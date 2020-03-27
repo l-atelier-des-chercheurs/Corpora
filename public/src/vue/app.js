@@ -306,7 +306,6 @@ let vm = new Vue({
       }
 
       this.$eventHub.$once("socketio.authentificated", () => {
-        this.$socketio.listFolders({ type: "authors" });
         this.$socketio.listFolders({ type: "corpus" });
       });
     }
@@ -325,21 +324,6 @@ let vm = new Vue({
         document.body.style.overflow = "hidden";
       } else {
         document.body.style.overflow = "";
-      }
-    },
-    "store.authors": function() {
-      if (window.state.dev_mode === "debug") {
-        console.log(`ROOT EVENT: var has changed: store.authors`);
-      }
-      // check if, when store.authors refresh, the current_author is still there
-      // delog if not
-      if (
-        this.settings.current_author &&
-        !this.store.authors.hasOwnProperty(
-          this.settings.current_author.slugFolderName
-        )
-      ) {
-        this.unsetAuthor();
       }
     }
   },
@@ -444,12 +428,38 @@ let vm = new Vue({
       });
     },
     editFolder: function(fdata) {
-      if (window.state.dev_mode === "debug") {
-        console.log(
-          `ROOT EVENT: editFolder: ${JSON.stringify(fdata, null, 4)}`
+      return new Promise((resolve, reject) => {
+        if (window.state.dev_mode === "debug") {
+          console.log(
+            `ROOT EVENT: editFolder: ${JSON.stringify(fdata, null, 4)}`
+          );
+        }
+
+        fdata.id =
+          Math.random()
+            .toString(36)
+            .substring(2, 15) +
+          Math.random()
+            .toString(36)
+            .substring(2, 15);
+
+        this.$socketio.editFolder(fdata);
+
+        const catchFolderEdition = function(d) {
+          if (fdata.id === d.id) {
+            return resolve(d);
+          } else {
+            this.$eventHub.$once(
+              "socketio.corpus.folderCreated",
+              catchFolderCreation
+            );
+          }
+        };
+        this.$eventHub.$once(
+          "socketio.corpus.folderCreated",
+          catchFolderEdition
         );
-      }
-      this.$socketio.editFolder(fdata);
+      });
     },
     removeFolder: function({ type, slugFolderName }) {
       if (window.state.dev_mode === "debug") {
