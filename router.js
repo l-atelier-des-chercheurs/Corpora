@@ -15,8 +15,8 @@ module.exports = function(app) {
   /**
    * routing event
    */
-  app.get("/", showIndex);
-  app.get("/:slugProjectName", loadFolder);
+  app.get("/", load_index);
+  app.get("/:slug", load_index);
   app.get("/_archives/:type/:slugFolderName", downloadArchive);
   app.post("/file-upload/:type/:slugFolderName", postFile2);
 
@@ -66,41 +66,10 @@ module.exports = function(app) {
   }
 
   // GET
-  function showIndex(req, res) {
+  function load_index(req, res) {
     generatePageData(req).then(
       pageData => {
         res.render("index", pageData);
-      },
-      err => {
-        dev.error(`Err while getting index data: ${err}`);
-      }
-    );
-  }
-
-  function loadFolder(req, res) {
-    let slugFolderName = req.param("slugFolderName");
-    const type = "corpus";
-
-    generatePageData(req).then(
-      pageData => {
-        // let’s make sure that folder exists first and return some meta
-        file
-          .getFolder({ type, slugFolderName })
-          .then(
-            foldersData => {
-              pageData.slugFolderName = slugFolderName;
-              pageData.store[type][slugFolderName] = foldersData;
-              return res.render("index", pageData);
-            },
-            (err, p) => {
-              dev.error(`Failed to get folder: ${err}`);
-              pageData.noticeOfError = "failed_to_find_folder";
-              res.render("index", pageData);
-            }
-          )
-          .catch(err => {
-            dev.error("No folder found");
-          });
       },
       err => {
         dev.error(`Err while getting index data: ${err}`);
