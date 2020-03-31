@@ -16,28 +16,12 @@
     "url": "https://github.com/louis-ev/corpora/issues"
   },
   "scripts": {
-    "start": "electron .",
-    "debug": "electron --inspect=5858 . --debug --verbose",
-    "debug-brk": "electron --inspect=5858 . --debug-brk --verbose",
-    "node-start": "node .",
-    "node-debug": "node . --inspect=5858 --debug --verbose",
-    "node-debug-brk": "node . --inspect=5858 --debug-brk --verbose",
-    "pack": "electron-builder --dir",
-    "dist": "electron-builder",
-    "postinstall": "electron-builder install-app-deps"
+    "start": "node .",
+    "debug": "node . --inspect=5858 --debug --verbose"
   },
   "engines": {
     "node": "8.9.3",
     "npm": "*"
-  },
-  "build": {
-    "electronVersion": "2.0.16",
-    "appId": "corpora",
-    "productName": "Corpora",
-    "asar": false,
-    "mac": {
-      "category": "public.app-category.education"
-    }
   },
   "dependencies": {
     "archiver": "^3.1.1",
