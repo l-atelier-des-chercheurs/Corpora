@@ -5,10 +5,7 @@
       :corpuses="Object.values($root.store.corpus)"
     />
 
-    <Corpus
-      v-else-if="$root.do_navigation.view === 'CorpusView'"
-      :corpus="$root.current_corpus"
-    />
+    <Corpus v-else-if="$root.do_navigation.view === 'CorpusView'" :corpus="$root.current_corpus" />
   </div>
 </template>
 
@@ -33,5 +30,9 @@ export default {
   methods: {}
 };
 </script>
-
-<style lang="scss"></style>
+<style>
+:root {
+  --spacing: 1em;
+  --color-black: #111;
+}
+</style>

@@ -62,7 +62,7 @@
       },
       "medias": {
         "thumbs": {
-          "resolutions": [180, 360, 1600]
+          "resolutions": [180, 360, 800, 1600]
         },
         "fields": {
           "date_created": {
@@ -81,10 +81,24 @@
           "original_media_filename": {
             "type": "string"
           },
+          "title": {
+            "type": "string"
+          },
           "type": {
             "type": "string",
-            "options": ["image", "video", "audio", "text", "document", "other"],
+            "options": [
+              "image",
+              "video",
+              "audio",
+              "text",
+              "document",
+              "fragment",
+              "other"
+            ],
             "default": "other"
+          },
+          "medias_slugs": {
+            "type": "array"
           },
           "file_meta": {
             "type": "array",
