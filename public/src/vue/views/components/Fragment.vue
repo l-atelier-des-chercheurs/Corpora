@@ -2,13 +2,21 @@
   <div class="m_fragment">
     <h2>{{ fragment.title }}</h2>
     <!-- {{ linked_medias }} -->
-    <div v-for="media in linked_medias" :key="media.metaFileName">{{ media.media_filename }}</div>
+    <div v-for="media in linked_medias" :key="media.metaFileName">
+      <MediaContent
+        v-model="media.content"
+        :context="'preview'"
+        :slugFolderName="slugProjectName"
+        :media="media"
+      />
+    </div>
 
     <AddMedias :slugFolderName="slugFolderName" @newMediaCreated="newMediaCreated" />
   </div>
 </template>
 <script>
 import AddMedias from "./AddMedias.vue";
+import MediaContent from "./MediaContent.vue";
 
 export default {
   props: {
@@ -17,7 +25,8 @@ export default {
     slugFolderName: String
   },
   components: {
-    AddMedias
+    AddMedias,
+    MediaContent
   },
   data() {
     return {};
@@ -28,7 +37,6 @@ export default {
   watch: {},
   computed: {
     linked_medias() {
-      debugger;
       if (
         typeof this.fragment.medias_slugs !== "object" ||
         this.fragment.medias_slugs.length === 0

@@ -13,13 +13,15 @@
       </form>
     </div>
 
-    <Fragment
-      v-for="fragment in fragments"
-      :key="fragment.metaFileName"
-      :medias="medias"
-      :fragment="fragment"
-      :slugFolderName="corpus.slugFolderName"
-    />
+    <div class="m_fragment--container">
+      <Fragment
+        v-for="fragment in fragments"
+        :key="fragment.metaFileName"
+        :medias="medias"
+        :fragment="fragment"
+        :slugFolderName="corpus.slugFolderName"
+      />
+    </div>
   </div>
 </template>
 <script>
@@ -57,9 +59,12 @@ export default {
         Object.values(this.corpus.medias).length === 0
       )
         return false;
-      return Object.values(this.corpus.medias).filter(
+      let fragments = Object.values(this.corpus.medias).filter(
         m => m.type === "fragment"
       );
+
+      fragments = this.$_.sortBy(fragments, "date_created");
+      return fragments.reverse();
     }
   },
   methods: {
@@ -96,4 +101,9 @@ export default {
   }
 };
 </script>
-<style lang="scss"></style>
+<style lang="scss" scoped>
+.m_fragment--container {
+  display: flex;
+  min-width: max-content;
+}
+</style>

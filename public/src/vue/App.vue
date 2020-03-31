@@ -34,5 +34,11 @@ export default {
 :root {
   --spacing: 1em;
   --color-black: #111;
+  --color-white: #fff;
+}
+
+button,
+.button {
+  border: none;
 }
 </style>

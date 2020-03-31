@@ -312,47 +312,12 @@ export default {
   }
 };
 </script>
-<style lang="less" scoped>
-button,
-.button {
-  position: relative;
-  box-shadow: -0.1em 0.2em 1em rgba(0, 0, 0, 0.35);
-  // margin: .3em;
-
-  &:active {
-    background-color: var(--color-vert_vif);
-  }
-
-  label {
-    cursor: pointer;
-    display: block;
-    top: 0;
-    left: 0;
-    user-select: none;
-  }
-
-  span {
-    // position: absolute;
-    margin-top: 0;
-  }
-}
-
-.text_label {
-  text-transform: initial;
-  padding: 3px 4px;
-  line-height: 1;
-
-  border-radius: 3px;
-  background-color: var(--color-black);
-  color: #fff;
-  white-space: nowrap;
-}
-
+<style lang="less">
 .m_addMedias {
   position: relative;
   // width: 100px;
   height: auto;
-  // color: var(--color-blanc);
+  // color: var(--color-white);
 
   .menu_encart {
     display: flex;
@@ -378,11 +343,20 @@ button,
           display: flex;
           flex-flow: row nowrap;
           align-items: center;
+          align-content: center;
+          background-color: var(--color-black);
+          padding: 0 ~"calc(var(--spacing)/2)";
+
+          color: var(--color-white);
+          margin: ~"calc(var(--spacing) / 4)";
+
+          > *:first-child {
+            width: 40px;
+            height: 40px;
+          }
         }
 
         .text_label {
-          background-color: var(--color-noir);
-          color: var(--color-blanc);
         }
 
         .delay_transition_up(@max, @counter) when (@counter < @max) {
@@ -417,8 +391,8 @@ button,
       display: block;
       text-transform: initial;
       pointer-events: auto;
-      background-color: var(--color-noir);
-      color: var(--color-blanc);
+      background-color: var(--color-black);
+      color: var(--color-white);
 
       > * {
         width: 24px;
@@ -451,19 +425,15 @@ button,
 
     width: 320px;
     height: 320px;
-    background-color: var(--color-noir);
+    background-color: var(--color-black);
   }
 }
 
-.picto {
-  background-color: var(--color-noir);
-}
-
 .button_addMedia {
-  width: 64px;
-  height: 64px;
-  padding: 0 20px;
+  width: 40px;
+  height: 40px;
+  // padding: 0 20px;
   margin: 0 auto !important;
-  background-color: var(--color-noir);
+  background-color: var(--color-black);
 }
 </style>
