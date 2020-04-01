@@ -1,17 +1,43 @@
 <template>
   <div class="m_fragment">
-    <h2>{{ fragment.title }}</h2>
-    <!-- {{ linked_medias }} -->
-    <div v-for="media in linked_medias" :key="media.metaFileName">
-      <MediaContent
-        v-model="media.content"
-        :context="'preview'"
-        :slugFolderName="slugProjectName"
-        :media="media"
+    <div class="m_fragment--content">
+      <h2>{{ fragment.title }}</h2>
+
+      <div>
+        <p>
+          Aliquam sit amet mauris eget nisi interdum auctor. Donec efficitur
+          tellus ultrices enim cursus accumsan. Donec at elit quis eros varius
+          convallis pulvinar at nunc. Vivamus cursus leo ligula, ac vestibulum
+          purus viverra gravida. Donec pulvinar interdum enim at laoreet.
+          Vestibulum mollis accumsan eleifend. Sed at orci nisi. Donec ut dolor
+          ultricies, lacinia odio ac, mattis nulla. Duis ultricies justo et
+          lobortis tincidunt. Sed feugiat, turpis nec vulputate tempor, dui diam
+          tempor leo, sollicitudin feugiat erat tellus ac diam. Nullam semper
+          diam tortor, in posuere ipsum fermentum non. Integer at sollicitudin
+          enim. Nullam nulla magna, tempor in imperdiet eu, consectetur sit amet
+          ligula. Etiam in ullamcorper mauris. Vivamus velit lorem, volutpat
+          rutrum fermentum id, volutpat sed magna. Nam quis dignissim quam.
+        </p>
+      </div>
+      <!-- {{ linked_medias }} -->
+      <div
+        v-for="media in linked_medias"
+        :key="media.metaFileName"
+        class="m_fragment--medias"
+      >
+        <MediaContent
+          v-model="media.content"
+          :context="'edit'"
+          :slugFolderName="slugFolderName"
+          :media="media"
+        />
+      </div>
+
+      <AddMedias
+        :slugFolderName="slugFolderName"
+        @newMediaCreated="newMediaCreated"
       />
     </div>
-
-    <AddMedias :slugFolderName="slugFolderName" @newMediaCreated="newMediaCreated" />
   </div>
 </template>
 <script>
@@ -80,8 +106,53 @@ export default {
 </script>
 <style lang="scss" scoped>
 .m_fragment {
-  border: 2px solid black;
-  padding: var(--spacing);
-  margin: var(--spacing);
+  // margin: 0 var(--spacing);
+  // width: 100%;
+  max-width: 600px;
+  flex: 0 1 100vw;
+
+  overflow-y: auto;
+  // columns: 50ch;
+  // column-gap: 1em;
+  // column-fill: auto;
+  // height: 90vh;
+  // padding-top: 100px;
+
+  --scrollbarBG: #cfd8dc;
+  --thumbBG: #90a4ae;
+
+  &::-webkit-scrollbar {
+    width: 11px;
+  }
+  & {
+    scrollbar-width: thin;
+    scrollbar-color: var(--thumbBG) var(--scrollbarBG);
+  }
+  &::-webkit-scrollbar-track {
+    background: var(--scrollbarBG);
+  }
+  &::-webkit-scrollbar-thumb {
+    background-color: var(--thumbBG);
+    border-radius: 6px;
+    border: 3px solid var(--scrollbarBG);
+  }
+
+  .m_fragment--content {
+    padding: var(--spacing);
+    margin: calc(var(--spacing) * 1) calc(var(--spacing) * 1);
+
+    background-color: rgba(255, 255, 255, 0.95);
+    border-radius: 20px;
+
+    > *:first-child {
+      margin-top: 0;
+    }
+  }
+
+  .m_fragment--medias {
+    > * {
+      margin-bottom: var(--spacing);
+    }
+  }
 }
 </style>
