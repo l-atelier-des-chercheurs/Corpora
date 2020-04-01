@@ -1,11 +1,11 @@
 <template>
   <div
-    class="m_collaborativeEditor"
-    :class="{ 
-      'is--focused' : is_focused,
-      'is--receptiveToDrop' : !!$root.settings.media_being_dragged,
-      'is--dragover' : is_being_dragover  ,
-      'is--disabled' : editor_not_enabled
+    class="m_collaborativeEditor quillWrapper"
+    :class="{
+      'is--focused': is_focused,
+      'is--receptiveToDrop': !!$root.settings.media_being_dragged,
+      'is--dragover': is_being_dragover,
+      'is--disabled': editor_not_enabled
     }"
     autofocus="autofocus"
     @dragover="ondragover($event)"
@@ -13,7 +13,7 @@
   >
     <!-- connection_state : {{ connection_state }}
     <br />-->
-    <div ref="editor" class="mediaWriteupContent" />
+    <div ref="editor" class="mediaTextContent" />
     <!-- <div class="_customCaret" :style="_customCaret_style" /> -->
   </div>
 </template>
@@ -21,14 +21,239 @@
 import ReconnectingWebSocket from "reconnectingwebsocket";
 import ShareDB from "sharedb/lib/client";
 import Quill from "quill";
+// import QuillCursors from "quill-cursors";
 import debounce from "debounce";
 
-import MediaBlot from "./quill_modules/MediaBlot";
-import CardEditableModule from "./quill_modules/CardEditableModule";
+let Inline = Quill.import("blots/inline");
+let Block = Quill.import("blots/block");
+let BlockEmbed = Quill.import("blots/block/embed");
+const Module = Quill.import("core/module");
 
-Quill.register("formats/media", MediaBlot);
-Quill.register("modules/cardEditable", CardEditableModule);
+class MediaBlot extends BlockEmbed {
+  static blotName = "media";
+  static tagName = "figure";
+  static className = "ql-mediacard";
 
+  static create({ type, src, caption, metaFileName }) {
+    let node = super.create();
+    console.log(`CollaborativeEditor • MediaBlot : create for type = ${type}`);
+
+    node.setAttribute("contenteditable", false);
+
+    let bg = window.document.createElement("div");
+    bg.setAttribute("class", "ql-mediacard--background");
+    node.appendChild(bg);
+
+    let tag;
+
+    if (!type || !metaFileName) {
+      alert(
+        `Missing type or metaFileName : type = ${type} and metaFileName = ${metaFileName}`
+      );
+      return;
+    }
+
+    if (type === "image") {
+      tag = window.document.createElement("img");
+    } else if (type === "video") {
+      tag = window.document.createElement("video");
+      tag.setAttribute("controls", true);
+    }
+
+    if (src) {
+      tag.setAttribute("src", src);
+    }
+    tag.setAttribute("draggable", false);
+    node.appendChild(tag);
+    if (caption) {
+      let caption_tag = window.document.createElement("figcaption");
+      caption_tag.innerHTML = caption;
+      node.appendChild(caption_tag);
+    }
+    node.dataset.type = type;
+    node.dataset.metaFileName = metaFileName;
+    node.setAttribute("draggable", false);
+
+    // todo for later: allow drag from cards in quill
+    // to move inside document or to composition
+    node.addEventListener("dragstart", $event => {
+      $event.dataTransfer.setData("text/plain", "media_in_quill");
+      $event.dataTransfer.effectAllowed = "move";
+      // this.is_dragged = true;
+      // this.$root.settings.media_being_dragged = media.metaFileName;
+    });
+
+    node.style.animation = "scale-in 0.5s cubic-bezier(0.19, 1, 0.22, 1)";
+    node.addEventListener("animationend", () => {
+      node.style.animation = "";
+    });
+
+    return node;
+  }
+
+  constructor(node) {
+    super(node);
+
+    let removeButton;
+    let caption;
+    let captionInput;
+
+    node.__onSelect = () => {
+      const quill = Quill.find(node.parentElement.parentElement);
+      const _block = Quill.find(node);
+
+      // quill.setSelection(quill.getIndex(_block), 0, Quill.sources.USER);
+      node.classList.add("is--focused");
+
+      removeButton = window.document.createElement("button");
+      removeButton.innerHTML = "×";
+      removeButton.setAttribute("type", "button");
+      removeButton.classList.add("_button_removeMedia");
+      removeButton.addEventListener("click", () => {
+        node.__onDeselect();
+        quill.enable(true);
+        node.style.animation = "scale-out 0.5s cubic-bezier(0.19, 1, 0.22, 1)";
+        node.addEventListener("animationend", () => {
+          super.remove();
+          // node.remove();
+          // supprimer du bloc proprement
+        });
+      });
+      node.appendChild(removeButton);
+
+      caption = node.querySelector("figcaption");
+      captionInput = window.document.createElement("input");
+      captionInput.setAttribute("type", "text");
+      captionInput.placeholder = "Légende…";
+
+      if (caption) {
+        captionInput.value = caption.innerText;
+        caption.innerHTML = "";
+        caption.appendChild(captionInput);
+      } else {
+        caption = window.document.createElement("figcaption");
+        caption.appendChild(captionInput);
+        node.appendChild(caption);
+      }
+
+      captionInput.focus();
+    };
+    node.__onDeselect = () => {
+      let value = captionInput.value;
+      if (!value || value === "") {
+        caption.remove();
+      } else {
+        captionInput.remove();
+        caption.innerText = value;
+      }
+      node.classList.remove("is--focused");
+      removeButton.remove();
+    };
+  }
+
+  // deleteAt() {
+  //   console.log("deleteAt for custom mediablock: prevented");
+
+  //   return false;
+  //   // prevent removing on backspace after block
+  // }
+
+  static value(node) {
+    if (node.dataset.type === "image") {
+      let img = node.querySelector("img");
+      let figcaption = node.querySelector("figcaption");
+      if (!img) return false;
+      return {
+        alt: img.getAttribute("alt"),
+        src: img.getAttribute("src"),
+        metaFileName: node.dataset.metaFileName,
+        type: node.dataset.type,
+        caption: figcaption ? figcaption.innerText : null
+      };
+    } else if (node.dataset.type === "video") {
+      let video = node.querySelector("video");
+      let figcaption = node.querySelector("figcaption");
+      if (!video) return false;
+      return {
+        alt: video.getAttribute("alt"),
+        src: video.getAttribute("src"),
+        metaFileName: node.dataset.metaFileName,
+        type: node.dataset.type,
+        caption: figcaption ? figcaption.innerText : null
+      };
+    }
+  }
+}
+
+class CardEditableModule extends Module {
+  constructor(quill, options) {
+    super(quill, options);
+    let is_selected = false;
+
+    let listener = e => {
+      if (!document.body.contains(quill.root)) {
+        return document.body.removeEventListener("click", listener);
+      }
+      let elm = e.target.closest(".ql-mediacard");
+
+      let deselectCard = () => {
+        console.log("deselectCard");
+        is_selected = false;
+        if (elm.__onDeselect) {
+          elm.__onDeselect(quill);
+        } else {
+          quill.setSelection(
+            quill.getIndex(elm.__blot.blot) + 1,
+            0,
+            Quill.sources.USER
+          );
+        }
+      };
+      if (elm && elm.__blot && elm.__onSelect && !is_selected) {
+        quill.disable();
+        is_selected = true;
+        console.log("selectCard");
+
+        elm.__onSelect(quill);
+        let handleKeyPress = e => {
+          if (e.keyCode === 27 || e.keyCode === 13) {
+            window.removeEventListener("keypress", handleKeyPress);
+            quill.enable(true);
+            deselectCard();
+          }
+        };
+        let handleClick = e => {
+          const path = e.path || (e.composedPath && e.composedPath());
+          if (e.which === 1 && !path.includes(elm)) {
+            window.removeEventListener("click", handleClick);
+            quill.enable(true);
+            deselectCard();
+          }
+        };
+        let handleDrag = e => {
+          window.removeEventListener("dragover", handleDrag);
+          quill.enable(true);
+          deselectCard();
+        };
+        window.addEventListener("keypress", handleKeyPress);
+        window.addEventListener("click", handleClick);
+        window.addEventListener("dragover", handleDrag);
+      }
+    };
+    quill.emitter.listenDOM("click", document.body, listener);
+  }
+}
+
+Quill.register(
+  {
+    // Other formats or modules
+    "formats/media": MediaBlot,
+    "modules/cardEditable": CardEditableModule
+  },
+  true
+);
+
+// Quill.register("modules/cursors", QuillCursors);
 ShareDB.types.register(require("rich-text").type);
 
 var quill_kb_bindings = {
@@ -87,8 +312,13 @@ export default {
     spellcheck: {
       type: Boolean,
       default: true
+    },
+    folder_type: {
+      type: String,
+      default: "corpus"
     }
   },
+
   components: {},
   data() {
     return {
@@ -101,7 +331,6 @@ export default {
 
       is_focused: false,
       is_being_dragover: false,
-      is_being_dragover_on_blot: false,
 
       debounce_textUpdate: undefined,
       caret_position: {
@@ -112,8 +341,9 @@ export default {
 
       custom_toolbar: {
         container: [
-          [{ header: [false, 1, 2] }],
-          ["italic", "underline", "link", "blockquote"],
+          // [{ header: [false, 1, 2, 3] }],
+          [{ header: 1 }, { header: 2 }],
+          ["bold", "italic", "link", "blockquote"],
           [{ list: "ordered" }, { list: "bullet" }],
           ["clean"]
         ]
@@ -131,20 +361,43 @@ export default {
       modules: {
         cardEditable: true,
         toolbar: this.custom_toolbar,
+        //         cursors: {
+        //           template: `
+        //     <span class="ql-cursor-caret-container">
+        //     <span class="ql-cursor-selections"></span>
+        //       <span class="ql-cursor-caret"></span>
+        //     </span>
+        //     <div class="ql-cursor-flag">
+        //       <small class="ql-cursor-name"></small>
+        //       <span class="ql-cursor-flag-flap"></span>
+        //     </div>
+        // `,
+        //           hideDelayMs: 5000,
+        //           hideSpeedMs: 0,
+        //           selectionChangeSource: null
+        //         },
         keyboard: {
           bindings: quill_kb_bindings
         }
       },
       bounds: this.$refs.editor,
 
-      theme: "snow",
-      formats: ["italic", "underline", "link", "header", "list", "media"],
-      placeholder: "…"
+      theme: "bubble",
+      formats: [
+        "bold",
+        "italic",
+        "underline",
+        "link",
+        "header",
+        "blockquote",
+        "indent",
+        "list",
+        "media"
+      ],
+      placeholder: "Écrire le texte ici…"
     });
 
     this.$refs.editor.dataset.quill = this.editor;
-
-    this.$root.settings.has_writeup_opended = this.media.metaFileName;
 
     this.cancelDragOver = debounce(this.cancelDragOver, 300);
 
@@ -154,21 +407,15 @@ export default {
       this.editor.disable();
     }
 
+    // const cursorsOne = this.editor.getModule("cursors");
+    // cursorsOne.createCursor(1, "User 1", "#0a997f");
+
     this.$nextTick(() => {
       if (this.$root.state.mode === "live" && this.enable_collaboration) {
         this.initWebsocketMode();
         this.editor.focus();
       } else {
-        let content = this.value;
-        if (this.$root.state.mode === "export_web") {
-          var el = document.createElement("html");
-          el.innerHTML = content;
-          el.querySelectorAll("[src]").forEach(function(item) {
-            item.setAttribute("src", "./" + item.getAttribute("src"));
-          });
-          content = el.innerHTML;
-        }
-        this.editor.root.innerHTML = content;
+        this.editor.root.innerHTML = this.value;
       }
 
       this.editor.on("text-change", (delta, oldDelta, source) => {
@@ -177,9 +424,9 @@ export default {
           this.editor.getText() ? this.editor.root.innerHTML : ""
         );
 
-        // this.$nextTick(() => {
-        //   this.updateFocusedLines();
-        // });
+        this.$nextTick(() => {
+          this.updateFocusedLines();
+        });
 
         // cursorsOne.moveCursor(1, range);
       });
@@ -195,7 +442,7 @@ export default {
           this.updateCaretPosition();
         }
 
-        // this.updateFocusedLines();
+        this.updateFocusedLines();
       });
     });
 
@@ -205,16 +452,16 @@ export default {
     if (!!this.socket) {
       this.socket.close();
     }
-    this.$root.settings.has_writeup_opended = false;
+
     this.$root.settings.medias_present_in_writeup = [];
   },
   watch: {
     "$root.preview_mode": function() {
-      // if (this.$root.preview_mode) {
-      //   this.editor.disable();
-      // } else {
-      //   this.editor.enable();
-      // }
+      if (this.$root.preview_mode) {
+        this.editor.disable();
+      } else {
+        this.editor.enable();
+      }
     },
     spellcheck: function() {
       this.setSpellCheck();
@@ -244,7 +491,7 @@ export default {
     initWebsocketMode() {
       console.log(`CollaborativeEditor / initWebsocketMode`);
       const params = new URLSearchParams({
-        type: "folders",
+        type: this.folder_type,
         slugFolderName: this.slugFolderName,
         metaFileName: this.media.metaFileName
       });
@@ -328,27 +575,29 @@ export default {
       const caretPos = this.editor.getBounds(selection);
       this.caret_position = { top: caretPos.top, left: caretPos.left };
     },
-    // updateFocusedLines() {
-    //   console.log(`CollaborativeEditor • METHODS: updateFocusedLines`);
+    updateFocusedLines() {
+      console.log(`CollaborativeEditor • METHODS: updateFocusedLines`);
 
-    //   // if (oldRange && oldRange.index) {
-    //   //   const line = this.editor.getLine(oldRange.index);
-    //   //   if (line) {
-    //   //     line[0].domNode.classList.remove("is--focused");
-    //   //   }
-    //   // }
+      // if (oldRange && oldRange.index) {
+      //   const line = this.editor.getLine(oldRange.index);
+      //   if (line) {
+      //     line[0].domNode.classList.remove("is--focused");
+      //   }
+      // }
 
-    //   this.removeFocusFromBlots();
+      this.editor
+        .getLines()
+        .map(b => b.domNode.classList.remove("is--focused"));
 
-    //   const range = this.editor.getSelection();
+      const range = this.editor.getSelection();
 
-    //   if (range && range.index) {
-    //     const line = this.editor.getLine(range.index);
-    //     if (line) {
-    //       line[0].domNode.classList.add("is--focused");
-    //     }
-    //   }
-    // },
+      if (range && range.index) {
+        const line = this.editor.getLine(range.index);
+        if (line) {
+          line[0].domNode.classList.add("is--focused");
+        }
+      }
+    },
     wsState(state, reason) {
       console.log(
         `METHODS • CollaborativeEditor: wsState with state = ${state} and reason = ${reason}`
@@ -366,7 +615,7 @@ export default {
         this.broadcastMediasPresentInWriteup();
 
         this.$root.editMedia({
-          type: "folders",
+          type: this.folder_type,
           slugFolderName: this.slugFolderName,
           slugMediaName: this.media.metaFileName,
           data: {
@@ -413,12 +662,8 @@ export default {
           ? `./${this.slugFolderName}/${media.media_filename}`
           : `/${this.slugFolderName}/${media.media_filename}`;
 
-      // setting editor focus and selection can cause the scroll to "jump"
-      // not exactly a good idea…
-      // this.editor.setSelection(index, Quill.sources.SILENT);
-      // this.editor.focus();
-
-      this.editor.blur();
+      this.editor.focus();
+      this.editor.setSelection(index, Quill.sources.SILENT);
 
       if (media.type === "image") {
         const thumb = media.thumbs.find(m => m.size === 1600);
@@ -434,9 +679,9 @@ export default {
             },
             Quill.sources.USER
           );
-          // this.editor.setSelection(index + 1, Quill.sources.SILENT);
+          this.editor.setSelection(index + 1, Quill.sources.SILENT);
         }
-      } else if (media.type === "video" || media.type === "audio") {
+      } else if (media.type === "video") {
         // this.editor.insertText(index, "\n", Quill.sources.USER);
         this.editor.insertEmbed(
           index,
@@ -448,18 +693,7 @@ export default {
           },
           Quill.sources.USER
         );
-        // this.editor.setSelection(index + 1, Quill.sources.SILENT);
-      } else if (media.type === "text") {
-        this.editor.insertEmbed(
-          index,
-          "media",
-          {
-            type: media.type,
-            content: media.content,
-            metaFileName: media.metaFileName
-          },
-          Quill.sources.USER
-        );
+        this.editor.setSelection(index + 1, Quill.sources.SILENT);
       } else {
         this.$alertify
           .closeLogOnClick(true)
@@ -472,9 +706,7 @@ export default {
         `METHODS • CollaborativeEditor / dragover on ${$event.currentTarget.className}`
       );
       this.is_being_dragover = true;
-
       this.removeDragoverFromBlots();
-      // this.removeFocusFromBlots();
 
       const _blot = this.getBlockFromElement($event.target);
       if (_blot) _blot.domNode.classList.add("is--dragover");
@@ -560,11 +792,6 @@ export default {
         }
       });
     },
-    removeFocusFromBlots() {
-      this.editor
-        .getLines()
-        .map(b => b.domNode.classList.remove("is--focused"));
-    },
     getBlockFromElement(_target) {
       while (!_target.parentElement.classList.contains("ql-editor")) {
         _target = _target.parentElement;
@@ -579,322 +806,1029 @@ export default {
   }
 };
 </script>
-<style src="../../../../node_modules/quill/dist/quill.snow.css"></style>
-<style lang="scss">
-html[lang="fr"] .ql-picker.ql-header .ql-picker-label[data-value="1"]::before,
-html[lang="fr"] .ql-picker.ql-header .ql-picker-item[data-value="1"]::before {
-  content: "Titre 1";
-}
-html[lang="fr"] .ql-picker.ql-header .ql-picker-label[data-value="2"]::before,
-html[lang="fr"] .ql-picker.ql-header .ql-picker-item[data-value="2"]::before {
-  content: "Titre 2";
-}
-html[lang="fr"] .ql-picker.ql-header .ql-picker-label[data-value="3"]::before,
-html[lang="fr"] .ql-picker.ql-header .ql-picker-item[data-value="3"]::before {
-  content: "Titre 3";
-}
-html[lang="fr"] .ql-picker.ql-header .ql-picker-label[data-value="4"]::before,
-html[lang="fr"] .ql-picker.ql-header .ql-picker-item[data-value="4"]::before {
-  content: "Titre 4";
-}
-html[lang="fr"] .ql-tooltip a.ql-remove::before {
-  content: "Supprimer";
-}
-html[lang="fr"] .ql-tooltip a.ql-action::after {
-  content: "Modifier";
-}
-html[lang="fr"] .ql-tooltip::before {
-  content: "Visiter le site :";
-}
-
-.m_collaborativeEditor {
+<style>
+/*!
+ * Quill Editor v1.3.7
+ * https://quilljs.com/
+ * Copyright (c) 2014, Jason Chen
+ * Copyright (c) 2013, salesforce.com
+ */
+.ql-container {
+  box-sizing: border-box;
+  height: 100%;
+  margin: 0px;
   position: relative;
-  // font-family: "Work Sans";
-  // height: 100%;
-  // margin-left: 3em;
-  // padding: 0 0.1em;
-  // color: rgb(27, 39, 41);
+}
+.ql-container.ql-disabled .ql-tooltip {
+  visibility: hidden;
+}
+.ql-container.ql-disabled .ql-editor ul[data-checked] > li::before {
+  pointer-events: none;
+}
+.ql-clipboard {
+  left: -100000px;
+  height: 1px;
+  overflow-y: hidden;
+  position: absolute;
+  top: 50%;
+}
+.ql-clipboard p {
+  margin: 0;
+  padding: 0;
+}
+.ql-editor {
+  box-sizing: border-box;
+  height: 100%;
+  outline: none;
+  overflow-y: auto;
+  padding: 12px 15px;
+  tab-size: 4;
+  -moz-tab-size: 4;
+  text-align: left;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+}
+.ql-editor > * {
+  cursor: text;
+}
 
-  --active-color: black;
-  --c-popup-bg: white;
-  --c-popup-c: black;
-  --size-column-width: 800px;
-  --spacing: 0.8rem;
-
-  --c-toolbar-warning-bg: var(--color-rouge_vif);
-  --c-toolbar-warning-c: white;
-
-  &.is--focussed {
-    background-color: blue;
+.ql-editor ol,
+.ql-editor ul {
+  padding-left: 1.5em;
+}
+.ql-editor ol > li,
+.ql-editor ul > li {
+  list-style-type: none;
+}
+.ql-editor ul > li::before {
+  content: "\2022";
+}
+.ql-editor ul[data-checked="true"],
+.ql-editor ul[data-checked="false"] {
+  pointer-events: none;
+}
+.ql-editor ul[data-checked="true"] > li *,
+.ql-editor ul[data-checked="false"] > li * {
+  pointer-events: all;
+}
+.ql-editor ul[data-checked="true"] > li::before,
+.ql-editor ul[data-checked="false"] > li::before {
+  color: #777;
+  cursor: pointer;
+  pointer-events: all;
+}
+.ql-editor ul[data-checked="true"] > li::before {
+  content: "\2611";
+}
+.ql-editor ul[data-checked="false"] > li::before {
+  content: "\2610";
+}
+.ql-editor li::before {
+  display: inline-block;
+  white-space: nowrap;
+  width: 1.2em;
+}
+.ql-editor li:not(.ql-direction-rtl)::before {
+  margin-left: -1.5em;
+  margin-right: 0.3em;
+  text-align: right;
+}
+.ql-editor li.ql-direction-rtl::before {
+  margin-left: 0.3em;
+  margin-right: -1.5em;
+}
+.ql-editor ol li:not(.ql-direction-rtl),
+.ql-editor ul li:not(.ql-direction-rtl) {
+  padding-left: 1.5em;
+}
+.ql-editor ol li.ql-direction-rtl,
+.ql-editor ul li.ql-direction-rtl {
+  padding-right: 1.5em;
+}
+.ql-editor ol li {
+  counter-reset: list-1 list-2 list-3 list-4 list-5 list-6 list-7 list-8 list-9;
+  counter-increment: list-0;
+}
+.ql-editor ol li:before {
+  content: counter(list-0, decimal) ". ";
+}
+.ql-editor ol li.ql-indent-1 {
+  counter-increment: list-1;
+}
+.ql-editor ol li.ql-indent-1:before {
+  content: counter(list-1, lower-alpha) ". ";
+}
+.ql-editor ol li.ql-indent-1 {
+  counter-reset: list-2 list-3 list-4 list-5 list-6 list-7 list-8 list-9;
+}
+.ql-editor ol li.ql-indent-2 {
+  counter-increment: list-2;
+}
+.ql-editor ol li.ql-indent-2:before {
+  content: counter(list-2, lower-roman) ". ";
+}
+.ql-editor ol li.ql-indent-2 {
+  counter-reset: list-3 list-4 list-5 list-6 list-7 list-8 list-9;
+}
+.ql-editor ol li.ql-indent-3 {
+  counter-increment: list-3;
+}
+.ql-editor ol li.ql-indent-3:before {
+  content: counter(list-3, decimal) ". ";
+}
+.ql-editor ol li.ql-indent-3 {
+  counter-reset: list-4 list-5 list-6 list-7 list-8 list-9;
+}
+.ql-editor ol li.ql-indent-4 {
+  counter-increment: list-4;
+}
+.ql-editor ol li.ql-indent-4:before {
+  content: counter(list-4, lower-alpha) ". ";
+}
+.ql-editor ol li.ql-indent-4 {
+  counter-reset: list-5 list-6 list-7 list-8 list-9;
+}
+.ql-editor ol li.ql-indent-5 {
+  counter-increment: list-5;
+}
+.ql-editor ol li.ql-indent-5:before {
+  content: counter(list-5, lower-roman) ". ";
+}
+.ql-editor ol li.ql-indent-5 {
+  counter-reset: list-6 list-7 list-8 list-9;
+}
+.ql-editor ol li.ql-indent-6 {
+  counter-increment: list-6;
+}
+.ql-editor ol li.ql-indent-6:before {
+  content: counter(list-6, decimal) ". ";
+}
+.ql-editor ol li.ql-indent-6 {
+  counter-reset: list-7 list-8 list-9;
+}
+.ql-editor ol li.ql-indent-7 {
+  counter-increment: list-7;
+}
+.ql-editor ol li.ql-indent-7:before {
+  content: counter(list-7, lower-alpha) ". ";
+}
+.ql-editor ol li.ql-indent-7 {
+  counter-reset: list-8 list-9;
+}
+.ql-editor ol li.ql-indent-8 {
+  counter-increment: list-8;
+}
+.ql-editor ol li.ql-indent-8:before {
+  content: counter(list-8, lower-roman) ". ";
+}
+.ql-editor ol li.ql-indent-8 {
+  counter-reset: list-9;
+}
+.ql-editor ol li.ql-indent-9 {
+  counter-increment: list-9;
+}
+.ql-editor ol li.ql-indent-9:before {
+  content: counter(list-9, decimal) ". ";
+}
+.ql-editor .ql-indent-1:not(.ql-direction-rtl) {
+  padding-left: 3em;
+}
+.ql-editor li.ql-indent-1:not(.ql-direction-rtl) {
+  padding-left: 4.5em;
+}
+.ql-editor .ql-indent-1.ql-direction-rtl.ql-align-right {
+  padding-right: 3em;
+}
+.ql-editor li.ql-indent-1.ql-direction-rtl.ql-align-right {
+  padding-right: 4.5em;
+}
+.ql-editor .ql-indent-2:not(.ql-direction-rtl) {
+  padding-left: 6em;
+}
+.ql-editor li.ql-indent-2:not(.ql-direction-rtl) {
+  padding-left: 7.5em;
+}
+.ql-editor .ql-indent-2.ql-direction-rtl.ql-align-right {
+  padding-right: 6em;
+}
+.ql-editor li.ql-indent-2.ql-direction-rtl.ql-align-right {
+  padding-right: 7.5em;
+}
+.ql-editor .ql-indent-3:not(.ql-direction-rtl) {
+  padding-left: 9em;
+}
+.ql-editor li.ql-indent-3:not(.ql-direction-rtl) {
+  padding-left: 10.5em;
+}
+.ql-editor .ql-indent-3.ql-direction-rtl.ql-align-right {
+  padding-right: 9em;
+}
+.ql-editor li.ql-indent-3.ql-direction-rtl.ql-align-right {
+  padding-right: 10.5em;
+}
+.ql-editor .ql-indent-4:not(.ql-direction-rtl) {
+  padding-left: 12em;
+}
+.ql-editor li.ql-indent-4:not(.ql-direction-rtl) {
+  padding-left: 13.5em;
+}
+.ql-editor .ql-indent-4.ql-direction-rtl.ql-align-right {
+  padding-right: 12em;
+}
+.ql-editor li.ql-indent-4.ql-direction-rtl.ql-align-right {
+  padding-right: 13.5em;
+}
+.ql-editor .ql-indent-5:not(.ql-direction-rtl) {
+  padding-left: 15em;
+}
+.ql-editor li.ql-indent-5:not(.ql-direction-rtl) {
+  padding-left: 16.5em;
+}
+.ql-editor .ql-indent-5.ql-direction-rtl.ql-align-right {
+  padding-right: 15em;
+}
+.ql-editor li.ql-indent-5.ql-direction-rtl.ql-align-right {
+  padding-right: 16.5em;
+}
+.ql-editor .ql-indent-6:not(.ql-direction-rtl) {
+  padding-left: 18em;
+}
+.ql-editor li.ql-indent-6:not(.ql-direction-rtl) {
+  padding-left: 19.5em;
+}
+.ql-editor .ql-indent-6.ql-direction-rtl.ql-align-right {
+  padding-right: 18em;
+}
+.ql-editor li.ql-indent-6.ql-direction-rtl.ql-align-right {
+  padding-right: 19.5em;
+}
+.ql-editor .ql-indent-7:not(.ql-direction-rtl) {
+  padding-left: 21em;
+}
+.ql-editor li.ql-indent-7:not(.ql-direction-rtl) {
+  padding-left: 22.5em;
+}
+.ql-editor .ql-indent-7.ql-direction-rtl.ql-align-right {
+  padding-right: 21em;
+}
+.ql-editor li.ql-indent-7.ql-direction-rtl.ql-align-right {
+  padding-right: 22.5em;
+}
+.ql-editor .ql-indent-8:not(.ql-direction-rtl) {
+  padding-left: 24em;
+}
+.ql-editor li.ql-indent-8:not(.ql-direction-rtl) {
+  padding-left: 25.5em;
+}
+.ql-editor .ql-indent-8.ql-direction-rtl.ql-align-right {
+  padding-right: 24em;
+}
+.ql-editor li.ql-indent-8.ql-direction-rtl.ql-align-right {
+  padding-right: 25.5em;
+}
+.ql-editor .ql-indent-9:not(.ql-direction-rtl) {
+  padding-left: 27em;
+}
+.ql-editor li.ql-indent-9:not(.ql-direction-rtl) {
+  padding-left: 28.5em;
+}
+.ql-editor .ql-indent-9.ql-direction-rtl.ql-align-right {
+  padding-right: 27em;
+}
+.ql-editor li.ql-indent-9.ql-direction-rtl.ql-align-right {
+  padding-right: 28.5em;
+}
+.ql-editor .ql-video {
+  display: block;
+  max-width: 100%;
+}
+.ql-editor .ql-video.ql-align-center {
+  margin: 0 auto;
+}
+.ql-editor .ql-video.ql-align-right {
+  margin: 0 0 0 auto;
+}
+.ql-editor .ql-bg-black {
+  background-color: #000;
+}
+.ql-editor .ql-bg-red {
+  background-color: #e60000;
+}
+.ql-editor .ql-bg-orange {
+  background-color: #f90;
+}
+.ql-editor .ql-bg-yellow {
+  background-color: #ff0;
+}
+.ql-editor .ql-bg-green {
+  background-color: #008a00;
+}
+.ql-editor .ql-bg-blue {
+  background-color: #06c;
+}
+.ql-editor .ql-bg-purple {
+  background-color: #93f;
+}
+.ql-editor .ql-color-white {
+  color: #fff;
+}
+.ql-editor .ql-color-red {
+  color: #e60000;
+}
+.ql-editor .ql-color-orange {
+  color: #f90;
+}
+.ql-editor .ql-color-yellow {
+  color: #ff0;
+}
+.ql-editor .ql-color-green {
+  color: #008a00;
+}
+.ql-editor .ql-color-blue {
+  color: #06c;
+}
+.ql-editor .ql-color-purple {
+  color: #93f;
+}
+.ql-editor .ql-font-serif {
+  font-family: Georgia, Times New Roman, serif;
+}
+.ql-editor .ql-font-monospace {
+  font-family: Monaco, Courier New, monospace;
+}
+.ql-editor .ql-size-small {
+  font-size: 0.75em;
+}
+.ql-editor .ql-size-large {
+  font-size: 1.5em;
+}
+.ql-editor .ql-size-huge {
+  font-size: 2.5em;
+}
+.ql-editor .ql-direction-rtl {
+  direction: rtl;
+  text-align: inherit;
+}
+.ql-editor .ql-align-center {
+  text-align: center;
+}
+.ql-editor .ql-align-justify {
+  text-align: justify;
+}
+.ql-editor .ql-align-right {
+  text-align: right;
+}
+.ql-editor.ql-blank::before {
+  color: rgba(0, 0, 0, 0.6);
+  content: attr(data-placeholder);
+  font-style: italic;
+  left: 15px;
+  pointer-events: none;
+  position: absolute;
+  right: 15px;
+}
+.ql-bubble.ql-toolbar:after,
+.ql-bubble .ql-toolbar:after {
+  clear: both;
+  content: "";
+  display: table;
+}
+.ql-bubble.ql-toolbar button,
+.ql-bubble .ql-toolbar button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  display: inline-block;
+  float: left;
+  height: 24px;
+  padding: 3px 5px;
+  width: 28px;
+}
+.ql-bubble.ql-toolbar button svg,
+.ql-bubble .ql-toolbar button svg {
+  float: left;
+  height: 100%;
+}
+.ql-bubble.ql-toolbar button:active:hover,
+.ql-bubble .ql-toolbar button:active:hover {
+  outline: none;
+}
+.ql-bubble.ql-toolbar input.ql-image[type="file"],
+.ql-bubble .ql-toolbar input.ql-image[type="file"] {
+  display: none;
+}
+.ql-bubble.ql-toolbar button:hover,
+.ql-bubble .ql-toolbar button:hover,
+.ql-bubble.ql-toolbar button:focus,
+.ql-bubble .ql-toolbar button:focus,
+.ql-bubble.ql-toolbar button.ql-active,
+.ql-bubble .ql-toolbar button.ql-active,
+.ql-bubble.ql-toolbar .ql-picker-label:hover,
+.ql-bubble .ql-toolbar .ql-picker-label:hover,
+.ql-bubble.ql-toolbar .ql-picker-label.ql-active,
+.ql-bubble .ql-toolbar .ql-picker-label.ql-active,
+.ql-bubble.ql-toolbar .ql-picker-item:hover,
+.ql-bubble .ql-toolbar .ql-picker-item:hover,
+.ql-bubble.ql-toolbar .ql-picker-item.ql-selected,
+.ql-bubble .ql-toolbar .ql-picker-item.ql-selected {
+  color: #fff;
+}
+.ql-bubble.ql-toolbar button:hover .ql-fill,
+.ql-bubble .ql-toolbar button:hover .ql-fill,
+.ql-bubble.ql-toolbar button:focus .ql-fill,
+.ql-bubble .ql-toolbar button:focus .ql-fill,
+.ql-bubble.ql-toolbar button.ql-active .ql-fill,
+.ql-bubble .ql-toolbar button.ql-active .ql-fill,
+.ql-bubble.ql-toolbar .ql-picker-label:hover .ql-fill,
+.ql-bubble .ql-toolbar .ql-picker-label:hover .ql-fill,
+.ql-bubble.ql-toolbar .ql-picker-label.ql-active .ql-fill,
+.ql-bubble .ql-toolbar .ql-picker-label.ql-active .ql-fill,
+.ql-bubble.ql-toolbar .ql-picker-item:hover .ql-fill,
+.ql-bubble .ql-toolbar .ql-picker-item:hover .ql-fill,
+.ql-bubble.ql-toolbar .ql-picker-item.ql-selected .ql-fill,
+.ql-bubble .ql-toolbar .ql-picker-item.ql-selected .ql-fill,
+.ql-bubble.ql-toolbar button:hover .ql-stroke.ql-fill,
+.ql-bubble .ql-toolbar button:hover .ql-stroke.ql-fill,
+.ql-bubble.ql-toolbar button:focus .ql-stroke.ql-fill,
+.ql-bubble .ql-toolbar button:focus .ql-stroke.ql-fill,
+.ql-bubble.ql-toolbar button.ql-active .ql-stroke.ql-fill,
+.ql-bubble .ql-toolbar button.ql-active .ql-stroke.ql-fill,
+.ql-bubble.ql-toolbar .ql-picker-label:hover .ql-stroke.ql-fill,
+.ql-bubble .ql-toolbar .ql-picker-label:hover .ql-stroke.ql-fill,
+.ql-bubble.ql-toolbar .ql-picker-label.ql-active .ql-stroke.ql-fill,
+.ql-bubble .ql-toolbar .ql-picker-label.ql-active .ql-stroke.ql-fill,
+.ql-bubble.ql-toolbar .ql-picker-item:hover .ql-stroke.ql-fill,
+.ql-bubble .ql-toolbar .ql-picker-item:hover .ql-stroke.ql-fill,
+.ql-bubble.ql-toolbar .ql-picker-item.ql-selected .ql-stroke.ql-fill,
+.ql-bubble .ql-toolbar .ql-picker-item.ql-selected .ql-stroke.ql-fill {
+  fill: #fff;
+}
+.ql-bubble.ql-toolbar button:hover .ql-stroke,
+.ql-bubble .ql-toolbar button:hover .ql-stroke,
+.ql-bubble.ql-toolbar button:focus .ql-stroke,
+.ql-bubble .ql-toolbar button:focus .ql-stroke,
+.ql-bubble.ql-toolbar button.ql-active .ql-stroke,
+.ql-bubble .ql-toolbar button.ql-active .ql-stroke,
+.ql-bubble.ql-toolbar .ql-picker-label:hover .ql-stroke,
+.ql-bubble .ql-toolbar .ql-picker-label:hover .ql-stroke,
+.ql-bubble.ql-toolbar .ql-picker-label.ql-active .ql-stroke,
+.ql-bubble .ql-toolbar .ql-picker-label.ql-active .ql-stroke,
+.ql-bubble.ql-toolbar .ql-picker-item:hover .ql-stroke,
+.ql-bubble .ql-toolbar .ql-picker-item:hover .ql-stroke,
+.ql-bubble.ql-toolbar .ql-picker-item.ql-selected .ql-stroke,
+.ql-bubble .ql-toolbar .ql-picker-item.ql-selected .ql-stroke,
+.ql-bubble.ql-toolbar button:hover .ql-stroke-miter,
+.ql-bubble .ql-toolbar button:hover .ql-stroke-miter,
+.ql-bubble.ql-toolbar button:focus .ql-stroke-miter,
+.ql-bubble .ql-toolbar button:focus .ql-stroke-miter,
+.ql-bubble.ql-toolbar button.ql-active .ql-stroke-miter,
+.ql-bubble .ql-toolbar button.ql-active .ql-stroke-miter,
+.ql-bubble.ql-toolbar .ql-picker-label:hover .ql-stroke-miter,
+.ql-bubble .ql-toolbar .ql-picker-label:hover .ql-stroke-miter,
+.ql-bubble.ql-toolbar .ql-picker-label.ql-active .ql-stroke-miter,
+.ql-bubble .ql-toolbar .ql-picker-label.ql-active .ql-stroke-miter,
+.ql-bubble.ql-toolbar .ql-picker-item:hover .ql-stroke-miter,
+.ql-bubble .ql-toolbar .ql-picker-item:hover .ql-stroke-miter,
+.ql-bubble.ql-toolbar .ql-picker-item.ql-selected .ql-stroke-miter,
+.ql-bubble .ql-toolbar .ql-picker-item.ql-selected .ql-stroke-miter {
+  stroke: #fff;
+}
+@media (pointer: coarse) {
+  .ql-bubble.ql-toolbar button:hover:not(.ql-active),
+  .ql-bubble .ql-toolbar button:hover:not(.ql-active) {
+    color: #ccc;
+  }
+  .ql-bubble.ql-toolbar button:hover:not(.ql-active) .ql-fill,
+  .ql-bubble .ql-toolbar button:hover:not(.ql-active) .ql-fill,
+  .ql-bubble.ql-toolbar button:hover:not(.ql-active) .ql-stroke.ql-fill,
+  .ql-bubble .ql-toolbar button:hover:not(.ql-active) .ql-stroke.ql-fill {
+    fill: #ccc;
+  }
+  .ql-bubble.ql-toolbar button:hover:not(.ql-active) .ql-stroke,
+  .ql-bubble .ql-toolbar button:hover:not(.ql-active) .ql-stroke,
+  .ql-bubble.ql-toolbar button:hover:not(.ql-active) .ql-stroke-miter,
+  .ql-bubble .ql-toolbar button:hover:not(.ql-active) .ql-stroke-miter {
+    stroke: #ccc;
+  }
+}
+.ql-bubble {
+  box-sizing: border-box;
+}
+.ql-bubble * {
+  box-sizing: border-box;
+}
+.ql-bubble .ql-hidden {
+  display: none;
+}
+.ql-bubble .ql-out-bottom,
+.ql-bubble .ql-out-top {
+  visibility: hidden;
+}
+.ql-bubble .ql-tooltip {
+  position: absolute;
+  transform: translateY(10px);
+}
+.ql-bubble .ql-tooltip a {
+  cursor: pointer;
+  text-decoration: none;
+}
+.ql-bubble .ql-tooltip.ql-flip {
+  transform: translateY(-10px);
+}
+.ql-bubble .ql-formats {
+  display: inline-block;
+  vertical-align: middle;
+}
+.ql-bubble .ql-formats:after {
+  clear: both;
+  content: "";
+  display: table;
+}
+.ql-bubble .ql-stroke {
+  fill: none;
+  stroke: #ccc;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 2;
+}
+.ql-bubble .ql-stroke-miter {
+  fill: none;
+  stroke: #ccc;
+  stroke-miterlimit: 10;
+  stroke-width: 2;
+}
+.ql-bubble .ql-fill,
+.ql-bubble .ql-stroke.ql-fill {
+  fill: #ccc;
+}
+.ql-bubble .ql-empty {
+  fill: none;
+}
+.ql-bubble .ql-even {
+  fill-rule: evenodd;
+}
+.ql-bubble .ql-thin,
+.ql-bubble .ql-stroke.ql-thin {
+  stroke-width: 1;
+}
+.ql-bubble .ql-transparent {
+  opacity: 0.4;
+}
+.ql-bubble .ql-direction svg:last-child {
+  display: none;
+}
+.ql-bubble .ql-direction.ql-active svg:last-child {
+  display: inline;
+}
+.ql-bubble .ql-direction.ql-active svg:first-child {
+  display: none;
+}
+.ql-bubble .ql-editor blockquote {
+  border-left: 4px solid #ccc;
+  margin-bottom: 5px;
+  margin-top: 5px;
+  padding-left: 16px;
+}
+.ql-bubble .ql-editor code,
+.ql-bubble .ql-editor pre {
+  background-color: #f0f0f0;
+  border-radius: 3px;
+}
+.ql-bubble .ql-editor pre {
+  white-space: pre-wrap;
+  margin-bottom: 5px;
+  margin-top: 5px;
+  padding: 5px 10px;
+}
+.ql-bubble .ql-editor pre.ql-syntax {
+  background-color: #23241f;
+  color: #f8f8f2;
+  overflow: visible;
+}
+.ql-bubble .ql-editor img {
+  max-width: 100%;
+}
+.ql-bubble .ql-picker {
+  color: #ccc;
+  display: inline-block;
+  float: left;
+  font-size: 14px;
+  font-weight: 500;
+  height: 24px;
+  position: relative;
+  vertical-align: middle;
+}
+.ql-bubble .ql-picker-label {
+  cursor: pointer;
+  display: inline-block;
+  height: 100%;
+  padding-left: 8px;
+  padding-right: 2px;
+  position: relative;
+  width: 100%;
+}
+.ql-bubble .ql-picker-label::before {
+  display: inline-block;
+  line-height: 22px;
+}
+.ql-bubble .ql-picker-options {
+  background-color: #444;
+  display: none;
+  min-width: 100%;
+  padding: 4px 8px;
+  position: absolute;
+  white-space: nowrap;
+}
+.ql-bubble .ql-picker-options .ql-picker-item {
+  cursor: pointer;
+  display: block;
+  padding-bottom: 5px;
+  padding-top: 5px;
+}
+.ql-bubble .ql-picker.ql-expanded .ql-picker-label {
+  color: #777;
+  z-index: 2;
+}
+.ql-bubble .ql-picker.ql-expanded .ql-picker-label .ql-fill {
+  fill: #777;
+}
+.ql-bubble .ql-picker.ql-expanded .ql-picker-label .ql-stroke {
+  stroke: #777;
+}
+.ql-bubble .ql-picker.ql-expanded .ql-picker-options {
+  display: block;
+  margin-top: -1px;
+  top: 100%;
+  z-index: 1;
+}
+.ql-bubble .ql-color-picker,
+.ql-bubble .ql-icon-picker {
+  width: 28px;
+}
+.ql-bubble .ql-color-picker .ql-picker-label,
+.ql-bubble .ql-icon-picker .ql-picker-label {
+  padding: 2px 4px;
+}
+.ql-bubble .ql-color-picker .ql-picker-label svg,
+.ql-bubble .ql-icon-picker .ql-picker-label svg {
+  right: 4px;
+}
+.ql-bubble .ql-icon-picker .ql-picker-options {
+  padding: 4px 0px;
+}
+.ql-bubble .ql-icon-picker .ql-picker-item {
+  height: 24px;
+  width: 24px;
+  padding: 2px 4px;
+}
+.ql-bubble .ql-color-picker .ql-picker-options {
+  padding: 3px 5px;
+  width: 152px;
+}
+.ql-bubble .ql-color-picker .ql-picker-item {
+  border: 1px solid transparent;
+  float: left;
+  height: 16px;
+  margin: 2px;
+  padding: 0px;
+  width: 16px;
+}
+.ql-bubble .ql-picker:not(.ql-color-picker):not(.ql-icon-picker) svg {
+  position: absolute;
+  margin-top: -9px;
+  right: 0;
+  top: 50%;
+  width: 18px;
+}
+.ql-bubble
+  .ql-picker.ql-header
+  .ql-picker-label[data-label]:not([data-label=""])::before,
+.ql-bubble
+  .ql-picker.ql-font
+  .ql-picker-label[data-label]:not([data-label=""])::before,
+.ql-bubble
+  .ql-picker.ql-size
+  .ql-picker-label[data-label]:not([data-label=""])::before,
+.ql-bubble
+  .ql-picker.ql-header
+  .ql-picker-item[data-label]:not([data-label=""])::before,
+.ql-bubble
+  .ql-picker.ql-font
+  .ql-picker-item[data-label]:not([data-label=""])::before,
+.ql-bubble
+  .ql-picker.ql-size
+  .ql-picker-item[data-label]:not([data-label=""])::before {
+  content: attr(data-label);
+}
+.ql-bubble .ql-picker.ql-header {
+  width: 98px;
+}
+.ql-bubble .ql-picker.ql-header .ql-picker-label::before,
+.ql-bubble .ql-picker.ql-header .ql-picker-item::before {
+  content: "Normal";
+}
+.ql-bubble .ql-picker.ql-header .ql-picker-label[data-value="1"]::before,
+.ql-bubble .ql-picker.ql-header .ql-picker-item[data-value="1"]::before {
+  content: "Heading 1";
+}
+.ql-bubble .ql-picker.ql-header .ql-picker-label[data-value="2"]::before,
+.ql-bubble .ql-picker.ql-header .ql-picker-item[data-value="2"]::before {
+  content: "Heading 2";
+}
+.ql-bubble .ql-picker.ql-header .ql-picker-label[data-value="3"]::before,
+.ql-bubble .ql-picker.ql-header .ql-picker-item[data-value="3"]::before {
+  content: "Heading 3";
+}
+.ql-bubble .ql-picker.ql-header .ql-picker-label[data-value="4"]::before,
+.ql-bubble .ql-picker.ql-header .ql-picker-item[data-value="4"]::before {
+  content: "Heading 4";
+}
+.ql-bubble .ql-picker.ql-header .ql-picker-label[data-value="5"]::before,
+.ql-bubble .ql-picker.ql-header .ql-picker-item[data-value="5"]::before {
+  content: "Heading 5";
+}
+.ql-bubble .ql-picker.ql-header .ql-picker-label[data-value="6"]::before,
+.ql-bubble .ql-picker.ql-header .ql-picker-item[data-value="6"]::before {
+  content: "Heading 6";
+}
+.ql-bubble .ql-picker.ql-header .ql-picker-item[data-value="1"]::before {
+  font-size: 2em;
+}
+.ql-bubble .ql-picker.ql-header .ql-picker-item[data-value="2"]::before {
+  font-size: 1.5em;
+}
+.ql-bubble .ql-picker.ql-header .ql-picker-item[data-value="3"]::before {
+  font-size: 1.17em;
+}
+.ql-bubble .ql-picker.ql-header .ql-picker-item[data-value="4"]::before {
+  font-size: 1em;
+}
+.ql-bubble .ql-picker.ql-header .ql-picker-item[data-value="5"]::before {
+  font-size: 0.83em;
+}
+.ql-bubble .ql-picker.ql-header .ql-picker-item[data-value="6"]::before {
+  font-size: 0.67em;
+}
+.ql-bubble .ql-picker.ql-font {
+  width: 108px;
+}
+.ql-bubble .ql-picker.ql-font .ql-picker-label::before,
+.ql-bubble .ql-picker.ql-font .ql-picker-item::before {
+  content: "Sans Serif";
+}
+.ql-bubble .ql-picker.ql-font .ql-picker-label[data-value="serif"]::before,
+.ql-bubble .ql-picker.ql-font .ql-picker-item[data-value="serif"]::before {
+  content: "Serif";
+}
+.ql-bubble .ql-picker.ql-font .ql-picker-label[data-value="monospace"]::before,
+.ql-bubble .ql-picker.ql-font .ql-picker-item[data-value="monospace"]::before {
+  content: "Monospace";
+}
+.ql-bubble .ql-picker.ql-font .ql-picker-item[data-value="serif"]::before {
+  font-family: Georgia, Times New Roman, serif;
+}
+.ql-bubble .ql-picker.ql-font .ql-picker-item[data-value="monospace"]::before {
+  font-family: Monaco, Courier New, monospace;
+}
+.ql-bubble .ql-picker.ql-size {
+  width: 98px;
+}
+.ql-bubble .ql-picker.ql-size .ql-picker-label::before,
+.ql-bubble .ql-picker.ql-size .ql-picker-item::before {
+  content: "Normal";
+}
+.ql-bubble .ql-picker.ql-size .ql-picker-label[data-value="small"]::before,
+.ql-bubble .ql-picker.ql-size .ql-picker-item[data-value="small"]::before {
+  content: "Small";
+}
+.ql-bubble .ql-picker.ql-size .ql-picker-label[data-value="large"]::before,
+.ql-bubble .ql-picker.ql-size .ql-picker-item[data-value="large"]::before {
+  content: "Large";
+}
+.ql-bubble .ql-picker.ql-size .ql-picker-label[data-value="huge"]::before,
+.ql-bubble .ql-picker.ql-size .ql-picker-item[data-value="huge"]::before {
+  content: "Huge";
+}
+.ql-bubble .ql-picker.ql-size .ql-picker-item[data-value="small"]::before {
+  font-size: 10px;
+}
+.ql-bubble .ql-picker.ql-size .ql-picker-item[data-value="large"]::before {
+  font-size: 18px;
+}
+.ql-bubble .ql-picker.ql-size .ql-picker-item[data-value="huge"]::before {
+  font-size: 32px;
+}
+.ql-bubble .ql-color-picker.ql-background .ql-picker-item {
+  background-color: #fff;
+}
+.ql-bubble .ql-color-picker.ql-color .ql-picker-item {
+  background-color: #000;
+}
+.ql-bubble .ql-toolbar .ql-formats {
+  margin: 8px 12px 8px 0px;
+}
+.ql-bubble .ql-toolbar .ql-formats:first-child {
+  margin-left: 12px;
+}
+.ql-bubble .ql-color-picker svg {
+  margin: 1px;
+}
+.ql-bubble .ql-color-picker .ql-picker-item.ql-selected,
+.ql-bubble .ql-color-picker .ql-picker-item:hover {
+  border-color: #fff;
+}
+.ql-bubble .ql-tooltip {
+  background-color: #444;
+  border-radius: 25px;
+  color: #fff;
+}
+.ql-bubble .ql-tooltip-arrow {
+  border-left: 6px solid transparent;
+  border-right: 6px solid transparent;
+  content: " ";
+  display: block;
+  left: 50%;
+  margin-left: -6px;
+  position: absolute;
+}
+.ql-bubble .ql-tooltip:not(.ql-flip) .ql-tooltip-arrow {
+  border-bottom: 6px solid #444;
+  top: -6px;
+}
+.ql-bubble .ql-tooltip.ql-flip .ql-tooltip-arrow {
+  border-top: 6px solid #444;
+  bottom: -6px;
+}
+.ql-bubble .ql-tooltip.ql-editing .ql-tooltip-editor {
+  display: block;
+}
+.ql-bubble .ql-tooltip.ql-editing .ql-formats {
+  visibility: hidden;
+}
+.ql-bubble .ql-tooltip-editor {
+  display: none;
+}
+.ql-bubble .ql-tooltip-editor input[type="text"] {
+  background: transparent;
+  border: none;
+  color: #fff;
+  font-size: 13px;
+  height: 100%;
+  outline: none;
+  padding: 10px 20px;
+  position: absolute;
+  width: 100%;
+}
+.ql-bubble .ql-tooltip-editor a {
+  top: 10px;
+  position: absolute;
+  right: 20px;
+}
+.ql-bubble .ql-tooltip-editor a:before {
+  color: #ccc;
+  content: "\D7";
+  font-size: 16px;
+  font-weight: bold;
+}
+.ql-container.ql-bubble:not(.ql-disabled) a {
+  position: relative;
+  white-space: nowrap;
+}
+.ql-container.ql-bubble:not(.ql-disabled) a::before {
+  background-color: #444;
+  border-radius: 15px;
+  top: -5px;
+  font-size: 12px;
+  color: #fff;
+  content: attr(href);
+  font-weight: normal;
+  overflow: hidden;
+  padding: 5px 15px;
+  text-decoration: none;
+  z-index: 1;
+}
+.ql-container.ql-bubble:not(.ql-disabled) a::after {
+  border-top: 6px solid #444;
+  border-left: 6px solid transparent;
+  border-right: 6px solid transparent;
+  top: 0;
+  content: " ";
+  height: 0;
+  width: 0;
+}
+.ql-container.ql-bubble:not(.ql-disabled) a::before,
+.ql-container.ql-bubble:not(.ql-disabled) a::after {
+  left: 0;
+  margin-left: 50%;
+  position: absolute;
+  transform: translate(-50%, -100%);
+  transition: visibility 0s ease 200ms;
+  visibility: hidden;
+}
+.ql-container.ql-bubble:not(.ql-disabled) a:hover::before,
+.ql-container.ql-bubble:not(.ql-disabled) a:hover::after {
+  visibility: visible;
+}
+</style>
+<style lang="scss">
+.m_collaborativeEditor {
+  .ql-toolbar .ql-formats:first-child::before {
+    /* content: "options :"; */
+    position: relative;
+    display: inline-block;
+    float: left;
+    font-size: 1rem;
+    vertical-align: middle;
+    font-weight: 400;
+    /* background-color: #333; */
+    /* left: -8px; */
+    margin: 0;
+    margin-top: 4px;
+    font-weight: 400;
+    /* padding: 11px; */
+    /* margin-bottom: 10px; */
+    /* text-decoration: underline; */
+    font-size: 0.8rem;
+    /* text-transform: uppercase; */
+    /* margin-right: 15px; */
+    /* font-style: italic; */
   }
 
-  &.is--disabled {
-    cursor: not-allowed;
-    .ql-toolbar {
-      background-color: var(--c-toolbar-warning-bg);
-      color: ar(--c-toolbar-warning-c);
-
-      &::before {
-        display: block;
-      }
-
-      html[lang="en"] body[data-mode="live"] &::before {
-        content: "Connection lost, attempting to reconnect…";
-      }
-      html[lang="fr"] body[data-mode="live"] &::before {
-        content: "Connexion au serveur perdue, reconnexion en cours…";
-      }
-      > * {
-        display: none !important;
-      }
-    }
-    // border-left: 2px solid rgba(255, 0, 0, 0.5);
+  html[lang="fr"] .ql-picker.ql-header .ql-picker-label[data-value="1"]::before,
+  html[lang="fr"] .ql-picker.ql-header .ql-picker-item[data-value="1"]::before {
+    content: "Titre 1";
+  }
+  html[lang="fr"] .ql-picker.ql-header .ql-picker-label[data-value="2"]::before,
+  html[lang="fr"] .ql-picker.ql-header .ql-picker-item[data-value="2"]::before {
+    content: "Titre 2";
+  }
+  html[lang="fr"] .ql-picker.ql-header .ql-picker-label[data-value="3"]::before,
+  html[lang="fr"] .ql-picker.ql-header .ql-picker-item[data-value="3"]::before {
+    content: "Titre 3";
+  }
+  html[lang="fr"] .ql-picker.ql-header .ql-picker-label[data-value="4"]::before,
+  html[lang="fr"] .ql-picker.ql-header .ql-picker-item[data-value="4"]::before {
+    content: "Titre 4";
   }
 
-  &.is--receptiveToDrop {
-    .ql-editor {
-      background-color: #f9f9f9;
-    }
-    &.is--dragover {
-      .ql-editor {
-        > * {
-          // background-image: linear-gradient(
-          //   90deg,
-          //   #ccc,
-          //   #ccc 50%,
-          //   transparent 0,
-          //   transparent
-          // );
-
-          // background-size: 250% 4px;
-        }
-      }
-    }
+  .ql-container.ql-bubble:not(.ql-disabled) a::before {
+    line-height: 1.2;
   }
 
   .ql-tooltip {
-    z-index: 1;
     border-radius: 4px;
-    background-color: var(--c-popup-bg);
-    color: var(--c-popup-c);
-    border: 0px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-
-    .ql-preview {
-      color: var(--c-popup-c);
-    }
-
-    input[type="text"] {
-      color: black;
-      border: 0px;
-    }
-    .ql-action {
-      font-weight: normal;
-      color: var(--c-popup-c);
-    }
-
-    a {
-      color: white;
-      text-decoration: underline;
-    }
-  }
-
-  .ql-container {
-    margin: 0 auto;
-
-    &.ql-snow {
-      border: 0;
-    }
+    // transition: all 0.8s cubic-bezier(0.19, 1, 0.22, 1);
   }
 
   .ql-editor {
-    position: relative;
-    padding: 0;
+    padding-left: 0;
+    padding-top: 0;
+    padding-bottom: 0;
     overflow: visible;
-    height: 100%;
-    overflow-y: auto;
 
-    // caret-color: var(--active-color);
-    line-height: inherit;
-    padding: var(--spacing) calc(var(--spacing) * 2) 250px;
-
-    transition: all 1s cubic-bezier(0.19, 1, 0.22, 1);
-
-    &[contenteditable="false"] {
-      > *:not(.is--focused) {
-        opacity: 0.5;
-        cursor: default;
-      }
+    &::after {
+      // content: ".";
+      color: #ccc;
     }
+  }
 
-    > * {
-      position: relative;
-      z-index: 1;
+  &.quillWrapper {
+  }
 
-      // attention : à cause du drop il vaut mieux ne pas utiliser de margin
-      // sinon pas moyen de savoir sur quel item c’est droppé
-      margin: 0 auto;
-      padding: 0;
-      max-width: var(--size-column-width);
+  &.quillWrapper.is--focused {
+    // color: rgba(40, 152, 217, 1);
 
-      background-position: 0 calc(100% - 3px);
-      background-repeat: no-repeat;
-      background-size: 250% 1px;
-      transition: transform 0.5s linear;
-
-      // background-image: linear-gradient(
-      //   90deg,
-      //   transparent,
-      //   transparent 50%,
-      //   transparent 0,
-      //   transparent
-      // );
-      // background-image: linear-gradient(
-      //   90deg,
-      //   #ddd,
-      //   #ddd 50%,
-      //   transparent 0,
-      //   transparent
-      // );
-
-      &.ql-mediacard {
-        transform-origin: center top;
-        border-radius: 0px;
-        // margin-top: var(--spacing);
-        // margin-bottom: var(--spacing);
-        padding: calc(var(--spacing)) 0;
-        // margin-left: calc(-1 * var(--spacing) / 2);
-        // margin-right: calc(-1 * var(--spacing) / 2);
-
-        .ql-mediacard--background {
-          content: "";
-          position: absolute;
-          display: block;
-          top: calc(var(--spacing) / 2);
-          left: calc(-1 * var(--spacing) / 2);
-          right: calc(-1 * var(--spacing) / 2);
-          bottom: calc(var(--spacing) / 1);
-
-          // background-color: rgba(0, 0, 0, 0.2);
-          border: 2px solid var(--active-color);
-          pointer-events: none;
-
-          opacity: 0;
-          z-index: 0;
-        }
-
-        img {
-          display: block;
-        }
-        video {
-          display: block;
-          &:focus {
-            outline: 0;
-          }
-        }
-
-        figcaption {
-          text-align: center;
-          font-size: 75%;
-          // font-weight: 600;
-          color: #444;
-          margin: 0 auto;
-          padding: 0.4em 0;
-          max-width: 33ch;
-          line-height: 2;
-          input {
-            text-align: center;
-            background-color: #d9d9d9;
-            border: 0;
-            border-radius: 4px;
-
-            &:focus {
-              background-color: #eee;
-            }
-          }
-        }
-
-        &:hover {
-          // background-color: #eee;
-          // box-shadow: 0 0 0 1px #fff, 0 0 0 2px var(--active-color);
-        }
-
-        &.is--focused {
-          // outline: 0;
-          // box-shadow: 0 0 0 2px #fff, 0 0 0 4px var(--active-color);
-          .ql-mediacard--background {
-            opacity: 1;
-          }
-        }
-      }
-
-      @keyframes scale-in {
-        0% {
-          opacity: 0;
-          // max-height: 0px;
-          transform: scale(1, 0.6);
-        }
-        100% {
-          opacity: 1;
-          // max-height: 50vh;
-          transform: scale(1, 1);
-        }
-      }
-      @keyframes scale-out {
-        0% {
-          opacity: 1;
-          // max-height: 50vh;
-          transform: scale(1, 1);
-        }
-        100% {
-          opacity: 0;
-          // max-height: 0px;
-          height: 0;
-          margin-top: 0;
-          margin-bottom: 0;
-          padding-top: 0;
-          padding-bottom: 0;
-          transform: scale(1, 0.6);
-        }
-      }
-
-      // &::before {
-      //   content: "";
-      //   position: absolute;
-      //   left: 0;
-      //   right: 0;
-      //   bottom: 0.15em;
-      //   height: 1px;
-      //   z-index: 0;
-      //   border-bottom: 1px solid #e9e9e9;
-      //   mix-blend-mode: darken;
-      // }
-    }
-    > img {
+    .ql-tooltip.ql-hidden {
+      position: absolute;
+      top: 100% !important;
+      left: 0 !important;
+      margin-top: var(--spacing);
       display: block;
+      z-index: 10;
+      transform: translateY(0px);
+
+      .ql-tooltip-arrow {
+        display: none;
+      }
+    }
+
+    &::after {
+      // content: "•";
+      // display: block;
+      // color: var(--active-color);
     }
   }
 
   .ql-editor.ql-blank::before {
-    display: block;
-
-    // position: relative;
-    max-width: var(--size-column-width);
-    margin: 0 auto;
-    left: 20px;
-    color: rgba(0, 0, 0, 0.6);
+    left: 0;
+    color: rgba(0, 0, 0, 0.4);
     font-style: normal;
-
-    &:hover {
-      color: black;
-    }
   }
 
-  .mediaWriteupContent {
+  .mediaTextContent {
     color: inherit;
     font-family: inherit;
     overflow: visible;
-    width: 100%;
 
     > *:first-child {
       margin-top: 0;
@@ -903,441 +1837,6 @@ html[lang="fr"] .ql-tooltip::before {
         margin-top: 0;
       }
     }
-
-    // https://www.gridlover.net/try
-    // fz : 16px
-    // lh : 1.41
-    // scale : 1.31
-
-    font-size: 1.1em;
-    line-height: 1.4375em;
-    // max-width: 773px;
-    // margin: auto;
-
-    h1,
-    .h1 {
-      font-size: 2.25em;
-      line-height: 1.27777778em;
-      margin-top: 0.319444445em;
-      margin-bottom: 0em;
-    }
-    h2,
-    .h2 {
-      font-size: 1.6875em;
-      line-height: 1.7037037em;
-      margin-top: 0.85185185em;
-      margin-bottom: 0em;
-    }
-    h3,
-    .h3 {
-      font-size: 1em;
-      line-height: 1.4375em;
-      margin-top: 1.4375em;
-      margin-bottom: 0em;
-    }
-    h4,
-    .h4 {
-      font-size: 1em;
-      line-height: 1.4375em;
-      margin-top: 1.4375em;
-      margin-bottom: 0em;
-    }
-    h5,
-    .h5 {
-      font-size: 1em;
-      line-height: 1.4375em;
-      margin-top: 1.4375em;
-      margin-bottom: 0em;
-    }
-    p,
-    ul,
-    ol,
-    pre,
-    table,
-    blockquote {
-      margin-top: 0em;
-      margin-bottom: 0em;
-    }
-    ul ul,
-    ol ol,
-    ul ol,
-    ol ul {
-      margin-top: 0em;
-      margin-bottom: 0em;
-    }
-
-    /* Let's make sure all's aligned */
-    hr,
-    .hr {
-      border: 1px solid;
-      margin: -1px 0;
-    }
-    // a,
-    // b,
-    // i,
-    // strong,
-    // em,
-    // small,
-    // code {
-    //   line-height: 0;
-    // }
-    // sub,
-    // sup {
-    //   line-height: 0;
-    //   position: relative;
-    //   vertical-align: baseline;
-    // }
-    sup {
-      top: -0.5em;
-    }
-    sub {
-      bottom: -0.25em;
-    }
-    // gridlover end
-
-    h1,
-    h2 {
-      & + h2 {
-        margin-top: 0;
-      }
-    }
-
-    ol,
-    ul {
-      padding: calc(var(--spacing) / 2) 1.5em;
-      > li {
-        padding-left: 0em;
-      }
-    }
-    ul > li {
-      list-style-type: disc;
-
-      &::before {
-        content: none;
-        // content: "\2022";
-      }
-    }
-
-    li::before {
-      display: inline-block;
-      white-space: nowrap;
-      width: 1.2em;
-    }
-
-    ol li {
-      counter-reset: list-1 list-2 list-3 list-4 list-5 list-6 list-7 list-8
-        list-9;
-      counter-increment: list-0;
-    }
-    ol li:before {
-      content: counter(list-0, decimal) ". ";
-      font-size: 75%;
-      // font-weight: 600;
-    }
-
-    strong,
-    b {
-      // font-weight: 600;
-    }
-
-    p > a {
-      text-decoration: underline;
-      text-decoration-style: solid;
-      color: var(--active-color);
-      // font-weight: 600;
-    }
-
-    h1,
-    h2 {
-      -webkit-hyphens: auto;
-      -ms-hyphens: auto;
-      hyphens: auto;
-
-      strong,
-      b {
-        // font-weight: 800;
-      }
-    }
-
-    h1 {
-      // font-weight: 600;
-    }
-
-    h2,
-    h3,
-    h4 {
-      // font-weight: 600;
-    }
-
-    blockquote {
-      border-left: 4px solid #ccc;
-      margin-bottom: 5px;
-      margin-top: 5px;
-      padding-left: 16px;
-
-      > *:first-child {
-        margin-top: 0;
-      }
-    }
-
-    code,
-    pre {
-      background-color: #f0f0f0;
-      border-radius: 3px;
-    }
-    pre {
-      white-space: pre-wrap;
-      margin-bottom: 5px;
-      margin-top: 5px;
-      padding: 5px 10px;
-    }
-    code {
-      font-size: 85%;
-      padding: 2px 4px;
-    }
-  }
-
-  ._customCaret {
-    position: absolute;
-    width: 2px;
-    height: 1em;
-    top: 0;
-    left: 0;
-    background-color: green;
-    z-index: 1;
-
-    animation: 1s blink step-end infinite;
-  }
-
-  @keyframes blink {
-    from,
-    to {
-      opacity: 0;
-    }
-    50% {
-      opacity: 1;
-    }
-  }
-
-  .ql-cursor-flag {
-    display: none;
-  }
-
-  .ql-toolbar.ql-snow .ql-formats {
-    // display: block;
-    // margin-right: 0 !important;
-  }
-  .ql-snow.ql-toolbar button,
-  .ql-snow .ql-toolbar button {
-    // display: block;
-    // float: none;
-  }
-
-  .ql-toolbar.ql-snow {
-    position: relative;
-    // top: 30%;
-    // left: 10px;
-
-    // width: 100%;
-    // flex-flow: row wrap;
-    // width: auto;
-    // margin: 0 auto;
-    color: var(--c-popup-c);
-    /* border-left: 0; */
-    // border: none;
-    // border-radius: 0 0 4px 4px;
-    // border-radius: 4px;
-    // top: 121px;
-    z-index: 10;
-    background-color: var(--c-popup-bg);
-    border-radius: 4px;
-
-    // &::before {
-    //   content: "";
-    //   display: block;
-    //   position: absolute;
-    //   top: 0;
-    //   bottom: 0;
-    //   left: 0;
-    //   right: 0;
-    //   z-index: -1;
-    // }
-
-    .ql-fill,
-    .ql-stroke.ql-fill {
-      fill: currentColor;
-    }
-
-    .ql-stroke {
-      stroke: currentColor;
-    }
-  }
-
-  .ql-snow.ql-toolbar button:hover .ql-stroke,
-  .ql-snow .ql-toolbar button:hover .ql-stroke,
-  .ql-snow.ql-toolbar button:focus .ql-stroke,
-  .ql-snow .ql-toolbar button:focus .ql-stroke,
-  .ql-snow.ql-toolbar button.ql-active .ql-stroke,
-  .ql-snow .ql-toolbar button.ql-active .ql-stroke,
-  .ql-snow.ql-toolbar .ql-picker-label:hover .ql-stroke,
-  .ql-snow .ql-toolbar .ql-picker-label:hover .ql-stroke,
-  .ql-snow.ql-toolbar .ql-picker-label.ql-active .ql-stroke,
-  .ql-snow .ql-toolbar .ql-picker-label.ql-active .ql-stroke,
-  .ql-snow.ql-toolbar .ql-picker-item:hover .ql-stroke,
-  .ql-snow .ql-toolbar .ql-picker-item:hover .ql-stroke,
-  .ql-snow.ql-toolbar .ql-picker-item.ql-selected .ql-stroke,
-  .ql-snow .ql-toolbar .ql-picker-item.ql-selected .ql-stroke,
-  .ql-snow.ql-toolbar button:hover .ql-stroke-miter,
-  .ql-snow .ql-toolbar button:hover .ql-stroke-miter,
-  .ql-snow.ql-toolbar button:focus .ql-stroke-miter,
-  .ql-snow .ql-toolbar button:focus .ql-stroke-miter,
-  .ql-snow.ql-toolbar button.ql-active .ql-stroke-miter,
-  .ql-snow .ql-toolbar button.ql-active .ql-stroke-miter,
-  .ql-snow.ql-toolbar .ql-picker-label:hover .ql-stroke-miter,
-  .ql-snow .ql-toolbar .ql-picker-label:hover .ql-stroke-miter,
-  .ql-snow.ql-toolbar .ql-picker-label.ql-active .ql-stroke-miter,
-  .ql-snow .ql-toolbar .ql-picker-label.ql-active .ql-stroke-miter,
-  .ql-snow.ql-toolbar .ql-picker-item:hover .ql-stroke-miter,
-  .ql-snow .ql-toolbar .ql-picker-item:hover .ql-stroke-miter,
-  .ql-snow.ql-toolbar .ql-picker-item.ql-selected .ql-stroke-miter,
-  .ql-snow .ql-toolbar .ql-picker-item.ql-selected .ql-stroke-miter {
-    stroke: #0a997f;
-  }
-
-  .ql-snow.ql-toolbar button:hover,
-  .ql-snow .ql-toolbar button:hover,
-  .ql-snow.ql-toolbar button:focus,
-  .ql-snow .ql-toolbar button:focus,
-  .ql-snow.ql-toolbar button.ql-active,
-  .ql-snow .ql-toolbar button.ql-active,
-  .ql-snow.ql-toolbar .ql-picker-label:hover,
-  .ql-snow .ql-toolbar .ql-picker-label:hover,
-  .ql-snow.ql-toolbar .ql-picker-label.ql-active,
-  .ql-snow .ql-toolbar .ql-picker-label.ql-active,
-  .ql-snow.ql-toolbar .ql-picker-item:hover,
-  .ql-snow .ql-toolbar .ql-picker-item:hover,
-  .ql-snow.ql-toolbar .ql-picker-item.ql-selected,
-  .ql-snow .ql-toolbar .ql-picker-item.ql-selected {
-    color: #0a997f;
-  }
-
-  .ql-snow.ql-toolbar button:hover .ql-fill,
-  .ql-snow .ql-toolbar button:hover .ql-fill,
-  .ql-snow.ql-toolbar button:focus .ql-fill,
-  .ql-snow .ql-toolbar button:focus .ql-fill,
-  .ql-snow.ql-toolbar button.ql-active .ql-fill,
-  .ql-snow .ql-toolbar button.ql-active .ql-fill,
-  .ql-snow.ql-toolbar .ql-picker-label:hover .ql-fill,
-  .ql-snow .ql-toolbar .ql-picker-label:hover .ql-fill,
-  .ql-snow.ql-toolbar .ql-picker-label.ql-active .ql-fill,
-  .ql-snow .ql-toolbar .ql-picker-label.ql-active .ql-fill,
-  .ql-snow.ql-toolbar .ql-picker-item:hover .ql-fill,
-  .ql-snow .ql-toolbar .ql-picker-item:hover .ql-fill,
-  .ql-snow.ql-toolbar .ql-picker-item.ql-selected .ql-fill,
-  .ql-snow .ql-toolbar .ql-picker-item.ql-selected .ql-fill,
-  .ql-snow.ql-toolbar button:hover .ql-stroke.ql-fill,
-  .ql-snow .ql-toolbar button:hover .ql-stroke.ql-fill,
-  .ql-snow.ql-toolbar button:focus .ql-stroke.ql-fill,
-  .ql-snow .ql-toolbar button:focus .ql-stroke.ql-fill,
-  .ql-snow.ql-toolbar button.ql-active .ql-stroke.ql-fill,
-  .ql-snow .ql-toolbar button.ql-active .ql-stroke.ql-fill,
-  .ql-snow.ql-toolbar .ql-picker-label:hover .ql-stroke.ql-fill,
-  .ql-snow .ql-toolbar .ql-picker-label:hover .ql-stroke.ql-fill,
-  .ql-snow.ql-toolbar .ql-picker-label.ql-active .ql-stroke.ql-fill,
-  .ql-snow .ql-toolbar .ql-picker-label.ql-active .ql-stroke.ql-fill,
-  .ql-snow.ql-toolbar .ql-picker-item:hover .ql-stroke.ql-fill,
-  .ql-snow .ql-toolbar .ql-picker-item:hover .ql-stroke.ql-fill,
-  .ql-snow.ql-toolbar .ql-picker-item.ql-selected .ql-stroke.ql-fill,
-  .ql-snow .ql-toolbar .ql-picker-item.ql-selected .ql-stroke.ql-fill {
-    fill: #0a997f;
-  }
-
-  .ql-editor {
-    counter-reset: listCounter;
-
-    & > * {
-      counter-increment: listCounter;
-
-      &::before {
-        content: "";
-
-        // font-family: "IBM Plex Sans", "OutputSansVariable";
-        position: absolute;
-        top: 2px;
-        right: 100%;
-        margin-right: var(--spacing);
-        margin-right: 0;
-
-        font-size: 0.6rem;
-        // font-weight: 600;
-        text-align: center;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-        overflow: hidden;
-        // display: inline-block;
-        // float: left;
-        width: var(--spacing);
-        max-width: 100px;
-        padding-right: calc(var(--spacing) / 2);
-        color: transparent;
-        color: hsl(210, 11%, 78%);
-
-        transition: all 0.4s cubic-bezier(0.19, 1, 0.22, 1);
-
-        content: counter(listCounter);
-        // font-size: 0.8rem;
-        // color: var(--active-color);
-        // color: hsl(210, 11%, 58%);
-      }
-
-      &.is--focused,
-      &.is--dragover {
-        &::before {
-          content: counter(listCounter);
-          // font-size: 0.8rem;
-          color: var(--active-color);
-          color: hsl(210, 11%, 58%);
-        }
-      }
-
-      &::after {
-        content: "";
-        display: block;
-        width: 100%;
-        height: 0;
-        margin: 0;
-        background-color: var(--color-rouge_vif);
-      }
-
-      &.is--dragover {
-        &::after {
-          margin: var(--spacing) 0;
-          height: 4px;
-          transition: all 0.4s cubic-bezier(0.19, 1, 0.22, 1);
-        }
-      }
-    }
-  }
-
-  ._button_removeMedia {
-    position: absolute;
-    top: calc(var(--spacing) / 2);
-    // top: 0;
-    right: calc(var(--spacing) / -2);
-    background: var(--color-noir);
-    color: white;
-    text-decoration: none;
-    line-height: 0;
-    width: 1.5em;
-    height: 1.5em;
-    padding: 0;
-    border-radius: 4px;
-    border-top-right-radius: 0;
-    border-top-left-radius: 0;
-    border-bottom-right-radius: 0;
-    text-align: center;
-
-    // border-bottom-left-radius: 2px;
   }
 }
 </style>

@@ -30,7 +30,10 @@
 
           <div :title="f.name" class="m_uploadFile--filename">{{ f.name }}</div>
           <div class="m_uploadFile--size">{{ formatBytes(f.size) }}</div>
-          <div class="m_uploadFile--action" v-if="files_to_upload_meta.hasOwnProperty(f.name)">
+          <div
+            class="m_uploadFile--action"
+            v-if="files_to_upload_meta.hasOwnProperty(f.name)"
+          >
             <button
               type="button"
               class="buttonLink"
@@ -42,16 +45,16 @@
               "
             >
               <template v-if="!files_to_upload_meta.hasOwnProperty(f.name)">
-                {{
-                $t("import")
-                }}
+                {{ $t("import") }}
               </template>
               <template
                 v-else-if="files_to_upload_meta[f.name].status === 'success'"
-              >{{ $t("sent") }}</template>
+                >{{ $t("sent") }}</template
+              >
               <template
                 v-else-if="files_to_upload_meta[f.name].status === 'failed'"
-              >{{ $t("retry") }}</template>
+                >{{ $t("retry") }}</template
+              >
             </button>
           </div>
         </div>

@@ -2,7 +2,7 @@
   <div class="m_addMedias">
     <div
       class="menu_encart"
-      :class="{ 'is--showing_options' : show_addmedia_options }"
+      :class="{ 'is--showing_options': show_addmedia_options }"
       :style="addMediaStyles"
     >
       <!-- @mouseenter="!is_touch && show_drop_container === false ? show_addmedia_options = true : ''" -->
@@ -15,7 +15,10 @@
           :disabled="read_only"
         >
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40">
-            <path d="M26.51,12V28h-13V12h13m1-1h-15V29h15V11Z" style="fill: currentColor" />
+            <path
+              d="M26.51,12V28h-13V12h13m1-1h-15V29h15V11Z"
+              style="fill: currentColor"
+            />
             <line
               x1="15.21"
               y1="14.41"
@@ -76,15 +79,17 @@
       <button
         type="button"
         class="menu_encart--button button button-round margin-bottom-small padding-none bg-noir c-blanc button_addMedia m_addMedias--buttons--openHideButton"
-        :class="{ 
-          'is--shown' : show_addmedia_options, 
-          'is--dragover' : show_drop_container,
+        :class="{
+          'is--shown': show_addmedia_options,
+          'is--dragover': show_drop_container
         }"
         :style="addMediaStyles"
         @click="show_addmedia_options = !show_addmedia_options"
         @drop="dropHandler($event)"
       >
-        <span class="text_label always_show" v-if="show_drop_container">Déposez vos fichiers ici</span>
+        <span class="text_label always_show" v-if="show_drop_container"
+          >Déposez vos fichiers ici</span
+        >
         <!-- TODO scroll to now au click -->
         <svg
           version="1.1"
@@ -329,7 +334,6 @@ export default {
       flex-flow: row wrap;
       justify-content: flex-end;
 
-      // pointer-events: none;
       > * {
         display: block;
         position: relative;

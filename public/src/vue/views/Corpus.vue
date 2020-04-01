@@ -82,11 +82,11 @@
       @wheel="/* onMousewheel */"
       @scroll="/* onTimelineScroll */"
     >
-      <div class="m_tags--alltags">
+      <!-- <div class="m_tags--alltags">
         <h3 v-for="{ tag } in tags_with_fragments" :key="tag">
           {{ tag }}
         </h3>
-      </div>
+      </div> -->
       <div class="m_tags--allfragments">
         <div
           v-for="{ tag, fragments } in tags_with_fragments"
@@ -94,17 +94,29 @@
           class="m_tags--allfragments--tagfragment"
         >
           <div class="m_tags--allfragments--tagfragment--tag">
-            <h2>{{ tag }}</h2>
+            <div>
+              <button type="button" @click="toggleShowingFragmentsForTag(tag)">
+                <h2>
+                  {{ tag }}&nbsp;<small>({{ fragments.length }})</small>
+                </h2>
+              </button>
+            </div>
           </div>
-          <div class="m_tags--allfragments--tagfragment--fragments">
-            <Fragment
-              v-for="fragment in fragments"
-              :key="fragment.metaFileName"
-              :medias="medias"
-              :fragment="fragment"
-              :slugFolderName="corpus.slugFolderName"
-            />
-          </div>
+
+          <transition name="slide-fade">
+            <div
+              class="m_tags--allfragments--tagfragment--fragments"
+              v-if="showFragmentsFor(tag)"
+            >
+              <Fragment
+                v-for="fragment in fragments"
+                :key="fragment.metaFileName"
+                :medias="medias"
+                :fragment="fragment"
+                :slugFolderName="corpus.slugFolderName"
+              />
+            </div>
+          </transition>
         </div>
       </div>
     </div>
@@ -126,7 +138,8 @@ export default {
       new_fragment_name: "",
       new_fragment_tag: "",
       new_fragment_tag_custom: "",
-      translation: 0
+      translation: 0,
+      show_fragments_for: {}
     };
   },
   created() {},
@@ -192,7 +205,6 @@ export default {
 
       const el = this.$refs.corpus_content;
 
-      debugger;
       const timeline_width = el.children[0].offsetWidth - el.offsetWidth;
 
       new_translation = Math.max(new_translation, 0);
@@ -225,12 +237,12 @@ export default {
         }
       }
 
-      let tag = this.new_fragment_tag;
-      if (tag === "") {
-        tag = this.new_fragment_tag_custom;
+      let tag_name = this.new_fragment_tag;
+      if (tag_name === "") {
+        tag_name = this.new_fragment_tag_custom;
       }
 
-      tag = [{ name: tag }];
+      const tags = [{ name: tag_name }];
 
       this.$root.createMedia({
         slugFolderName: this.corpus.slugFolderName,
@@ -238,7 +250,7 @@ export default {
         additionalMeta: {
           type: "fragment",
           title,
-          tag,
+          tags,
           medias_slugs: []
         }
       });
@@ -247,6 +259,19 @@ export default {
       this.new_fragment_tag = "";
       this.new_fragment_tag_custom = "";
       this.show_create_fragment = false;
+    },
+
+    showFragmentsFor(tag) {
+      if (!this.show_fragments_for.hasOwnProperty(tag)) return false;
+      return this.show_fragments_for[tag];
+    },
+    toggleShowingFragmentsForTag(tag) {
+      console.log("Corpus • METHODS: toggleShowingFragmentsForTag");
+
+      const current_opt = this.show_fragments_for.hasOwnProperty(tag)
+        ? this.show_fragments_for[tag]
+        : false;
+      this.$set(this.show_fragments_for, tag, !current_opt);
     }
   }
 };
@@ -270,8 +295,6 @@ export default {
 .m_corpus--topbar {
   // position: absolute;
   margin: calc(var(--spacing) * 2) calc(var(--spacing) * 2);
-  pointer-events: none;
-  pointer-events: auto;
   z-index: 1;
 
   max-width: 66ch;
@@ -312,15 +335,48 @@ export default {
 .m_tags--allfragments--tagfragment {
   display: flex;
   flex-flow: row nowrap;
+
   // min-width: max-content;
   // overflow-y: auto;
+
+  &::after {
+    content: "";
+    display: block;
+    height: calc(100% - var(--spacing) * 2);
+    margin: calc(var(--spacing) * 1) 0;
+    padding-left: var(--spacing);
+    border-right: 1px solid black;
+  }
 }
 
 .m_tags--allfragments--tagfragment--tag {
   // position: absolute;
-  transform: rotate(-90deg);
   display: flex;
   align-items: center;
+  justify-content: center;
+  width: 80px;
+
+  button {
+    background-color: transparent;
+    padding: 0;
+    border-bottom: 0.2em solid transparent;
+
+    &:hover,
+    &:active,
+    &:focus {
+      outline: 0;
+      border-bottom: 0.2em solid black;
+    }
+  }
+
+  h2 {
+    margin: 0;
+    white-space: nowrap;
+  }
+
+  > * {
+    transform: rotate(-90deg);
+  }
 }
 .m_tags--allfragments--tagfragment--fragments {
   display: flex;

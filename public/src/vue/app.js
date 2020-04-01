@@ -200,7 +200,8 @@ let vm = new Vue({
     settings: {
       windowWidth: window.innerWidth,
       windowHeight: window.innerHeight,
-      enable_system_bar: window.state.is_electron && window.state.is_darwin
+      enable_system_bar: window.state.is_electron && window.state.is_darwin,
+      text_media_being_edited: false
     },
     lang: {
       available: lang_settings.available,
