@@ -225,12 +225,12 @@ export default {
         }
       }
 
-      let tag = this.new_fragment_tag;
-      if (tag === "") {
-        tag = this.new_fragment_tag_custom;
+      let tag_name = this.new_fragment_tag;
+      if (tag_name === "") {
+        tag_name = this.new_fragment_tag_custom;
       }
 
-      tag = [{ name: tag }];
+      const tags = [{ name: tag_name }];
 
       this.$root.createMedia({
         slugFolderName: this.corpus.slugFolderName,
@@ -238,7 +238,7 @@ export default {
         additionalMeta: {
           type: "fragment",
           title,
-          tag,
+          tags,
           medias_slugs: []
         }
       });
