@@ -1,0 +1,24 @@
+/*
+ * Emigre web font kit C2YuiLPO5uqJPOVO+7QhHA==
+ * 
+ * These fonts are not shareware. 
+ * Use of these fonts requires the purchase 
+ * of a license from Emigre, www.emigre.com  
+ * Please contact sales@emigre.com
+ *
+ * To purchase a license to use this font go to:
+ * http://www.emigre.com/
+ *
+ * © 2020 Emigre, Inc
+ */
+
+@font-face {
+  font-family: "base12";
+  src: url("base12sansot-regitalic-webfont.eot");
+  src: url("base12sansot-regitalic-webfont.eot?#iefix")
+      format("embedded-opentype"),
+    url("base12sansot-regitalic-webfont.woff2") format("woff2"),
+    url("base12sansot-regitalic-webfont.woff") format("woff");
+  font-weight: normal;
+  font-style: italic;
+}

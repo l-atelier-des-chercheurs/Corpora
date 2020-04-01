@@ -1,7 +1,7 @@
 <template>
   <div>
     <div>
-      Les corpus
+      <h1>Les corpus</h1>
     </div>
     <hr />
 
