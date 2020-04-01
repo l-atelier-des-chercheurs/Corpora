@@ -42,8 +42,7 @@
           </svg>
 
           <div v-if="media_duration" class="_duration">
-            {{ $root.formatDurationToMinuteHours(
-            media_duration * 1000) }}
+            {{ $root.formatDurationToMinuteHours(media_duration * 1000) }}
           </div>
         </div>
       </template>
@@ -54,7 +53,12 @@
           :emit="['volumechange']"
           @volumechange="volumeChanged"
         >
-          <video :poster="linkToVideoThumb" :src="mediaURL" preload="none" :autoplay="autoplay" />
+          <video
+            :poster="linkToVideoThumb"
+            :src="mediaURL"
+            preload="none"
+            :autoplay="autoplay"
+          />
         </vue-plyr>
       </template>
     </template>
@@ -93,6 +97,7 @@
         v-if="context === 'edit'"
         v-model="htmlForEditor"
         :media="media"
+        :enable_collaboration="true"
         :slugFolderName="slugFolderName"
         ref="textField"
       />
@@ -131,8 +136,12 @@
     </template>
 
     <template v-else-if="media.type === 'document'">
-      <div v-if="context !== 'edit' && context !== 'full'" class="padding-small font-verysmall">
-        <pre>{{ media.media_filename }}
+      <div
+        v-if="context !== 'edit' && context !== 'full'"
+        class="padding-small font-verysmall"
+      >
+        <pre
+          >{{ media.media_filename }}
         </pre>
       </div>
       <iframe v-else :src="mediaURL" />

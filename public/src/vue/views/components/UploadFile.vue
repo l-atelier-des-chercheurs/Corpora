@@ -174,8 +174,6 @@ export default {
                   d.corpus[this.slugFolderName].medias
                 ).filter(m => m.media_filename === x.medias_filenames[0]);
 
-                debugger;
-
                 if (new_media.length > 0) {
                   this.$emit("insertMedia", new_media[0].metaFileName);
                   return;
