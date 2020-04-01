@@ -83,9 +83,9 @@
       @scroll="/* onTimelineScroll */"
     >
       <div class="m_tags--alltags">
-        <h2 v-for="{ tag } in tags_with_fragments" :key="tag">
+        <h3 v-for="{ tag } in tags_with_fragments" :key="tag">
           {{ tag }}
-        </h2>
+        </h3>
       </div>
       <div class="m_tags--allfragments">
         <div
@@ -93,7 +93,9 @@
           :key="tag"
           class="m_tags--allfragments--tagfragment"
         >
-          <h2>{{ tag }}</h2>
+          <div class="m_tags--allfragments--tagfragment--tag">
+            <h2>{{ tag }}</h2>
+          </div>
           <div class="m_tags--allfragments--tagfragment--fragments">
             <Fragment
               v-for="fragment in fragments"
@@ -286,6 +288,7 @@ export default {
 
 .m_tags--alltags {
   position: fixed;
+  // position: relative;
   width: 100%;
 
   h2 {
@@ -307,8 +310,18 @@ export default {
 }
 
 .m_tags--allfragments--tagfragment {
+  display: flex;
+  flex-flow: row nowrap;
+  // min-width: max-content;
+  // overflow-y: auto;
 }
 
+.m_tags--allfragments--tagfragment--tag {
+  // position: absolute;
+  transform: rotate(-90deg);
+  display: flex;
+  align-items: center;
+}
 .m_tags--allfragments--tagfragment--fragments {
   display: flex;
   flex-flow: row nowrap;

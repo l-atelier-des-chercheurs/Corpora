@@ -42,6 +42,7 @@ export default {
 
 body {
   background-color: #e8f4eb;
+  background-color: #e2edef;
   margin: 0;
   font-family: "base12", sans-serif;
   font-size: 90%;

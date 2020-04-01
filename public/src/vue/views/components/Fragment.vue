@@ -20,12 +20,10 @@
         </p>
       </div>
       <!-- {{ linked_medias }} -->
-      <div
-        v-for="media in linked_medias"
-        :key="media.metaFileName"
-        class="m_fragment--medias"
-      >
+      <div class="m_fragment--medias">
         <MediaContent
+          v-for="media in linked_medias"
+          :key="media.metaFileName"
           v-model="media.content"
           :context="'edit'"
           :slugFolderName="slugFolderName"
@@ -108,7 +106,7 @@ export default {
 .m_fragment {
   // margin: 0 var(--spacing);
   // width: 100%;
-  max-width: 600px;
+  max-width: 400px;
   flex: 0 1 100vw;
 
   overflow-y: auto;
@@ -118,11 +116,11 @@ export default {
   // height: 90vh;
   // padding-top: 100px;
 
-  --scrollbarBG: #cfd8dc;
+  --scrollbarBG: transparent;
   --thumbBG: #90a4ae;
 
   &::-webkit-scrollbar {
-    width: 11px;
+    width: 8px;
   }
   & {
     scrollbar-width: thin;
@@ -141,8 +139,16 @@ export default {
     padding: var(--spacing);
     margin: calc(var(--spacing) * 1) calc(var(--spacing) * 1);
 
-    background-color: rgba(255, 255, 255, 0.95);
-    border-radius: 20px;
+    background-color: #f9f3db;
+    background: linear-gradient(
+      180deg,
+      #fff 50%,
+      #f9f3db calc(100% - 1px),
+      #000 100%
+    );
+    // border: 0.5px solid black;
+
+    border-radius: 2px;
 
     > *:first-child {
       margin-top: 0;
@@ -150,9 +156,22 @@ export default {
   }
 
   .m_fragment--medias {
+    // display: grid;
+    // grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+    // grid-gap: var(--spacing);
+
     > * {
-      margin-bottom: var(--spacing);
+      // display: flex;
+      // align-items: center;
+      // background-color: #eee;
     }
+
+    // > * {
+    //   margin-bottom: var(--spacing);
+    //   display: inline-block;
+    //   margin: 0;
+    //   width: 25%;
+    // }
   }
 }
 </style>
