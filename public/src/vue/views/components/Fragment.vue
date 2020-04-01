@@ -90,6 +90,8 @@ export default {
         metaFileName: metaFileName
       });
 
+      this.fragment.medias_slugs = medias_slugs;
+
       this.$root.editMedia({
         type: "corpus",
         slugFolderName: this.slugFolderName,
