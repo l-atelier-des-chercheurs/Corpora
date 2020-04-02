@@ -38,7 +38,7 @@ export default {
 <style lang="scss">
 :root {
   --spacing: 1rem;
-  --color-black: #111;
+  --color-black: #3c3541;
   --color-white: #fff;
   --active-color: #ccd0da;
   --panel-width: 320px;
@@ -81,6 +81,48 @@ h3 {
 }
 
 button {
+}
+
+/* -----
+SVG Icons - svgicons.sparkk.fr
+----- */
+
+.svg-icon {
+  width: 1em;
+  height: 1em;
+}
+
+.svg-icon path,
+.svg-icon polygon,
+.svg-icon rect {
+  fill: var(--color-black);
+}
+
+.svg-icon circle {
+  fill: var(--color-black);
+  stroke-width: 1;
+}
+
+.m_advancedMenu {
+  position: relative;
+  z-index: 1;
+
+  .m_advancedMenu--toggleButton {
+    margin-bottom: 0;
+    // background-color: transparent;
+    svg {
+      width: 2em;
+      height: 2em;
+    }
+  }
+
+  .m_advancedMenu--menu {
+    position: absolute;
+
+    > * {
+      display: block;
+    }
+  }
 }
 
 p,
@@ -217,11 +259,20 @@ body,
 button,
 .button {
   border: none;
-  background: #aaa;
+  background: #ccd0da;
   cursor: pointer;
 
-  &:hover {
-    background-color: #eee;
+  transition: background 0.4s cubic-bezier(0.19, 1, 0.22, 1);
+
+  &:hover,
+  &:active,
+  &:focus {
+    background: #f4f4f2;
+    outline: 0;
+  }
+
+  &.is--active {
+    background: #fff4db;
   }
 }
 
@@ -247,7 +298,7 @@ audio {
 
 .module-switch-move {
   position: relative;
-  background-color: white;
+  // background-color: white;
   transition: transform 1s cubic-bezier(0.19, 1, 0.22, 1);
 }
 .module-switch-enter,

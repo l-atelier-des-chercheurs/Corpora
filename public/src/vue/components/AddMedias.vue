@@ -5,81 +5,83 @@
       :class="{ 'is--showing_options': show_addmedia_options }"
       :style="addMediaStyles"
     >
-      <!-- @mouseenter="!is_touch && show_drop_container === false ? show_addmedia_options = true : ''" -->
-      <div class="menu_encart--options">
-        <button
-          key="add_text"
-          type="button"
-          class="button button-round button-round-small margin-bottom-small padding-none bg-noir c-blanc"
-          @click="createTextMedia"
-          :disabled="read_only"
-        >
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40">
-            <path
-              d="M26.51,12V28h-13V12h13m1-1h-15V29h15V11Z"
-              style="fill: currentColor"
-            />
-            <line
-              x1="15.21"
-              y1="14.41"
-              x2="24.71"
-              y2="14.41"
-              style="fill: none;stroke: currentColor;stroke-miterlimit: 10"
-            />
-            <line
-              x1="15.21"
-              y1="17.88"
-              x2="24.71"
-              y2="17.88"
-              style="fill: none;stroke: currentColor;stroke-miterlimit: 10"
-            />
-            <line
-              x1="15.21"
-              y1="21.26"
-              x2="24.71"
-              y2="21.26"
-              style="fill: none;stroke: currentColor;stroke-miterlimit: 10"
-            />
-            <line
-              x1="15.21"
-              y1="24.62"
-              x2="22.88"
-              y2="24.62"
-              style="fill: none;stroke: currentColor;stroke-miterlimit: 10"
-            />
-          </svg>
-          <span class="text_label">Texte</span>
-        </button>
-
-        <template>
-          <div
-            :key="`add_${field.key}`"
-            class="button button-round button-round-small margin-bottom-small bg-noir c-blanc padding-none"
-            v-for="field in input_file_fields"
+      <transition name="slide-fade">
+        <!-- @mouseenter="!is_touch && show_drop_container === false ? show_addmedia_options = true : ''" -->
+        <div class="menu_encart--options" v-if="show_addmedia_options">
+          <button
+            key="add_text"
+            type="button"
+            class="button button-round button-round-small margin-bottom-small padding-none bg-noir c-blanc"
+            @click="createTextMedia"
             :disabled="read_only"
           >
-            <label :for="`add_${field.key + unique_id}`">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40">
+              <path
+                d="M26.51,12V28h-13V12h13m1-1h-15V29h15V11Z"
+                style="fill: currentColor"
+              />
+              <line
+                x1="15.21"
+                y1="14.41"
+                x2="24.71"
+                y2="14.41"
+                style="fill: none;stroke: currentColor;stroke-miterlimit: 10"
+              />
+              <line
+                x1="15.21"
+                y1="17.88"
+                x2="24.71"
+                y2="17.88"
+                style="fill: none;stroke: currentColor;stroke-miterlimit: 10"
+              />
+              <line
+                x1="15.21"
+                y1="21.26"
+                x2="24.71"
+                y2="21.26"
+                style="fill: none;stroke: currentColor;stroke-miterlimit: 10"
+              />
+              <line
+                x1="15.21"
+                y1="24.62"
+                x2="22.88"
+                y2="24.62"
+                style="fill: none;stroke: currentColor;stroke-miterlimit: 10"
+              />
+            </svg>
+            <span class="text_label">Texte</span>
+          </button>
+
+          <template>
+            <label
+              :key="`add_${field.key}`"
+              class="button button-round button-round-small margin-bottom-small bg-noir c-blanc padding-none"
+              v-for="field in input_file_fields"
+              :disabled="read_only"
+              :for="`add_${field.key + unique_id}`"
+            >
               <div v-html="field.svg" />
               <span class="text_label">{{ field.label }}</span>
+              <input
+                type="file"
+                multiple
+                :id="`add_${field.key + unique_id}`"
+                :name="field.key"
+                @change="updateInputFiles($event)"
+                :accept="field.accept"
+                :capture="field.capture"
+                style="width: 1px; height: 1px; overflow: hidden;"
+              />
             </label>
-            <input
-              type="file"
-              multiple
-              :id="`add_${field.key + unique_id}`"
-              :name="field.key"
-              @change="updateInputFiles($event)"
-              :accept="field.accept"
-              :capture="field.capture"
-              style="width: 1px; height: 1px; overflow: hidden;"
-            />
-          </div>
-        </template>
-      </div>
+          </template>
+        </div>
+      </transition>
 
       <button
         type="button"
         class="menu_encart--button button button-round margin-bottom-small padding-none bg-noir c-blanc button_addMedia m_addMedias--buttons--openHideButton"
         :class="{
+          'is--active': show_addmedia_options,
           'is--shown': show_addmedia_options,
           'is--dragover': show_drop_container
         }"
@@ -139,28 +141,28 @@ export default {
       show_drop_container: false,
 
       input_file_fields: [
-        {
-          key: "audio",
-          label: "Audio",
-          accept: "audio/*",
-          capture: true,
-          svg: `
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40">
-            <line x1="5.83" y1="21.69" x2="5.83" y2="18.31" style="fill: none;stroke: currentColor;stroke-linecap: round;stroke-linejoin: round"/>
-            <line x1="8.41" y1="16.52" x2="8.41" y2="23.48" style="fill: none;stroke: currentColor;stroke-linecap: round;stroke-linejoin: round"/>
-            <line x1="10.99" y1="17.83" x2="10.99" y2="22.17" style="fill: none;stroke: currentColor;stroke-linecap: round;stroke-linejoin: round"/>
-            <line x1="13.56" y1="24.94" x2="13.56" y2="15.06" style="fill: none;stroke: currentColor;stroke-linecap: round;stroke-linejoin: round"/>
-            <line x1="16.14" y1="22.53" x2="16.14" y2="17.47" style="fill: none;stroke: currentColor;stroke-linecap: round;stroke-linejoin: round"/>
-            <line x1="18.71" y1="16.9" x2="18.71" y2="23.1" style="fill: none;stroke: currentColor;stroke-linecap: round;stroke-linejoin: round"/>
-            <line x1="21.29" y1="18.06" x2="21.29" y2="21.94" style="fill: none;stroke: currentColor;stroke-linecap: round;stroke-linejoin: round"/>
-            <line x1="23.86" y1="22.67" x2="23.86" y2="17.33" style="fill: none;stroke: currentColor;stroke-linecap: round;stroke-linejoin: round"/>
-            <line x1="26.44" y1="26.02" x2="26.44" y2="13.98" style="fill: none;stroke: currentColor;stroke-linecap: round;stroke-linejoin: round"/>
-            <line x1="29.01" y1="22.73" x2="29.01" y2="17.27" style="fill: none;stroke: currentColor;stroke-linecap: round;stroke-linejoin: round"/>
-            <line x1="31.59" y1="23.73" x2="31.59" y2="16.27" style="fill: none;stroke: currentColor;stroke-linecap: round;stroke-linejoin: round"/>
-            <line x1="34.17" y1="21.43" x2="34.17" y2="18.57" style="fill: none;stroke: currentColor;stroke-linecap: round;stroke-linejoin: round"/>
-            </svg>
-          `
-        },
+        // {
+        //   key: "audio",
+        //   label: "Audio",
+        //   accept: "audio/*",
+        //   capture: true,
+        //   svg: `
+        //     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40">
+        //     <line x1="5.83" y1="21.69" x2="5.83" y2="18.31" style="fill: none;stroke: currentColor;stroke-linecap: round;stroke-linejoin: round"/>
+        //     <line x1="8.41" y1="16.52" x2="8.41" y2="23.48" style="fill: none;stroke: currentColor;stroke-linecap: round;stroke-linejoin: round"/>
+        //     <line x1="10.99" y1="17.83" x2="10.99" y2="22.17" style="fill: none;stroke: currentColor;stroke-linecap: round;stroke-linejoin: round"/>
+        //     <line x1="13.56" y1="24.94" x2="13.56" y2="15.06" style="fill: none;stroke: currentColor;stroke-linecap: round;stroke-linejoin: round"/>
+        //     <line x1="16.14" y1="22.53" x2="16.14" y2="17.47" style="fill: none;stroke: currentColor;stroke-linecap: round;stroke-linejoin: round"/>
+        //     <line x1="18.71" y1="16.9" x2="18.71" y2="23.1" style="fill: none;stroke: currentColor;stroke-linecap: round;stroke-linejoin: round"/>
+        //     <line x1="21.29" y1="18.06" x2="21.29" y2="21.94" style="fill: none;stroke: currentColor;stroke-linecap: round;stroke-linejoin: round"/>
+        //     <line x1="23.86" y1="22.67" x2="23.86" y2="17.33" style="fill: none;stroke: currentColor;stroke-linecap: round;stroke-linejoin: round"/>
+        //     <line x1="26.44" y1="26.02" x2="26.44" y2="13.98" style="fill: none;stroke: currentColor;stroke-linecap: round;stroke-linejoin: round"/>
+        //     <line x1="29.01" y1="22.73" x2="29.01" y2="17.27" style="fill: none;stroke: currentColor;stroke-linecap: round;stroke-linejoin: round"/>
+        //     <line x1="31.59" y1="23.73" x2="31.59" y2="16.27" style="fill: none;stroke: currentColor;stroke-linecap: round;stroke-linejoin: round"/>
+        //     <line x1="34.17" y1="21.43" x2="34.17" y2="18.57" style="fill: none;stroke: currentColor;stroke-linecap: round;stroke-linejoin: round"/>
+        //     </svg>
+        //   `
+        // },
         {
           key: "file",
           label: "Fichier",
@@ -172,33 +174,33 @@ export default {
               <line x1="27" y1="17.12" x2="21.38" y2="11.5" style="fill: none;stroke: currentColor;stroke-linecap: round;stroke-linejoin: round;stroke-width: 0.9900837817656861px"/>
             </svg>
           `
-        },
-        {
-          key: "video",
-          label: "Vidéo",
-          accept: "video/*",
-          capture: true,
-          svg: `
-            <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="40px"
-              height="40px" viewBox="0 0 40 40" style="enable-background:new 0 0 40 40;" xml:space="preserve">
-              <rect style="fill:none;stroke:currentColor" x="12.3" y="11" transform="matrix(-1.836970e-16 1 -1 -1.836970e-16 40 3.552714e-15)" style="fill:none;stroke:currentColor" width="15.3" height="18"/>
-              <polygon  style="fill:none;stroke:currentColor" style="fill:none;stroke:currentColor" points="23.8,20 17.4,23.6 17.4,16.4 "/>
-            </svg>
-          `
-        },
-        {
-          key: "image",
-          label: "Image",
-          accept: "image/*",
-          capture: true,
-          svg: `
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40">
-              <path d="M28,13.35v13.3H12V13.35H28m1-1H11v15.3H29V12.35Z" style="fill: currentColor"/>
-              <line x1="13.85" y1="14.99" x2="26.48" y2="25.12" style="fill: none;stroke: currentColor;stroke-linecap: round;stroke-linejoin: round"/>
-              <line x1="13.85" y1="25.12" x2="26.48" y2="14.99" style="fill: none;stroke: currentColor;stroke-linecap: round;stroke-linejoin: round"/>
-            </svg>
-          `
         }
+        // {
+        //   key: "video",
+        //   label: "Vidéo",
+        //   accept: "video/*",
+        //   capture: true,
+        //   svg: `
+        //     <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="40px"
+        //       height="40px" viewBox="0 0 40 40" style="enable-background:new 0 0 40 40;" xml:space="preserve">
+        //       <rect style="fill:none;stroke:currentColor" x="12.3" y="11" transform="matrix(-1.836970e-16 1 -1 -1.836970e-16 40 3.552714e-15)" style="fill:none;stroke:currentColor" width="15.3" height="18"/>
+        //       <polygon  style="fill:none;stroke:currentColor" style="fill:none;stroke:currentColor" points="23.8,20 17.4,23.6 17.4,16.4 "/>
+        //     </svg>
+        //   `
+        // },
+        // {
+        //   key: "image",
+        //   label: "Image",
+        //   accept: "image/*",
+        //   capture: true,
+        //   svg: `
+        //     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40">
+        //       <path d="M28,13.35v13.3H12V13.35H28m1-1H11v15.3H29V12.35Z" style="fill: currentColor"/>
+        //       <line x1="13.85" y1="14.99" x2="26.48" y2="25.12" style="fill: none;stroke: currentColor;stroke-linecap: round;stroke-linejoin: round"/>
+        //       <line x1="13.85" y1="25.12" x2="26.48" y2="14.99" style="fill: none;stroke: currentColor;stroke-linecap: round;stroke-linejoin: round"/>
+        //     </svg>
+        //   `
+        // }
       ]
     };
   },
@@ -317,22 +319,27 @@ export default {
   }
 };
 </script>
-<style lang="less">
+<style lang="scss">
 .m_addMedias {
   position: relative;
   // width: 100px;
   height: auto;
+  text-align: center;
+  margin: var(--spacing);
   // color: var(--color-white);
 
   .menu_encart {
     display: flex;
+    justify-content: center;
 
     .menu_encart--options {
-      padding: var(--spacing-medium) var(--spacing-small) 0;
-      flex: 1 1 auto;
+      padding: calc(var(--spacing) / 4);
+
+      flex: 0 1 auto;
       display: flex;
       flex-flow: row wrap;
       justify-content: flex-end;
+      background-color: #fff4db;
 
       > * {
         display: block;
@@ -341,35 +348,42 @@ export default {
         opacity: 0;
         padding: 0;
         transition: all 0.4s cubic-bezier(0.19, 1, 0.22, 1);
+        background-color: transparent;
 
-        label {
+        display: flex;
+        align-items: center;
+        background-color: var(--color-black);
+        border-radius: 20px;
+        // padding: calc(var(--spacing) / 4) calc(var(--spacing) / 2);
+        margin: calc(var(--spacing) / 4) 1px;
+
+        .text_label {
+          font-size: 0.8rem;
           cursor: inherit;
           display: flex;
           flex-flow: row nowrap;
           align-items: center;
           align-content: center;
-          background-color: var(--color-black);
-          padding: 0 ~"calc(var(--spacing)/2)";
+          border-radius: 10px;
+          text-transform: lowercase;
+          padding: calc(var(--spacing) / 4) calc(var(--spacing) / 2)
+            calc(var(--spacing) / 4) 0;
+
+          font-family: "base12";
+          font-style: italic;
 
           color: var(--color-white);
-          margin: ~"calc(var(--spacing) / 4)";
-
-          > *:first-child {
-            width: 40px;
-            height: 40px;
-          }
+          // margin: calc(var(--spacing) / 4);
+        }
+        svg {
+          width: 30px;
+          height: 30px;
+          color: var(--color-white);
+          // padding-left: calc(var(--spacing) / 4);
         }
 
         .text_label {
         }
-
-        .delay_transition_up(@max, @counter) when (@counter < @max) {
-          .delay_transition_up(@max, (@counter + 1));
-          &:nth-child(@{counter}) {
-            transition-delay: ((@max - @counter) * 0.035s);
-          }
-        }
-        .delay_transition_up(6, 0);
       }
     }
     &.is--showing_options {
@@ -389,24 +403,32 @@ export default {
 
     .menu_encart--button {
       // height: 2em;
-      flex: 0 0 2em;
+      flex: 0 1 auto;
 
       transition: all cubic-bezier(0.19, 1, 0.22, 1) 0.8s;
       display: block;
       text-transform: initial;
       pointer-events: auto;
-      background-color: var(--color-black);
-      color: var(--color-white);
+      // background-color: var(--color-black);
+      // color: var(--color-white);
+      color: var(--color-black);
+      padding: calc(var(--spacing) / 4);
+      border-radius: 14px;
 
       > * {
-        width: 24px;
-        height: 24px;
+        display: block;
+        width: 14px;
+        height: 14px;
         transition: transform cubic-bezier(0.19, 1, 0.22, 1) 0.8s;
         transform: rotate(0);
       }
       &.is--dragover {
-        width: 256px;
-        height: 256px;
+        width: 64px;
+        height: 64px;
+      }
+
+      &.is--shown {
+        border-radius: 0;
       }
     }
 
@@ -431,13 +453,5 @@ export default {
     height: 320px;
     background-color: var(--color-black);
   }
-}
-
-.button_addMedia {
-  width: 40px;
-  height: 40px;
-  // padding: 0 20px;
-  margin: 0 auto !important;
-  background-color: var(--color-black);
 }
 </style>

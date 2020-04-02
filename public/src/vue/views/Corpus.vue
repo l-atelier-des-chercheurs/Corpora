@@ -236,10 +236,6 @@ export default {
   align-items: center;
   > * {
     flex: 0 0 auto;
-
-    &.m_fragment--container {
-      flex: 1 1 auto;
-    }
   }
 }
 
@@ -334,6 +330,8 @@ export default {
   flex-flow: row nowrap;
   align-content: stretch;
   min-width: max-content;
+
+  min-width: 400px;
 }
 
 // .m_fragment--content {
