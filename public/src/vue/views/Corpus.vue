@@ -1,24 +1,23 @@
 <template>
   <div class="m_corpus">
-    <div class="m_corpus--topbar">
-      <div>
+    <div class="m_corpus--presentation">
+      <div class="">
         <button type="button" @click="$root.closeCorpus()">back</button>
       </div>
-      <div>
-        <h1>{{ corpus.name }} Morbi sed. Morbi sed. Morbi sed. Morbi sed.</h1>
-        <h3>Un titre h3</h3>
+
+      <div class="m_corpus--presentation--name">
+        <h1>{{ corpus.name }}</h1>
+        <h3>{{ corpus.subtitle }}</h3>
       </div>
 
       <div>
         <p>
-          Fusce tempus arcu nec turpis consectetur, non dignissim nulla
-          interdum. Quisque consectetur vulputate sem ac aliquet. Etiam eu
-          vulputate augue, non molestie eros. Integer efficitur nisl purus, nec
-          vehicula ligula sollicitudin vel. Pellentesque porttitor id orci in
-          bibendum. Suspendisse eleifend eget neque a facilisis. Aliquam erat
-          volutpat. Mauris a enim id nulla hendrerit blandit. Praesent tempor
-          fermentum neque, non eleifend quam.
+          {{ corpus.description }}
         </p>
+      </div>
+
+      <div v-if="previewURL" class="m_corpus--presentation--vignette">
+        <img :src="previewURL" class draggable="false" />
       </div>
 
       <div>
@@ -123,7 +122,7 @@
   </div>
 </template>
 <script>
-import Fragment from "./components/Fragment.vue";
+import Fragment from "../components/Fragment.vue";
 
 export default {
   props: {
@@ -151,6 +150,20 @@ export default {
     }
   },
   computed: {
+    previewURL() {
+      if (
+        !this.corpus.hasOwnProperty("preview") ||
+        this.corpus.preview === ""
+      ) {
+        return false;
+      }
+      const thumb = this.corpus.preview.filter(p => p.size === 640);
+      if (thumb.length > 0) {
+        return `${thumb[0].path}`;
+      }
+      return false;
+    },
+
     medias() {
       if (
         typeof this.corpus.medias !== "object" ||
@@ -292,7 +305,7 @@ export default {
   }
 }
 
-.m_corpus--topbar {
+.m_corpus--presentation {
   // position: absolute;
   margin: calc(var(--spacing) * 2) calc(var(--spacing) * 2);
   z-index: 1;
