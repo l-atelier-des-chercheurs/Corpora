@@ -39,8 +39,21 @@
   "structure": {
     "corpus": {
       "path": "",
+      "preview": {
+        "width": 1600,
+        "height": 1600,
+        "thumbs": {
+          "resolutions": [50, 320, 640]
+        }
+      },
       "fields": {
         "name": {
+          "type": "string"
+        },
+        "subtitle": {
+          "type": "string"
+        },
+        "description": {
           "type": "string"
         },
         "date_created": {
@@ -54,9 +67,6 @@
           "override": true
         },
         "password": {
-          "type": "string"
-        },
-        "description": {
           "type": "string"
         }
       },
