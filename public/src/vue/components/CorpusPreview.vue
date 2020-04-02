@@ -14,7 +14,11 @@
     </div>
 
     <div class="m_corpusPreview--options">
-      <button type="button" @click="show_edit_corpus_for = true">
+      <button
+        type="button"
+        v-if="can_access_corpus"
+        @click="show_edit_corpus_for = true"
+      >
         {{ $t("edit") }}
       </button>
 
@@ -26,14 +30,18 @@
         @close="show_edit_corpus_for = false"
       />
 
-      <button type="button" @click="removeThisCorpus()">
+      <button
+        type="button"
+        v-if="can_access_corpus"
+        @click="removeThisCorpus()"
+      >
         {{ $t("remove") }}
       </button>
     </div>
 
     <div class="m_corpusPreview--open">
       <div
-        class="m_metaField"
+        class=""
         v-if="
           can_access_corpus &&
             corpus.password === 'has_pass' &&
@@ -91,16 +99,26 @@
       </div>
 
       <div v-if="can_access_corpus && corpus_password" class="m_metaField">
-        <div
-          class="cursor-pointer"
-          :readonly="read_only"
+        <button
+          type="button"
           @click="showCurrentPassword = !showCurrentPassword"
-          v-html="!showCurrentPassword ? $t('show_password') : $t('hide')"
+          v-html="
+            !showCurrentPassword ? $t('show_password') : $t('hide_password')
+          "
         />
         <div v-if="showCurrentPassword && can_access_corpus">
           {{ corpus_password }}
         </div>
       </div>
+
+      <button
+        v-if="can_access_corpus"
+        type="button"
+        class=""
+        @click="$root.openCorpus(corpus.slugFolderName)"
+      >
+        <span class>{{ $t("open") }}</span>
+      </button>
     </div>
   </div>
 </template>
@@ -196,10 +214,19 @@ export default {
     },
 
     removeThisCorpus() {
-      this.$root.removeFolder({
-        type: "corpus",
-        slugFolderName: corpus.slugFolderName
-      });
+      this.$alertify
+        .okBtn(this.$t("yes"))
+        .cancelBtn(this.$t("cancel"))
+        .confirm(
+          this.$t("sure_to_remove_corpus"),
+          () => {
+            this.$root.removeFolder({
+              type: "corpus",
+              slugFolderName: this.corpus.slugFolderName
+            });
+          },
+          () => {}
+        );
     }
   }
 };

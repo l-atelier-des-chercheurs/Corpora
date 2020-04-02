@@ -265,7 +265,20 @@ audio {
   z-index: 0 !important;
 }
 
-.alertify {
+.m_metaField {
+  position: relative;
+
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: space-between;
+  align-items: flex-end;
+
+  border-bottom: 1px dashed var(--color-black);
+  margin-bottom: var(--spacing);
+}
+
+.alertify,
+.alertify-logs {
   z-index: 20000;
 }
 

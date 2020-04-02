@@ -28,46 +28,12 @@
           Create fragment
         </button>
 
-        <form
+        <CreateFragment
           v-if="show_create_fragment"
-          @submit.prevent="createFragment()"
-          class="input-group"
-        >
-          <div>
-            <input
-              type="text"
-              v-model.trim="new_fragment_name"
-              required
-              autofocus
-            />
-          </div>
-          <div>
-            <select v-model="new_fragment_tag">
-              <option value="">
-                {{ $t("new_tag") }}
-              </option>
-              <option v-for="tag in all_tags" :key="tag" :value="tag">
-                {{ tag }}
-              </option>
-            </select>
-          </div>
-          <div v-if="new_fragment_tag === ''">
-            <label>New tag name</label>
-            <input
-              type="text"
-              v-model.trim="new_fragment_tag_custom"
-              required
-              autofocus
-            />
-          </div>
-
-          <button
-            type="submit"
-            :disabled="new_fragment_name === ''"
-            v-html="$t('create')"
-            class
-          />
-        </form>
+          :corpus="corpus"
+          :all_tags="all_tags"
+          @close="show_create_fragment = false"
+        />
       </div>
 
       <div>
@@ -96,7 +62,13 @@
             <div>
               <button type="button" @click="toggleShowingFragmentsForTag(tag)">
                 <h2>
-                  {{ tag }}&nbsp;<small>({{ fragments.length }})</small>
+                  <template v-if="tag === 'zzz'">
+                    Non-taggés
+                  </template>
+                  <template v-else>
+                    {{ tag }}
+                  </template>
+                  &nbsp;<small>({{ fragments.length }})</small>
                 </h2>
               </button>
             </div>
@@ -110,6 +82,8 @@
               <Fragment
                 v-for="fragment in fragments"
                 :key="fragment.metaFileName"
+                :corpus="corpus"
+                :all_tags="all_tags"
                 :medias="medias"
                 :fragment="fragment"
                 :slugFolderName="corpus.slugFolderName"
@@ -123,13 +97,15 @@
 </template>
 <script>
 import Fragment from "../components/Fragment.vue";
+import CreateFragment from "../components/modals/CreateFragment.vue";
 
 export default {
   props: {
     corpus: Object
   },
   components: {
-    Fragment
+    Fragment,
+    CreateFragment
   },
   data() {
     return {
@@ -191,9 +167,8 @@ export default {
 
       let fragments_by_tag = this.$_.groupBy(this.fragments, f => {
         if (!!f.tags && Array.isArray(f.tags) && f.tags.length > 0)
-          return f.tags[0].name;
-
-        return "no-tag";
+          return f.tags[0].title;
+        return "zzz";
       });
 
       fragments_by_tag = Object.entries(fragments_by_tag).map(
@@ -201,8 +176,12 @@ export default {
           return { tag, fragments };
         }
       );
+
+      fragments_by_tag = this.$_.sortBy(fragments_by_tag, "tag");
+
       return fragments_by_tag;
     },
+    fragments_without_tags() {},
     all_tags() {
       return this.tags_with_fragments.map(t => t.tag);
     }
@@ -231,47 +210,6 @@ export default {
       // console.log('METHODS • TimeLineView: onTimelineScroll');
       const el = this.$refs.corpus_content;
       this.translation = el.scrollLeft;
-    },
-
-    createFragment() {
-      const title = this.new_fragment_name;
-
-      if (this.corpus.medias && Object.values(this.corpus.medias).length > 0) {
-        if (
-          Object.values(this.corpus.medias).find(
-            m => m.type === "fragment" && m.title === title
-          )
-        ) {
-          this.$alertify
-            .closeLogOnClick(true)
-            .delay(4000)
-            .error(this.$t("notifications.fragment_with_title_already_exists"));
-          return;
-        }
-      }
-
-      let tag_name = this.new_fragment_tag;
-      if (tag_name === "") {
-        tag_name = this.new_fragment_tag_custom;
-      }
-
-      const tags = [{ name: tag_name }];
-
-      this.$root.createMedia({
-        slugFolderName: this.corpus.slugFolderName,
-        type: "corpus",
-        additionalMeta: {
-          type: "fragment",
-          title,
-          tags,
-          medias_slugs: []
-        }
-      });
-
-      this.new_fragment_name = "";
-      this.new_fragment_tag = "";
-      this.new_fragment_tag_custom = "";
-      this.show_create_fragment = false;
     },
 
     showFragmentsFor(tag) {

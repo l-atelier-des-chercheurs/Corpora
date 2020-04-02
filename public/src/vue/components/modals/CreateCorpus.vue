@@ -125,7 +125,6 @@ export default {
   computed: {},
   methods: {
     newCorpus: function(event) {
-      debugger;
       console.log("newCorpus");
 
       function getAllCorpusNames() {

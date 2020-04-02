@@ -3,6 +3,22 @@
     <div class="m_fragment--content">
       <div class="m_fragment--content--top">
         <h2>{{ fragment.title }}</h2>
+
+        <button type="button" @click="show_edit_fragment = true">
+          edit
+        </button>
+
+        <button type="button" @click="removeFragment">
+          remove
+        </button>
+
+        <EditFragment
+          v-if="show_edit_fragment"
+          :corpus="corpus"
+          :fragment="fragment"
+          :all_tags="all_tags"
+          @close="show_edit_fragment = false"
+        />
       </div>
       <!-- {{ linked_medias }} -->
       <div class="m_fragment--medias">
@@ -81,23 +97,28 @@
 </template>
 <script>
 import AddMedias from "./AddMedias.vue";
+import EditFragment from "./modals/EditFragment.vue";
 import MediaContent from "./MediaContent.vue";
 import CollaborativeEditor from "./CollaborativeEditor.vue";
 
 export default {
   props: {
+    corpus: Object,
     fragment: Object,
+    all_tags: Array,
     medias: Array,
     slugFolderName: String
   },
   components: {
     AddMedias,
+    EditFragment,
     MediaContent,
     CollaborativeEditor
   },
   data() {
     return {
-      context: "preview"
+      context: "preview",
+      show_edit_fragment: false
     };
   },
   created() {},
@@ -122,6 +143,9 @@ export default {
     }
   },
   methods: {
+    removeFragment() {
+      this.removeMedia(this.fragment.metaFileName);
+    },
     newMediaCreated(metaFileName) {
       if (window.state.dev_mode === "debug")
         console.log("Fragment • METHODS: newMediaCreated");
@@ -160,25 +184,34 @@ export default {
           `Fragment • METHODS: removeMedia / metaFileName = ${metaFileName}`
         );
 
-      this.$root.removeMedia({
-        type: "corpus",
-        slugFolderName: this.slugFolderName,
-        slugMediaName: metaFileName
-      });
+      this.$alertify
+        .okBtn(this.$t("yes"))
+        .cancelBtn(this.$t("cancel"))
+        .confirm(
+          this.$t("sure_to_remove"),
+          () => {
+            this.$root.removeMedia({
+              type: "corpus",
+              slugFolderName: this.slugFolderName,
+              slugMediaName: metaFileName
+            });
 
-      if (this.fragment.medias_slugs.length > 0) {
-        let new_medias_slugs = this.fragment.medias_slugs.filter(
-          m => m.metaFileName !== metaFileName
+            if (this.fragment.medias_slugs.length > 0) {
+              let new_medias_slugs = this.fragment.medias_slugs.filter(
+                m => m.metaFileName !== metaFileName
+              );
+
+              this.$root.editFolder({
+                type: "corpus",
+                slugFolderName: this.slugFolderName,
+                data: {
+                  medias_slugs: new_medias_slugs
+                }
+              });
+            }
+          },
+          () => {}
         );
-
-        this.$root.editFolder({
-          type: "corpus",
-          slugFolderName: this.slugFolderName,
-          data: {
-            medias_slugs: new_medias_slugs
-          }
-        });
-      }
     }
   }
 };
