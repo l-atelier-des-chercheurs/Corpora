@@ -233,6 +233,7 @@ export default {
 }
 .m_fragmentMedia--infos--caption {
   background-color: var(--active-color);
+  border-radius: 4px;
   padding: 5px;
 }
 .m_fragmentMedia--infos--type {

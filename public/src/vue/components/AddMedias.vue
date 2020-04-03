@@ -1,5 +1,5 @@
 <template>
-  <div class="m_addMedias">
+  <div class="m_addMedias" :class="{ 'is--collapsed': collapsed }">
     <div
       class="menu_encart"
       :class="{ 'is--showing_options': show_addmedia_options }"
@@ -286,19 +286,6 @@ export default {
           this.$emit("newMediaCreated", mdata.metaFileName);
         });
     },
-    newTextMediaCreated(mdata) {
-      if (this.$root.justCreatedMediaID === mdata.id) {
-        this.$eventHub.$off(
-          "socketio.media_created_or_updated",
-          this.newTextMediaCreated
-        );
-        this.$root.justCreatedMediaID = false;
-        this.$nextTick(() => {
-          this.$eventHub.$emit("timeline.openMediaModal", mdata.metaFileName);
-        });
-      }
-    },
-
     updateInputFiles($event) {
       if (this.$root.state.dev_mode === "debug") {
         console.log(`METHODS • AddMedia / updateSelectedFiles`);
@@ -360,7 +347,7 @@ export default {
   // width: 100px;
   height: auto;
   text-align: center;
-  margin: var(--spacing);
+  margin: calc(var(--spacing) / 2);
   // color: var(--color-white);
 
   .menu_encart {
@@ -454,12 +441,13 @@ export default {
       padding: calc(var(--spacing) / 4);
       border-radius: 14px;
 
-      > * {
+      svg {
         display: block;
         width: 14px;
         height: 14px;
         transition: transform cubic-bezier(0.19, 1, 0.22, 1) 0.8s;
         transform: rotate(0);
+        fill: currentColor;
       }
       &.is--dragover {
         width: 64px;
@@ -480,6 +468,25 @@ export default {
     }
   }
 
+  &.is--collapsed .menu_encart--button:not(:hover):not(.is--shown) {
+    background-color: var(--color-black);
+    padding: 2px;
+    > * {
+      width: 0px;
+      height: 0px;
+      // transform: scale(0.4);
+    }
+  }
+
+  .menu_encart--button:not(.is--shown) {
+    background-color: var(--color-black);
+    > * {
+      color: #fff4db;
+      svg {
+      }
+    }
+  }
+
   .m_addMedias--dropContainer {
     position: absolute;
     z-index: 0;
@@ -488,8 +495,8 @@ export default {
 
     border-radius: 6px;
 
-    width: 320px;
-    height: 320px;
+    width: 120px;
+    height: 120px;
     background-color: var(--color-black);
   }
 }

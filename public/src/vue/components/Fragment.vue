@@ -47,6 +47,18 @@
       </div>
 
       <div class="m_fragment--medias">
+        <AddMedias
+          :slugFolderName="slugFolderName"
+          :key="'addmedia_start'"
+          :collapsed="true"
+          @newMediaCreated="
+            metaFileName =>
+              newMediaCreated({
+                metaFileName,
+                index: 0
+              })
+          "
+        />
         <transition-group name="module-switch" :duration="1000">
           <template v-for="(media, index) in linked_medias">
             <FragmentMedia
@@ -59,20 +71,27 @@
               @moveMedia="d => moveMedia(d)"
             />
             <AddMedias
+              v-if="
+                linked_medias.length > 0 && index < linked_medias.length - 1
+              "
               :slugFolderName="slugFolderName"
               :key="'addmedia_' + media.metaFileName"
+              :collapsed="true"
               @newMediaCreated="
                 metaFileName => newMediaCreated({ metaFileName, index })
               "
             />
           </template>
         </transition-group>
-
         <AddMedias
-          v-if="linked_medias.length === 0"
           :slugFolderName="slugFolderName"
+          :key="'addmedia_end'"
           @newMediaCreated="
-            metaFileName => newMediaCreated({ metaFileName, index })
+            metaFileName =>
+              newMediaCreated({
+                metaFileName,
+                index: linked_medias.length - 1
+              })
           "
         />
       </div>
