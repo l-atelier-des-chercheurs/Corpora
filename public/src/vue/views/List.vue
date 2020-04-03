@@ -1,32 +1,38 @@
 <template>
   <div class="m_list">
-    <div>
-      <h1>Les corpus</h1>
+    <div v-if="!can_admin_corpora">
+      <p>Enter password to admin</p>
+      <input type="password" v-model="$root.admin_pwd" />
     </div>
+    <div v-else>
+      <div>
+        <h1>Les corpus</h1>
+      </div>
 
-    <div>
-      <button
-        type="button"
-        class="buttonLink"
-        :class="{ 'is--active': show_create_corpus }"
-        @click="show_create_corpus = !show_create_corpus"
-      >
-        {{ $t("create") }}
-      </button>
+      <div>
+        <button
+          type="button"
+          class="buttonLink"
+          :class="{ 'is--active': show_create_corpus }"
+          @click="show_create_corpus = !show_create_corpus"
+        >
+          {{ $t("create") }}
+        </button>
 
-      <CreateCorpus
-        v-if="show_create_corpus"
-        @close="show_create_corpus = false"
-      />
-    </div>
+        <CreateCorpus
+          v-if="show_create_corpus"
+          @close="show_create_corpus = false"
+        />
+      </div>
 
-    <div class="m_list--corpuses">
-      <div
-        class="m_list--corpuses--corpus"
-        v-for="corpus in corpuses"
-        :key="corpus.slugFolderName"
-      >
-        <CorpusPreview :corpus="corpus" />
+      <div class="m_list--corpuses">
+        <div
+          class="m_list--corpuses--corpus"
+          v-for="corpus in corpuses"
+          :key="corpus.slugFolderName"
+        >
+          <CorpusPreview :corpus="corpus" />
+        </div>
       </div>
     </div>
   </div>
@@ -52,8 +58,20 @@ export default {
   mounted() {},
   beforeDestroy() {},
   watch: {},
-  computed: {},
-  methods: {}
+  computed: {
+    can_admin_corpora() {
+      // todo actual admin checks
+      return this.hashCode(this.$root.admin_pwd) === 2678;
+    }
+  },
+  methods: {
+    hashCode(s) {
+      return s.split("").reduce(function(a, b) {
+        a = (a << 5) - a + b.charCodeAt(0);
+        return a & a;
+      }, 0);
+    }
+  }
 };
 </script>
 <style lang="scss" scoped>

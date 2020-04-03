@@ -1,5 +1,5 @@
 <template>
-  <div class="m_addMedias">
+  <div class="m_addMedias" :class="{ 'is--collapsed': collapsed }">
     <div
       class="menu_encart"
       :class="{ 'is--showing_options': show_addmedia_options }"
@@ -8,72 +8,105 @@
       <transition name="slide-fade">
         <!-- @mouseenter="!is_touch && show_drop_container === false ? show_addmedia_options = true : ''" -->
         <div class="menu_encart--options" v-if="show_addmedia_options">
-          <button
-            key="add_text"
-            type="button"
-            class="button button-round button-round-small margin-bottom-small padding-none bg-noir c-blanc"
-            @click="createTextMedia"
-            :disabled="read_only"
-          >
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40">
-              <path
-                d="M26.51,12V28h-13V12h13m1-1h-15V29h15V11Z"
-                style="fill: currentColor"
-              />
-              <line
-                x1="15.21"
-                y1="14.41"
-                x2="24.71"
-                y2="14.41"
-                style="fill: none;stroke: currentColor;stroke-miterlimit: 10"
-              />
-              <line
-                x1="15.21"
-                y1="17.88"
-                x2="24.71"
-                y2="17.88"
-                style="fill: none;stroke: currentColor;stroke-miterlimit: 10"
-              />
-              <line
-                x1="15.21"
-                y1="21.26"
-                x2="24.71"
-                y2="21.26"
-                style="fill: none;stroke: currentColor;stroke-miterlimit: 10"
-              />
-              <line
-                x1="15.21"
-                y1="24.62"
-                x2="22.88"
-                y2="24.62"
-                style="fill: none;stroke: currentColor;stroke-miterlimit: 10"
-              />
-            </svg>
-            <span class="text_label">Texte</span>
-          </button>
-
-          <template>
-            <label
-              :key="`add_${field.key}`"
-              class="button button-round button-round-small margin-bottom-small bg-noir c-blanc padding-none"
-              v-for="field in input_file_fields"
+          <div class="menu_encart--options--buttonRow">
+            <button
+              key="add_text"
+              type="button"
+              class="button button-round button-round-small margin-bottom-small padding-none bg-noir c-blanc"
+              @click="createMedia({ type: 'text' })"
               :disabled="read_only"
-              :for="`add_${field.key + unique_id}`"
             >
-              <div v-html="field.svg" />
-              <span class="text_label">{{ field.label }}</span>
-              <input
-                type="file"
-                multiple
-                :id="`add_${field.key + unique_id}`"
-                :name="field.key"
-                @change="updateInputFiles($event)"
-                :accept="field.accept"
-                :capture="field.capture"
-                style="width: 1px; height: 1px; overflow: hidden;"
-              />
-            </label>
-          </template>
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40">
+                <path
+                  d="M26.51,12V28h-13V12h13m1-1h-15V29h15V11Z"
+                  style="fill: currentColor"
+                />
+                <line
+                  x1="15.21"
+                  y1="14.41"
+                  x2="24.71"
+                  y2="14.41"
+                  style="fill: none;stroke: currentColor;stroke-miterlimit: 10"
+                />
+                <line
+                  x1="15.21"
+                  y1="17.88"
+                  x2="24.71"
+                  y2="17.88"
+                  style="fill: none;stroke: currentColor;stroke-miterlimit: 10"
+                />
+                <line
+                  x1="15.21"
+                  y1="21.26"
+                  x2="24.71"
+                  y2="21.26"
+                  style="fill: none;stroke: currentColor;stroke-miterlimit: 10"
+                />
+                <line
+                  x1="15.21"
+                  y1="24.62"
+                  x2="22.88"
+                  y2="24.62"
+                  style="fill: none;stroke: currentColor;stroke-miterlimit: 10"
+                />
+              </svg>
+              <span class="text_label">Texte</span>
+            </button>
+
+            <button
+              key="add_link"
+              type="button"
+              class="button button-round button-round-small margin-bottom-small padding-none bg-noir c-blanc"
+              @click="createMedia({ type: 'link' })"
+              :disabled="read_only"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="-50 -50 200 200">
+                <path
+                  stroke="none"
+                  fill="currentColor"
+                  d="M8.9,104.6c11.8,11.8,31,11.8,42.8,0l16.9-16.9c-1.3,0.1-2.7,0.2-4,0.2c-4.3,0-8.4-0.7-12.4-2l-9.6,9.6
+		c-3.3,3.3-7.7,5.1-12.3,5.1c-4.6,0-9-1.8-12.3-5.1c-3.3-3.3-5.1-7.6-5.1-12.3c0-4.6,1.8-9,5.1-12.3l18.7-18.7
+		c3.3-3.3,7.7-5.1,12.3-5.1c4.7,0,9,1.8,12.3,5.1c1.6,1.6,2.8,3.4,3.7,5.5c2.1-0.1,10.6-7.5,10.6-7.5c-1.4-2.5-3.1-4.9-5.3-7.1
+		c-11.8-11.8-31-11.8-42.8,0L8.9,61.8C-3,73.6-3,92.8,8.9,104.6z"
+                />
+                <path
+                  stroke="none"
+                  fill="currentColor"
+                  d="M48.8,25.5c4.3,0,8.5,0.7,12.5,2.1l9.6-9.6c3.3-3.3,7.7-5.1,12.3-5.1s9,1.8,12.3,5.1c3.3,3.3,5.1,7.7,5.1,12.3
+		s-1.8,9-5.1,12.3L76.8,61.3c-3.3,3.3-7.7,5.1-12.3,5.1c-4.7,0-9-1.8-12.3-5.1c-1.6-1.6-2.9-3.5-3.7-5.5c-2.1,0.1-4.1,1-5.7,2.5
+		l-5,5c1.4,2.5,3.1,4.9,5.3,7.1c11.8,11.8,31,11.8,42.8,0l18.7-18.7c11.8-11.8,11.8-31,0-42.8C92.8-3,73.7-3,61.8,8.9L45,25.7
+		C46.2,25.6,47.5,25.5,48.8,25.5L48.8,25.5L48.8,25.5z"
+                />
+              </svg>
+              <span class="text_label">Lien</span>
+            </button>
+
+            <template>
+              <label
+                :key="`add_${field.key}`"
+                class="button button-round button-round-small margin-bottom-small bg-noir c-blanc padding-none"
+                v-for="field in input_file_fields"
+                :disabled="read_only"
+                :for="`add_${field.key + unique_id}`"
+              >
+                <div class="svg" v-html="field.svg" />
+                <span class="text_label">{{ field.label }}</span>
+                <input
+                  type="file"
+                  multiple
+                  :id="`add_${field.key + unique_id}`"
+                  :name="field.key"
+                  @change="updateInputFiles($event)"
+                  :accept="field.accept"
+                  :capture="field.capture"
+                  style="width: 1px; height: 1px; overflow: hidden;"
+                />
+              </label>
+            </template>
+          </div>
+          <div>
+            <small>{{ $t("file_max_size") }}: 20mo</small>
+          </div>
         </div>
       </transition>
 
@@ -128,7 +161,11 @@ import debounce from "debounce";
 
 export default {
   props: {
-    slugFolderName: String
+    slugFolderName: String,
+    collapsed: {
+      type: Boolean,
+      default: false
+    }
   },
   components: {
     UploadFile
@@ -165,7 +202,7 @@ export default {
         // },
         {
           key: "file",
-          label: "Fichier",
+          label: "Fichier(s)",
           accept: "",
           capture: false,
           svg: `
@@ -232,18 +269,16 @@ export default {
     }
   },
   methods: {
-    createTextMedia() {
+    createMedia({ type }) {
       if (window.state.dev_mode === "debug")
-        console.log("METHODS • AddMediaButton: createTextMedia");
+        console.log("METHODS • AddMediaButton: createMedia");
 
       this.$root
         .createMedia({
           slugFolderName: this.slugFolderName,
           type: "corpus",
           additionalMeta: {
-            type: "text"
-            // w: 4,
-            // h: 4
+            type
           }
         })
         .then(mdata => {
@@ -251,19 +286,6 @@ export default {
           this.$emit("newMediaCreated", mdata.metaFileName);
         });
     },
-    newTextMediaCreated(mdata) {
-      if (this.$root.justCreatedMediaID === mdata.id) {
-        this.$eventHub.$off(
-          "socketio.media_created_or_updated",
-          this.newTextMediaCreated
-        );
-        this.$root.justCreatedMediaID = false;
-        this.$nextTick(() => {
-          this.$eventHub.$emit("timeline.openMediaModal", mdata.metaFileName);
-        });
-      }
-    },
-
     updateInputFiles($event) {
       if (this.$root.state.dev_mode === "debug") {
         console.log(`METHODS • AddMedia / updateSelectedFiles`);
@@ -325,7 +347,7 @@ export default {
   // width: 100px;
   height: auto;
   text-align: center;
-  margin: var(--spacing);
+  margin: calc(var(--spacing) / 2);
   // color: var(--color-white);
 
   .menu_encart {
@@ -336,60 +358,64 @@ export default {
       padding: calc(var(--spacing) / 4);
 
       flex: 0 1 auto;
-      display: flex;
-      flex-flow: row wrap;
-      justify-content: flex-end;
       background-color: #fff4db;
 
-      > * {
-        display: block;
-        position: relative;
-        cursor: pointer;
-        opacity: 0;
-        padding: 0;
-        transition: all 0.4s cubic-bezier(0.19, 1, 0.22, 1);
-        background-color: transparent;
-
+      .menu_encart--options--buttonRow {
         display: flex;
-        align-items: center;
-        background-color: var(--color-black);
-        border-radius: 20px;
-        // padding: calc(var(--spacing) / 4) calc(var(--spacing) / 2);
-        margin: calc(var(--spacing) / 4) 1px;
+        flex-flow: row wrap;
+        justify-content: flex-end;
+        > button,
+        > label {
+          display: block;
+          position: relative;
+          cursor: pointer;
+          opacity: 0;
+          padding: 0;
+          transition: all 0.4s cubic-bezier(0.19, 1, 0.22, 1);
+          background-color: transparent;
 
-        .text_label {
-          font-size: 0.8rem;
-          cursor: inherit;
           display: flex;
-          flex-flow: row nowrap;
           align-items: center;
-          align-content: center;
-          border-radius: 10px;
-          text-transform: lowercase;
-          padding: calc(var(--spacing) / 4) calc(var(--spacing) / 2)
-            calc(var(--spacing) / 4) 0;
+          background-color: var(--color-black);
+          border-radius: 20px;
+          // padding: calc(var(--spacing) / 4) calc(var(--spacing) / 2);
+          margin: calc(var(--spacing) / 4) 1px;
 
-          font-family: "base12";
-          font-style: italic;
+          .text_label {
+            font-size: 0.8rem;
+            cursor: inherit;
+            display: flex;
+            flex-flow: row nowrap;
+            align-items: center;
+            align-content: center;
+            border-radius: 10px;
+            text-transform: lowercase;
+            padding: calc(var(--spacing) / 4) calc(var(--spacing) / 2)
+              calc(var(--spacing) / 4) 0;
 
-          color: var(--color-white);
-          // margin: calc(var(--spacing) / 4);
-        }
-        svg {
-          width: 30px;
-          height: 30px;
-          color: var(--color-white);
-          // padding-left: calc(var(--spacing) / 4);
-        }
+            font-family: "base12";
+            font-style: italic;
 
-        .text_label {
+            color: var(--color-white);
+            // margin: calc(var(--spacing) / 4);
+          }
+          svg,
+          .svg {
+            width: 30px;
+            height: 30px;
+            color: var(--color-white);
+            // padding-left: calc(var(--spacing) / 4);
+          }
+
+          .text_label {
+          }
         }
       }
     }
     &.is--showing_options {
       pointer-events: auto;
 
-      .menu_encart--options > * {
+      .menu_encart--options .menu_encart--options--buttonRow > * {
         opacity: 1;
         transform: translateY(0px) scale(1);
 
@@ -415,12 +441,13 @@ export default {
       padding: calc(var(--spacing) / 4);
       border-radius: 14px;
 
-      > * {
+      svg {
         display: block;
         width: 14px;
         height: 14px;
         transition: transform cubic-bezier(0.19, 1, 0.22, 1) 0.8s;
         transform: rotate(0);
+        fill: currentColor;
       }
       &.is--dragover {
         width: 64px;
@@ -441,6 +468,25 @@ export default {
     }
   }
 
+  &.is--collapsed .menu_encart--button:not(:hover):not(.is--shown) {
+    background-color: var(--color-black);
+    padding: 2px;
+    > * {
+      width: 0px;
+      height: 0px;
+      // transform: scale(0.4);
+    }
+  }
+
+  .menu_encart--button:not(.is--shown) {
+    background-color: var(--color-black);
+    > * {
+      color: #fff4db;
+      svg {
+      }
+    }
+  }
+
   .m_addMedias--dropContainer {
     position: absolute;
     z-index: 0;
@@ -449,8 +495,8 @@ export default {
 
     border-radius: 6px;
 
-    width: 320px;
-    height: 320px;
+    width: 120px;
+    height: 120px;
     background-color: var(--color-black);
   }
 }

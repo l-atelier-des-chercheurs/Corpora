@@ -1,7 +1,10 @@
 <template>
   <div class="app">
     <List
-      v-if="$root.do_navigation.view === 'ListView'"
+      v-if="
+        $root.do_navigation.view === 'ListView' &&
+          !$root.settings.is_loading_corpus
+      "
       :corpuses="Object.values($root.store.corpus)"
     />
 
@@ -35,10 +38,12 @@ export default {
   methods: {}
 };
 </script>
+<style src="../../node_modules/vue-plyr/dist/vue-plyr.css"></style>
 <style lang="scss">
 :root {
   --spacing: 1rem;
   --color-black: #3c3541;
+  --color-orange: #ffd675;
   --color-white: #fff;
   --active-color: #ccd0da;
   --panel-width: 320px;
@@ -47,10 +52,11 @@ export default {
 body {
   background-color: #e8f4eb;
   background-color: #e2edef;
+  color: var(--color-black);
   margin: 0;
   font-family: "base12", sans-serif;
   font-size: 90%;
-  line-height: 1.21;
+  line-height: 1.25;
 }
 
 * {
@@ -69,7 +75,7 @@ h1 {
 }
 
 h2 {
-  font-size: 1.5rem;
+  font-size: 1.3rem;
   line-height: 1.125;
 }
 
@@ -105,19 +111,40 @@ SVG Icons - svgicons.sparkk.fr
 
 .m_advancedMenu {
   position: relative;
-  z-index: 1;
+  display: flex;
+  flex-flow: column wrap;
+  justify-content: flex-end;
+  align-items: flex-end;
+  align-content: flex-end;
+
+  > * {
+  }
 
   .m_advancedMenu--toggleButton {
     margin-bottom: 0;
     // background-color: transparent;
+    width: auto;
+    height: auto;
+    line-height: 1;
+    padding: 0;
     svg {
-      width: 2em;
-      height: 2em;
+      display: block;
+      width: 26px;
+      height: 16px;
+      padding: 0 5px;
+      // fill: #000;
+      filter: drop-shadow(0px 0px 2px #fff);
     }
   }
 
   .m_advancedMenu--menu {
-    position: absolute;
+    position: relative;
+    z-index: 2;
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: flex-end;
+    align-content: flex-end;
+    align-items: flex-end;
 
     > * {
       display: block;
@@ -866,37 +893,61 @@ audio {
   }
 }
 
-@media print {
-  .m_modal--container {
-    max-width: none !important;
-  }
-  .m_modal--container--content {
-    box-shadow: none !important;
-    border: none !important;
-  }
-  .m_modal--preview {
-    height: 100vh !important;
-    border: none !important;
-  }
-  .m_modal--header {
-    display: none;
-  }
-  // .m_modal--sidebar {
-  //   display: none;
-  // }
+.plyr {
+  width: 100%;
+  height: 100%;
+  min-width: 100px;
+  font-family: inherit;
+  font-weight: 300;
 
-  .m_modal--preview {
-    display: none;
+  button {
+    min-height: 0;
   }
-  .m_modal--mask {
-    height: auto !important;
+
+  video,
+  .plyr__video-wrapper,
+  .plyr__poster {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+
+    > video {
+      object-fit: contain;
+      height: 100%;
+    }
   }
-  .m_modal--sidebar {
-    overflow: auto;
-    max-height: none !important;
+  .plyr__video-wrapper {
+    background-color: var(--color-black);
   }
-  .m_modal--footer {
-    display: none;
+  &.plyr--audio {
+    // .bg-noir;
+
+    .plyr__controls {
+      // background: @c-noir;
+      background: transparent;
+      color: var(--color-black);
+    }
+  }
+  .plyr__controls {
+    background: linear-gradient(rgba(60, 53, 65, 0), rgba(60, 53, 65, 1));
+    color: white;
+  }
+
+  .plyr__control--overlaid {
+    background-color: var(--color-orange);
+  }
+  input[type="range"] {
+    color: var(--color-orange);
+  }
+
+  .plyr__control.plyr__tab-focus,
+  .plyr__control:hover,
+  .plyr__control[aria-expanded="true"] {
+    background-color: var(--color-orange);
+  }
+
+  .plyr__progress__container {
+    flex: 1;
   }
 }
 </style>
