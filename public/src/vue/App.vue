@@ -56,7 +56,7 @@ body {
   margin: 0;
   font-family: "base12", sans-serif;
   font-size: 90%;
-  line-height: 1.21;
+  line-height: 1.25;
 }
 
 * {
@@ -75,7 +75,7 @@ h1 {
 }
 
 h2 {
-  font-size: 1.5rem;
+  font-size: 1.3rem;
   line-height: 1.125;
 }
 
