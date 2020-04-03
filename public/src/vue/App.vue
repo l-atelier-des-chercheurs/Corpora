@@ -108,7 +108,6 @@ SVG Icons - svgicons.sparkk.fr
 
 .m_advancedMenu {
   position: relative;
-  z-index: 1;
 
   .m_advancedMenu--toggleButton {
     margin-bottom: 0;
@@ -121,6 +120,7 @@ SVG Icons - svgicons.sparkk.fr
 
   .m_advancedMenu--menu {
     position: absolute;
+    z-index: 2;
 
     > * {
       display: block;
