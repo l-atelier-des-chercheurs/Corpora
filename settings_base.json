@@ -94,6 +94,9 @@
           "title": {
             "type": "string"
           },
+          "caption": {
+            "type": "string"
+          },
           "type": {
             "type": "string",
             "options": [
@@ -101,6 +104,7 @@
               "video",
               "audio",
               "text",
+              "link",
               "document",
               "fragment",
               "other"

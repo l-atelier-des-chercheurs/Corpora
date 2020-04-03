@@ -111,11 +111,21 @@ SVG Icons - svgicons.sparkk.fr
   position: relative;
 
   .m_advancedMenu--toggleButton {
+    display: flex;
+    align-items: center;
     margin-bottom: 0;
-    // background-color: transparent;
+    background-color: transparent;
+
+    span {
+      text-transform: uppercase;
+      font-size: 75%;
+      padding: 0 4px;
+    }
     svg {
       width: 2em;
       height: 2em;
+      fill: #000;
+      filter: drop-shadow(0px 0px 2px #ccd0da);
     }
   }
 

@@ -13,7 +13,7 @@
               key="add_text"
               type="button"
               class="button button-round button-round-small margin-bottom-small padding-none bg-noir c-blanc"
-              @click="createTextMedia"
+              @click="createMedia({ type: 'text' })"
               :disabled="read_only"
             >
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40">
@@ -53,6 +53,34 @@
               <span class="text_label">Texte</span>
             </button>
 
+            <button
+              key="add_link"
+              type="button"
+              class="button button-round button-round-small margin-bottom-small padding-none bg-noir c-blanc"
+              @click="createMedia({ type: 'link' })"
+              :disabled="read_only"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="-50 -50 200 200">
+                <path
+                  stroke="none"
+                  fill="currentColor"
+                  d="M8.9,104.6c11.8,11.8,31,11.8,42.8,0l16.9-16.9c-1.3,0.1-2.7,0.2-4,0.2c-4.3,0-8.4-0.7-12.4-2l-9.6,9.6
+		c-3.3,3.3-7.7,5.1-12.3,5.1c-4.6,0-9-1.8-12.3-5.1c-3.3-3.3-5.1-7.6-5.1-12.3c0-4.6,1.8-9,5.1-12.3l18.7-18.7
+		c3.3-3.3,7.7-5.1,12.3-5.1c4.7,0,9,1.8,12.3,5.1c1.6,1.6,2.8,3.4,3.7,5.5c2.1-0.1,10.6-7.5,10.6-7.5c-1.4-2.5-3.1-4.9-5.3-7.1
+		c-11.8-11.8-31-11.8-42.8,0L8.9,61.8C-3,73.6-3,92.8,8.9,104.6z"
+                />
+                <path
+                  stroke="none"
+                  fill="currentColor"
+                  d="M48.8,25.5c4.3,0,8.5,0.7,12.5,2.1l9.6-9.6c3.3-3.3,7.7-5.1,12.3-5.1s9,1.8,12.3,5.1c3.3,3.3,5.1,7.7,5.1,12.3
+		s-1.8,9-5.1,12.3L76.8,61.3c-3.3,3.3-7.7,5.1-12.3,5.1c-4.7,0-9-1.8-12.3-5.1c-1.6-1.6-2.9-3.5-3.7-5.5c-2.1,0.1-4.1,1-5.7,2.5
+		l-5,5c1.4,2.5,3.1,4.9,5.3,7.1c11.8,11.8,31,11.8,42.8,0l18.7-18.7c11.8-11.8,11.8-31,0-42.8C92.8-3,73.7-3,61.8,8.9L45,25.7
+		C46.2,25.6,47.5,25.5,48.8,25.5L48.8,25.5L48.8,25.5z"
+                />
+              </svg>
+              <span class="text_label">Lien</span>
+            </button>
+
             <template>
               <label
                 :key="`add_${field.key}`"
@@ -61,7 +89,7 @@
                 :disabled="read_only"
                 :for="`add_${field.key + unique_id}`"
               >
-                <div v-html="field.svg" />
+                <div class="svg" v-html="field.svg" />
                 <span class="text_label">{{ field.label }}</span>
                 <input
                   type="file"
@@ -133,7 +161,11 @@ import debounce from "debounce";
 
 export default {
   props: {
-    slugFolderName: String
+    slugFolderName: String,
+    collapsed: {
+      type: Boolean,
+      default: false
+    }
   },
   components: {
     UploadFile
@@ -237,18 +269,16 @@ export default {
     }
   },
   methods: {
-    createTextMedia() {
+    createMedia({ type }) {
       if (window.state.dev_mode === "debug")
-        console.log("METHODS • AddMediaButton: createTextMedia");
+        console.log("METHODS • AddMediaButton: createMedia");
 
       this.$root
         .createMedia({
           slugFolderName: this.slugFolderName,
           type: "corpus",
           additionalMeta: {
-            type: "text"
-            // w: 4,
-            // h: 4
+            type
           }
         })
         .then(mdata => {
@@ -382,7 +412,8 @@ export default {
             color: var(--color-white);
             // margin: calc(var(--spacing) / 4);
           }
-          svg {
+          svg,
+          .svg {
             width: 30px;
             height: 30px;
             color: var(--color-white);
