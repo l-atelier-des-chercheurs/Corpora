@@ -8,72 +8,77 @@
       <transition name="slide-fade">
         <!-- @mouseenter="!is_touch && show_drop_container === false ? show_addmedia_options = true : ''" -->
         <div class="menu_encart--options" v-if="show_addmedia_options">
-          <button
-            key="add_text"
-            type="button"
-            class="button button-round button-round-small margin-bottom-small padding-none bg-noir c-blanc"
-            @click="createTextMedia"
-            :disabled="read_only"
-          >
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40">
-              <path
-                d="M26.51,12V28h-13V12h13m1-1h-15V29h15V11Z"
-                style="fill: currentColor"
-              />
-              <line
-                x1="15.21"
-                y1="14.41"
-                x2="24.71"
-                y2="14.41"
-                style="fill: none;stroke: currentColor;stroke-miterlimit: 10"
-              />
-              <line
-                x1="15.21"
-                y1="17.88"
-                x2="24.71"
-                y2="17.88"
-                style="fill: none;stroke: currentColor;stroke-miterlimit: 10"
-              />
-              <line
-                x1="15.21"
-                y1="21.26"
-                x2="24.71"
-                y2="21.26"
-                style="fill: none;stroke: currentColor;stroke-miterlimit: 10"
-              />
-              <line
-                x1="15.21"
-                y1="24.62"
-                x2="22.88"
-                y2="24.62"
-                style="fill: none;stroke: currentColor;stroke-miterlimit: 10"
-              />
-            </svg>
-            <span class="text_label">Texte</span>
-          </button>
-
-          <template>
-            <label
-              :key="`add_${field.key}`"
-              class="button button-round button-round-small margin-bottom-small bg-noir c-blanc padding-none"
-              v-for="field in input_file_fields"
+          <div class="menu_encart--options--buttonRow">
+            <button
+              key="add_text"
+              type="button"
+              class="button button-round button-round-small margin-bottom-small padding-none bg-noir c-blanc"
+              @click="createTextMedia"
               :disabled="read_only"
-              :for="`add_${field.key + unique_id}`"
             >
-              <div v-html="field.svg" />
-              <span class="text_label">{{ field.label }}</span>
-              <input
-                type="file"
-                multiple
-                :id="`add_${field.key + unique_id}`"
-                :name="field.key"
-                @change="updateInputFiles($event)"
-                :accept="field.accept"
-                :capture="field.capture"
-                style="width: 1px; height: 1px; overflow: hidden;"
-              />
-            </label>
-          </template>
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40">
+                <path
+                  d="M26.51,12V28h-13V12h13m1-1h-15V29h15V11Z"
+                  style="fill: currentColor"
+                />
+                <line
+                  x1="15.21"
+                  y1="14.41"
+                  x2="24.71"
+                  y2="14.41"
+                  style="fill: none;stroke: currentColor;stroke-miterlimit: 10"
+                />
+                <line
+                  x1="15.21"
+                  y1="17.88"
+                  x2="24.71"
+                  y2="17.88"
+                  style="fill: none;stroke: currentColor;stroke-miterlimit: 10"
+                />
+                <line
+                  x1="15.21"
+                  y1="21.26"
+                  x2="24.71"
+                  y2="21.26"
+                  style="fill: none;stroke: currentColor;stroke-miterlimit: 10"
+                />
+                <line
+                  x1="15.21"
+                  y1="24.62"
+                  x2="22.88"
+                  y2="24.62"
+                  style="fill: none;stroke: currentColor;stroke-miterlimit: 10"
+                />
+              </svg>
+              <span class="text_label">Texte</span>
+            </button>
+
+            <template>
+              <label
+                :key="`add_${field.key}`"
+                class="button button-round button-round-small margin-bottom-small bg-noir c-blanc padding-none"
+                v-for="field in input_file_fields"
+                :disabled="read_only"
+                :for="`add_${field.key + unique_id}`"
+              >
+                <div v-html="field.svg" />
+                <span class="text_label">{{ field.label }}</span>
+                <input
+                  type="file"
+                  multiple
+                  :id="`add_${field.key + unique_id}`"
+                  :name="field.key"
+                  @change="updateInputFiles($event)"
+                  :accept="field.accept"
+                  :capture="field.capture"
+                  style="width: 1px; height: 1px; overflow: hidden;"
+                />
+              </label>
+            </template>
+          </div>
+          <div>
+            <small>{{ $t("file_max_size") }}: 20mo</small>
+          </div>
         </div>
       </transition>
 
@@ -336,60 +341,63 @@ export default {
       padding: calc(var(--spacing) / 4);
 
       flex: 0 1 auto;
-      display: flex;
-      flex-flow: row wrap;
-      justify-content: flex-end;
       background-color: #fff4db;
 
-      > * {
-        display: block;
-        position: relative;
-        cursor: pointer;
-        opacity: 0;
-        padding: 0;
-        transition: all 0.4s cubic-bezier(0.19, 1, 0.22, 1);
-        background-color: transparent;
-
+      .menu_encart--options--buttonRow {
         display: flex;
-        align-items: center;
-        background-color: var(--color-black);
-        border-radius: 20px;
-        // padding: calc(var(--spacing) / 4) calc(var(--spacing) / 2);
-        margin: calc(var(--spacing) / 4) 1px;
+        flex-flow: row wrap;
+        justify-content: flex-end;
+        > button,
+        > label {
+          display: block;
+          position: relative;
+          cursor: pointer;
+          opacity: 0;
+          padding: 0;
+          transition: all 0.4s cubic-bezier(0.19, 1, 0.22, 1);
+          background-color: transparent;
 
-        .text_label {
-          font-size: 0.8rem;
-          cursor: inherit;
           display: flex;
-          flex-flow: row nowrap;
           align-items: center;
-          align-content: center;
-          border-radius: 10px;
-          text-transform: lowercase;
-          padding: calc(var(--spacing) / 4) calc(var(--spacing) / 2)
-            calc(var(--spacing) / 4) 0;
+          background-color: var(--color-black);
+          border-radius: 20px;
+          // padding: calc(var(--spacing) / 4) calc(var(--spacing) / 2);
+          margin: calc(var(--spacing) / 4) 1px;
 
-          font-family: "base12";
-          font-style: italic;
+          .text_label {
+            font-size: 0.8rem;
+            cursor: inherit;
+            display: flex;
+            flex-flow: row nowrap;
+            align-items: center;
+            align-content: center;
+            border-radius: 10px;
+            text-transform: lowercase;
+            padding: calc(var(--spacing) / 4) calc(var(--spacing) / 2)
+              calc(var(--spacing) / 4) 0;
 
-          color: var(--color-white);
-          // margin: calc(var(--spacing) / 4);
-        }
-        svg {
-          width: 30px;
-          height: 30px;
-          color: var(--color-white);
-          // padding-left: calc(var(--spacing) / 4);
-        }
+            font-family: "base12";
+            font-style: italic;
 
-        .text_label {
+            color: var(--color-white);
+            // margin: calc(var(--spacing) / 4);
+          }
+          svg {
+            width: 30px;
+            height: 30px;
+            color: var(--color-white);
+            // padding-left: calc(var(--spacing) / 4);
+          }
+
+          .text_label {
+          }
         }
       }
     }
     &.is--showing_options {
       pointer-events: auto;
 
-      .menu_encart--options > * {
+      .menu_encart--options .menu_encart--options--buttonRow > * {
         opacity: 1;
         transform: translateY(0px) scale(1);
 

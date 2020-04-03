@@ -24,7 +24,7 @@
   "deletedFolderName": "_bin",
 
   "mediaThumbQuality": 70,
-  "maxFileSizeForUpload": 10000,
+  "maxFileSizeForUpload": 20000,
 
   "regexpMatchFolderNames": "^([^.]+)$",
   "regexpGetFileExtension": "\\.[^.]*$",
