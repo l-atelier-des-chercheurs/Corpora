@@ -170,7 +170,7 @@ export default {
         // },
         {
           key: "file",
-          label: "Fichier",
+          label: "Fichier(s)",
           accept: "",
           capture: false,
           svg: `
