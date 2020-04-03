@@ -190,6 +190,7 @@ let vm = new Vue({
 
     currentTime: "",
     app_is_fullscreen: false,
+    admin_pwd: "",
 
     do_navigation: {
       view: "ListView",
