@@ -4,8 +4,6 @@
       <div class="m_fragment--content--top">
         <h2>{{ fragment.title }}</h2>
 
-        {{ $root.settings.text_media_being_edited }}
-
         <div class="m_advancedMenu">
           <button
             type="button"
@@ -75,7 +73,7 @@
                 linked_medias.length > 0 && index < linked_medias.length - 1
               "
               :slugFolderName="slugFolderName"
-              :key="'addmedia_' + media.metaFileName"
+              :key="'addmedia_' + index"
               :collapsed="true"
               @newMediaCreated="
                 metaFileName => newMediaCreated({ metaFileName, index })
