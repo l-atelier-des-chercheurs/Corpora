@@ -59,7 +59,7 @@
         :readonly="read_only"
         @click="showInputPasswordField = !showInputPasswordField"
       >
-        {{ $t("password_required_to_open") }}
+        {{ $t("password_required_to_edit") }}
       </button>
 
       <div
@@ -112,7 +112,6 @@
       </div>
 
       <button
-        v-if="can_access_corpus"
         type="button"
         class=""
         @click="$root.openCorpus(corpus.slugFolderName)"
@@ -196,7 +195,6 @@ export default {
             f.allowed_slugFolderNames.includes(this.corpus.slugFolderName)
         );
 
-        debugger;
         if (has_passworded_folder.length === 0) {
           this.$alertify
             .closeLogOnClick(true)
@@ -208,7 +206,7 @@ export default {
           this.$refs.passwordField.focus();
         } else {
           this.showInputPasswordField = false;
-          this.$root.openCorpus(this.corpus.slugFolderName);
+          // this.$root.openCorpus(this.corpus.slugFolderName);
         }
       });
     },

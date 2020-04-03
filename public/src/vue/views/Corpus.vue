@@ -1,101 +1,108 @@
 <template>
-  <div class="m_corpus">
-    <div class="m_corpus--presentation">
-      <div class="">
-        <button type="button" @click="$root.closeCorpus()">back</button>
+  <div style="width: 100%; height: 100%;">
+    <CorpusPwd v-if="!can_access_corpus" :corpus="corpus" />
+    <div v-else class="m_corpus">
+      <div class="m_corpus--presentation">
+        <div class="">
+          <button type="button" @click="$root.closeCorpus()">back</button>
+        </div>
+
+        <div class="m_corpus--presentation--name">
+          <h1>{{ corpus.name }}</h1>
+          <h3>{{ corpus.subtitle }}</h3>
+        </div>
+
+        <div>
+          <p>
+            {{ corpus.description }}
+          </p>
+        </div>
+
+        <div v-if="previewURL" class="m_corpus--presentation--vignette">
+          <img :src="previewURL" class draggable="false" />
+        </div>
+
+        <div>
+          <button
+            type="button"
+            @click="show_create_fragment = !show_create_fragment"
+          >
+            Create fragment
+          </button>
+
+          <CreateFragment
+            v-if="show_create_fragment"
+            :corpus="corpus"
+            :all_tags="all_tags"
+            @close="show_create_fragment = false"
+          />
+        </div>
+
+        <div>
+          Les logos ici
+        </div>
       </div>
 
-      <div class="m_corpus--presentation--name">
-        <h1>{{ corpus.name }}</h1>
-        <h3>{{ corpus.subtitle }}</h3>
-      </div>
-
-      <div>
-        <p>
-          {{ corpus.description }}
-        </p>
-      </div>
-
-      <div v-if="previewURL" class="m_corpus--presentation--vignette">
-        <img :src="previewURL" class draggable="false" />
-      </div>
-
-      <div>
-        <button
-          type="button"
-          @click="show_create_fragment = !show_create_fragment"
-        >
-          Create fragment
-        </button>
-
-        <CreateFragment
-          v-if="show_create_fragment"
-          :corpus="corpus"
-          :all_tags="all_tags"
-          @close="show_create_fragment = false"
-        />
-      </div>
-
-      <div>
-        Les logos ici
-      </div>
-    </div>
-
-    <div
-      class="m_tags"
-      ref="corpus_content"
-      @wheel="/* onMousewheel */"
-      @scroll="/* onTimelineScroll */"
-    >
-      <!-- <div class="m_tags--alltags">
+      <div
+        class="m_tags"
+        ref="corpus_content"
+        @wheel="/* onMousewheel */"
+        @scroll="/* onTimelineScroll */"
+      >
+        <!-- <div class="m_tags--alltags">
         <h3 v-for="{ tag } in tags_with_fragments" :key="tag">
           {{ tag }}
         </h3>
       </div> -->
-      <div class="m_tags--allfragments">
-        <div
-          v-for="{ tag, fragments } in tags_with_fragments"
-          :key="tag"
-          class="m_tags--allfragments--tagfragment"
-        >
-          <div class="m_tags--allfragments--tagfragment--tag">
-            <div>
-              <button type="button" @click="toggleShowingFragmentsForTag(tag)">
-                <h2>
-                  <template v-if="tag === 'zzz'">
-                    Non-taggés
-                  </template>
-                  <template v-else>
-                    {{ tag }}
-                  </template>
-                  &nbsp;<small>({{ fragments.length }})</small>
-                </h2>
-              </button>
+        <div class="m_tags--allfragments">
+          <div
+            v-for="{ tag, fragments } in tags_with_fragments"
+            :key="tag"
+            class="m_tags--allfragments--tagfragment"
+          >
+            <div class="m_tags--allfragments--tagfragment--tag">
+              <div>
+                <button
+                  type="button"
+                  @click="toggleShowingFragmentsForTag(tag)"
+                >
+                  <h2>
+                    <template v-if="tag === 'zzz'">
+                      Non-taggés
+                    </template>
+                    <template v-else>
+                      {{ tag }}
+                    </template>
+                    &nbsp;<small>({{ fragments.length }})</small>
+                  </h2>
+                </button>
+              </div>
             </div>
-          </div>
 
-          <transition name="slide-fade">
-            <div
-              class="m_tags--allfragments--tagfragment--fragments"
-              v-if="showFragmentsFor(tag)"
-            >
-              <Fragment
-                v-for="fragment in fragments"
-                :key="fragment.metaFileName"
-                :corpus="corpus"
-                :all_tags="all_tags"
-                :medias="medias"
-                :fragment="fragment"
-                :slugFolderName="corpus.slugFolderName"
-              />
-            </div>
-          </transition>
+            <transition name="slide-fade">
+              <div
+                class="m_tags--allfragments--tagfragment--fragments"
+                v-if="showFragmentsFor(tag)"
+              >
+                <Fragment
+                  v-for="fragment in fragments"
+                  :key="fragment.metaFileName"
+                  :corpus="corpus"
+                  :all_tags="all_tags"
+                  :medias="medias"
+                  :fragment="fragment"
+                  :slugFolderName="corpus.slugFolderName"
+                />
+              </div>
+            </transition>
+          </div>
         </div>
       </div>
     </div>
   </div>
 </template>
 <script>
+import CorpusPwd from "../components/modals/CorpusPwd.vue";
 import Fragment from "../components/Fragment.vue";
 import CreateFragment from "../components/modals/CreateFragment.vue";
 
@@ -104,6 +111,7 @@ export default {
     corpus: Object
   },
   components: {
+    CorpusPwd,
     Fragment,
     CreateFragment
   },
@@ -126,6 +134,12 @@ export default {
     }
   },
   computed: {
+    can_access_corpus() {
+      return this.$root.canAccessFolder({
+        type: "corpus",
+        slugFolderName: this.corpus.slugFolderName
+      });
+    },
     previewURL() {
       if (
         !this.corpus.hasOwnProperty("preview") ||

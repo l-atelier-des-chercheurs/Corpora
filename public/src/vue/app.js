@@ -201,7 +201,8 @@ let vm = new Vue({
       windowWidth: window.innerWidth,
       windowHeight: window.innerHeight,
       enable_system_bar: window.state.is_electron && window.state.is_darwin,
-      text_media_being_edited: false
+      text_media_being_edited: false,
+      is_loading_corpus: false
     },
     lang: {
       available: lang_settings.available,
@@ -230,9 +231,15 @@ let vm = new Vue({
         "ROOT EVENT: created / no errors, checking for content to load"
       );
 
-    if (window.location.pathname.substring(1).split("/").length === 1) {
+    const pathname =
+      window.location.pathname && window.location.pathname !== "/"
+        ? window.location.pathname.substring(1)
+        : false;
+    if (pathname) {
+      const slugFolderName = pathname.substring(0, pathname.indexOf("/"));
+      this.settings.is_loading_corpus = true;
       this.$eventHub.$once("socketio.corpus.folders_listed", () => {
-        this.openCorpus(window.location.pathname.substring(1).split("/")[0]);
+        this.openCorpus(slugFolderName);
       });
     }
 
@@ -550,17 +557,17 @@ let vm = new Vue({
       if (window.state.dev_mode === "debug") {
         console.log(`ROOT EVENT: openCorpus: ${slugFolderName}`);
       }
-      if (
-        !this.store.corpus.hasOwnProperty(slugFolderName) ||
-        !this.canAccessFolder({
-          type: "corpus",
-          slugFolderName: slugFolderName
-        })
-      ) {
-        console.log("Missing folder key on the page, aborting.");
-        this.closeCorpus();
-        return false;
-      }
+      // if (
+      //   !this.store.corpus.hasOwnProperty(slugFolderName) ||
+      //   !this.canAccessFolder({
+      //     type: "corpus",
+      //     slugFolderName: slugFolderName
+      //   })
+      // ) {
+      //   console.log("Missing folder key on the page, aborting.");
+      //   this.closeCorpus();
+      //   return false;
+      // }
 
       this.do_navigation.view = "CorpusView";
       this.do_navigation.slug = slugFolderName;

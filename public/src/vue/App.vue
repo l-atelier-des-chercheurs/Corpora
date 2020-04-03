@@ -1,7 +1,10 @@
 <template>
   <div class="app">
     <List
-      v-if="$root.do_navigation.view === 'ListView'"
+      v-if="
+        $root.do_navigation.view === 'ListView' &&
+          !$root.settings.is_loading_corpus
+      "
       :corpuses="Object.values($root.store.corpus)"
     />
 
