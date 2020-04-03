@@ -416,7 +416,6 @@ export default {
       #f9f3db calc(100% - 1px),
       #000 100%
     );
-    // border: 0.5px solid black;
 
     border-radius: 2px;
 

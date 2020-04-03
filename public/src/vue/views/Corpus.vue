@@ -279,7 +279,7 @@ export default {
     display: inline-block;
     background-color: #fff;
     padding: var(--spacing);
-    border: 2px solid black;
+    border: 2px solid currentColor;
     margin-right: var(--spacing);
   }
 }
@@ -306,7 +306,7 @@ export default {
     height: calc(100% - var(--spacing) * 2);
     margin: calc(var(--spacing) * 1) 0;
     padding-left: var(--spacing);
-    border-right: 1px solid black;
+    border-right: 1px solid currentColor;
   }
 }
 
@@ -326,7 +326,7 @@ export default {
     &:active,
     &:focus {
       outline: 0;
-      border-bottom: 0.2em solid black;
+      border-bottom: 0.2em solid currentColor;
     }
   }
 

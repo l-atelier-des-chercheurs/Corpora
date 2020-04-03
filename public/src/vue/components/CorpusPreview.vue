@@ -231,7 +231,7 @@ export default {
 </script>
 <style lang="scss" scoped>
 .m_corpusPreview {
-  border-top: 1px solid black;
+  border-top: 1px solid currentColor;
   margin: var(--spacing);
   padding: var(--spacing);
   // border-radius: 15px;
