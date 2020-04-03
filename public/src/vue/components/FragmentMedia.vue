@@ -16,13 +16,24 @@
         :slugFolderName="slugFolderName"
         ref="textField"
       />
+
+      <input
+        v-else-if="media.type === 'link' && is_being_edited"
+        type="url"
+        class="border-none bg-transparent"
+        placeholder="Étiquette"
+        v-model="mediadata.content"
+        ref="textField"
+      />
+
       <MediaContent
         v-else
         v-model="media.content"
-        :context="'preview'"
+        :context="!is_being_edited ? 'preview' : 'edit'"
         :slugFolderName="slugFolderName"
         :media="media"
         :preview_size="360"
+        :read_only="false"
       />
     </div>
     <div class="m_advancedMenu">
@@ -113,7 +124,11 @@
           {{ media.caption }}
         </template>
         <template v-else>
-          <input type="text" v-model="mediadata.caption" />
+          <input
+            type="text"
+            v-model="mediadata.caption"
+            @keyup.enter="saveMedia"
+          />
         </template>
       </div>
     </div>
@@ -155,7 +170,6 @@ export default {
       );
       if (this.is_being_edited) {
         this.saveMedia();
-        this.is_being_edited = false;
       } else if (
         this.$root.settings.text_media_being_edited === this.media.metaFileName
       ) {
@@ -178,6 +192,7 @@ export default {
       }
     },
     saveMedia() {
+      this.is_being_edited = false;
       this.$root.editMedia({
         type: "corpus",
         slugFolderName: this.slugFolderName,

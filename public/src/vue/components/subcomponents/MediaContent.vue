@@ -142,7 +142,7 @@
       </div>
       <input
         v-else
-        type="text"
+        type="url"
         class="border-none bg-transparent"
         placeholder="Étiquette"
         name="label"
