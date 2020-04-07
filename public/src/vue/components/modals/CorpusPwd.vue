@@ -25,9 +25,11 @@
           v-model="remember_password_on_this_device"
           disabled
         />
-        <label for="remember_password_on_this_device">{{
+        <label for="remember_password_on_this_device">
+          {{
           $t("remember_password_on_this_device")
-        }}</label>
+          }}
+        </label>
       </span>
     </template>
 
@@ -60,8 +62,6 @@ export default {
   methods: {
     submitPassword() {
       console.log("METHODS • CorpusPwd: submitPassword");
-
-      debugger;
 
       this.$auth.updateFoldersPasswords({
         corpus: {

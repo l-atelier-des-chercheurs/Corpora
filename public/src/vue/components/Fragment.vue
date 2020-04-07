@@ -1,5 +1,5 @@
 <template>
-  <div class="m_fragment">
+  <div class="m_fragment" :style="`min-width: ${fragment_width}px`">
     <div class="m_fragment--content">
       <div class="m_fragment--content--top">
         <h2>{{ fragment.title }}</h2>
@@ -21,17 +21,13 @@
                   S16.623,11.011,16.064,11.011z M10,7.979c-1.116,0-2.021,0.905-2.021,2.021S8.884,12.021,10,12.021s2.021-0.905,2.021-2.021
                   S11.116,7.979,10,7.979z M10,11.011c-0.558,0-1.011-0.452-1.011-1.011S9.442,8.989,10,8.989S11.011,9.441,11.011,10
                   S10.558,11.011,10,11.011z"
-              ></path>
+              />
             </svg>
           </button>
           <div class="m_advancedMenu--menu" v-if="show_advanced_menu">
-            <button type="button" @click="show_edit_fragment = true">
-              edit
-            </button>
+            <button type="button" @click="show_edit_fragment = true">{{ $t('edit' )}}</button>
 
-            <button type="button" @click="removeFragment">
-              remove
-            </button>
+            <button type="button" @click="removeFragment">{{ $t('remove') }}</button>
           </div>
         </div>
 
@@ -48,12 +44,11 @@
         <AddMedias
           :slugFolderName="slugFolderName"
           :key="'addmedia_start'"
-          :collapsed="true"
+          :collapsed="linked_medias.length > 0"
           @newMediaCreated="
             metaFileName =>
               newMediaCreated({
-                metaFileName,
-                index: 0
+                metaFileName
               })
           "
         />
@@ -69,29 +64,26 @@
               @moveMedia="d => moveMedia(d)"
             />
             <AddMedias
-              v-if="
-                linked_medias.length > 0 && index < linked_medias.length - 1
-              "
               :slugFolderName="slugFolderName"
-              :key="'addmedia_' + index"
-              :collapsed="true"
+              :key="'addmedia_' + media.metaFileName"
+              :collapsed="index < linked_medias.length - 1"
               @newMediaCreated="
-                metaFileName => newMediaCreated({ metaFileName, index })
+                metaFileName => newMediaCreated({ metaFileName, after_metaFileName: media.metaFileName })
               "
             />
           </template>
         </transition-group>
-        <AddMedias
+        <!-- <AddMedias
           :slugFolderName="slugFolderName"
           :key="'addmedia_end'"
           @newMediaCreated="
             metaFileName =>
               newMediaCreated({
                 metaFileName,
-                index: linked_medias.length - 1
+                index: linked_medias.length
               })
           "
-        />
+        />-->
       </div>
     </div>
   </div>
@@ -111,7 +103,8 @@ export default {
     fragment: Object,
     all_tags: Array,
     medias: Array,
-    slugFolderName: String
+    slugFolderName: String,
+    fragment_width: Number
   },
   components: {
     AddMedias,
@@ -147,7 +140,16 @@ export default {
   },
   methods: {
     removeFragment() {
-      this.removeMedia({ metaFileName: this.fragment.metaFileName });
+      this.$alertify
+        .okBtn(this.$t("yes"))
+        .cancelBtn(this.$t("cancel"))
+        .confirm(this.$t("sure_to_remove"), () => {
+          this.$root.removeMedia({
+            type: "corpus",
+            slugFolderName: this.slugFolderName,
+            slugMediaName: this.fragment.metaFileName
+          });
+        });
     },
     moveMedia({ metaFileName, dir }) {
       const _medias_slugs = JSON.parse(
@@ -173,16 +175,23 @@ export default {
         }
       });
     },
-    newMediaCreated({ metaFileName, index }) {
+    newMediaCreated({ metaFileName, index = 0, after_metaFileName }) {
       if (window.state.dev_mode === "debug")
-        console.log("Fragment • METHODS: newMediaCreated");
+        console.log(
+          `Fragment • METHODS: newMediaCreated after_metaFileName ${after_metaFileName} or if missing at index ${index}`
+        );
 
       let medias_slugs =
         typeof this.fragment.medias_slugs === "object"
           ? JSON.parse(JSON.stringify(this.fragment.medias_slugs))
           : [];
 
-      medias_slugs.splice(index + 1, 0, {
+      if (after_metaFileName)
+        index =
+          medias_slugs.findIndex(m => m.metaFileName === after_metaFileName) +
+          1;
+
+      medias_slugs.splice(index, 0, {
         metaFileName: metaFileName
       });
 
@@ -219,10 +228,10 @@ export default {
               let new_medias_slugs = this.fragment.medias_slugs.filter(
                 m => m.metaFileName !== metaFileName
               );
-
-              this.$root.editFolder({
+              this.$root.editMedia({
                 type: "corpus",
                 slugFolderName: this.slugFolderName,
+                slugMediaName: this.fragment.metaFileName,
                 data: {
                   medias_slugs: new_medias_slugs
                 }
@@ -239,8 +248,9 @@ export default {
 .m_fragment {
   // margin: 0 var(--spacing);
   // width: 100%;
-  max-width: 400px;
-  flex: 1 0 100vw;
+  // max-width: 400px;
+  // flex: 1 0 100vw;
+  // width: 95vw;
 
   overflow-y: auto;
   // columns: 50ch;
@@ -253,7 +263,7 @@ export default {
   --thumbBG: #90a4ae;
 
   &::-webkit-scrollbar {
-    width: 11px;
+    width: 12px;
   }
   & {
     scrollbar-width: thin;
@@ -264,8 +274,10 @@ export default {
   }
   &::-webkit-scrollbar-thumb {
     background-color: var(--thumbBG);
-    border-radius: 6px;
-    border: 3px solid var(--scrollbarBG);
+    // border-radius: 2px;
+    border: 4px solid var(--scrollbarBG);
+    border-top-width: calc(var(--spacing) * 2);
+    border-bottom-width: calc(var(--spacing) * 2);
 
     &:hover {
       background-color: #ccd0da;
@@ -274,9 +286,12 @@ export default {
 
   .m_fragment--content {
     padding: var(--spacing);
-    margin: calc(var(--spacing) * 1) calc(var(--spacing) * 1);
+    margin: calc(var(--spacing) * 2);
+    margin-right: 4px;
+    margin-left: 4px;
 
-    background-color: #f9f3db;
+    // background-color: #fff;
+    // background-color: #f9f3db;
     background: linear-gradient(
       180deg,
       #fff 50%,

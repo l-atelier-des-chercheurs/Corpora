@@ -17,10 +17,7 @@
               :disabled="read_only"
             >
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40">
-                <path
-                  d="M26.51,12V28h-13V12h13m1-1h-15V29h15V11Z"
-                  style="fill: currentColor"
-                />
+                <path d="M26.51,12V28h-13V12h13m1-1h-15V29h15V11Z" style="fill: currentColor" />
                 <line
                   x1="15.21"
                   y1="14.41"
@@ -60,7 +57,7 @@
               @click="createMedia({ type: 'link' })"
               :disabled="read_only"
             >
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="-50 -50 200 200">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="-80 -70 250 250">
                 <path
                   stroke="none"
                   fill="currentColor"
@@ -78,7 +75,7 @@
 		C46.2,25.6,47.5,25.5,48.8,25.5L48.8,25.5L48.8,25.5z"
                 />
               </svg>
-              <span class="text_label">Lien</span>
+              <span class="text_label">{{ $t('link') }}</span>
             </button>
 
             <template>
@@ -122,9 +119,7 @@
         @click="show_addmedia_options = !show_addmedia_options"
         @drop="dropHandler($event)"
       >
-        <span class="text_label always_show" v-if="show_drop_container"
-          >Déposez vos fichiers ici</span
-        >
+        <span class="text_label always_show" v-if="show_drop_container">Déposez vos fichiers ici</span>
         <!-- TODO scroll to now au click -->
         <svg
           version="1.1"
@@ -150,7 +145,7 @@
         :slugFolderName="slugFolderName"
         :type="'corpus'"
         :selected_files="selected_files"
-        @insertMedia="metaFileName => $emit('newMediaCreated', metaFileName)"
+        @insertMedia="metaFileName => newMediaCreated({ metaFileName })"
       />
     </div>
   </div>
@@ -282,9 +277,12 @@ export default {
           }
         })
         .then(mdata => {
-          this.show_addmedia_options = false;
-          this.$emit("newMediaCreated", mdata.metaFileName);
+          this.newMediaCreated({ metaFileName: mdata.metaFileName });
         });
+    },
+    newMediaCreated({ metaFileName }) {
+      this.show_addmedia_options = false;
+      this.$emit("newMediaCreated", metaFileName);
     },
     updateInputFiles($event) {
       if (this.$root.state.dev_mode === "debug") {
@@ -383,6 +381,7 @@ export default {
 
           .text_label {
             font-size: 0.8rem;
+            font-weight: normal;
             cursor: inherit;
             display: flex;
             flex-flow: row nowrap;
@@ -440,6 +439,7 @@ export default {
       color: var(--color-black);
       padding: calc(var(--spacing) / 4);
       border-radius: 14px;
+      margin-bottom: 0;
 
       svg {
         display: block;
@@ -448,6 +448,10 @@ export default {
         transition: transform cubic-bezier(0.19, 1, 0.22, 1) 0.8s;
         transform: rotate(0);
         fill: currentColor;
+
+        path {
+          transition: opacity 0.4s ease-out;
+        }
       }
       &.is--dragover {
         width: 64px;
@@ -469,13 +473,16 @@ export default {
   }
 
   &.is--collapsed .menu_encart--button:not(:hover):not(.is--shown) {
-    background-color: var(--color-black);
-    padding: 2px;
-    > * {
-      width: 0px;
-      height: 0px;
-      // transform: scale(0.4);
+    background-color: var(--active-color);
+    // padding: 2px;
+    transform: scale(0.3);
+
+    svg path {
+      opacity: 0;
     }
+    // width: 0px;
+    // height: 0px;
+    // transform: scale(0.4);
   }
 
   .menu_encart--button:not(.is--shown) {
@@ -498,6 +505,30 @@ export default {
     width: 120px;
     height: 120px;
     background-color: var(--color-black);
+  }
+}
+
+.m_addMedias--buttons--openHideButton:not(.is--active) {
+  position: relative;
+
+  &::before {
+    content: "";
+    display: block;
+    position: absolute;
+    // background-color: rgba(255, 0, 0, 0.2);
+    left: 0px;
+    top: 0px;
+    width: 20px;
+    height: 20px;
+    transform: scale(2);
+  }
+}
+
+.m_addMedias.is--collapsed {
+  .m_addMedias--buttons--openHideButton:not(.is--active) {
+    &::before {
+      transform: scale(6);
+    }
   }
 }
 </style>

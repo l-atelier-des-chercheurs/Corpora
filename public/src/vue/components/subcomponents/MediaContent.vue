@@ -41,9 +41,10 @@
             />
           </svg>
 
-          <div v-if="media_duration" class="_duration">
-            {{ $root.formatDurationToMinuteHours(media_duration * 1000) }}
-          </div>
+          <div
+            v-if="media_duration"
+            class="_duration"
+          >{{ $root.formatDurationToMinuteHours(media_duration * 1000) }}</div>
         </div>
       </template>
       <template v-else>
@@ -53,12 +54,7 @@
           :emit="['volumechange']"
           @volumechange="volumeChanged"
         >
-          <video
-            :poster="linkToVideoThumb"
-            :src="mediaURL"
-            preload="none"
-            :autoplay="autoplay"
-          />
+          <video :poster="linkToVideoThumb" :src="mediaURL" preload="none" :autoplay="autoplay" />
         </vue-plyr>
       </template>
     </template>
@@ -154,12 +150,8 @@
     </template>
 
     <template v-else-if="media.type === 'document'">
-      <div
-        v-if="context !== 'edit' && context !== 'full'"
-        class="padding-small font-verysmall"
-      >
-        <pre
-          >{{ media.media_filename }}
+      <div v-if="context !== 'edit' && context !== 'full'" class="padding-small font-verysmall">
+        <pre>{{ media.media_filename }}
         </pre>
       </div>
       <iframe v-else :src="mediaURL" />
@@ -225,7 +217,7 @@ export default {
     return {
       available_resolutions: {
         preview_hovered: 360,
-        default: 1600
+        default: 600
       },
       htmlForEditor: this.value,
 

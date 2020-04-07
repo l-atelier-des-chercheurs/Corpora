@@ -18,7 +18,7 @@
         v-else-if="media.type === 'link' && is_being_edited"
         type="url"
         class="border-none bg-transparent"
-        placeholder="Étiquette"
+        placeholder="URL"
         v-model="mediadata.content"
         ref="textField"
       />
@@ -26,26 +26,17 @@
       <MediaContent
         v-else
         v-model="media.content"
-        :context="!is_being_edited ? 'full' : 'edit'"
+        :context="!is_being_edited ? '' : 'edit'"
         :slugFolderName="slugFolderName"
         :media="media"
-        :preview_size="360"
         :read_only="false"
       />
     </div>
     <div class="m_advancedMenu">
-      <button
-        type="button"
-        v-if="is_being_edited"
-        @click="setBlocToEdit(false)"
-      >
-        save
-      </button>
+      <button type="button" v-if="is_being_edited" @click="setBlocToEdit(false)">save</button>
 
       <template v-else>
-        <button type="button" @click="setBlocToEdit(media.metaFileName)">
-          edit
-        </button>
+        <button type="button" @click="setBlocToEdit(media.metaFileName)">{{ $t("edit") }}</button>
 
         <button
           type="button"
@@ -65,7 +56,7 @@
                       S16.623,11.011,16.064,11.011z M10,7.979c-1.116,0-2.021,0.905-2.021,2.021S8.884,12.021,10,12.021s2.021-0.905,2.021-2.021
                       S11.116,7.979,10,7.979z M10,11.011c-0.558,0-1.011-0.452-1.011-1.011S9.442,8.989,10,8.989S11.011,9.441,11.011,10
                       S10.558,11.011,10,11.011z"
-            ></path>
+            />
           </svg>
         </button>
         <div class="m_advancedMenu--menu" v-if="show_advanced_menu_for_media">
@@ -76,9 +67,7 @@
               $emit('moveMedia', { metaFileName: media.metaFileName, dir: -1 });
               show_advanced_menu_for_media = false;
             "
-          >
-            {{ $t("moveup") }}
-          </button>
+          >{{ $t("moveup") }}</button>
           <button
             type="button"
             v-if="index < linked_medias.length - 1"
@@ -86,36 +75,23 @@
               $emit('moveMedia', { metaFileName: media.metaFileName, dir: +1 });
               show_advanced_menu_for_media = false;
             "
-          >
-            {{ $t("movedown") }}
-          </button>
+          >{{ $t("movedown") }}</button>
           <button
             type="button"
             @click="
               $emit('removeMedia', { metaFileName: media.metaFileName });
               show_advanced_menu_for_media = false;
             "
-          >
-            {{ $t("remove") }}
-          </button>
+          >{{ $t("remove") }}</button>
         </div>
       </template>
     </div>
 
     <div class="m_fragmentMedia--infos">
-      <div
-        class="m_fragmentMedia--infos--caption"
-        v-if="is_being_edited || media.caption"
-      >
-        <template v-if="!is_being_edited">
-          {{ media.caption }}
-        </template>
+      <div class="m_fragmentMedia--infos--caption" v-if="is_being_edited || media.caption">
+        <template v-if="!is_being_edited">{{ media.caption }}</template>
         <template v-else>
-          <input
-            type="text"
-            v-model="mediadata.caption"
-            @keyup.enter="setBlocToEdit(false)"
-          />
+          <input type="text" v-model="mediadata.caption" @keyup.enter="setBlocToEdit(false)" />
         </template>
       </div>
     </div>
@@ -193,7 +169,7 @@ export default {
 <style lang="scss" scoped>
 .m_fragmentMedia {
   position: relative;
-  border-radius: 4px;
+  border-radius: 8px;
 
   .m_fragmentMedia--content {
     min-height: 3em;
@@ -201,7 +177,7 @@ export default {
 
   &:not([data-type="text"]) {
     .m_fragmentMedia--content {
-      border-radius: 4px;
+      border-radius: 8px;
       overflow: hidden;
     }
   }
@@ -231,9 +207,9 @@ export default {
   display: flex;
   flex-flow: row nowrap;
   justify-content: center;
-  margin-top: calc(var(--spacing) / 2);
 }
 .m_fragmentMedia--infos--caption {
+  margin-top: calc(var(--spacing) / 2);
   // background-color: var(--active-color);
   border-radius: 4px;
   padding: 2px;
