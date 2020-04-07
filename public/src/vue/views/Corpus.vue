@@ -25,8 +25,6 @@
         <div v-if="previewURL" class="m_corpus--presentation--vignette">
           <img :src="previewURL" class draggable="false" />
         </div>
-
-        <div>Les logos ici</div>
       </div>
 
       <div
@@ -313,7 +311,8 @@ export default {
   // position: absolute;
   margin: calc(var(--spacing) * 2) calc(var(--spacing) * 2);
   z-index: 1;
-
+  // in case of very small height of viewport
+  max-height: 100%;
   max-width: 66ch;
 
   > * {
@@ -325,6 +324,13 @@ export default {
   h1 + h3 {
     margin-top: calc(-1 * var(--spacing));
   }
+}
+.m_corpus--presentation--description {
+  margin-bottom: calc(var(--spacing) * 1.5);
+}
+
+.m_corpus--presentation--vignette {
+  max-width: 240px;
 }
 
 .m_tags {
