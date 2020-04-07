@@ -3,16 +3,16 @@
     <CorpusPwd v-if="!can_access_corpus" :corpus="corpus" />
     <div v-else class="m_corpus">
       <div class="m_corpus--presentation">
-        <div class>
+        <!-- <div class>
           <button type="button" @click="$root.closeCorpus()">back</button>
-        </div>
+        </div>-->
 
         <div class="m_corpus--presentation--name">
           <h1>{{ corpus.name }}</h1>
           <h3>{{ corpus.subtitle }}</h3>
         </div>
 
-        <div>
+        <div class="m_corpus--presentation--name">
           <label>{{ $t('description') }}</label>
           <p>{{ corpus.description }}</p>
         </div>
@@ -278,6 +278,8 @@ export default {
   display: flex;
   flex-flow: row nowrap;
   align-items: center;
+  overflow-y: auto;
+
   > * {
     flex: 0 0 auto;
   }
@@ -289,6 +291,10 @@ export default {
   z-index: 1;
 
   max-width: 66ch;
+
+  > * {
+    margin-bottom: calc(var(--spacing));
+  }
 }
 
 .m_tags {

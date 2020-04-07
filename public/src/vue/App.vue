@@ -86,9 +86,24 @@ h3 {
 button {
 }
 
-/* -----
-SVG Icons - svgicons.sparkk.fr
------ */
+label {
+  display: block;
+  font-size: 0.7rem;
+  text-transform: lowercase;
+  // padding: calc(var(--spacing) / 4) calc(var(--spacing) / 2)
+  //   calc(var(--spacing) / 4) 0;
+
+  font-family: "base9";
+  font-weight: bold;
+  // font-family: "base12";
+  // font-style: italic;
+
+  // margin: calc(var(--spacing) / 4);
+}
+
+.margin-bottom-small {
+  margin-bottom: var(--spacing);
+}
 
 .svg-icon {
   width: 1em;

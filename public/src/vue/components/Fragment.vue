@@ -40,10 +40,6 @@
         />
       </div>
 
-      <ul>
-        <li v-for="{ metaFileName} in fragment.medias_slugs">{{ metaFileName }}</li>
-      </ul>
-
       <div class="m_fragment--medias">
         <AddMedias
           :slugFolderName="slugFolderName"
@@ -247,7 +243,7 @@ export default {
   // flex: 1 0 100vw;
   // width: 95vw;
 
-  overflow-y: auto;
+  overflow-y: scroll;
   // columns: 50ch;
   // column-gap: 1em;
   // column-fill: auto;
@@ -258,7 +254,7 @@ export default {
   --thumbBG: #90a4ae;
 
   &::-webkit-scrollbar {
-    width: 11px;
+    width: 12px;
   }
   & {
     scrollbar-width: thin;
@@ -269,8 +265,10 @@ export default {
   }
   &::-webkit-scrollbar-thumb {
     background-color: var(--thumbBG);
-    border-radius: 6px;
-    border: 3px solid var(--scrollbarBG);
+    // border-radius: 2px;
+    border: 4px solid var(--scrollbarBG);
+    border-top-width: calc(var(--spacing) * 2);
+    border-bottom-width: calc(var(--spacing) * 2);
 
     &:hover {
       background-color: #ccd0da;
@@ -279,7 +277,9 @@ export default {
 
   .m_fragment--content {
     padding: var(--spacing);
-    margin: calc(var(--spacing) * 1) calc(var(--spacing) * 1);
+    margin: calc(var(--spacing) * 2);
+    margin-right: 4px;
+    margin-left: 4px;
 
     background-color: #f9f3db;
     background: linear-gradient(
