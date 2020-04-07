@@ -25,9 +25,9 @@
             </svg>
           </button>
           <div class="m_advancedMenu--menu" v-if="show_advanced_menu">
-            <button type="button" @click="show_edit_fragment = true">edit</button>
+            <button type="button" @click="show_edit_fragment = true">{{ $t('edit' )}}</button>
 
-            <button type="button" @click="removeFragment">remove</button>
+            <button type="button" @click="removeFragment">{{ $t('remove') }}</button>
           </div>
         </div>
 
@@ -140,7 +140,16 @@ export default {
   },
   methods: {
     removeFragment() {
-      this.removeMedia({ metaFileName: this.fragment.metaFileName });
+      this.$alertify
+        .okBtn(this.$t("yes"))
+        .cancelBtn(this.$t("cancel"))
+        .confirm(this.$t("sure_to_remove"), () => {
+          this.$root.removeMedia({
+            type: "corpus",
+            slugFolderName: this.slugFolderName,
+            slugMediaName: this.fragment.metaFileName
+          });
+        });
     },
     moveMedia({ metaFileName, dir }) {
       const _medias_slugs = JSON.parse(
@@ -243,7 +252,7 @@ export default {
   // flex: 1 0 100vw;
   // width: 95vw;
 
-  overflow-y: scroll;
+  overflow-y: auto;
   // columns: 50ch;
   // column-gap: 1em;
   // column-fill: auto;

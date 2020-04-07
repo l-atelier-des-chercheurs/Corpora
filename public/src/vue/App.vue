@@ -42,13 +42,13 @@ export default {
   --color-black: #3c3541;
   --color-orange: #ffd675;
   --color-white: #fff;
+  --body-bg: #e2edef;
   --active-color: #ccd0da;
   --panel-width: 320px;
 }
 
 body {
-  background-color: #e8f4eb;
-  background-color: #e2edef;
+  background-color: var(--body-bg);
   color: var(--color-black);
   margin: 0;
   font-family: "base12", sans-serif;
@@ -84,12 +84,14 @@ h3 {
 }
 
 button {
+  color: inherit;
 }
 
 label {
   display: block;
   font-size: 0.7rem;
   text-transform: lowercase;
+  color: inherit;
   // padding: calc(var(--spacing) / 4) calc(var(--spacing) / 2)
   //   calc(var(--spacing) / 4) 0;
 

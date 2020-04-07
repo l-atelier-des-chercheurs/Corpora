@@ -57,7 +57,7 @@
               @click="createMedia({ type: 'link' })"
               :disabled="read_only"
             >
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="-50 -50 200 200">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="-80 -70 250 250">
                 <path
                   stroke="none"
                   fill="currentColor"
@@ -75,7 +75,7 @@
 		C46.2,25.6,47.5,25.5,48.8,25.5L48.8,25.5L48.8,25.5z"
                 />
               </svg>
-              <span class="text_label">Lien</span>
+              <span class="text_label">{{ $t('link') }}</span>
             </button>
 
             <template>
@@ -381,6 +381,7 @@ export default {
 
           .text_label {
             font-size: 0.8rem;
+            font-weight: normal;
             cursor: inherit;
             display: flex;
             flex-flow: row nowrap;

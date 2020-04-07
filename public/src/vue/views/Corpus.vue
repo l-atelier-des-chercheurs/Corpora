@@ -13,13 +13,15 @@
         </div>
 
         <div class="m_corpus--presentation--name">
-          <label>{{ $t('description') }}</label>
+          <!-- <label>{{ $t('description') }}</label> -->
           <p>{{ corpus.description }}</p>
         </div>
-        <div class="m_corpus--presentation--tags">
+
+        <!-- <div class="m_corpus--presentation--tags">
           <label>{{ $t('keywords') }}</label>
           <button type="button" v-for="(tag, index) in all_tags" :key="index">{{ tag }}</button>
-        </div>
+        </div>-->
+
         <div v-if="previewURL" class="m_corpus--presentation--vignette">
           <img :src="previewURL" class draggable="false" />
         </div>
@@ -60,12 +62,17 @@
           >
             <div class="m_tags--allfragments--tagfragment--tag">
               <div>
-                <button type="button" @click="toggleShowingFragmentsForTag(tag)">
+                <button
+                  type="button"
+                  @click="toggleShowingFragmentsForTag(tag)"
+                  :class="{ 'is--active' : showFragmentsFor(tag) }"
+                >
                   <h2>
-                    <template v-if="tag === ''">Non-taggés</template>
-                    <template v-else>{{ tag }}</template>
-                    &nbsp;
-                    <small>({{ fragments.length }})</small>
+                    <span>
+                      <template v-if="tag === ''">Non-taggés</template>
+                      <template v-else>{{ tag }}</template>
+                    </span>
+                    <small>{{ fragments.length * 1 }}</small>
                   </h2>
                 </button>
               </div>
@@ -341,38 +348,88 @@ export default {
     display: block;
     height: calc(100% - var(--spacing) * 2);
     margin: calc(var(--spacing) * 1) 0;
-    padding-left: var(--spacing);
-    border-right: 1px solid currentColor;
+    // padding-left: var(--spacing);
+    // border-right: 1px solid currentColor;
   }
 }
 
 .m_tags--allfragments--tagfragment--tag {
+  position: relative;
   // position: absolute;
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 80px;
+  width: 84px;
+
+  &::before {
+    content: "";
+    display: block;
+    position: absolute;
+    height: calc(100% - var(--spacing) * 4);
+    width: 2px;
+    background-color: #c0d8dd;
+    z-index: 0;
+  }
 
   button {
     background-color: transparent;
-    padding: 0;
-    border-bottom: 0.2em solid transparent;
+    padding: calc(var(--spacing) / 2) calc(var(--spacing) * 1)
+      calc(var(--spacing) / 2) calc(var(--spacing) * 1.5);
+    // padding-right: 0;
+    border-radius: 28px;
+    // width: 80vh;
+    // border-bottom: 0.2em solid transparent;
+    // width: 50vh;
+    text-align: center;
 
-    &:hover,
+    background-color: var(--body-bg);
+
+    &:hover {
+      background-color: #c0d8dd;
+    }
     &:active,
+    &.is--active,
     &:focus {
       outline: 0;
-      border-bottom: 0.2em solid currentColor;
+      span {
+        text-decoration: underline;
+        // border-bottom: 0.1em solid currentColor;
+      }
     }
   }
 
   h2 {
     margin: 0;
     white-space: nowrap;
+
+    display: flex;
+    flex-flow: row wrap;
+    align-items: center;
+
+    span {
+      margin-right: var(--spacing);
+    }
+
+    small {
+      font-size: 0.7em;
+      background-color: #c0d8dd;
+      border-radius: 50%;
+      min-width: 1.7em;
+      height: 1.7em;
+      display: inline-block;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-variant-numeric: tabular-nums;
+    }
   }
 
   > * {
+    display: block;
+    flex: 0 0 80vh;
     transform: rotate(-90deg);
+    // background-color: rosybrown;
+    text-align: center;
   }
 }
 .m_tags--allfragments--tagfragment--fragments {
