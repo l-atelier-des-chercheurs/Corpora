@@ -18,7 +18,7 @@
         v-else-if="media.type === 'link' && is_being_edited"
         type="url"
         class="border-none bg-transparent"
-        placeholder="Étiquette"
+        placeholder="URL"
         v-model="mediadata.content"
         ref="textField"
       />
@@ -208,9 +208,9 @@ export default {
   display: flex;
   flex-flow: row nowrap;
   justify-content: center;
-  margin-top: calc(var(--spacing) / 2);
 }
 .m_fragmentMedia--infos--caption {
+  margin-top: calc(var(--spacing) / 2);
   // background-color: var(--active-color);
   border-radius: 4px;
   padding: 2px;

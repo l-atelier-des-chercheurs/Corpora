@@ -439,6 +439,7 @@ export default {
       color: var(--color-black);
       padding: calc(var(--spacing) / 4);
       border-radius: 14px;
+      margin-bottom: 0;
 
       svg {
         display: block;
@@ -469,10 +470,11 @@ export default {
 
   &.is--collapsed .menu_encart--button:not(:hover):not(.is--shown) {
     background-color: var(--color-black);
-    padding: 2px;
+    // padding: 2px;
+    transform: scale(0.1);
     > * {
-      width: 0px;
-      height: 0px;
+      // width: 0px;
+      // height: 0px;
       // transform: scale(0.4);
     }
   }
@@ -497,6 +499,22 @@ export default {
     width: 120px;
     height: 120px;
     background-color: var(--color-black);
+  }
+}
+
+.m_addMedias--buttons--openHideButton:not(.is--active) {
+  position: relative;
+
+  &::before {
+    content: "";
+    display: block;
+    position: absolute;
+    // background-color: rgba(255, 0, 0, 0.2);
+    left: -6px;
+    top: -6px;
+    width: 20px;
+    height: 20px;
+    transform: scale(6);
   }
 }
 </style>

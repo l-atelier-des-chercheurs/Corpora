@@ -55,6 +55,9 @@ body {
   font-size: 90%;
   line-height: 1.25;
 }
+::selection {
+  background-color: var(--active-color);
+}
 
 * {
   box-sizing: border-box;
