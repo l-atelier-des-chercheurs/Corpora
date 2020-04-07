@@ -17,10 +17,7 @@
               :disabled="read_only"
             >
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40">
-                <path
-                  d="M26.51,12V28h-13V12h13m1-1h-15V29h15V11Z"
-                  style="fill: currentColor"
-                />
+                <path d="M26.51,12V28h-13V12h13m1-1h-15V29h15V11Z" style="fill: currentColor" />
                 <line
                   x1="15.21"
                   y1="14.41"
@@ -122,9 +119,7 @@
         @click="show_addmedia_options = !show_addmedia_options"
         @drop="dropHandler($event)"
       >
-        <span class="text_label always_show" v-if="show_drop_container"
-          >Déposez vos fichiers ici</span
-        >
+        <span class="text_label always_show" v-if="show_drop_container">Déposez vos fichiers ici</span>
         <!-- TODO scroll to now au click -->
         <svg
           version="1.1"
@@ -150,7 +145,7 @@
         :slugFolderName="slugFolderName"
         :type="'corpus'"
         :selected_files="selected_files"
-        @insertMedia="metaFileName => $emit('newMediaCreated', metaFileName)"
+        @insertMedia="metaFileName => newMediaCreated({ metaFileName })"
       />
     </div>
   </div>
@@ -282,9 +277,12 @@ export default {
           }
         })
         .then(mdata => {
-          this.show_addmedia_options = false;
-          this.$emit("newMediaCreated", mdata.metaFileName);
+          this.newMediaCreated({ metaFileName: mdata.metaFileName });
         });
+    },
+    newMediaCreated({ metaFileName }) {
+      this.show_addmedia_options = false;
+      this.$emit("newMediaCreated", metaFileName);
     },
     updateInputFiles($event) {
       if (this.$root.state.dev_mode === "debug") {

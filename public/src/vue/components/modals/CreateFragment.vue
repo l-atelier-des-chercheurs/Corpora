@@ -15,19 +15,11 @@
       <!-- Human name -->
       <div class="margin-bottom-small">
         <label>{{ $t("fragment_title") }}</label>
-        <input
-          type="text"
-          class="input-big"
-          v-model.trim="fragmentdata.title"
-          required
-          autofocus
-        />
+        <input type="text" class="input-big" v-model.trim="fragmentdata.title" required autofocus />
       </div>
 
       <div class="margin-bottom-small">
-        <label>
-          {{ $t("tags") }}
-        </label>
+        <label>{{ $t("tags") }}</label>
         <TagsInput
           :allKeywords="all_tags_rightly_formatted"
           @tagsChanged="newTags => (fragmentdata.tags = newTags)"
@@ -87,8 +79,6 @@ export default {
       }
 
       const tags = this.fragmentdata.tags;
-
-      debugger;
 
       this.$root
         .createMedia({

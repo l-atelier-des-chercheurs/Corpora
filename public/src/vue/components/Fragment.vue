@@ -1,5 +1,5 @@
 <template>
-  <div class="m_fragment">
+  <div class="m_fragment" :style="`min-width: ${fragment_width}px`">
     <div class="m_fragment--content">
       <div class="m_fragment--content--top">
         <h2>{{ fragment.title }}</h2>
@@ -40,16 +40,19 @@
         />
       </div>
 
+      <ul>
+        <li v-for="{ metaFileName} in fragment.medias_slugs">{{ metaFileName }}</li>
+      </ul>
+
       <div class="m_fragment--medias">
         <AddMedias
           :slugFolderName="slugFolderName"
           :key="'addmedia_start'"
-          :collapsed="true"
+          :collapsed="linked_medias.length > 0"
           @newMediaCreated="
             metaFileName =>
               newMediaCreated({
-                metaFileName,
-                index: 0
+                metaFileName
               })
           "
         />
@@ -65,29 +68,26 @@
               @moveMedia="d => moveMedia(d)"
             />
             <AddMedias
-              v-if="
-                linked_medias.length > 0 && index < linked_medias.length - 1
-              "
               :slugFolderName="slugFolderName"
-              :key="'addmedia_' + index"
-              :collapsed="true"
+              :key="'addmedia_' + media.metaFileName"
+              :collapsed="index < linked_medias.length - 1"
               @newMediaCreated="
-                metaFileName => newMediaCreated({ metaFileName, index })
+                metaFileName => newMediaCreated({ metaFileName, after_metaFileName: media.metaFileName })
               "
             />
           </template>
         </transition-group>
-        <AddMedias
+        <!-- <AddMedias
           :slugFolderName="slugFolderName"
           :key="'addmedia_end'"
           @newMediaCreated="
             metaFileName =>
               newMediaCreated({
                 metaFileName,
-                index: linked_medias.length - 1
+                index: linked_medias.length
               })
           "
-        />
+        />-->
       </div>
     </div>
   </div>
@@ -107,7 +107,8 @@ export default {
     fragment: Object,
     all_tags: Array,
     medias: Array,
-    slugFolderName: String
+    slugFolderName: String,
+    fragment_width: Number
   },
   components: {
     AddMedias,
@@ -169,16 +170,23 @@ export default {
         }
       });
     },
-    newMediaCreated({ metaFileName, index }) {
+    newMediaCreated({ metaFileName, index = 0, after_metaFileName }) {
       if (window.state.dev_mode === "debug")
-        console.log("Fragment • METHODS: newMediaCreated");
+        console.log(
+          `Fragment • METHODS: newMediaCreated after_metaFileName ${after_metaFileName} or if missing at index ${index}`
+        );
 
       let medias_slugs =
         typeof this.fragment.medias_slugs === "object"
           ? JSON.parse(JSON.stringify(this.fragment.medias_slugs))
           : [];
 
-      medias_slugs.splice(index + 1, 0, {
+      if (after_metaFileName)
+        index =
+          medias_slugs.findIndex(m => m.metaFileName === after_metaFileName) +
+          1;
+
+      medias_slugs.splice(index, 0, {
         metaFileName: metaFileName
       });
 
@@ -215,10 +223,10 @@ export default {
               let new_medias_slugs = this.fragment.medias_slugs.filter(
                 m => m.metaFileName !== metaFileName
               );
-
-              this.$root.editFolder({
+              this.$root.editMedia({
                 type: "corpus",
                 slugFolderName: this.slugFolderName,
+                slugMediaName: this.fragment.metaFileName,
                 data: {
                   medias_slugs: new_medias_slugs
                 }
@@ -235,9 +243,9 @@ export default {
 .m_fragment {
   // margin: 0 var(--spacing);
   // width: 100%;
-  max-width: 400px;
+  // max-width: 400px;
   // flex: 1 0 100vw;
-  width: 95vw;
+  // width: 95vw;
 
   overflow-y: auto;
   // columns: 50ch;

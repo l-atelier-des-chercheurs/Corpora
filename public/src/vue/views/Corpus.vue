@@ -3,7 +3,7 @@
     <CorpusPwd v-if="!can_access_corpus" :corpus="corpus" />
     <div v-else class="m_corpus">
       <div class="m_corpus--presentation">
-        <div class="">
+        <div class>
           <button type="button" @click="$root.closeCorpus()">back</button>
         </div>
 
@@ -13,11 +13,13 @@
         </div>
 
         <div>
-          <p>
-            {{ corpus.description }}
-          </p>
+          <label>{{ $t('description') }}</label>
+          <p>{{ corpus.description }}</p>
         </div>
-
+        <div class="m_corpus--presentation--tags">
+          <label>{{ $t('keywords') }}</label>
+          <button type="button" v-for="(tag, index) in all_tags" :key="index">{{ tag }}</button>
+        </div>
         <div v-if="previewURL" class="m_corpus--presentation--vignette">
           <img :src="previewURL" class draggable="false" />
         </div>
@@ -26,9 +28,7 @@
           <button
             type="button"
             @click="show_create_fragment = !show_create_fragment"
-          >
-            Create fragment
-          </button>
+          >Create fragment</button>
 
           <CreateFragment
             v-if="show_create_fragment"
@@ -38,9 +38,7 @@
           />
         </div>
 
-        <div>
-          Les logos ici
-        </div>
+        <div>Les logos ici</div>
       </div>
 
       <div
@@ -53,7 +51,7 @@
         <h3 v-for="{ tag } in tags_with_fragments" :key="tag">
           {{ tag }}
         </h3>
-      </div> -->
+        </div>-->
         <div class="m_tags--allfragments">
           <div
             v-for="{ tag, fragments } in tags_with_fragments"
@@ -62,27 +60,22 @@
           >
             <div class="m_tags--allfragments--tagfragment--tag">
               <div>
-                <button
-                  type="button"
-                  @click="toggleShowingFragmentsForTag(tag)"
-                >
+                <button type="button" @click="toggleShowingFragmentsForTag(tag)">
                   <h2>
-                    <template v-if="tag === 'zzz'">
-                      Non-taggés
-                    </template>
-                    <template v-else>
-                      {{ tag }}
-                    </template>
-                    &nbsp;<small>({{ fragments.length }})</small>
+                    <template v-if="tag === ''">Non-taggés</template>
+                    <template v-else>{{ tag }}</template>
+                    &nbsp;
+                    <small>({{ fragments.length }})</small>
                   </h2>
                 </button>
               </div>
             </div>
 
-            <transition name="slide-fade">
+            <transition name="width_collapse">
               <div
                 class="m_tags--allfragments--tagfragment--fragments"
                 v-if="showFragmentsFor(tag)"
+                :style="`width: ${fragment_width * fragments.length}px`"
               >
                 <Fragment
                   v-for="fragment in fragments"
@@ -91,6 +84,7 @@
                   :all_tags="all_tags"
                   :medias="medias"
                   :fragment="fragment"
+                  :fragment_width="fragment_width"
                   :slugFolderName="corpus.slugFolderName"
                 />
               </div>
@@ -134,6 +128,9 @@ export default {
     }
   },
   computed: {
+    fragment_width() {
+      return Math.min(400, this.$root.settings.windowWidth * 0.9);
+    },
     can_access_corpus() {
       return this.$root.canAccessFolder({
         type: "corpus",
@@ -177,27 +174,55 @@ export default {
     },
     tags_with_fragments() {
       // get all tags from fragments
-      if (!this.fragments) return [];
+      if (this.all_tags.length === 0) return [];
 
-      let fragments_by_tag = this.$_.groupBy(this.fragments, f => {
-        if (!!f.tags && Array.isArray(f.tags) && f.tags.length > 0)
-          return f.tags[0].title;
-        return "zzz";
+      // get all tags
+      let fragments_by_tag = this.all_tags.map(tag => {
+        const fragments_for_tag = this.fragments.filter(
+          f =>
+            !!f.tags &&
+            Array.isArray(f.tags) &&
+            f.tags.some(t => t.title === tag)
+        );
+
+        return {
+          tag,
+          fragments: fragments_for_tag
+        };
       });
 
-      fragments_by_tag = Object.entries(fragments_by_tag).map(
-        ([tag, fragments]) => {
-          return { tag, fragments };
-        }
+      // append all fragments
+      const fragments_with_no_tags = this.fragments.filter(
+        f => !f.tags || !Array.isArray(f.tags) || f.tags.length === 0
       );
+      if (fragments_with_no_tags.length > 0) {
+        fragments_by_tag.push({
+          tag: "",
+          fragments: fragments_with_no_tags
+        });
+      }
 
-      fragments_by_tag = this.$_.sortBy(fragments_by_tag, "tag");
+      // fragments_by_tag.sort((a, b) => a.tag.localeCompare(b.tag));
+      // fragments_by_tag = this.$_.sortBy(fragments_by_tag, "tag");
 
       return fragments_by_tag;
     },
-    fragments_without_tags() {},
     all_tags() {
-      return this.tags_with_fragments.map(t => t.tag);
+      if (!this.fragments) return [];
+
+      let all_tags = this.fragments.reduce((acc, f) => {
+        if (!!f.tags && Array.isArray(f.tags) && f.tags.length > 0)
+          acc = acc.concat(f.tags.map(t => t.title));
+        return acc;
+      }, []);
+
+      all_tags = all_tags.filter(function(item, pos) {
+        return all_tags.indexOf(item) == pos;
+      });
+
+      all_tags.sort((a, b) => a.localeCompare(b));
+
+      return all_tags;
     }
   },
   methods: {
@@ -236,6 +261,11 @@ export default {
       const current_opt = this.show_fragments_for.hasOwnProperty(tag)
         ? this.show_fragments_for[tag]
         : false;
+
+      Object.keys(this.show_fragments_for).map(
+        s => (this.show_fragments_for[s] = false)
+      );
+
       this.$set(this.show_fragments_for, tag, !current_opt);
     }
   }
@@ -342,10 +372,11 @@ export default {
 .m_tags--allfragments--tagfragment--fragments {
   display: flex;
   flex-flow: row nowrap;
-  align-content: stretch;
-  min-width: max-content;
-
-  min-width: 400px;
+  // align-content: stretch;
+  // min-width: max-content;
+  // transform-origin: left center;
+  overflow: hidden;
+  // min-width: 400px;
 }
 
 // .m_fragment--content {

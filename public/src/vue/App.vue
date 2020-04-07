@@ -8,10 +8,7 @@
       :corpuses="Object.values($root.store.corpus)"
     />
 
-    <Corpus
-      v-else-if="$root.do_navigation.view === 'CorpusView'"
-      :corpus="$root.current_corpus"
-    />
+    <Corpus v-else-if="$root.do_navigation.view === 'CorpusView'" :corpus="$root.current_corpus" />
 
     <portal-target name="modal_container" />
   </div>
@@ -323,6 +320,17 @@ audio {
   opacity: 0;
 }
 
+.width_collapse-enter-active,
+.width_collapse-leave-active {
+  // transform: scale(1, 1);
+  transition: all 0.2s cubic-bezier(0.19, 1, 0.22, 1);
+}
+.width_collapse-enter,
+.width_collapse-leave-to {
+  // transform: scale(0, 1);
+  width: 0 !important;
+}
+
 .module-switch-move {
   position: relative;
   // background-color: white;
@@ -338,6 +346,7 @@ audio {
   height: 0;
   padding: 0;
   margin: 0;
+  position: absolute;
 
   // position: absolute;
   z-index: 0 !important;
