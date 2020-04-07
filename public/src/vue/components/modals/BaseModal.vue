@@ -45,13 +45,9 @@
               class="m_modal--sidebar--toggle"
               @click="toggleSidebar"
               v-if="can_minimize"
-            >
-              &#x2630;
-            </button>
+            >&#x2630;</button>
 
-            <template
-              v-if="!!this.$slots['sidebar'] && show_sidebar && !is_minimized"
-            >
+            <template v-if="!!this.$slots['sidebar'] && show_sidebar && !is_minimized">
               <div class="m_modal--header">
                 <h3 class="margin-none">
                   <slot name="header">default header</slot>
@@ -62,16 +58,12 @@
                 <slot name="sidebar">default sidebar</slot>
               </div>
 
-              <div
-                v-if="!!this.$slots['submit_button']"
-                class="m_modal--buttons"
-              >
+              <div v-if="!!this.$slots['submit_button']" class="m_modal--buttons">
                 <button
                   type="submit"
                   :disabled="read_only || is_loading"
-                  class="button button-bg_rounded bg-bleuvert"
+                  class="button button-bg_rounded"
                 >
-                  <img src="/images/i_enregistre.svg" draggable="false" />
                   <span class="text-cap font-verysmall">
                     <slot name="submit_button">{{ $t("save") }}</slot>
                   </span>
@@ -86,11 +78,7 @@
             v-on:submit.prevent="$emit('submit')"
             ref="form"
           >
-            <button
-              type="button"
-              @click="closeModal"
-              class="button button-bg_rounded bg-orange"
-            >
+            <button type="button" @click="closeModal" class="button button-bg_rounded bg-orange">
               <img src="/images/i_clear.svg" draggable="false" />
               <span class="text-cap font-verysmall">
                 <slot name="cancel_button">{{ $t("cancel") }}</slot>
@@ -102,7 +90,6 @@
               :disabled="read_only"
               class="button button-bg_rounded bg-bleuvert"
             >
-              <img src="/images/i_enregistre.svg" draggable="false" />
               <span class="text-cap font-verysmall">
                 <slot name="submit_button">{{ $t("save") }}</slot>
               </span>

@@ -15,13 +15,7 @@
       <!-- Human name -->
       <div class="margin-bottom-small">
         <label>{{ $t("corpus_name") }}</label>
-        <input
-          type="text"
-          class="input-big"
-          v-model.trim="corpusdata.name"
-          required
-          autofocus
-        />
+        <input type="text" class v-model.trim="corpusdata.name" required autofocus />
       </div>
 
       <!-- Human name -->
@@ -44,9 +38,7 @@
             class="button-nostyle text-uc button-triangle"
             :class="{ 'is--active': show_image }"
             @click="show_image = !show_image"
-          >
-            {{ $t("cover_image") }}
-          </button>
+          >{{ $t("cover_image") }}</button>
         </label>
         <template v-if="show_image">
           <ImageSelect
@@ -67,16 +59,10 @@
             class="button-nostyle text-uc button-triangle"
             :class="{ 'is--active': show_password }"
             @click="show_password = !show_password"
-          >
-            {{ $t("password") }}
-          </button>
+          >{{ $t("password") }}</button>
         </label>
         <template v-if="show_password">
-          <input
-            type="password"
-            v-model="corpusdata.password"
-            autocomplete="new-password"
-          />
+          <input type="password" v-model="corpusdata.password" autocomplete="new-password" />
           <small>{{ $t("password_instructions") }}</small>
         </template>
       </div>
