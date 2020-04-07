@@ -36,7 +36,7 @@
       <button type="button" v-if="is_being_edited" @click="setBlocToEdit(false)">save</button>
 
       <template v-else>
-        <button type="button" @click="setBlocToEdit(media.metaFileName)">edit</button>
+        <button type="button" @click="setBlocToEdit(media.metaFileName)">{{ $t("edit") }}</button>
 
         <button
           type="button"
