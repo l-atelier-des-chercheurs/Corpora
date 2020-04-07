@@ -21,17 +21,13 @@
                   S16.623,11.011,16.064,11.011z M10,7.979c-1.116,0-2.021,0.905-2.021,2.021S8.884,12.021,10,12.021s2.021-0.905,2.021-2.021
                   S11.116,7.979,10,7.979z M10,11.011c-0.558,0-1.011-0.452-1.011-1.011S9.442,8.989,10,8.989S11.011,9.441,11.011,10
                   S10.558,11.011,10,11.011z"
-              ></path>
+              />
             </svg>
           </button>
           <div class="m_advancedMenu--menu" v-if="show_advanced_menu">
-            <button type="button" @click="show_edit_fragment = true">
-              edit
-            </button>
+            <button type="button" @click="show_edit_fragment = true">edit</button>
 
-            <button type="button" @click="removeFragment">
-              remove
-            </button>
+            <button type="button" @click="removeFragment">remove</button>
           </div>
         </div>
 
@@ -240,7 +236,8 @@ export default {
   // margin: 0 var(--spacing);
   // width: 100%;
   max-width: 400px;
-  flex: 1 0 100vw;
+  // flex: 1 0 100vw;
+  width: 95vw;
 
   overflow-y: auto;
   // columns: 50ch;
