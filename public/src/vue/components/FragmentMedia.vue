@@ -26,10 +26,9 @@
       <MediaContent
         v-else
         v-model="media.content"
-        :context="!is_being_edited ? 'full' : 'edit'"
+        :context="!is_being_edited ? '' : 'edit'"
         :slugFolderName="slugFolderName"
         :media="media"
-        :preview_size="360"
         :read_only="false"
       />
     </div>
@@ -170,7 +169,7 @@ export default {
 <style lang="scss" scoped>
 .m_fragmentMedia {
   position: relative;
-  border-radius: 4px;
+  border-radius: 8px;
 
   .m_fragmentMedia--content {
     min-height: 3em;
@@ -178,7 +177,7 @@ export default {
 
   &:not([data-type="text"]) {
     .m_fragmentMedia--content {
-      border-radius: 4px;
+      border-radius: 8px;
       overflow: hidden;
     }
   }

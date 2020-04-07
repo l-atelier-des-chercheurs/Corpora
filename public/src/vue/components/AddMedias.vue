@@ -448,6 +448,10 @@ export default {
         transition: transform cubic-bezier(0.19, 1, 0.22, 1) 0.8s;
         transform: rotate(0);
         fill: currentColor;
+
+        path {
+          transition: opacity 0.4s ease-out;
+        }
       }
       &.is--dragover {
         width: 64px;
@@ -469,14 +473,16 @@ export default {
   }
 
   &.is--collapsed .menu_encart--button:not(:hover):not(.is--shown) {
-    background-color: var(--color-black);
+    background-color: var(--active-color);
     // padding: 2px;
-    transform: scale(0.1);
-    > * {
-      // width: 0px;
-      // height: 0px;
-      // transform: scale(0.4);
+    transform: scale(0.3);
+
+    svg path {
+      opacity: 0;
     }
+    // width: 0px;
+    // height: 0px;
+    // transform: scale(0.4);
   }
 
   .menu_encart--button:not(.is--shown) {
@@ -510,11 +516,19 @@ export default {
     display: block;
     position: absolute;
     // background-color: rgba(255, 0, 0, 0.2);
-    left: -6px;
-    top: -6px;
+    left: 0px;
+    top: 0px;
     width: 20px;
     height: 20px;
-    transform: scale(6);
+    transform: scale(2);
+  }
+}
+
+.m_addMedias.is--collapsed {
+  .m_addMedias--buttons--openHideButton:not(.is--active) {
+    &::before {
+      transform: scale(6);
+    }
   }
 }
 </style>

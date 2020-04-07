@@ -217,7 +217,7 @@ export default {
     return {
       available_resolutions: {
         preview_hovered: 360,
-        default: 1600
+        default: 600
       },
       htmlForEditor: this.value,
 

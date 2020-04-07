@@ -290,7 +290,8 @@ export default {
     margin-right: 4px;
     margin-left: 4px;
 
-    background-color: #f9f3db;
+    // background-color: #fff;
+    // background-color: #f9f3db;
     background: linear-gradient(
       180deg,
       #fff 50%,
