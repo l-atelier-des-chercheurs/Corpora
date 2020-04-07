@@ -8,11 +8,11 @@
         </div>-->
 
         <div class="m_corpus--presentation--name">
-          <h1>{{ corpus.name }}</h1>
-          <h3>{{ corpus.subtitle }}</h3>
+          <h1 v-if="!!corpus.name">{{ corpus.name }}</h1>
+          <h3 v-if="!!corpus.subtitle">{{ corpus.subtitle }}</h3>
         </div>
 
-        <div class="m_corpus--presentation--name">
+        <div class="m_corpus--presentation--description">
           <!-- <label>{{ $t('description') }}</label> -->
           <p>{{ corpus.description }}</p>
         </div>
@@ -24,20 +24,6 @@
 
         <div v-if="previewURL" class="m_corpus--presentation--vignette">
           <img :src="previewURL" class draggable="false" />
-        </div>
-
-        <div>
-          <button
-            type="button"
-            @click="show_create_fragment = !show_create_fragment"
-          >Create fragment</button>
-
-          <CreateFragment
-            v-if="show_create_fragment"
-            :corpus="corpus"
-            :all_tags="all_tags"
-            @close="show_create_fragment = false"
-          />
         </div>
 
         <div>Les logos ici</div>
@@ -54,6 +40,37 @@
           {{ tag }}
         </h3>
         </div>-->
+        <div class="m_tags--options">
+          <button
+            type="button"
+            class="m_tags--options--addFragmentButton"
+            @click="show_create_fragment = !show_create_fragment"
+          >
+            <svg
+              version="1.1"
+              xmlns="http://www.w3.org/2000/svg"
+              xmlns:xlink="http://www.w3.org/1999/xlink"
+              x="0px"
+              y="0px"
+              width="24px"
+              height="24px"
+              viewBox="0 0 24 24"
+              style="enable-background:new 0 0 24 24;"
+              xml:space="preserve"
+            >
+              <path
+                style="fill: currentColor;"
+                d="M0,10.5h10.5V0h2.9v10.5H24v2.9H13.5V24h-2.9V13.5H0V10.5z"
+              />
+            </svg>
+          </button>
+          <CreateFragment
+            v-if="show_create_fragment"
+            :corpus="corpus"
+            :all_tags="all_tags"
+            @close="show_create_fragment = false"
+          />
+        </div>
         <div class="m_tags--allfragments">
           <div
             v-for="{ tag, fragments } in tags_with_fragments"
@@ -304,6 +321,12 @@ export default {
   }
 }
 
+.m_corpus--presentation--name {
+  h1 + h3 {
+    margin-top: calc(-1 * var(--spacing));
+  }
+}
+
 .m_tags {
   display: flex;
   flex-flow: row nowrap;
@@ -311,6 +334,26 @@ export default {
   min-width: max-content;
 
   height: 100%;
+}
+
+.m_tags--options {
+  display: flex;
+  flex-flow: column wrap;
+  margin: calc(var(--spacing) * 1.9) 0;
+
+  .m_tags--options--addFragmentButton {
+    background-color: white;
+    color: black;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 0;
+    padding: 0;
+    font-size: 4em;
+    width: 1em;
+    height: 1em;
+    border-radius: 50%;
+  }
 }
 
 .m_tags--alltags {
