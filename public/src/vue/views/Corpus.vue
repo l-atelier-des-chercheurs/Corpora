@@ -79,17 +79,14 @@
             <div
               class="m_tags--allfragments--tagfragment--tag"
               v-visible="
-                currently_shown_fragments_from_tag !== tag || !title_is_fixed
+                currently_shown_fragments_from_tag !== tag ||
+                !tag_title_position
               "
             >
               <div>
                 <button
                   type="button"
-                  @click="
-                    currently_shown_fragments_from_tag === tag
-                      ? (currently_shown_fragments_from_tag = false)
-                      : (currently_shown_fragments_from_tag = tag)
-                  "
+                  @click="setVisibleTagFragments(tag)"
                   :class="{
                     'is--active': currently_shown_fragments_from_tag === tag,
                   }"
@@ -106,18 +103,15 @@
             </div>
             <div
               class="m_tags--allfragments--tagfragment--tag m_tags--allfragments--tagfragment--tag_fixed"
+              :class="[`has--position_${tag_title_position}`]"
               v-if="
-                currently_shown_fragments_from_tag === tag && title_is_fixed
+                currently_shown_fragments_from_tag === tag && tag_title_position
               "
             >
               <div>
                 <button
                   type="button"
-                  @click="
-                    currently_shown_fragments_from_tag === tag
-                      ? (currently_shown_fragments_from_tag = false)
-                      : (currently_shown_fragments_from_tag = tag)
-                  "
+                  @click="setVisibleTagFragments(tag)"
                   :class="{
                     'is--active': currently_shown_fragments_from_tag === tag,
                   }"
@@ -181,7 +175,7 @@ export default {
       // show_fragments_for: {},
       currently_shown_fragments_from_tag: false,
 
-      title_is_fixed: false,
+      tag_title_position: false,
     };
   },
   created() {},
@@ -289,7 +283,6 @@ export default {
       });
 
       all_tags.sort((a, b) => a.localeCompare(b));
-
       return all_tags;
     },
   },
@@ -301,14 +294,23 @@ export default {
           `section_${this.currently_shown_fragments_from_tag}`
         ][0].getBoundingClientRect();
 
-        if (tag_box.x < 0) {
-          this.title_is_fixed = true;
+        if (tag_box.x < 0 && tag_box.right > 84) {
+          this.tag_title_position = "in-between";
+        } else if (tag_box.x < 0 && tag_box.right < 84) {
+          this.tag_title_position = "end-of-container";
         } else {
-          this.title_is_fixed = false;
+          this.tag_title_position = false;
         }
-        console.log("tag_box : " + JSON.stringify(tag_box));
-        // récupérer le scrollLeft
       }
+    },
+
+    setVisibleTagFragments(tag) {
+      if (this.currently_shown_fragments_from_tag === tag)
+        this.currently_shown_fragments_from_tag = false;
+      else this.currently_shown_fragments_from_tag = tag;
+      this.$nextTick(() => {
+        this.onScroll();
+      });
     },
 
     // showFragmentsFor(tag) {
@@ -429,6 +431,7 @@ export default {
 }
 
 .m_tags--allfragments--tagfragment {
+  position: relative;
   display: flex;
   flex-flow: row nowrap;
 
@@ -453,13 +456,27 @@ export default {
   justify-content: center;
   width: 84px;
   height: 100%;
+  transition: background 1s cubic-bezier(0.19, 1, 0.22, 1);
 
   &.m_tags--allfragments--tagfragment--tag_fixed {
     position: fixed;
     left: 0;
     z-index: 100;
     // background-color: var(--body-bg);
-    background: linear-gradient(to right, var(--body-bg) 50%, transparent 99%);
+    background: linear-gradient(
+      to right,
+      var(--body-bg) 75%,
+      transparent calc(75% + 1px)
+    );
+    background-size: 200% 100%;
+    background-position: -100% 0;
+
+    &.has--position_end-of-container {
+      position: absolute;
+      right: 0;
+      left: auto;
+      background-position: -200% 0;
+    }
   }
 
   &::before {
@@ -494,6 +511,8 @@ export default {
     &.is--active,
     &:focus {
       outline: 0;
+      border: 2px solid #c0d8dd;
+
       span {
         text-decoration: underline;
         // border-bottom: 0.1em solid currentColor;
@@ -503,10 +522,10 @@ export default {
 
   h2 {
     margin: 0;
-    white-space: nowrap;
+    // white-space: nowrap;
 
     display: flex;
-    flex-flow: row wrap;
+    flex-flow: row nowrap;
     align-items: center;
 
     span {

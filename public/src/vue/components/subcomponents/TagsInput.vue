@@ -78,10 +78,10 @@ export default {
     return {
       tags:
         !!this.keywords && this.keywords.length > 0
-          ? createTags(this.keywords.map(k => k.title))
+          ? createTags(this.keywords.map((k) => k.title))
           : [],
       tag: "",
-      new_tag: ""
+      new_tag: "",
     };
   },
 
@@ -99,62 +99,74 @@ export default {
         return [];
       }
       const fitting_keywords = this.allKeywords.filter(
-        i =>
+        (i) =>
           new RegExp(this.tag, "i").test(i.text) &&
-          !this.tags.find(t => t.text === i.text)
+          !this.tags.find((t) => t.text === i.text)
       );
       return fitting_keywords.slice(0, 2);
       // return fitting_keywords;
       // return this.$root.allKeywords.filter(i => i.text.toLowerCase().startsWith(this.tag.toLowerCase()) && !this.tags.find(t => t.text === i.text));
     },
     disableAddButton() {
-      if (this.tag.length === 0) {
-        return true;
-      }
-      if (this.tags.find(t => t.text === this.tag)) {
-        return true;
-      }
+      if (this.tag.length === 0) return true;
+
+      // if (this.tags.find((t) => t.text === this.tag)) {
+      //   return true;
+      // }
       return false;
     },
     allKeywordsExceptCurrent() {
       return this.allKeywords.filter(
-        i => !this.tags.find(t => t.text === i.text)
+        (i) => !this.tags.find((t) => t.text === i.text)
       );
-    }
+    },
   },
   methods: {
-    createTagFromAutocomplete: function(tag) {
+    createTagFromAutocomplete: function (tag) {
       this.tag = tag;
       this.createTag();
     },
-    createTag: function() {
+    createTag: function () {
       if (this.tag.trim().length === 0) {
         return;
       }
+      if (
+        this.allKeywords.some(
+          (i) => i.text.toLowerCase() === this.tag.toLowerCase()
+        )
+      ) {
+        this.$alertify
+          .closeLogOnClick(true)
+          .delay(4000)
+          .error(this.$t("tag_already_exists"));
+
+        return;
+      }
+
       this.tags.push({ text: this.tag });
       this.sendTags(this.tags);
       this.tag = "";
     },
-    removeTag: function(tag_text) {
-      this.tags = this.tags.filter(t => t.text !== tag_text);
+    removeTag: function (tag_text) {
+      this.tags = this.tags.filter((t) => t.text !== tag_text);
       this.sendTags(this.tags);
     },
-    updateTags: function(newTags) {
-      this.tags = newTags.map(val => {
+    updateTags: function (newTags) {
+      this.tags = newTags.map((val) => {
         val.classes = "tagcolorid_" + (parseInt(val.text, 36) % 2);
         return val;
       });
     },
-    sendTags: function(newTags) {
+    sendTags: function (newTags) {
       this.updateTags(newTags);
-      const tag_array = this.tags.map(val => {
+      const tag_array = this.tags.map((val) => {
         return { title: val.text };
       });
       if (!!this.new_tag) tag_array.push({ title: this.new_tag });
 
       this.$emit("tagsChanged", tag_array);
-    }
-  }
+    },
+  },
 };
 </script>
 <style></style>
