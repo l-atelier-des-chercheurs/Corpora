@@ -3,12 +3,15 @@
     <List
       v-if="
         $root.do_navigation.view === 'ListView' &&
-          !$root.settings.is_loading_corpus
+        !$root.settings.is_loading_corpus
       "
       :corpuses="Object.values($root.store.corpus)"
     />
 
-    <Corpus v-else-if="$root.do_navigation.view === 'CorpusView'" :corpus="$root.current_corpus" />
+    <Corpus
+      v-else-if="$root.do_navigation.view === 'CorpusView'"
+      :corpus="$root.current_corpus"
+    />
 
     <portal-target name="modal_container" />
   </div>
@@ -22,7 +25,7 @@ export default {
   name: "app",
   components: {
     List,
-    Corpus
+    Corpus,
   },
   props: {},
   data() {
@@ -32,7 +35,7 @@ export default {
   created() {},
   beforeDestroy() {},
   computed: {},
-  methods: {}
+  methods: {},
 };
 </script>
 <style src="../../node_modules/vue-plyr/dist/vue-plyr.css"></style>
@@ -88,6 +91,7 @@ h3 {
 
 button {
   color: inherit;
+  text-transform: lowercase;
 }
 
 label {
