@@ -175,33 +175,9 @@ module.exports = (function () {
       fr: "Déjà créés",
       en: "Already created",
     },
-    suggestion: {
-      fr: "Suggestion",
-      en: "Suggestion",
-    },
-    suggestion: {
-      fr: "Suggestion",
-      en: "Suggestion",
-    },
-    suggestion: {
-      fr: "Suggestion",
-      en: "Suggestion",
-    },
-    suggestion: {
-      fr: "Suggestion",
-      en: "Suggestion",
-    },
-    suggestion: {
-      fr: "Suggestion",
-      en: "Suggestion",
-    },
-    suggestion: {
-      fr: "Suggestion",
-      en: "Suggestion",
-    },
-    suggestion: {
-      fr: "Suggestion",
-      en: "Suggestion",
+    tag_already_exists: {
+      fr: "Ce mot-clé existe déjà",
+      en: "This tag already exists",
     },
   };
 

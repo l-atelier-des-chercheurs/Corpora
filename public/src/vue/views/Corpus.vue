@@ -483,6 +483,8 @@ export default {
     // width: 50vh;
     text-align: center;
 
+    text-transform: initial;
+
     background-color: var(--body-bg);
 
     &:hover {

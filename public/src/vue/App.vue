@@ -459,6 +459,7 @@ audio {
     flex-flow: row nowrap;
     transform: all 1s cubic-bezier(0.19, 1, 0.22, 1);
 
+    color: var(--color-black);
     input {
       position: relative;
       z-index: 1;
@@ -479,18 +480,21 @@ audio {
       // font-size: 2em;
       background-color: var(--color-orange);
 
-      color: white;
+      // color: white;
       flex: 0 0 1em;
       min-height: 0;
       width: 1em;
       overflow: hidden;
+      font-size: 2em;
+      line-height: 1;
       padding: 0;
+      padding-bottom: 0.2em;
       margin-left: -4px;
       padding-left: 4px;
       border-radius: 0 4px 4px 0;
 
       &[disabled] {
-        background-color: #ccc;
+        background-color: #999;
       }
     }
   }
@@ -504,10 +508,10 @@ audio {
     align-items: center;
     min-height: 0;
     // border-radius: 4px !important;
-    background-color: var(--color-orange) !important;
+    background-color: var(--color-orange);
     // color: white !important;
-    color: black !important;
-    font-size: inherit !important;
+    color: var(--color-black);
+    font-size: inherit;
     // .padding-sides-verysmall !important;
     // .padding-vert-verysmall !important;
     padding: 0.2rem 0.2rem;
@@ -533,6 +537,7 @@ audio {
       flex-shrink: 0;
       margin: 0 8px;
       margin-left: 6px;
+      padding-bottom: 2px;
       line-height: 1;
       display: inline-block;
       vertical-align: middle;
