@@ -1,7 +1,7 @@
 <template>
   <div style="width: 100%; height: 100%;">
     <CorpusPwd v-if="!can_access_corpus" :corpus="corpus" />
-    <div v-else class="m_corpus">
+    <div v-else class="m_corpus" ref="corpus" @scroll="onScroll">
       <div class="m_corpus--presentation">
         <!-- <div class>
           <button type="button" @click="$root.closeCorpus()">back</button>
@@ -53,7 +53,7 @@
               width="24px"
               height="24px"
               viewBox="0 0 24 24"
-              style="enable-background:new 0 0 24 24;"
+              style="enable-background: new 0 0 24 24;"
               xml:space="preserve"
             >
               <path
@@ -73,14 +73,48 @@
           <div
             v-for="{ tag, fragments } in tags_with_fragments"
             :key="tag"
+            :ref="`section_${tag}`"
             class="m_tags--allfragments--tagfragment"
           >
-            <div class="m_tags--allfragments--tagfragment--tag">
+            <div
+              class="m_tags--allfragments--tagfragment--tag"
+              v-visible="
+                currently_shown_fragments_from_tag !== tag ||
+                !tag_title_position
+              "
+            >
               <div>
                 <button
                   type="button"
-                  @click="toggleShowingFragmentsForTag(tag)"
-                  :class="{ 'is--active' : showFragmentsFor(tag) }"
+                  @click="setVisibleTagFragments(tag)"
+                  :class="{
+                    'is--active': currently_shown_fragments_from_tag === tag,
+                  }"
+                >
+                  <h2>
+                    <span>
+                      <template v-if="tag === ''">Non-taggés</template>
+                      <template v-else>{{ tag }}</template>
+                    </span>
+                    <small>{{ fragments.length * 1 }}</small>
+                  </h2>
+                </button>
+              </div>
+            </div>
+            <div
+              class="m_tags--allfragments--tagfragment--tag m_tags--allfragments--tagfragment--tag_fixed"
+              :class="[`has--position_${tag_title_position}`]"
+              v-if="
+                currently_shown_fragments_from_tag === tag && tag_title_position
+              "
+            >
+              <div>
+                <button
+                  type="button"
+                  @click="setVisibleTagFragments(tag)"
+                  :class="{
+                    'is--active': currently_shown_fragments_from_tag === tag,
+                  }"
                 >
                   <h2>
                     <span>
@@ -96,7 +130,7 @@
             <transition name="width_collapse">
               <div
                 class="m_tags--allfragments--tagfragment--fragments"
-                v-if="showFragmentsFor(tag)"
+                v-if="currently_shown_fragments_from_tag === tag"
                 :style="`width: ${fragment_width * fragments.length}px`"
               >
                 <Fragment
@@ -124,12 +158,12 @@ import CreateFragment from "../components/modals/CreateFragment.vue";
 
 export default {
   props: {
-    corpus: Object
+    corpus: Object,
   },
   components: {
     CorpusPwd,
     Fragment,
-    CreateFragment
+    CreateFragment,
   },
   data() {
     return {
@@ -138,16 +172,22 @@ export default {
       new_fragment_tag: "",
       new_fragment_tag_custom: "",
       translation: 0,
-      show_fragments_for: {}
+      // show_fragments_for: {},
+      currently_shown_fragments_from_tag: false,
+
+      tag_title_position: false,
     };
   },
   created() {},
   mounted() {},
   beforeDestroy() {},
+  destroyed() {
+    if (this.observer) this.observer.disconnect();
+  },
   watch: {
-    translation: function() {
+    translation: function () {
       this.$refs.corpus_content.scrollLeft = this.translation;
-    }
+    },
   },
   computed: {
     fragment_width() {
@@ -156,7 +196,7 @@ export default {
     can_access_corpus() {
       return this.$root.canAccessFolder({
         type: "corpus",
-        slugFolderName: this.corpus.slugFolderName
+        slugFolderName: this.corpus.slugFolderName,
       });
     },
     previewURL() {
@@ -166,7 +206,7 @@ export default {
       ) {
         return false;
       }
-      const thumb = this.corpus.preview.filter(p => p.size === 640);
+      const thumb = this.corpus.preview.filter((p) => p.size === 640);
       if (thumb.length > 0) {
         return `${thumb[0].path}`;
       }
@@ -188,7 +228,7 @@ export default {
       )
         return false;
       let fragments = Object.values(this.corpus.medias).filter(
-        m => m.type === "fragment"
+        (m) => m.type === "fragment"
       );
 
       fragments = this.$_.sortBy(fragments, "date_created");
@@ -199,28 +239,28 @@ export default {
       if (this.all_tags.length === 0) return [];
 
       // get all tags
-      let fragments_by_tag = this.all_tags.map(tag => {
+      let fragments_by_tag = this.all_tags.map((tag) => {
         const fragments_for_tag = this.fragments.filter(
-          f =>
+          (f) =>
             !!f.tags &&
             Array.isArray(f.tags) &&
-            f.tags.some(t => t.title === tag)
+            f.tags.some((t) => t.title === tag)
         );
 
         return {
           tag,
-          fragments: fragments_for_tag
+          fragments: fragments_for_tag,
         };
       });
 
       // append all fragments
       const fragments_with_no_tags = this.fragments.filter(
-        f => !f.tags || !Array.isArray(f.tags) || f.tags.length === 0
+        (f) => !f.tags || !Array.isArray(f.tags) || f.tags.length === 0
       );
       if (fragments_with_no_tags.length > 0) {
         fragments_by_tag.push({
           tag: "",
-          fragments: fragments_with_no_tags
+          fragments: fragments_with_no_tags,
         });
       }
 
@@ -234,63 +274,60 @@ export default {
 
       let all_tags = this.fragments.reduce((acc, f) => {
         if (!!f.tags && Array.isArray(f.tags) && f.tags.length > 0)
-          acc = acc.concat(f.tags.map(t => t.title));
+          acc = acc.concat(f.tags.map((t) => t.title));
         return acc;
       }, []);
 
-      all_tags = all_tags.filter(function(item, pos) {
+      all_tags = all_tags.filter(function (item, pos) {
         return all_tags.indexOf(item) == pos;
       });
 
       all_tags.sort((a, b) => a.localeCompare(b));
-
       return all_tags;
-    }
+    },
   },
   methods: {
-    onMousewheel(event) {
-      // console.log('METHODS • TimeLineView: onMousewheel');
-      event.preventDefault();
+    onScroll() {
+      if (this.currently_shown_fragments_from_tag) {
+        const scroll_left = this.$refs.corpus.scrollLeft;
+        const tag_box = this.$refs[
+          `section_${this.currently_shown_fragments_from_tag}`
+        ][0].getBoundingClientRect();
 
-      let new_translation = this.translation;
-      new_translation += event.deltaX;
-      new_translation += event.deltaY;
-
-      const el = this.$refs.corpus_content;
-
-      const timeline_width = el.children[0].offsetWidth - el.offsetWidth;
-
-      new_translation = Math.max(new_translation, 0);
-      new_translation = Math.min(new_translation, timeline_width);
-
-      if (new_translation !== this.translation) {
-        this.translation = new_translation;
+        if (tag_box.x < 0 && tag_box.right > 84) {
+          this.tag_title_position = "in-between";
+        } else if (tag_box.x < 0 && tag_box.right < 84) {
+          this.tag_title_position = "end-of-container";
+        } else {
+          this.tag_title_position = false;
+        }
       }
     },
-    onTimelineScroll() {
-      // console.log('METHODS • TimeLineView: onTimelineScroll');
-      const el = this.$refs.corpus_content;
-      this.translation = el.scrollLeft;
+
+    setVisibleTagFragments(tag) {
+      if (this.currently_shown_fragments_from_tag === tag)
+        this.currently_shown_fragments_from_tag = false;
+      else this.currently_shown_fragments_from_tag = tag;
+      this.$nextTick(() => {
+        this.onScroll();
+      });
     },
 
-    showFragmentsFor(tag) {
-      if (!this.show_fragments_for.hasOwnProperty(tag)) return false;
-      return this.show_fragments_for[tag];
-    },
-    toggleShowingFragmentsForTag(tag) {
-      console.log("Corpus • METHODS: toggleShowingFragmentsForTag");
-
-      const current_opt = this.show_fragments_for.hasOwnProperty(tag)
-        ? this.show_fragments_for[tag]
-        : false;
-
-      Object.keys(this.show_fragments_for).map(
-        s => (this.show_fragments_for[s] = false)
-      );
-
-      this.$set(this.show_fragments_for, tag, !current_opt);
-    }
-  }
+    // showFragmentsFor(tag) {
+    //   if (!this.show_fragments_for.hasOwnProperty(tag)) return false;
+    //   return this.show_fragments_for[tag];
+    // },
+    // toggleShowingFragmentsForTag(tag) {
+    //   console.log("Corpus • METHODS: toggleShowingFragmentsForTag");
+    //   const current_opt = this.show_fragments_for.hasOwnProperty(tag)
+    //     ? this.show_fragments_for[tag]
+    //     : false;
+    //   Object.keys(this.show_fragments_for).map(
+    //     (s) => (this.show_fragments_for[s] = false)
+    //   );
+    //   this.$set(this.show_fragments_for, tag, !current_opt);
+    // },
+  },
 };
 </script>
 <style lang="scss" scoped>
@@ -300,7 +337,7 @@ export default {
   display: flex;
   flex-flow: row nowrap;
   align-items: center;
-  overflow-y: auto;
+  overflow-x: auto;
 
   > * {
     flex: 0 0 auto;
@@ -340,6 +377,14 @@ export default {
   min-width: max-content;
 
   height: 100%;
+
+  &::after {
+    display: block;
+    content: "";
+    // background-color: red;
+    width: calc(var(--spacing) * 2);
+    height: 100%;
+  }
 }
 
 .m_tags--options {
@@ -386,6 +431,7 @@ export default {
 }
 
 .m_tags--allfragments--tagfragment {
+  position: relative;
   display: flex;
   flex-flow: row nowrap;
 
@@ -409,6 +455,29 @@ export default {
   align-items: center;
   justify-content: center;
   width: 84px;
+  height: 100%;
+  transition: background 1s cubic-bezier(0.19, 1, 0.22, 1);
+
+  &.m_tags--allfragments--tagfragment--tag_fixed {
+    position: fixed;
+    left: 0;
+    z-index: 100;
+    // background-color: var(--body-bg);
+    background: linear-gradient(
+      to right,
+      var(--body-bg) 75%,
+      transparent calc(75% + 1px)
+    );
+    background-size: 200% 100%;
+    background-position: -100% 0;
+
+    &.has--position_end-of-container {
+      position: absolute;
+      right: 0;
+      left: auto;
+      background-position: -200% 0;
+    }
+  }
 
   &::before {
     content: "";
@@ -431,6 +500,8 @@ export default {
     // width: 50vh;
     text-align: center;
 
+    text-transform: initial;
+
     background-color: var(--body-bg);
 
     &:hover {
@@ -440,6 +511,8 @@ export default {
     &.is--active,
     &:focus {
       outline: 0;
+      border: 2px solid #c0d8dd;
+
       span {
         text-decoration: underline;
         // border-bottom: 0.1em solid currentColor;
@@ -449,10 +522,10 @@ export default {
 
   h2 {
     margin: 0;
-    white-space: nowrap;
+    // white-space: nowrap;
 
     display: flex;
-    flex-flow: row wrap;
+    flex-flow: row nowrap;
     align-items: center;
 
     span {
