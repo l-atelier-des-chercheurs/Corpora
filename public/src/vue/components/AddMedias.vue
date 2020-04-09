@@ -4,6 +4,7 @@
       class="menu_encart"
       :class="{ 'is--showing_options': show_addmedia_options }"
       :style="addMediaStyles"
+      v-if="selected_files.length === 0"
     >
       <transition name="slide-fade">
         <!-- @mouseenter="!is_touch && show_drop_container === false ? show_addmedia_options = true : ''" -->
@@ -160,15 +161,15 @@
           />
         </svg>
       </button>
-      <UploadFile
-        v-if="selected_files.length > 0"
-        @close="selected_files = []"
-        :slugFolderName="slugFolderName"
-        :type="'corpus'"
-        :selected_files="selected_files"
-        @insertMedia="(metaFileName) => newMediaCreated({ metaFileName })"
-      />
     </div>
+    <UploadFile
+      v-if="selected_files.length > 0"
+      @close="selected_files = []"
+      :slugFolderName="slugFolderName"
+      :type="'corpus'"
+      :selected_files="selected_files"
+      @insertMedia="(metaFileName) => newMediaCreated({ metaFileName })"
+    />
   </div>
 </template>
 <script>
@@ -498,7 +499,7 @@ export default {
   }
 
   &.is--collapsed .menu_encart--button:not(:hover):not(.is--shown) {
-    background-color: var(--active-color);
+    background-color: var(--color-black);
     // padding: 2px;
     transform: scale(0.3);
 
