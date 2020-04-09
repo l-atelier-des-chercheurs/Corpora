@@ -643,6 +643,10 @@ audio {
   z-index: 20000;
 }
 
+.ql-editor {
+  background-color: rgba(141, 141, 141, 0.05);
+}
+
 .m_modal--mask {
   position: fixed;
   z-index: 10000;

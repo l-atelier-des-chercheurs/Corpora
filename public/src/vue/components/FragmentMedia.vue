@@ -240,6 +240,8 @@ export default {
   display: flex;
   flex-flow: row nowrap;
   justify-content: center;
+  margin-left: -2px;
+  margin-right: -2px;
 
   > * {
     flex: 1 1 0;
