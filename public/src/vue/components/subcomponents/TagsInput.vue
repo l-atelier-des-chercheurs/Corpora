@@ -41,7 +41,10 @@
     </transition-group>
 
     <div class="m_keywordField">
-      <div v-if="allKeywordsExceptCurrent.length > 0" class="autocomplete">
+      <div
+        v-if="allKeywordsExceptCurrent.length > 0 && matchingKeywords.length === 0"
+        class="autocomplete"
+      >
         <label>{{ $t("existing") }}</label>
         <div>
           <button
@@ -126,6 +129,17 @@ export default {
           .delay(4000)
           .error(this.$t("tag_already_exists"));
         return;
+      }
+
+      // if tag already exists with some other case, we take it
+      if (
+        this.allKeywords.some(
+          t => t.text.toLowerCase() === this.tag.toLowerCase()
+        )
+      ) {
+        this.tag = this.allKeywords.find(
+          t => t.text.toLowerCase() === this.tag.toLowerCase()
+        ).text;
       }
 
       this.tags.push({ text: this.tag });
