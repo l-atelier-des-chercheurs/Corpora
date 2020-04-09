@@ -127,6 +127,10 @@ module.exports = (function () {
       fr: "Créer un corpus",
       en: "Create a corpus",
     },
+    edit_corpus: {
+      fr: "Éditer un corpus",
+      en: "Edit a corpus",
+    },
     create: {
       fr: "Créer",
       en: "Create",
@@ -178,6 +182,10 @@ module.exports = (function () {
     tag_already_exists: {
       fr: "Ce mot-clé existe déjà",
       en: "This tag already exists",
+    },
+    cover_image: {
+      fr: "Logos",
+      en: "Logos",
     },
   };
 

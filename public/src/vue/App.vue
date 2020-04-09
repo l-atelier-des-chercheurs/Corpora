@@ -8,10 +8,7 @@
       :corpuses="Object.values($root.store.corpus)"
     />
 
-    <Corpus
-      v-else-if="$root.do_navigation.view === 'CorpusView'"
-      :corpus="$root.current_corpus"
-    />
+    <Corpus v-else-if="$root.do_navigation.view === 'CorpusView'" :corpus="$root.current_corpus" />
 
     <portal-target name="modal_container" />
   </div>
@@ -25,7 +22,7 @@ export default {
   name: "app",
   components: {
     List,
-    Corpus,
+    Corpus
   },
   props: {},
   data() {
@@ -35,7 +32,7 @@ export default {
   created() {},
   beforeDestroy() {},
   computed: {},
-  methods: {},
+  methods: {}
 };
 </script>
 <style src="../../node_modules/vue-plyr/dist/vue-plyr.css"></style>
@@ -87,11 +84,6 @@ h3 {
   font-style: italic;
   font-size: 1.25rem;
   line-height: 1.15;
-}
-
-button {
-  color: inherit;
-  text-transform: lowercase;
 }
 
 label {
@@ -307,7 +299,8 @@ select {
   color: --color-black;
 }
 
-input {
+input,
+textarea {
   font-size: 1.2em;
   padding: 0.4em 8px;
   border: none;
@@ -323,6 +316,10 @@ input {
   }
 }
 
+textarea {
+  min-height: 12em;
+}
+
 html,
 body,
 .app {
@@ -332,8 +329,10 @@ body,
 button,
 .button {
   border: none;
+  color: var(--color-black);
   background: #ccd0da;
   cursor: pointer;
+  text-transform: lowercase;
 
   transition: background 0.4s cubic-bezier(0.19, 1, 0.22, 1);
 
@@ -638,7 +637,7 @@ audio {
 }
 
 .m_modal--mask {
-  position: absolute;
+  position: fixed;
   z-index: 10000;
   min-height: 100%;
   top: 0;
