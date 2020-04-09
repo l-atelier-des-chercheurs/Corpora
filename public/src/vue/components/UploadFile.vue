@@ -87,7 +87,7 @@ export default {
   beforeDestroy() {},
   computed: {
     uriToUploadMedia: function () {
-      return `file-upload/${this.type}/${this.slugFolderName}`;
+      return `_file-upload/${this.type}/${this.slugFolderName}`;
     },
   },
   methods: {
@@ -136,11 +136,9 @@ export default {
           formData.append("socketid", socketid);
         }
 
-        if (this.$root.state.dev_mode === "debug") {
-          console.log(
-            `METHODS • sendThisFile: name = ${filename} / formData is ready / sending to ${this.uriToUploadMedia}`
-          );
-        }
+        console.log(
+          `METHODS • sendThisFile: name = ${filename} / formData is ready / sending to ${this.uriToUploadMedia}`
+        );
 
         // TODO : possibilité de cancel
         axios
@@ -152,7 +150,10 @@ export default {
               );
             }.bind(this),
           })
-          .then((x) => x.data)
+          .then((x) => {
+            console.log(`METHODS • sendThisFile: got answer, x ${x}`);
+            return x.data;
+          })
           .then((x) => {
             if (this.$root.state.dev_mode === "debug") {
               console.log(
@@ -195,11 +196,9 @@ export default {
             // resolve(x.map(img => Object.assign({}, img, { url: `${BASE_URL}/images/${img.id}` })));
           })
           .catch((err) => {
-            if (this.$root.state.dev_mode === "debug") {
-              console.log(
-                `METHODS • sendThisFile: name = ${filename} / failed uploading`
-              );
-            }
+            console.log(
+              `METHODS • sendThisFile: name = ${filename} / failed uploading`
+            );
 
             this.files_to_upload_meta[filename].status = "failed";
             this.files_to_upload_meta[filename].upload_percentages = 0;

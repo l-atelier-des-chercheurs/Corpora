@@ -11,21 +11,21 @@ const sockets = require("./core/sockets"),
   importer = require("./core/importer"),
   remote_api = require("./core/remote_api");
 
-module.exports = function(app) {
+module.exports = function (app) {
   /**
    * routing event
    */
   app.get("/", load_index);
   app.get("/:slug", load_index);
   app.get("/_archives/:type/:slugFolderName", downloadArchive);
-  app.post("/file-upload/:type/:slugFolderName", postFile2);
+  app.post("/_file-upload/:type/:slugFolderName", postFile2);
 
   remote_api.init(app);
 
   function collaborativeEditing(ws, req) {
     console.log("WebSocket sharedb event");
 
-    ws.on("message", msg => {
+    ws.on("message", (msg) => {
       console.log("WebSocket was closed");
       ws.send(msg);
     });
@@ -36,7 +36,7 @@ module.exports = function(app) {
   }
 
   function generatePageData(req) {
-    return new Promise(function(resolve, reject) {
+    return new Promise(function (resolve, reject) {
       let fullUrl = req.protocol + "://" + req.get("host") + req.originalUrl;
       dev.log(`••• the following page has been requested: ${fullUrl} •••`);
 
@@ -68,10 +68,10 @@ module.exports = function(app) {
   // GET
   function load_index(req, res) {
     generatePageData(req).then(
-      pageData => {
+      (pageData) => {
         res.render("index", pageData);
       },
-      err => {
+      (err) => {
         dev.error(`Err while getting index data: ${err}`);
       }
     );
@@ -84,7 +84,7 @@ module.exports = function(app) {
     // check if folder is protected
     file
       .getFolder({ type: type, slugFolderName })
-      .then(foldersData => {
+      .then((foldersData) => {
         const folder_meta = Object.values(foldersData)[0];
         if (!folder_meta.hasOwnProperty("password") || !folder_meta.password) {
           return;
@@ -108,15 +108,15 @@ module.exports = function(app) {
 
         // checks passed
         var archive = archiver("zip", {
-          zlib: { level: 0 } //
+          zlib: { level: 0 }, //
         });
 
-        archive.on("error", function(err) {
+        archive.on("error", function (err) {
           res.status(500).send({ error: err.message });
         });
 
         //on stream closed we can end the request
-        archive.on("end", function() {
+        archive.on("end", function () {
           dev.log("Archive wrote %d bytes", archive.pointer());
         });
 
@@ -134,7 +134,7 @@ module.exports = function(app) {
 
         archive.finalize();
       })
-      .catch(err => {
+      .catch((err) => {
         dev.error(`Error! ${err}`);
         res.status(500).send({ error: err });
       });
