@@ -195,6 +195,10 @@ module.exports = (function () {
       fr: "Logos",
       en: "Logos",
     },
+    download: {
+      fr: "Télécharger",
+      en: "Download",
+    },
   };
 
   return messages;
