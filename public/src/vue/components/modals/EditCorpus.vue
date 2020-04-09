@@ -15,13 +15,7 @@
       <!-- Human name -->
       <div class="margin-bottom-small">
         <label>{{ $t("corpus_name") }}</label>
-        <input
-          class="input-big"
-          type="text"
-          v-model.trim="corpusdata.name"
-          required
-          :readonly="read_only"
-        />
+        <input type="text" v-model.trim="corpusdata.name" required :readonly="read_only" />
       </div>
 
       <!-- Human name -->
@@ -44,9 +38,7 @@
             class="button-nostyle text-uc button-triangle"
             :class="{ 'is--active': show_image }"
             @click="show_image = !show_image"
-          >
-            {{ $t("cover_image") }}
-          </button>
+          >{{ $t("cover_image") }}</button>
         </label>
         <template v-if="show_image">
           <ImageSelect
@@ -68,20 +60,16 @@
             class="button-nostyle text-uc button-triangle"
             :class="{ 'is--active': show_password }"
             @click="show_password = !show_password"
-          >
-            {{ $t("password") }}
-          </button>
+          >{{ $t("password") }}</button>
         </label>
         <template v-if="show_password">
-          <input
-            type="password"
-            v-model="corpusdata.password"
-            :readonly="read_only"
-          />
+          <input type="password" v-model="corpusdata.password" :readonly="read_only" />
           <small>
-            <template v-if="!!corpus_password && corpusdata.password === ''">{{
+            <template v-if="!!corpus_password && corpusdata.password === ''">
+              {{
               $t("removing_password_warning")
-            }}</template>
+              }}
+            </template>
             <template v-else>{{ $t("adding_password_warning") }}</template>
           </small>
         </template>

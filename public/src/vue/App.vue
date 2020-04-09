@@ -8,10 +8,7 @@
       :corpuses="Object.values($root.store.corpus)"
     />
 
-    <Corpus
-      v-else-if="$root.do_navigation.view === 'CorpusView'"
-      :corpus="$root.current_corpus"
-    />
+    <Corpus v-else-if="$root.do_navigation.view === 'CorpusView'" :corpus="$root.current_corpus" />
 
     <portal-target name="modal_container" />
   </div>
@@ -25,7 +22,7 @@ export default {
   name: "app",
   components: {
     List,
-    Corpus,
+    Corpus
   },
   props: {},
   data() {
@@ -35,7 +32,7 @@ export default {
   created() {},
   beforeDestroy() {},
   computed: {},
-  methods: {},
+  methods: {}
 };
 </script>
 <style src="../../node_modules/vue-plyr/dist/vue-plyr.css"></style>
@@ -87,11 +84,6 @@ h3 {
   font-style: italic;
   font-size: 1.25rem;
   line-height: 1.15;
-}
-
-button {
-  color: inherit;
-  text-transform: lowercase;
 }
 
 label {
@@ -301,15 +293,23 @@ code {
 }
 
 textarea,
-.textarea,
 input,
-select {
+select,
+button {
+  font-family: inherit;
+}
+
+textarea,
+input,
+select,
+button {
   color: --color-black;
 }
 
-input {
+input,
+textarea {
   font-size: 1.2em;
-  padding: 0.4em 8px;
+  padding: 0.4em 0.4em;
   border: none;
   border-radius: 2px;
   width: 100%;
@@ -323,6 +323,10 @@ input {
   }
 }
 
+textarea {
+  min-height: 12em;
+}
+
 html,
 body,
 .app {
@@ -332,8 +336,10 @@ body,
 button,
 .button {
   border: none;
+  color: var(--color-black);
   background: #ccd0da;
   cursor: pointer;
+  text-transform: lowercase;
 
   transition: background 0.4s cubic-bezier(0.19, 1, 0.22, 1);
 
@@ -394,8 +400,8 @@ audio {
   text-transform: initial;
 
   > .input {
-    border: none !important;
-    padding: 0 !important;
+    // border: none !important;
+    // padding: 0 !important;
   }
   > .autocomplete {
     position: relative !important;
@@ -637,8 +643,12 @@ audio {
   z-index: 20000;
 }
 
+.ql-editor {
+  background-color: rgba(141, 141, 141, 0.05);
+}
+
 .m_modal--mask {
-  position: absolute;
+  position: fixed;
   z-index: 10000;
   min-height: 100%;
   top: 0;

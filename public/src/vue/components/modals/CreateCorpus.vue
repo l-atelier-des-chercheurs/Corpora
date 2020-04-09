@@ -27,44 +27,27 @@
       <!-- Human name -->
       <div class="margin-bottom-small">
         <label>{{ $t("description") }}</label>
-        <input type="textarea" v-model.trim="corpusdata.description" />
+        <textarea v-model.trim="corpusdata.description" @keydown.enter.stop />
       </div>
 
       <!-- Preview -->
       <div class="margin-bottom-small">
-        <label>
-          <button
-            type="button"
-            class="button-nostyle text-uc button-triangle"
-            :class="{ 'is--active': show_image }"
-            @click="show_image = !show_image"
-          >{{ $t("cover_image") }}</button>
-        </label>
-        <template v-if="show_image">
-          <ImageSelect
-            @newPreview="
+        <label>{{ $t("cover_image") }}</label>
+        <ImageSelect
+          @newPreview="
               value => {
                 preview = value;
               }
             "
-          ></ImageSelect>
-        </template>
+        />
       </div>
 
       <!-- Password -->
       <div class="margin-bottom-small">
-        <label>
-          <button
-            type="button"
-            class="button-nostyle text-uc button-triangle"
-            :class="{ 'is--active': show_password }"
-            @click="show_password = !show_password"
-          >{{ $t("password") }}</button>
-        </label>
-        <template v-if="show_password">
+        <label>{{ $t("password") }}</label>
+        <div>
           <input type="password" v-model="corpusdata.password" autocomplete="new-password" />
-          <small>{{ $t("password_instructions") }}</small>
-        </template>
+        </div>
       </div>
     </template>
 

@@ -205,6 +205,11 @@ export default {
           medias_slugs
         }
       });
+
+      // set created media(s) to edit mode
+      this.$nextTick(() => {
+        this.$root.settings.text_media_being_edited = metaFileName;
+      });
     },
     removeMedia({ metaFileName }) {
       if (this.$root.state.dev_mode === "debug")

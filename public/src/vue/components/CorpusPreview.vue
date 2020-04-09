@@ -18,9 +18,7 @@
         type="button"
         v-if="can_access_corpus"
         @click="show_edit_corpus_for = true"
-      >
-        {{ $t("edit") }}
-      </button>
+      >{{ $t("edit") }}</button>
 
       <EditCorpus
         v-if="show_edit_corpus_for"
@@ -30,18 +28,12 @@
         @close="show_edit_corpus_for = false"
       />
 
-      <button
-        type="button"
-        v-if="can_access_corpus"
-        @click="removeThisCorpus()"
-      >
-        {{ $t("remove") }}
-      </button>
+      <button type="button" v-if="can_access_corpus" @click="removeThisCorpus()">{{ $t("remove") }}</button>
     </div>
 
     <div class="m_corpusPreview--open">
       <div
-        class=""
+        class
         v-if="
           can_access_corpus &&
             corpus.password === 'has_pass' &&
@@ -58,14 +50,9 @@
         style
         :readonly="read_only"
         @click="showInputPasswordField = !showInputPasswordField"
-      >
-        {{ $t("password_required_to_edit") }}
-      </button>
+      >{{ $t("password_required_to_edit") }}</button>
 
-      <div
-        class="padding-verysmall _pwd_input"
-        v-if="showInputPasswordField && !can_access_corpus"
-      >
+      <div class="padding-verysmall _pwd_input" v-if="showInputPasswordField && !can_access_corpus">
         <div class="margin-bottom-small">
           <label>{{ $t("password") }}</label>
           <input
@@ -87,15 +74,13 @@
                 <label
                   for="remember_corpus_password_for_this_device"
                 >{{ $t('remember_corpus_password_for_this_device') }}</label>
-            </div>-->
+        </div>-->
 
         <button
           type="button"
           class="button bg-bleuvert button-thin"
           @click="submitPassword"
-        >
-          {{ $t("send") }}
-        </button>
+        >{{ $t("send") }}</button>
       </div>
 
       <div v-if="can_access_corpus && corpus_password" class="m_metaField">
@@ -106,16 +91,10 @@
             !showCurrentPassword ? $t('show_password') : $t('hide_password')
           "
         />
-        <div v-if="showCurrentPassword && can_access_corpus">
-          {{ corpus_password }}
-        </div>
+        <div v-if="showCurrentPassword && can_access_corpus">{{ corpus_password }}</div>
       </div>
 
-      <button
-        type="button"
-        class=""
-        @click="$root.openCorpus(corpus.slugFolderName)"
-      >
+      <button type="button" class @click="$root.openCorpus(corpus.slugFolderName)">
         <span class>{{ $t("open") }}</span>
       </button>
     </div>
@@ -245,6 +224,17 @@ export default {
     h2 {
       margin-top: 0;
     }
+  }
+
+  .m_corpusPreview--description > p {
+    display: block;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+  }
+
+  .m_corpusPreview--preview {
+    max-width: 140px;
   }
 
   .m_corpusPreview--options {

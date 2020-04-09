@@ -49,7 +49,7 @@
               </svg>
               <span class="text_label">Texte</span>
             </button>
-
+            <!-- 
             <button
               key="add_link"
               type="button"
@@ -76,7 +76,7 @@
                 />
               </svg>
               <span class="text_label">{{ $t('link') }}</span>
-            </button>
+            </button>-->
 
             <template>
               <label
@@ -529,6 +529,10 @@ export default {
     &::before {
       transform: scale(6);
     }
+  }
+
+  input[type="file"] {
+    padding: 0;
   }
 }
 </style>

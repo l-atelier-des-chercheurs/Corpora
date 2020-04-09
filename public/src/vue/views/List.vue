@@ -2,7 +2,7 @@
   <div class="m_list">
     <div v-if="!can_admin_corpora">
       <p>Enter password to admin</p>
-      <input type="password" v-model="$root.admin_pwd" />
+      <input type="password" autofocus v-model="$root.admin_pwd" />
     </div>
     <div v-else>
       <div>
@@ -15,14 +15,9 @@
           class="buttonLink"
           :class="{ 'is--active': show_create_corpus }"
           @click="show_create_corpus = !show_create_corpus"
-        >
-          {{ $t("create") }}
-        </button>
+        >{{ $t("create") }}</button>
 
-        <CreateCorpus
-          v-if="show_create_corpus"
-          @close="show_create_corpus = false"
-        />
+        <CreateCorpus v-if="show_create_corpus" @close="show_create_corpus = false" />
       </div>
 
       <div class="m_list--corpuses">
