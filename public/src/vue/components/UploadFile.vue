@@ -173,7 +173,24 @@ export default {
                   );
 
                   this.$emit("insertMedia", new_media[0].metaFileName);
-                  this.$emit("close");
+
+                  Object.keys(this.files_to_upload_meta).map((name) => {
+                    let index = 1;
+                    if (this.files_to_upload_meta[name].status === "success") {
+                      this.files_to_upload = this.files_to_upload.filter(
+                        (x) => x.name !== name
+                      );
+                      this.$delete(this.files_to_upload_meta, name);
+                      index++;
+                    }
+                  });
+
+                  debugger;
+
+                  if (Object.keys(this.files_to_upload_meta).length === 0) {
+                    this.$emit("close");
+                  }
+
                   return;
                 }
               }
@@ -210,26 +227,7 @@ export default {
 
       executeSequentially(
         Array.from(Array(this.files_to_upload.length).keys())
-      ).then((x) => {
-        Object.keys(this.files_to_upload_meta).map((name) => {
-          let index = 1;
-          if (this.files_to_upload_meta[name].status === "success") {
-            setTimeout(() => {
-              this.files_to_upload = this.files_to_upload.filter(
-                (x) => x.name !== name
-              );
-              this.$delete(this.files_to_upload_meta, name);
-
-              // check if there are anymore files to upload
-              // if (Object.keys(this.files_to_upload_meta).length === 0) {
-              //   this.$eventHub.$emit("timeline.scrollToEnd");
-              //   this.$emit("close");
-              // }
-            }, 500 * index);
-            index++;
-          }
-        });
-      });
+      ).then((x) => {});
 
       // const test = async () => {
       //   for (let task of Array.from(Array(this.files_to_upload.length).keys()).map()) {
