@@ -126,6 +126,33 @@ label {
   stroke-width: 1;
 }
 
+.custom_scrollbar {
+  --scrollbarBG: #e2edef;
+  --thumbBG: #90a4ae;
+
+  &::-webkit-scrollbar {
+    width: 12px;
+  }
+  & {
+    scrollbar-width: thin;
+    scrollbar-color: var(--thumbBG) var(--scrollbarBG);
+  }
+  &::-webkit-scrollbar-track {
+    background: var(--scrollbarBG);
+  }
+  &::-webkit-scrollbar-thumb {
+    background-color: var(--thumbBG);
+    // border-radius: 2px;
+    border: 4px solid var(--scrollbarBG);
+    border-top-width: calc(var(--spacing) * 2);
+    border-bottom-width: calc(var(--spacing) * 2);
+
+    &:hover {
+      background-color: #ccd0da;
+    }
+  }
+}
+
 .m_advancedMenu {
   position: relative;
   display: flex;
