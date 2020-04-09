@@ -1,19 +1,13 @@
 <template>
   <div class="m_tag">
-    <div
-      class="m_tag--tag"
-      v-visible="
-                !show_fragments ||
-                !tag_title_position
-              "
-    >
+    <div class="m_tag--tag" v-visible="!show_fragments || !tag_title_position">
       <div>
         <button
           type="button"
           @click="showFragments"
           :class="{
-                    'is--active': show_fragments,
-                  }"
+            'is--active': show_fragments,
+          }"
         >
           <h2>
             <span>
@@ -28,17 +22,15 @@
     <div
       class="m_tag--tag m_tag--tag_fixed"
       :class="[`has--position_${tag_title_position}`]"
-      v-if="
-                show_fragments && tag_title_position
-              "
+      v-if="show_fragments && tag_title_position"
     >
       <div>
         <button
           type="button"
           @click="showFragments"
           :class="{
-                    'is--active': show_fragments,
-                  }"
+            'is--active': show_fragments,
+          }"
         >
           <h2>
             <span>
@@ -83,24 +75,24 @@ export default {
     slugFolderName: String,
     fragments: Array,
     fragment_width: Number,
-    corpus_scroll_left: Number
+    corpus_scroll_left: Number,
   },
   components: {
-    Fragment
+    Fragment,
   },
   data() {
     return {
       show_fragments: false,
-      tag_title_position: false
+      tag_title_position: false,
     };
   },
   created() {},
   mounted() {},
   beforeDestroy() {},
   watch: {
-    corpus_scroll_left: function() {
+    corpus_scroll_left: function () {
       this.setTitleBarRightPos();
-    }
+    },
   },
   computed: {},
   methods: {
@@ -113,7 +105,7 @@ export default {
     setTitleBarRightPos() {
       if (this.show_fragments) {
         const tag_box = this.$el.getBoundingClientRect();
-        console.log(`tag_box ${JSON.stringify(tag_box)}`);
+        // console.log(`tag_box ${JSON.stringify(tag_box)}`);
 
         if (tag_box.x < 0 && tag_box.right > 84) {
           this.tag_title_position = "in-between";
@@ -123,8 +115,8 @@ export default {
           this.tag_title_position = false;
         }
       }
-    }
-  }
+    },
+  },
 };
 </script>
 <style lang="scss" scoped>

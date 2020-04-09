@@ -189,10 +189,9 @@ export default {
       });
     },
     newMediaCreated({ metaFileName, index = 0, after_metaFileName }) {
-      if (window.state.dev_mode === "debug")
-        console.log(
-          `Fragment • METHODS: newMediaCreated after_metaFileName ${after_metaFileName} or if missing at index ${index}`
-        );
+      console.log(
+        `Fragment • METHODS: newMediaCreated after_metaFileName ${after_metaFileName} or if missing at index ${index}`
+      );
 
       let medias_slugs =
         typeof this.fragment.medias_slugs === "object"

@@ -302,6 +302,10 @@ export default {
         });
     },
     newMediaCreated({ metaFileName }) {
+      console.log(
+        `AddMedias • METHODS: newMediaCreated metaFileName = ${metaFileName}`
+      );
+
       this.show_addmedia_options = false;
       this.$emit("newMediaCreated", metaFileName);
     },
