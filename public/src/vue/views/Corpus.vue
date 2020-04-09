@@ -70,82 +70,18 @@
           />
         </div>
         <div class="m_tags--allfragments">
-          <div
+          <Tag
             v-for="{ tag, fragments } in tags_with_fragments"
             :key="tag"
-            :ref="`section_${tag}`"
-            class="m_tags--allfragments--tagfragment"
-          >
-            <div
-              class="m_tags--allfragments--tagfragment--tag"
-              v-visible="
-                currently_shown_fragments_from_tag !== tag ||
-                !tag_title_position
-              "
-            >
-              <div>
-                <button
-                  type="button"
-                  @click="setVisibleTagFragments(tag)"
-                  :class="{
-                    'is--active': currently_shown_fragments_from_tag === tag,
-                  }"
-                >
-                  <h2>
-                    <span>
-                      <template v-if="tag === ''">Non-taggés</template>
-                      <template v-else>{{ tag }}</template>
-                    </span>
-                    <small>{{ fragments.length * 1 }}</small>
-                  </h2>
-                </button>
-              </div>
-            </div>
-            <div
-              class="m_tags--allfragments--tagfragment--tag m_tags--allfragments--tagfragment--tag_fixed"
-              :class="[`has--position_${tag_title_position}`]"
-              v-if="
-                currently_shown_fragments_from_tag === tag && tag_title_position
-              "
-            >
-              <div>
-                <button
-                  type="button"
-                  @click="setVisibleTagFragments(tag)"
-                  :class="{
-                    'is--active': currently_shown_fragments_from_tag === tag,
-                  }"
-                >
-                  <h2>
-                    <span>
-                      <template v-if="tag === ''">Non-taggés</template>
-                      <template v-else>{{ tag }}</template>
-                    </span>
-                    <small>{{ fragments.length * 1 }}</small>
-                  </h2>
-                </button>
-              </div>
-            </div>
-
-            <transition name="width_collapse">
-              <div
-                class="m_tags--allfragments--tagfragment--fragments"
-                v-if="currently_shown_fragments_from_tag === tag"
-                :style="`width: ${fragment_width * fragments.length}px`"
-              >
-                <Fragment
-                  v-for="fragment in fragments"
-                  :key="fragment.metaFileName"
-                  :corpus="corpus"
-                  :all_tags="all_tags"
-                  :medias="medias"
-                  :fragment="fragment"
-                  :fragment_width="fragment_width"
-                  :slugFolderName="corpus.slugFolderName"
-                />
-              </div>
-            </transition>
-          </div>
+            :tag="tag"
+            :medias="medias"
+            :all_tags="all_tags"
+            :corpus="corpus"
+            :slugFolderName="corpus.slugFolderName"
+            :fragments="fragments"
+            :fragment_width="fragment_width"
+            :corpus_scroll_left="corpus_scroll_left"
+          />
         </div>
       </div>
     </div>
@@ -153,17 +89,17 @@
 </template>
 <script>
 import CorpusPwd from "../components/modals/CorpusPwd.vue";
-import Fragment from "../components/Fragment.vue";
+import Tag from "../components/Tag.vue";
 import CreateFragment from "../components/modals/CreateFragment.vue";
 
 export default {
   props: {
-    corpus: Object,
+    corpus: Object
   },
   components: {
     CorpusPwd,
-    Fragment,
-    CreateFragment,
+    Tag,
+    CreateFragment
   },
   data() {
     return {
@@ -171,24 +107,16 @@ export default {
       new_fragment_name: "",
       new_fragment_tag: "",
       new_fragment_tag_custom: "",
-      translation: 0,
-      // show_fragments_for: {},
-      currently_shown_fragments_from_tag: false,
+      corpus_scroll_left: 0
 
-      tag_title_position: false,
+      // show_fragments_for: {},
     };
   },
   created() {},
   mounted() {},
   beforeDestroy() {},
-  destroyed() {
-    if (this.observer) this.observer.disconnect();
-  },
-  watch: {
-    translation: function () {
-      this.$refs.corpus_content.scrollLeft = this.translation;
-    },
-  },
+  destroyed() {},
+  watch: {},
   computed: {
     fragment_width() {
       return Math.min(400, this.$root.settings.windowWidth * 0.9);
@@ -196,7 +124,7 @@ export default {
     can_access_corpus() {
       return this.$root.canAccessFolder({
         type: "corpus",
-        slugFolderName: this.corpus.slugFolderName,
+        slugFolderName: this.corpus.slugFolderName
       });
     },
     previewURL() {
@@ -206,7 +134,7 @@ export default {
       ) {
         return false;
       }
-      const thumb = this.corpus.preview.filter((p) => p.size === 640);
+      const thumb = this.corpus.preview.filter(p => p.size === 640);
       if (thumb.length > 0) {
         return `${thumb[0].path}`;
       }
@@ -228,7 +156,7 @@ export default {
       )
         return false;
       let fragments = Object.values(this.corpus.medias).filter(
-        (m) => m.type === "fragment"
+        m => m.type === "fragment"
       );
 
       fragments = this.$_.sortBy(fragments, "date_created");
@@ -239,28 +167,28 @@ export default {
       if (this.all_tags.length === 0) return [];
 
       // get all tags
-      let fragments_by_tag = this.all_tags.map((tag) => {
+      let fragments_by_tag = this.all_tags.map(tag => {
         const fragments_for_tag = this.fragments.filter(
-          (f) =>
+          f =>
             !!f.tags &&
             Array.isArray(f.tags) &&
-            f.tags.some((t) => t.title === tag)
+            f.tags.some(t => t.title === tag)
         );
 
         return {
           tag,
-          fragments: fragments_for_tag,
+          fragments: fragments_for_tag
         };
       });
 
       // append all fragments
       const fragments_with_no_tags = this.fragments.filter(
-        (f) => !f.tags || !Array.isArray(f.tags) || f.tags.length === 0
+        f => !f.tags || !Array.isArray(f.tags) || f.tags.length === 0
       );
       if (fragments_with_no_tags.length > 0) {
         fragments_by_tag.push({
           tag: "",
-          fragments: fragments_with_no_tags,
+          fragments: fragments_with_no_tags
         });
       }
 
@@ -274,60 +202,23 @@ export default {
 
       let all_tags = this.fragments.reduce((acc, f) => {
         if (!!f.tags && Array.isArray(f.tags) && f.tags.length > 0)
-          acc = acc.concat(f.tags.map((t) => t.title));
+          acc = acc.concat(f.tags.map(t => t.title));
         return acc;
       }, []);
 
-      all_tags = all_tags.filter(function (item, pos) {
+      all_tags = all_tags.filter(function(item, pos) {
         return all_tags.indexOf(item) == pos;
       });
 
       all_tags.sort((a, b) => a.localeCompare(b));
       return all_tags;
-    },
+    }
   },
   methods: {
     onScroll() {
-      if (this.currently_shown_fragments_from_tag) {
-        const scroll_left = this.$refs.corpus.scrollLeft;
-        const tag_box = this.$refs[
-          `section_${this.currently_shown_fragments_from_tag}`
-        ][0].getBoundingClientRect();
-
-        if (tag_box.x < 0 && tag_box.right > 84) {
-          this.tag_title_position = "in-between";
-        } else if (tag_box.x < 0 && tag_box.right < 84) {
-          this.tag_title_position = "end-of-container";
-        } else {
-          this.tag_title_position = false;
-        }
-      }
-    },
-
-    setVisibleTagFragments(tag) {
-      if (this.currently_shown_fragments_from_tag === tag)
-        this.currently_shown_fragments_from_tag = false;
-      else this.currently_shown_fragments_from_tag = tag;
-      this.$nextTick(() => {
-        this.onScroll();
-      });
-    },
-
-    // showFragmentsFor(tag) {
-    //   if (!this.show_fragments_for.hasOwnProperty(tag)) return false;
-    //   return this.show_fragments_for[tag];
-    // },
-    // toggleShowingFragmentsForTag(tag) {
-    //   console.log("Corpus • METHODS: toggleShowingFragmentsForTag");
-    //   const current_opt = this.show_fragments_for.hasOwnProperty(tag)
-    //     ? this.show_fragments_for[tag]
-    //     : false;
-    //   Object.keys(this.show_fragments_for).map(
-    //     (s) => (this.show_fragments_for[s] = false)
-    //   );
-    //   this.$set(this.show_fragments_for, tag, !current_opt);
-    // },
-  },
+      this.corpus_scroll_left = this.$refs.corpus.scrollLeft;
+    }
+  }
 };
 </script>
 <style lang="scss" scoped>
@@ -429,159 +320,4 @@ export default {
   min-width: max-content;
   overflow-y: auto;
 }
-
-.m_tags--allfragments--tagfragment {
-  position: relative;
-  display: flex;
-  flex-flow: row nowrap;
-
-  // min-width: max-content;
-  // overflow-y: auto;
-
-  &::after {
-    content: "";
-    display: block;
-    height: calc(100% - var(--spacing) * 2);
-    margin: calc(var(--spacing) * 1) 0;
-    // padding-left: var(--spacing);
-    // border-right: 1px solid currentColor;
-  }
-}
-
-.m_tags--allfragments--tagfragment--tag {
-  position: relative;
-  // position: absolute;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 84px;
-  height: 100%;
-  transition: background 1s cubic-bezier(0.19, 1, 0.22, 1);
-
-  &.m_tags--allfragments--tagfragment--tag_fixed {
-    position: fixed;
-    left: 0;
-    z-index: 100;
-    // background-color: var(--body-bg);
-    background: linear-gradient(
-      to right,
-      var(--body-bg) 75%,
-      transparent calc(75% + 1px)
-    );
-    background-size: 200% 100%;
-    background-position: -100% 0;
-
-    &.has--position_end-of-container {
-      position: absolute;
-      right: 0;
-      left: auto;
-      background-position: -200% 0;
-    }
-  }
-
-  &::before {
-    content: "";
-    display: block;
-    position: absolute;
-    height: calc(100% - var(--spacing) * 4);
-    width: 2px;
-    background-color: #c0d8dd;
-    z-index: 0;
-  }
-
-  button {
-    background-color: transparent;
-    padding: calc(var(--spacing) / 2) calc(var(--spacing) * 1)
-      calc(var(--spacing) / 2) calc(var(--spacing) * 1.5);
-    // padding-right: 0;
-    border-radius: 28px;
-    // width: 80vh;
-    // border-bottom: 0.2em solid transparent;
-    // width: 50vh;
-    text-align: center;
-
-    text-transform: initial;
-
-    background-color: var(--body-bg);
-
-    &:hover {
-      background-color: #c0d8dd;
-    }
-    &:active,
-    &.is--active,
-    &:focus {
-      outline: 0;
-      border: 2px solid #c0d8dd;
-
-      span {
-        text-decoration: underline;
-        // border-bottom: 0.1em solid currentColor;
-      }
-    }
-  }
-
-  h2 {
-    margin: 0;
-    // white-space: nowrap;
-
-    display: flex;
-    flex-flow: row nowrap;
-    align-items: center;
-
-    span {
-      margin-right: var(--spacing);
-    }
-
-    small {
-      font-size: 0.7em;
-      background-color: #c0d8dd;
-      border-radius: 50%;
-      min-width: 1.7em;
-      height: 1.7em;
-      display: inline-block;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-variant-numeric: tabular-nums;
-    }
-  }
-
-  > * {
-    display: block;
-    flex: 0 0 80vh;
-    transform: rotate(-90deg);
-    // background-color: rosybrown;
-    text-align: center;
-  }
-}
-.m_tags--allfragments--tagfragment--fragments {
-  display: flex;
-  flex-flow: row nowrap;
-  // align-content: stretch;
-  // min-width: max-content;
-  // transform-origin: left center;
-  overflow: hidden;
-  // min-width: 400px;
-}
-
-// .m_fragment--content {
-//   position: relative;
-//   padding: 0 calc(var(--spacing) * 1);
-//   width: 100%;
-//   height: 100%;
-
-//   // max-height: 90vh;
-// }
-
-// .m_fragment--content--title {
-// }
-
-// .m_fragment--content--fragments {
-//   display: flex;
-//   flex-flow: row nowrap;
-//   align-content: stretch;
-//   min-width: max-content;
-
-//   height: 100%;
-// }
 </style>
