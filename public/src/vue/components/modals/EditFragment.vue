@@ -15,7 +15,7 @@
       <!-- Human name -->
       <div class="margin-bottom-small">
         <label>{{ $t("fragment_title") }}</label>
-        <input type="text" class="input-big" v-model.trim="fragmentdata.title" required autofocus />
+        <input type="text" v-model.trim="fragmentdata.title" required autofocus />
       </div>
 
       <div class="margin-bottom-small">

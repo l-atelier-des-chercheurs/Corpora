@@ -97,6 +97,9 @@
           "caption": {
             "type": "string"
           },
+          "source": {
+            "type": "string"
+          },
           "type": {
             "type": "string",
             "options": [

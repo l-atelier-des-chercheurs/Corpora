@@ -293,16 +293,23 @@ code {
 }
 
 textarea,
-.textarea,
 input,
-select {
+select,
+button {
+  font-family: inherit;
+}
+
+textarea,
+input,
+select,
+button {
   color: --color-black;
 }
 
 input,
 textarea {
   font-size: 1.2em;
-  padding: 0.4em 8px;
+  padding: 0.4em 0.4em;
   border: none;
   border-radius: 2px;
   width: 100%;
@@ -393,8 +400,8 @@ audio {
   text-transform: initial;
 
   > .input {
-    border: none !important;
-    padding: 0 !important;
+    // border: none !important;
+    // padding: 0 !important;
   }
   > .autocomplete {
     position: relative !important;

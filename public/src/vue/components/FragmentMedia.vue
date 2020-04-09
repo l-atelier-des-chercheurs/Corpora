@@ -89,10 +89,41 @@
 
     <div class="m_fragmentMedia--infos">
       <div class="m_fragmentMedia--infos--caption" v-if="is_being_edited || media.caption">
-        <template v-if="!is_being_edited">{{ media.caption }}</template>
-        <template v-else>
-          <input type="text" v-model="mediadata.caption" @keyup.enter="setBlocToEdit(false)" />
-        </template>
+        <label>{{$t('caption')}}</label>
+        <div>
+          <template v-if="!is_being_edited">
+            <span>{{ media.caption }}</span>
+          </template>
+          <template v-else>
+            <input
+              type="text"
+              v-model="mediadata.caption"
+              :placeholder="$t('caption')"
+              @keyup.enter="setBlocToEdit(false)"
+            />
+          </template>
+        </div>
+      </div>
+      <div class="m_fragmentMedia--infos--source" v-if="is_being_edited || media.source">
+        <label>{{$t('source')}} (URL)</label>
+        <div>
+          <template v-if="!is_being_edited">
+            <a
+              target="_blank"
+              rel="noopener noreferrer"
+              :title="media.source"
+              :href="media.source"
+            >{{ media.source }}</a>
+          </template>
+          <template v-else>
+            <input
+              type="url"
+              v-model="mediadata.source"
+              :placeholder="$t('source')"
+              @keyup.enter="setBlocToEdit(false)"
+            />
+          </template>
+        </div>
       </div>
     </div>
   </div>
@@ -117,6 +148,7 @@ export default {
       show_advanced_menu_for_media: false,
       mediadata: {
         caption: this.media.caption,
+        source: this.media.source,
         content: this.media.content
       },
       is_being_edited: false
@@ -139,6 +171,7 @@ export default {
         this.is_being_edited = true;
         this.mediadata = {
           caption: this.media.caption,
+          source: this.media.source,
           content: this.media.content
         };
       }
@@ -186,7 +219,7 @@ export default {
   transition: all 0.4s cubic-bezier(0.19, 1, 0.22, 1);
 
   &.is--beingEdited {
-    box-shadow: 0px 4px 4px 0px #ccd0da;
+    // box-shadow: 0px 4px 4px 0px #ccd0da;
     // transform: translateY(-5px);
   }
 }
@@ -207,25 +240,50 @@ export default {
   display: flex;
   flex-flow: row nowrap;
   justify-content: center;
+
+  > * {
+    flex: 1 1 0;
+  }
 }
-.m_fragmentMedia--infos--caption {
+.m_fragmentMedia--infos--caption,
+.m_fragmentMedia--infos--source {
   margin-top: calc(var(--spacing) / 2);
   // background-color: var(--active-color);
   border-radius: 4px;
   padding: 2px;
-  color: #999;
+  color: #666;
+
+  /* These are technically the same, but use both */
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+
+  -ms-word-break: break-all;
+  /* This is the dangerous one in WebKit, as it breaks things wherever */
+  word-break: break-all;
+  /* Instead use this non-standard one: */
+  word-break: break-word;
+
+  /* Adds a hyphen where the word breaks, if supported (No Blink) */
+  -ms-hyphens: auto;
+  -moz-hyphens: auto;
+  -webkit-hyphens: auto;
+  hyphens: auto;
 
   input {
-    font-family: inherit;
-    background-color: transparent;
-    border: 2px solid white;
-    border: none;
-    background-color: #fff4db;
-    outline: 0;
-    padding: 2px;
-    width: 260px;
+    background-color: var(--body-bg);
+    font-size: inherit;
+    // width: 260px;
   }
 }
+
+.m_fragmentMedia--infos--source {
+  a {
+    // overflow: hidden;
+    // white-space: nowrap;
+    // text-overflow: ellipsis;
+  }
+}
+
 .m_fragmentMedia--infos--type {
   text-transform: uppercase;
   font-size: 70%;

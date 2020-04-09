@@ -71,6 +71,14 @@ module.exports = (function () {
       fr: "Mot de passe",
       en: "Password",
     },
+    caption: {
+      fr: "Légende",
+      en: "Caption",
+    },
+    source: {
+      fr: "Source",
+      en: "Source",
+    },
     open: {
       fr: "Ouvrir",
       en: "Open",
