@@ -1,63 +1,57 @@
 <template>
   <div>
-    <!-- @submit="uploadFiles" -->
-    <template slot="header">
-      <span class>{{ $t("import_medias") }}</span>
-    </template>
+    <transition-group tag="div" name="fileupload_list">
+      <div
+        v-for="(f, index) in files_to_upload"
+        :key="f.name"
+        class="m_uploadFile"
+        :class="cssStatus(f)"
+        :style="`--progress-percent: ${
+          files_to_upload_meta.hasOwnProperty(f.name)
+            ? files_to_upload_meta[f.name].upload_percentages / 100
+            : 0
+        }`"
+      >
+        <div class="m_uploadFile--progressBar"></div>
 
-    <template slot="sidebar">
-      <transition-group tag="div" name="fileupload_list">
+        <img
+          v-if="!!f.type && f.type.includes('image') && index < 5"
+          class="m_uploadFile--image"
+          :src="getImgPreview(f)"
+        />
+        <div v-else class="m_uploadFile--image" />
+
+        <div :title="f.name" class="m_uploadFile--filename">{{ f.name }}</div>
+        <div class="m_uploadFile--size">{{ formatBytes(f.size) }}</div>
         <div
-          v-for="(f, index) in files_to_upload"
-          :key="f.name"
-          class="m_uploadFile"
-          :class="cssStatus(f)"
-          :style="`--progress-percent: ${
-            files_to_upload_meta.hasOwnProperty(f.name)
-              ? files_to_upload_meta[f.name].upload_percentages / 100
-              : 0
-          }`"
+          class="m_uploadFile--action"
+          v-if="files_to_upload_meta.hasOwnProperty(f.name)"
         >
-          <!-- too heavy on memory on mobile devices -->
-          <img
-            v-if="!!f.type && f.type.includes('image') && index < 5"
-            class="m_uploadFile--image"
-            :src="getImgPreview(f)"
-          />
-          <div v-else class="m_uploadFile--image" />
-
-          <div :title="f.name" class="m_uploadFile--filename">{{ f.name }}</div>
-          <div class="m_uploadFile--size">{{ formatBytes(f.size) }}</div>
-          <div
-            class="m_uploadFile--action"
-            v-if="files_to_upload_meta.hasOwnProperty(f.name)"
+          <button
+            type="button"
+            class="buttonLink"
+            @click="sendThisFile(f)"
+            :disabled="
+              read_only ||
+              (files_to_upload_meta.hasOwnProperty(f.name) &&
+                files_to_upload_meta[f.name].status === 'success')
+            "
           >
-            <button
-              type="button"
-              class="buttonLink"
-              @click="sendThisFile(f)"
-              :disabled="
-                read_only ||
-                (files_to_upload_meta.hasOwnProperty(f.name) &&
-                  files_to_upload_meta[f.name].status === 'success')
-              "
+            <template v-if="!files_to_upload_meta.hasOwnProperty(f.name)">
+              {{ $t("import") }}
+            </template>
+            <template
+              v-else-if="files_to_upload_meta[f.name].status === 'success'"
+              >{{ $t("sent") }}</template
             >
-              <template v-if="!files_to_upload_meta.hasOwnProperty(f.name)">
-                {{ $t("import") }}
-              </template>
-              <template
-                v-else-if="files_to_upload_meta[f.name].status === 'success'"
-                >{{ $t("sent") }}</template
-              >
-              <template
-                v-else-if="files_to_upload_meta[f.name].status === 'failed'"
-                >{{ $t("retry") }}</template
-              >
-            </button>
-          </div>
+            <template
+              v-else-if="files_to_upload_meta[f.name].status === 'failed'"
+              >{{ $t("retry") }}</template
+            >
+          </button>
         </div>
-      </transition-group>
-    </template>
+      </div>
+    </transition-group>
   </div>
 </template>
 <script>
@@ -179,6 +173,7 @@ export default {
                   );
 
                   this.$emit("insertMedia", new_media[0].metaFileName);
+                  this.$emit("close");
                   return;
                 }
               }
@@ -226,10 +221,10 @@ export default {
               this.$delete(this.files_to_upload_meta, name);
 
               // check if there are anymore files to upload
-              if (Object.keys(this.files_to_upload_meta).length === 0) {
-                this.$eventHub.$emit("timeline.scrollToEnd");
-                this.$emit("close");
-              }
+              // if (Object.keys(this.files_to_upload_meta).length === 0) {
+              //   this.$eventHub.$emit("timeline.scrollToEnd");
+              //   this.$emit("close");
+              // }
             }, 500 * index);
             index++;
           }
@@ -273,4 +268,81 @@ export default {
   },
 };
 </script>
-<style></style>
+<style lang="scss" scoped>
+.m_uploadFile {
+  position: relative;
+
+  display: flex;
+  flex-flow: row nowrap;
+  align-items: center;
+  justify-content: space-between;
+
+  font-size: 75%;
+  height: 60px;
+
+  margin-bottom: calc(var(--spacing) / 2);
+  background-color: var(--body-bg);
+
+  border-radius: 4px;
+  overflow: hidden;
+
+  .m_uploadFile--progressBar {
+    content: "";
+    position: absolute;
+    width: 100%;
+    height: 100%;
+
+    transform: scale(var(--progress-percent), 1);
+    transform-origin: left center;
+
+    transition: all 0.1s;
+    background-color: var(--color-black);
+  }
+
+  > * {
+    flex: 1 1 auto;
+    position: relative;
+    z-index: 1;
+  }
+
+  &.is--success {
+  }
+  &.is--failed {
+    &::before {
+      background-color: var(--color-black);
+    }
+  }
+
+  .m_uploadFile--image {
+    display: block;
+    flex: 0 0 60px;
+    width: 60px;
+    height: 60px;
+    object-fit: contain;
+    object-position: center;
+    background-color: fade(white, 35%);
+  }
+
+  .m_uploadFile--filename {
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+
+    font-size: 75%;
+    color: var(--color-black);
+    padding: calc(var(--spacing) / 4);
+  }
+  .m_uploadFile--size {
+    flex: 0 0 70px;
+  }
+  .m_uploadFile--action {
+    flex: 0 0 70px;
+
+    button {
+      // .bg-bleuvert;
+      background-color: transparent;
+      color: inherit;
+    }
+  }
+}
+</style>

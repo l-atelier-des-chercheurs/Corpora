@@ -286,7 +286,7 @@ export default {
     // background-color: #f9f3db;
     background: linear-gradient(
       180deg,
-      #fff 50%,
+      #fbf8e9 50%,
       #f9f3db calc(100% - 1px),
       #000 100%
     );
