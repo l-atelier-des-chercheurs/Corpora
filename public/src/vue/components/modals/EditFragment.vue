@@ -15,19 +15,11 @@
       <!-- Human name -->
       <div class="margin-bottom-small">
         <label>{{ $t("fragment_title") }}</label>
-        <input
-          type="text"
-          class="input-big"
-          v-model.trim="fragmentdata.title"
-          required
-          autofocus
-        />
+        <input type="text" class="input-big" v-model.trim="fragmentdata.title" required autofocus />
       </div>
 
       <div class="margin-bottom-small">
-        <label>
-          {{ $t("tags") }}
-        </label>
+        <label>{{ $t("tags") }}</label>
         <TagsInput
           :allKeywords="all_tags_rightly_formatted"
           :keywords="fragmentdata.tags"
@@ -35,7 +27,7 @@
         />
       </div>
     </template>
-    <template slot="submit_button">{{ $t("create") }}</template>
+    <template slot="submit_button">{{ $t("edit") }}</template>
   </Modal>
 </template>
 <script>

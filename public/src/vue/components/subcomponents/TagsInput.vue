@@ -8,9 +8,7 @@
         @click="removeTag(tag.text)"
         class="can_be_removed"
         :class="['tagcolorid_' + (parseInt(tag.text, 36) % 2)]"
-      >
-        {{ tag.text }}
-      </button>
+      >{{ tag.text }}</button>
 
       <div class="new-tag-input-wrapper" :key="'new-tag-input'">
         <input
@@ -25,16 +23,10 @@
           @click="createTag"
           :disabled="disableAddButton"
           v-if="tag.length > 0"
-        >
-          +
-        </button>
+        >+</button>
       </div>
 
-      <div
-        v-if="matchingKeywords.length > 0"
-        class="autocomplete"
-        :key="'autocomplete'"
-      >
+      <div v-if="matchingKeywords.length > 0" class="autocomplete" :key="'autocomplete'">
         <label>{{ $t("suggestion") }}</label>
         <div>
           <button
@@ -43,9 +35,7 @@
             :key="keyword.text"
             class="tag"
             @click="createTagFromAutocomplete(keyword.text)"
-          >
-            {{ keyword.text }}
-          </button>
+          >{{ keyword.text }}</button>
         </div>
       </div>
     </transition-group>
@@ -60,9 +50,7 @@
             :key="keyword.text"
             class="tag"
             @click="createTagFromAutocomplete(keyword.text)"
-          >
-            {{ keyword.text }}
-          </button>
+          >{{ keyword.text }}</button>
         </div>
       </div>
     </div>
@@ -78,10 +66,10 @@ export default {
     return {
       tags:
         !!this.keywords && this.keywords.length > 0
-          ? createTags(this.keywords.map((k) => k.title))
+          ? createTags(this.keywords.map(k => k.title))
           : [],
       tag: "",
-      new_tag: "",
+      new_tag: ""
     };
   },
 
@@ -99,9 +87,9 @@ export default {
         return [];
       }
       const fitting_keywords = this.allKeywords.filter(
-        (i) =>
+        i =>
           new RegExp(this.tag, "i").test(i.text) &&
-          !this.tags.find((t) => t.text === i.text)
+          !this.tags.find(t => t.text === i.text)
       );
       return fitting_keywords.slice(0, 2);
       // return fitting_keywords;
@@ -117,29 +105,26 @@ export default {
     },
     allKeywordsExceptCurrent() {
       return this.allKeywords.filter(
-        (i) => !this.tags.find((t) => t.text === i.text)
+        i => !this.tags.find(t => t.text === i.text)
       );
-    },
+    }
   },
   methods: {
-    createTagFromAutocomplete: function (tag) {
+    createTagFromAutocomplete: function(tag) {
       this.tag = tag;
       this.createTag();
     },
-    createTag: function () {
+    createTag: function() {
       if (this.tag.trim().length === 0) {
         return;
       }
       if (
-        this.allKeywords.some(
-          (i) => i.text.toLowerCase() === this.tag.toLowerCase()
-        )
+        this.tags.some(t => t.text.toLowerCase() === this.tag.toLowerCase())
       ) {
         this.$alertify
           .closeLogOnClick(true)
           .delay(4000)
           .error(this.$t("tag_already_exists"));
-
         return;
       }
 
@@ -147,26 +132,26 @@ export default {
       this.sendTags(this.tags);
       this.tag = "";
     },
-    removeTag: function (tag_text) {
-      this.tags = this.tags.filter((t) => t.text !== tag_text);
+    removeTag: function(tag_text) {
+      this.tags = this.tags.filter(t => t.text !== tag_text);
       this.sendTags(this.tags);
     },
-    updateTags: function (newTags) {
-      this.tags = newTags.map((val) => {
+    updateTags: function(newTags) {
+      this.tags = newTags.map(val => {
         val.classes = "tagcolorid_" + (parseInt(val.text, 36) % 2);
         return val;
       });
     },
-    sendTags: function (newTags) {
+    sendTags: function(newTags) {
       this.updateTags(newTags);
-      const tag_array = this.tags.map((val) => {
+      const tag_array = this.tags.map(val => {
         return { title: val.text };
       });
       if (!!this.new_tag) tag_array.push({ title: this.new_tag });
 
       this.$emit("tagsChanged", tag_array);
-    },
-  },
+    }
+  }
 };
 </script>
 <style></style>
