@@ -2,7 +2,7 @@
   <div style="width: 100%; height: 100%;">
     <CorpusPwd v-if="!can_access_corpus" :corpus="corpus" />
     <div v-else class="m_corpus" ref="corpus" @scroll="onScroll">
-      <div class="m_corpus--presentation">
+      <div class="m_corpus--presentation custom_scrollbar">
         <!-- <div class>
           <button type="button" @click="$root.closeCorpus()">back</button>
         </div>-->
@@ -94,12 +94,12 @@ import CreateFragment from "../components/modals/CreateFragment.vue";
 
 export default {
   props: {
-    corpus: Object
+    corpus: Object,
   },
   components: {
     CorpusPwd,
     Tag,
-    CreateFragment
+    CreateFragment,
   },
   data() {
     return {
@@ -107,7 +107,7 @@ export default {
       new_fragment_name: "",
       new_fragment_tag: "",
       new_fragment_tag_custom: "",
-      corpus_scroll_left: 0
+      corpus_scroll_left: 0,
 
       // show_fragments_for: {},
     };
@@ -124,7 +124,7 @@ export default {
     can_access_corpus() {
       return this.$root.canAccessFolder({
         type: "corpus",
-        slugFolderName: this.corpus.slugFolderName
+        slugFolderName: this.corpus.slugFolderName,
       });
     },
     previewURL() {
@@ -134,7 +134,7 @@ export default {
       ) {
         return false;
       }
-      const thumb = this.corpus.preview.filter(p => p.size === 640);
+      const thumb = this.corpus.preview.filter((p) => p.size === 640);
       if (thumb.length > 0) {
         return `${thumb[0].path}`;
       }
@@ -156,7 +156,7 @@ export default {
       )
         return false;
       let fragments = Object.values(this.corpus.medias).filter(
-        m => m.type === "fragment"
+        (m) => m.type === "fragment"
       );
 
       fragments = this.$_.sortBy(fragments, "date_created");
@@ -167,28 +167,28 @@ export default {
       if (this.all_tags.length === 0) return [];
 
       // get all tags
-      let fragments_by_tag = this.all_tags.map(tag => {
+      let fragments_by_tag = this.all_tags.map((tag) => {
         const fragments_for_tag = this.fragments.filter(
-          f =>
+          (f) =>
             !!f.tags &&
             Array.isArray(f.tags) &&
-            f.tags.some(t => t.title === tag)
+            f.tags.some((t) => t.title === tag)
         );
 
         return {
           tag,
-          fragments: fragments_for_tag
+          fragments: fragments_for_tag,
         };
       });
 
       // append all fragments
       const fragments_with_no_tags = this.fragments.filter(
-        f => !f.tags || !Array.isArray(f.tags) || f.tags.length === 0
+        (f) => !f.tags || !Array.isArray(f.tags) || f.tags.length === 0
       );
       if (fragments_with_no_tags.length > 0) {
         fragments_by_tag.push({
           tag: "",
-          fragments: fragments_with_no_tags
+          fragments: fragments_with_no_tags,
         });
       }
 
@@ -202,23 +202,23 @@ export default {
 
       let all_tags = this.fragments.reduce((acc, f) => {
         if (!!f.tags && Array.isArray(f.tags) && f.tags.length > 0)
-          acc = acc.concat(f.tags.map(t => t.title));
+          acc = acc.concat(f.tags.map((t) => t.title));
         return acc;
       }, []);
 
-      all_tags = all_tags.filter(function(item, pos) {
+      all_tags = all_tags.filter(function (item, pos) {
         return all_tags.indexOf(item) == pos;
       });
 
       all_tags.sort((a, b) => a.localeCompare(b));
       return all_tags;
-    }
+    },
   },
   methods: {
     onScroll() {
       this.corpus_scroll_left = this.$refs.corpus.scrollLeft;
-    }
-  }
+    },
+  },
 };
 </script>
 <style lang="scss" scoped>
@@ -237,11 +237,13 @@ export default {
 
 .m_corpus--presentation {
   // position: absolute;
-  margin: calc(var(--spacing) * 2) calc(var(--spacing) * 2);
+  padding: calc(var(--spacing) * 2) calc(var(--spacing) * 2);
+  margin-right: calc(var(--spacing) * 2);
   z-index: 1;
   // in case of very small height of viewport
-  max-height: 100%;
+  max-height: 100vh;
   max-width: 66ch;
+  overflow-y: auto;
 
   > * {
     margin-bottom: calc(var(--spacing));

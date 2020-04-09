@@ -8,7 +8,10 @@
       :corpuses="Object.values($root.store.corpus)"
     />
 
-    <Corpus v-else-if="$root.do_navigation.view === 'CorpusView'" :corpus="$root.current_corpus" />
+    <Corpus
+      v-else-if="$root.do_navigation.view === 'CorpusView'"
+      :corpus="$root.current_corpus"
+    />
 
     <portal-target name="modal_container" />
   </div>
@@ -22,7 +25,7 @@ export default {
   name: "app",
   components: {
     List,
-    Corpus
+    Corpus,
   },
   props: {},
   data() {
@@ -32,7 +35,7 @@ export default {
   created() {},
   beforeDestroy() {},
   computed: {},
-  methods: {}
+  methods: {},
 };
 </script>
 <style src="../../node_modules/vue-plyr/dist/vue-plyr.css"></style>
@@ -123,6 +126,33 @@ label {
   stroke-width: 1;
 }
 
+.custom_scrollbar {
+  --scrollbarBG: #e2edef;
+  --thumbBG: #90a4ae;
+
+  &::-webkit-scrollbar {
+    width: 12px;
+  }
+  & {
+    scrollbar-width: thin;
+    scrollbar-color: var(--thumbBG) var(--scrollbarBG);
+  }
+  &::-webkit-scrollbar-track {
+    background: var(--scrollbarBG);
+  }
+  &::-webkit-scrollbar-thumb {
+    background-color: var(--thumbBG);
+    // border-radius: 2px;
+    border: 4px solid var(--scrollbarBG);
+    border-top-width: calc(var(--spacing) * 2);
+    border-bottom-width: calc(var(--spacing) * 2);
+
+    &:hover {
+      background-color: #ccd0da;
+    }
+  }
+}
+
 .m_advancedMenu {
   position: relative;
   display: flex;
@@ -197,11 +227,11 @@ strong,
 em,
 small,
 code {
-  line-height: 0;
+  // line-height: 0;
 }
 sub,
 sup {
-  line-height: 0;
+  // line-height: 0;
   position: relative;
   vertical-align: baseline;
 }
@@ -222,7 +252,7 @@ h2 {
 
 ol,
 ul {
-  padding-left: 1.5em;
+  padding-left: calc(var(--spacing) / 2);
 
   > li {
     list-style-type: none;
@@ -248,14 +278,14 @@ ol li:before {
 
 strong,
 b {
-  font-weight: 700;
+  font-weight: bold;
 }
 
 a {
   text-decoration: underline;
   text-decoration-style: solid;
   color: var(--active-color);
-  font-weight: 600;
+  // font-weight: 600;
 }
 
 h1,
@@ -295,15 +325,17 @@ code {
 textarea,
 input,
 select,
-button {
+button,
+.button {
   font-family: inherit;
 }
 
 textarea,
 input,
 select,
-button {
-  color: --color-black;
+button,
+.button {
+  color: var(--color-black);
 }
 
 input,
@@ -340,6 +372,9 @@ button,
   background: #ccd0da;
   cursor: pointer;
   text-transform: lowercase;
+  font-size: 0.8rem;
+  padding: 0.2em 0.4em;
+  text-decoration: none;
 
   transition: background 0.4s cubic-bezier(0.19, 1, 0.22, 1);
 

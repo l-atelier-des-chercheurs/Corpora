@@ -33,17 +33,25 @@
       />
     </div>
     <div class="m_advancedMenu">
-      <button type="button" v-if="is_being_edited" @click="setBlocToEdit(false)">save</button>
+      <button
+        type="button"
+        v-if="is_being_edited"
+        @click="setBlocToEdit(false)"
+      >
+        save
+      </button>
 
       <template v-else>
-        <button type="button" @click="setBlocToEdit(media.metaFileName)">{{ $t("edit") }}</button>
+        <button type="button" @click="setBlocToEdit(media.metaFileName)">
+          {{ $t("edit") }}
+        </button>
 
         <button
           type="button"
           @click="show_advanced_menu_for_media = !show_advanced_menu_for_media"
           class="m_advancedMenu--toggleButton"
           :class="{
-            'is--active': show_advanced_menu_for_media
+            'is--active': show_advanced_menu_for_media,
           }"
         >
           <svg class="svg-icon" viewBox="0 0 20 20">
@@ -67,7 +75,9 @@
               $emit('moveMedia', { metaFileName: media.metaFileName, dir: -1 });
               show_advanced_menu_for_media = false;
             "
-          >{{ $t("moveup") }}</button>
+          >
+            {{ $t("moveup") }}
+          </button>
           <button
             type="button"
             v-if="index < linked_medias.length - 1"
@@ -75,21 +85,35 @@
               $emit('moveMedia', { metaFileName: media.metaFileName, dir: +1 });
               show_advanced_menu_for_media = false;
             "
-          >{{ $t("movedown") }}</button>
+          >
+            {{ $t("movedown") }}
+          </button>
+          <a
+            class="button"
+            :download="media.media_filename"
+            :href="mediaURL"
+            target="_blank"
+            >{{ $t("download") }}
+          </a>
           <button
             type="button"
             @click="
               $emit('removeMedia', { metaFileName: media.metaFileName });
               show_advanced_menu_for_media = false;
             "
-          >{{ $t("remove") }}</button>
+          >
+            {{ $t("remove") }}
+          </button>
         </div>
       </template>
     </div>
 
     <div class="m_fragmentMedia--infos">
-      <div class="m_fragmentMedia--infos--caption" v-if="is_being_edited || media.caption">
-        <label>{{$t('caption')}}</label>
+      <div
+        class="m_fragmentMedia--infos--caption"
+        v-if="is_being_edited || media.caption"
+      >
+        <label>{{ $t("caption") }}</label>
         <div>
           <template v-if="!is_being_edited">
             <span>{{ media.caption }}</span>
@@ -104,8 +128,11 @@
           </template>
         </div>
       </div>
-      <div class="m_fragmentMedia--infos--source" v-if="is_being_edited || media.source">
-        <label>{{$t('source')}} (URL)</label>
+      <div
+        class="m_fragmentMedia--infos--source"
+        v-if="is_being_edited || media.source"
+      >
+        <label>{{ $t("source") }} (URL)</label>
         <div>
           <template v-if="!is_being_edited">
             <a
@@ -113,7 +140,8 @@
               rel="noopener noreferrer"
               :title="media.source"
               :href="media.source"
-            >{{ media.source }}</a>
+              >{{ media.source }}</a
+            >
           </template>
           <template v-else>
             <input
@@ -137,11 +165,11 @@ export default {
     slugFolderName: String,
     media: Object,
     index: Number,
-    linked_medias: Array
+    linked_medias: Array,
   },
   components: {
     MediaContent,
-    CollaborativeEditor
+    CollaborativeEditor,
   },
   data() {
     return {
@@ -149,16 +177,17 @@ export default {
       mediadata: {
         caption: this.media.caption,
         source: this.media.source,
-        content: this.media.content
+        content: this.media.content,
       },
-      is_being_edited: false
+      mediaURL: `/${this.slugFolderName}/${this.media.media_filename}`,
+      is_being_edited: false,
     };
   },
   created() {},
   mounted() {},
   beforeDestroy() {},
   watch: {
-    "$root.settings.text_media_being_edited": function() {
+    "$root.settings.text_media_being_edited": function () {
       console.log(
         "$root.settings.text_media_being_edited ===" +
           this.$root.settings.text_media_being_edited
@@ -172,10 +201,10 @@ export default {
         this.mediadata = {
           caption: this.media.caption,
           source: this.media.source,
-          content: this.media.content
+          content: this.media.content,
         };
       }
-    }
+    },
   },
   computed: {},
   methods: {
@@ -193,10 +222,10 @@ export default {
         type: "corpus",
         slugFolderName: this.slugFolderName,
         slugMediaName: this.media.metaFileName,
-        data: this.mediadata
+        data: this.mediadata,
       });
-    }
-  }
+    },
+  },
 };
 </script>
 <style lang="scss" scoped>

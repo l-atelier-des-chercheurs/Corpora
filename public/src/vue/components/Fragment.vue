@@ -1,5 +1,8 @@
 <template>
-  <div class="m_fragment" :style="`min-width: ${fragment_width}px`">
+  <div
+    class="m_fragment custom_scrollbar"
+    :style="`min-width: ${fragment_width}px`"
+  >
     <div class="m_fragment--content">
       <div class="m_fragment--content--top">
         <h2>{{ fragment.title }}</h2>
@@ -25,9 +28,13 @@
             </svg>
           </button>
           <div class="m_advancedMenu--menu" v-if="show_advanced_menu">
-            <button type="button" @click="show_edit_fragment = true">{{ $t('edit' )}}</button>
+            <button type="button" @click="show_edit_fragment = true">
+              {{ $t("edit") }}
+            </button>
 
-            <button type="button" @click="removeFragment">{{ $t('remove') }}</button>
+            <button type="button" @click="removeFragment">
+              {{ $t("remove") }}
+            </button>
           </div>
         </div>
 
@@ -46,9 +53,9 @@
           :key="'addmedia_start'"
           :collapsed="linked_medias.length > 0"
           @newMediaCreated="
-            metaFileName =>
+            (metaFileName) =>
               newMediaCreated({
-                metaFileName
+                metaFileName,
               })
           "
         />
@@ -60,15 +67,19 @@
               :slugFolderName="slugFolderName"
               :index="index"
               :linked_medias="linked_medias"
-              @removeMedia="d => removeMedia(d)"
-              @moveMedia="d => moveMedia(d)"
+              @removeMedia="(d) => removeMedia(d)"
+              @moveMedia="(d) => moveMedia(d)"
             />
             <AddMedias
               :slugFolderName="slugFolderName"
               :key="'addmedia_' + media.metaFileName"
               :collapsed="index < linked_medias.length - 1"
               @newMediaCreated="
-                metaFileName => newMediaCreated({ metaFileName, after_metaFileName: media.metaFileName })
+                (metaFileName) =>
+                  newMediaCreated({
+                    metaFileName,
+                    after_metaFileName: media.metaFileName,
+                  })
               "
             />
           </template>
@@ -93,7 +104,7 @@ import AddMedias from "./AddMedias.vue";
 import FragmentMedia from "./FragmentMedia.vue";
 import EditFragment from "./modals/EditFragment.vue";
 
-Array.prototype.move = function(from, to) {
+Array.prototype.move = function (from, to) {
   this.splice(to, 0, this.splice(from, 1)[0]);
 };
 
@@ -104,17 +115,17 @@ export default {
     all_tags: Array,
     medias: Array,
     slugFolderName: String,
-    fragment_width: Number
+    fragment_width: Number,
   },
   components: {
     AddMedias,
     FragmentMedia,
-    EditFragment
+    EditFragment,
   },
   data() {
     return {
       show_advanced_menu: false,
-      show_edit_fragment: false
+      show_edit_fragment: false,
     };
   },
   created() {},
@@ -131,12 +142,12 @@ export default {
 
       return this.fragment.medias_slugs.reduce((acc, item) => {
         const linked_media = this.medias.find(
-          m => m.metaFileName === item.metaFileName
+          (m) => m.metaFileName === item.metaFileName
         );
         if (linked_media) acc.push(linked_media);
         return acc;
       }, []);
-    }
+    },
   },
   methods: {
     removeFragment() {
@@ -147,7 +158,7 @@ export default {
           this.$root.removeMedia({
             type: "corpus",
             slugFolderName: this.slugFolderName,
-            slugMediaName: this.fragment.metaFileName
+            slugMediaName: this.fragment.metaFileName,
           });
         });
     },
@@ -156,7 +167,9 @@ export default {
         JSON.stringify(this.fragment.medias_slugs)
       );
 
-      const idx = _medias_slugs.findIndex(m => m.metaFileName === metaFileName);
+      const idx = _medias_slugs.findIndex(
+        (m) => m.metaFileName === metaFileName
+      );
 
       console.log(`METHODS • Fragment: move idx = ${idx} and dir = ${dir}`);
 
@@ -171,8 +184,8 @@ export default {
         slugFolderName: this.slugFolderName,
         slugMediaName: this.fragment.metaFileName,
         data: {
-          medias_slugs: _medias_slugs
-        }
+          medias_slugs: _medias_slugs,
+        },
       });
     },
     newMediaCreated({ metaFileName, index = 0, after_metaFileName }) {
@@ -188,11 +201,11 @@ export default {
 
       if (after_metaFileName)
         index =
-          medias_slugs.findIndex(m => m.metaFileName === after_metaFileName) +
+          medias_slugs.findIndex((m) => m.metaFileName === after_metaFileName) +
           1;
 
       medias_slugs.splice(index, 0, {
-        metaFileName: metaFileName
+        metaFileName: metaFileName,
       });
 
       this.fragment.medias_slugs = medias_slugs;
@@ -202,8 +215,8 @@ export default {
         slugFolderName: this.slugFolderName,
         slugMediaName: this.fragment.metaFileName,
         data: {
-          medias_slugs
-        }
+          medias_slugs,
+        },
       });
 
       // set created media(s) to edit mode
@@ -226,27 +239,27 @@ export default {
             this.$root.removeMedia({
               type: "corpus",
               slugFolderName: this.slugFolderName,
-              slugMediaName: metaFileName
+              slugMediaName: metaFileName,
             });
 
             if (this.fragment.medias_slugs.length > 0) {
               let new_medias_slugs = this.fragment.medias_slugs.filter(
-                m => m.metaFileName !== metaFileName
+                (m) => m.metaFileName !== metaFileName
               );
               this.$root.editMedia({
                 type: "corpus",
                 slugFolderName: this.slugFolderName,
                 slugMediaName: this.fragment.metaFileName,
                 data: {
-                  medias_slugs: new_medias_slugs
-                }
+                  medias_slugs: new_medias_slugs,
+                },
               });
             }
           },
           () => {}
         );
-    }
-  }
+    },
+  },
 };
 </script>
 <style lang="scss" scoped>
@@ -263,31 +276,6 @@ export default {
   // column-fill: auto;
   // height: 90vh;
   // padding-top: 100px;
-
-  --scrollbarBG: #e2edef;
-  --thumbBG: #90a4ae;
-
-  &::-webkit-scrollbar {
-    width: 12px;
-  }
-  & {
-    scrollbar-width: thin;
-    scrollbar-color: var(--thumbBG) var(--scrollbarBG);
-  }
-  &::-webkit-scrollbar-track {
-    background: var(--scrollbarBG);
-  }
-  &::-webkit-scrollbar-thumb {
-    background-color: var(--thumbBG);
-    // border-radius: 2px;
-    border: 4px solid var(--scrollbarBG);
-    border-top-width: calc(var(--spacing) * 2);
-    border-bottom-width: calc(var(--spacing) * 2);
-
-    &:hover {
-      background-color: #ccd0da;
-    }
-  }
 
   .m_fragment--content {
     padding: var(--spacing);
