@@ -71,6 +71,8 @@ export default {
       files_to_upload: this.selected_files,
       files_to_upload_meta: {},
       upload_percentages: 0,
+
+      list_of_medias_to_add_to_fragment: [],
     };
   },
   watch: {},
@@ -159,6 +161,10 @@ export default {
             this.files_to_upload_meta[filename].upload_percentages = 100;
 
             const catchMediaCreation = (d) => {
+              if (this.$root.state.dev_mode === "debug") {
+                console.log(`METHODS • sendThisFile: catchMediaCreation`);
+              }
+
               if (
                 d.hasOwnProperty("corpus") &&
                 d.corpus.hasOwnProperty(this.slugFolderName)
@@ -172,26 +178,11 @@ export default {
                     `UploadFile • METHODS: sendThisFile. Will emit insertMedia for = ${new_media[0].metaFileName}`
                   );
 
-                  this.$emit("insertMedia", new_media[0].metaFileName);
+                  this.list_of_medias_to_add_to_fragment.push(
+                    new_media[0].metaFileName
+                  );
 
-                  Object.keys(this.files_to_upload_meta).map((name) => {
-                    let index = 1;
-                    if (this.files_to_upload_meta[name].status === "success") {
-                      this.files_to_upload = this.files_to_upload.filter(
-                        (x) => x.name !== name
-                      );
-                      this.$delete(this.files_to_upload_meta, name);
-                      index++;
-                    }
-                  });
-
-                  debugger;
-
-                  if (Object.keys(this.files_to_upload_meta).length === 0) {
-                    this.$emit("close");
-                  }
-
-                  return;
+                  return resolve();
                 }
               }
               this.$eventHub.$once(
@@ -203,8 +194,6 @@ export default {
               "socketio.corpus.listMedia",
               catchMediaCreation
             );
-
-            resolve();
             // resolve(x.map(img => Object.assign({}, img, { url: `${BASE_URL}/images/${img.id}` })));
           })
           .catch((err) => {
@@ -227,7 +216,10 @@ export default {
 
       executeSequentially(
         Array.from(Array(this.files_to_upload.length).keys())
-      ).then((x) => {});
+      ).then((x) => {
+        this.$emit("insertMedias", this.list_of_medias_to_add_to_fragment);
+        this.$emit("close");
+      });
 
       // const test = async () => {
       //   for (let task of Array.from(Array(this.files_to_upload.length).keys()).map()) {

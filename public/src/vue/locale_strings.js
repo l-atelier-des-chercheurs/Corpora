@@ -47,6 +47,10 @@ module.exports = (function () {
       fr: "Lien",
       en: "Link",
     },
+    embed: {
+      fr: "Embed",
+      en: "Embed",
+    },
     file_max_size: {
       fr: "Taille max. des fichiers",
       en: "Max file size",
@@ -198,6 +202,10 @@ module.exports = (function () {
     download: {
       fr: "Télécharger",
       en: "Download",
+    },
+    embed_instructions: {
+      fr: "Placez ici l’URL vers une vidéo Vimeo, Youtube or Twitter",
+      en: "Add a URL to Vimeo, Youtube or Twitter",
     },
   };
 

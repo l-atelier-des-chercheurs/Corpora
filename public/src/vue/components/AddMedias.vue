@@ -69,12 +69,12 @@
               </svg>
               <span class="text_label">Texte</span>
             </button>
-            <!-- 
+
             <button
               key="add_link"
               type="button"
               class="button button-round button-round-small margin-bottom-small padding-none bg-noir c-blanc"
-              @click="createMedia({ type: 'link' })"
+              @click="createMedia({ type: 'embed' })"
               :disabled="read_only"
             >
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="-80 -70 250 250">
@@ -95,8 +95,8 @@
 		C46.2,25.6,47.5,25.5,48.8,25.5L48.8,25.5L48.8,25.5z"
                 />
               </svg>
-              <span class="text_label">{{ $t('link') }}</span>
-            </button>-->
+              <span class="text_label">{{ $t("embed") }}</span>
+            </button>
 
             <template>
               <label
@@ -110,12 +110,12 @@
                 <span class="text_label">{{ field.label }}</span>
                 <input
                   type="file"
-                  multiple
                   :id="`add_${field.key + unique_id}`"
                   :name="field.key"
                   @change="updateInputFiles($event)"
                   :accept="field.accept"
                   :capture="field.capture"
+                  multiple
                   style="width: 1px; height: 1px; overflow: hidden;"
                 />
               </label>
@@ -168,7 +168,7 @@
       :slugFolderName="slugFolderName"
       :type="'corpus'"
       :selected_files="selected_files"
-      @insertMedia="(metaFileName) => newMediaCreated({ metaFileName })"
+      @insertMedias="(metaFileNames) => newMediaCreated({ metaFileNames })"
     />
   </div>
 </template>
@@ -299,16 +299,18 @@ export default {
           },
         })
         .then((mdata) => {
-          this.newMediaCreated({ metaFileName: mdata.metaFileName });
+          this.newMediaCreated({ metaFileNames: [mdata.metaFileName] });
         });
     },
-    newMediaCreated({ metaFileName }) {
+    newMediaCreated({ metaFileNames }) {
       console.log(
-        `AddMedias • METHODS: newMediaCreated metaFileName = ${metaFileName}`
+        `AddMedias • METHODS: newMediaCreated metaFileNames = ${metaFileNames.join(
+          ","
+        )}`
       );
 
       this.show_addmedia_options = false;
-      this.$emit("newMediaCreated", metaFileName);
+      this.$emit("addMediasToFragment", metaFileNames);
     },
     updateInputFiles($event) {
       if (this.$root.state.dev_mode === "debug") {
@@ -467,6 +469,8 @@ export default {
       border-radius: 14px;
       margin-bottom: 0;
 
+      transition: none;
+
       svg {
         display: block;
         width: 14px;
@@ -480,8 +484,10 @@ export default {
         }
       }
       &.is--dragover {
-        width: 64px;
-        height: 64px;
+        width: 120px;
+        // height: 64px;
+        padding: 0;
+        margin: 0;
       }
 
       &.is--shown {
@@ -529,7 +535,7 @@ export default {
     border-radius: 6px;
 
     width: 120px;
-    height: 120px;
+    // height: 120px;
     background-color: var(--color-black);
   }
 

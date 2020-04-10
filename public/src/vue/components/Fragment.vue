@@ -52,10 +52,10 @@
           :slugFolderName="slugFolderName"
           :key="'addmedia_start'"
           :collapsed="linked_medias.length > 0"
-          @newMediaCreated="
-            (metaFileName) =>
-              newMediaCreated({
-                metaFileName,
+          @addMediasToFragment="
+            (metaFileNames) =>
+              addMediasToFragment({
+                metaFileNames,
               })
           "
         />
@@ -74,27 +74,16 @@
               :slugFolderName="slugFolderName"
               :key="'addmedia_' + media.metaFileName"
               :collapsed="index < linked_medias.length - 1"
-              @newMediaCreated="
-                (metaFileName) =>
-                  newMediaCreated({
-                    metaFileName,
+              @addMediasToFragment="
+                (metaFileNames) =>
+                  addMediasToFragment({
+                    metaFileNames,
                     after_metaFileName: media.metaFileName,
                   })
               "
             />
           </template>
         </transition-group>
-        <!-- <AddMedias
-          :slugFolderName="slugFolderName"
-          :key="'addmedia_end'"
-          @newMediaCreated="
-            metaFileName =>
-              newMediaCreated({
-                metaFileName,
-                index: linked_medias.length
-              })
-          "
-        />-->
       </div>
     </div>
   </div>
@@ -188,9 +177,9 @@ export default {
         },
       });
     },
-    newMediaCreated({ metaFileName, index = 0, after_metaFileName }) {
+    addMediasToFragment({ metaFileNames, index = 0, after_metaFileName }) {
       console.log(
-        `Fragment • METHODS: newMediaCreated after_metaFileName ${after_metaFileName} or if missing at index ${index}`
+        `Fragment • METHODS: addMediasToFragment after_metaFileName ${after_metaFileName} or if missing at index ${index}`
       );
 
       let medias_slugs =
@@ -203,11 +192,13 @@ export default {
           medias_slugs.findIndex((m) => m.metaFileName === after_metaFileName) +
           1;
 
-      medias_slugs.splice(index, 0, {
-        metaFileName: metaFileName,
-      });
+      medias_slugs.splice(
+        index,
+        0,
+        ...metaFileNames.map((metaFileName) => ({ metaFileName }))
+      );
 
-      this.fragment.medias_slugs = medias_slugs;
+      // this.fragment.medias_slugs = medias_slugs;
 
       this.$root.editMedia({
         type: "corpus",
@@ -219,9 +210,7 @@ export default {
       });
 
       // set created media(s) to edit mode
-      this.$nextTick(() => {
-        this.$root.settings.text_media_being_edited = metaFileName;
-      });
+      this.$root.settings.text_media_being_edited = metaFileNames[0];
     },
     removeMedia({ metaFileName }) {
       if (this.$root.state.dev_mode === "debug")
@@ -278,7 +267,8 @@ export default {
 
   .m_fragment--content {
     padding: var(--spacing);
-    margin: calc(var(--spacing) * 2);
+    margin-top: calc(var(--spacing) * 2);
+    margin-bottom: 50vh;
     margin-right: 4px;
     margin-left: 4px;
 

@@ -107,7 +107,7 @@
               "video",
               "audio",
               "text",
-              "link",
+              "embed",
               "document",
               "fragment",
               "other"

@@ -263,10 +263,11 @@ let vm = new Vue({
     });
 
     window.onpopstate = (event) => {
-      console.log(
-        `ROOT EVENT: popstate with event.state.slugFolderName = ${event.state.slugFolderName}`
-      );
-      this.do_navigation.slug = event.state.slugFolderName;
+      debugger;
+      console.log(`ROOT EVENT: popstate`);
+      if (event.state && event.state.slugFolderName)
+        this.openCorpus(event.state.slugFolderName);
+      else this.closeCorpus();
     };
 
     window.addEventListener("tag.newTagDetected", this.newTagDetected);

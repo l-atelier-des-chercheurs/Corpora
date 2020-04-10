@@ -411,8 +411,16 @@ audio {
 }
 
 .mediaContainer {
-  img {
+  img,
+  iframe,
+  video {
+    display: block;
     width: 100%;
+    background-color: var(--color-black);
+  }
+
+  iframe {
+    min-height: 202px;
   }
 }
 
@@ -795,7 +803,7 @@ audio {
         width: 100%;
         height: 90vh;
         overflow: hidden;
-        border-right: 1px solid #f4f4f2;
+        // border-right: 1px solid #f4f4f2;
       }
     }
   }
