@@ -469,6 +469,8 @@ export default {
       border-radius: 14px;
       margin-bottom: 0;
 
+      transition: none;
+
       svg {
         display: block;
         width: 14px;
@@ -482,8 +484,10 @@ export default {
         }
       }
       &.is--dragover {
-        width: 64px;
-        height: 64px;
+        width: 120px;
+        // height: 64px;
+        padding: 0;
+        margin: 0;
       }
 
       &.is--shown {
@@ -531,7 +535,7 @@ export default {
     border-radius: 6px;
 
     width: 120px;
-    height: 120px;
+    // height: 120px;
     background-color: var(--color-black);
   }
 

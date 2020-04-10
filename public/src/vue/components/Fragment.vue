@@ -198,8 +198,6 @@ export default {
         ...metaFileNames.map((metaFileName) => ({ metaFileName }))
       );
 
-      debugger;
-
       // this.fragment.medias_slugs = medias_slugs;
 
       this.$root.editMedia({
@@ -212,9 +210,7 @@ export default {
       });
 
       // set created media(s) to edit mode
-      this.$nextTick(() => {
-        this.$root.settings.text_media_being_edited = metaFileNames[0];
-      });
+      this.$root.settings.text_media_being_edited = metaFileNames[0];
     },
     removeMedia({ metaFileName }) {
       if (this.$root.state.dev_mode === "debug")
@@ -271,7 +267,8 @@ export default {
 
   .m_fragment--content {
     padding: var(--spacing);
-    margin: calc(var(--spacing) * 2);
+    margin-top: calc(var(--spacing) * 2);
+    margin-bottom: 50vh;
     margin-right: 4px;
     margin-left: 4px;
 

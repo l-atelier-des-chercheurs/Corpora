@@ -182,7 +182,8 @@ export default {
         content: this.media.content,
       },
       mediaURL: `/${this.slugFolderName}/${this.media.media_filename}`,
-      is_being_edited: false,
+      is_being_edited:
+        this.$root.settings.text_media_being_edited === this.media.metaFileName,
     };
   },
   created() {},
@@ -191,8 +192,10 @@ export default {
   watch: {
     "$root.settings.text_media_being_edited": function () {
       console.log(
-        "$root.settings.text_media_being_edited ===" +
-          this.$root.settings.text_media_being_edited
+        `FragmentMedia • WATCH: $root.settings.text_media_being_edited. Is self ? ${
+          this.$root.settings.text_media_being_edited ===
+          this.media.metaFileName
+        }`
       );
       if (this.is_being_edited) {
         this.saveMedia();
@@ -212,7 +215,9 @@ export default {
   methods: {
     setBlocToEdit(metaFileName) {
       if (window.state.dev_mode === "debug")
-        console.log(`Fragment • METHODS: setBlocToEdit for ${metaFileName}`);
+        console.log(
+          `FragmentMedia • METHODS: setBlocToEdit for ${metaFileName}`
+        );
 
       if (this.$root.settings.text_media_being_edited !== metaFileName) {
         this.$root.settings.text_media_being_edited = metaFileName;
