@@ -115,6 +115,7 @@
                   @change="updateInputFiles($event)"
                   :accept="field.accept"
                   :capture="field.capture"
+                  multiple
                   style="width: 1px; height: 1px; overflow: hidden;"
                 />
               </label>
@@ -167,7 +168,7 @@
       :slugFolderName="slugFolderName"
       :type="'corpus'"
       :selected_files="selected_files"
-      @insertMedia="(metaFileName) => newMediaCreated({ metaFileName })"
+      @insertMedias="(metaFileNames) => newMediaCreated({ metaFileNames })"
     />
   </div>
 </template>
@@ -298,16 +299,18 @@ export default {
           },
         })
         .then((mdata) => {
-          this.newMediaCreated({ metaFileName: mdata.metaFileName });
+          this.newMediaCreated({ metaFileNames: [mdata.metaFileName] });
         });
     },
-    newMediaCreated({ metaFileName }) {
+    newMediaCreated({ metaFileNames }) {
       console.log(
-        `AddMedias • METHODS: newMediaCreated metaFileName = ${metaFileName}`
+        `AddMedias • METHODS: newMediaCreated metaFileNames = ${metaFileNames.join(
+          ","
+        )}`
       );
 
       this.show_addmedia_options = false;
-      this.$emit("newMediaCreated", metaFileName);
+      this.$emit("addMediasToFragment", metaFileNames);
     },
     updateInputFiles($event) {
       if (this.$root.state.dev_mode === "debug") {
