@@ -69,12 +69,12 @@
               </svg>
               <span class="text_label">Texte</span>
             </button>
-            <!-- 
+
             <button
               key="add_link"
               type="button"
               class="button button-round button-round-small margin-bottom-small padding-none bg-noir c-blanc"
-              @click="createMedia({ type: 'link' })"
+              @click="createMedia({ type: 'embed' })"
               :disabled="read_only"
             >
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="-80 -70 250 250">
@@ -95,8 +95,8 @@
 		C46.2,25.6,47.5,25.5,48.8,25.5L48.8,25.5L48.8,25.5z"
                 />
               </svg>
-              <span class="text_label">{{ $t('link') }}</span>
-            </button>-->
+              <span class="text_label">{{ $t("embed") }}</span>
+            </button>
 
             <template>
               <label
@@ -110,7 +110,6 @@
                 <span class="text_label">{{ field.label }}</span>
                 <input
                   type="file"
-                  multiple
                   :id="`add_${field.key + unique_id}`"
                   :name="field.key"
                   @change="updateInputFiles($event)"

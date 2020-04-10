@@ -14,14 +14,16 @@
         ref="textField"
       />
 
-      <input
-        v-else-if="media.type === 'link' && is_being_edited"
-        type="url"
-        class="border-none bg-transparent"
-        placeholder="URL"
-        v-model="mediadata.content"
-        ref="textField"
-      />
+      <template v-else-if="media.type === 'embed' && is_being_edited">
+        <input
+          type="url"
+          class="border-none bg-transparent"
+          placeholder="URL"
+          v-model="mediadata.content"
+          ref="textField"
+        />
+        <small v-html="$t('embed_instructions')" />
+      </template>
 
       <MediaContent
         v-else

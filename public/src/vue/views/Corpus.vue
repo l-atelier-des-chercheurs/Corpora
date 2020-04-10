@@ -164,7 +164,7 @@ export default {
     },
     tags_with_fragments() {
       // get all tags from fragments
-      if (this.all_tags.length === 0) return [];
+      // if (this.all_tags.length === 0) return [];
 
       // get all tags
       let fragments_by_tag = this.all_tags.map((tag) => {

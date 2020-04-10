@@ -47,6 +47,10 @@ module.exports = (function () {
       fr: "Lien",
       en: "Link",
     },
+    embed: {
+      fr: "Embed",
+      en: "Embed",
+    },
     file_max_size: {
       fr: "Taille max. des fichiers",
       en: "Max file size",
