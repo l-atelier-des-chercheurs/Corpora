@@ -203,6 +203,10 @@ module.exports = (function () {
       fr: "Télécharger",
       en: "Download",
     },
+    embed_instructions: {
+      fr: "Placez ici l’URL vers une vidéo Vimeo, Youtube or Twitter",
+      en: "Add a URL to Vimeo, Youtube or Twitter",
+    },
   };
 
   return messages;

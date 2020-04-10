@@ -137,7 +137,17 @@
 
     <template v-else-if="media.type === 'embed'">
       <div v-if="context !== 'edit' && embedURL" class="padding-small">
-        <iframe :src="embedURL" frameborder="0" allowfullscreen />
+        <iframe
+          v-if="embedURL.type !== 'tweet'"
+          :src="embedURL.src"
+          frameborder="0"
+          allowfullscreen
+        />
+        <Tweet
+          v-else
+          :id="embedURL.id"
+          :options="{ cards: 'hidden', theme: 'light' }"
+        />
       </div>
     </template>
 
@@ -162,6 +172,7 @@
 </template>
 <script>
 import CollaborativeEditor from "./CollaborativeEditor.vue";
+import { Tweet } from "vue-tweet-embed";
 
 export default {
   props: {
@@ -208,6 +219,7 @@ export default {
   },
   components: {
     CollaborativeEditor,
+    Tweet,
   },
   data() {
     return {
@@ -258,10 +270,21 @@ export default {
     },
     embedURL: function () {
       if (!this.media.content) return false;
-      if (this.media.content.includes("youtube.com"))
-        return this.getYoutubeEmbedURLFromURL(this.media.content);
+      if (this.media.content.includes("twitter.com"))
+        return {
+          type: "tweet",
+          id: this.getTweetIdFromURL(this.media.content),
+        };
+      else if (this.media.content.includes("youtube.com"))
+        return {
+          type: "youtube",
+          src: this.getYoutubeEmbedURLFromURL(this.media.content),
+        };
       else if (this.media.content.includes("vimeo.com"))
-        return this.getVimeoEmbedURLFromURL(this.media.content);
+        return {
+          type: "vimeo",
+          src: this.getVimeoEmbedURLFromURL(this.media.content),
+        };
       return this.media.content;
     },
     thumbRes: function () {
@@ -414,6 +437,10 @@ export default {
       if (this.$refs.hasOwnProperty("plyr")) {
         this.$refs.plyr.player.volume = val / 100;
       }
+    },
+    getTweetIdFromURL(url) {
+      let tweetRegex = /^https?:\/\/twitter\.com\/(?:#!\/)?(\w+)\/status(es)?\/([0-9]{19})/;
+      return url.match(tweetRegex)[3];
     },
     getYoutubeEmbedURLFromURL(url) {
       function getId(url) {
