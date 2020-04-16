@@ -18,10 +18,7 @@
               :disabled="read_only"
             >
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40">
-                <path
-                  d="M26.51,12V28h-13V12h13m1-1h-15V29h15V11Z"
-                  style="fill: currentColor;"
-                />
+                <path d="M26.51,12V28h-13V12h13m1-1h-15V29h15V11Z" style="fill: currentColor;" />
                 <line
                   x1="15.21"
                   y1="14.41"
@@ -139,9 +136,7 @@
         @click="show_addmedia_options = !show_addmedia_options"
         @drop="dropHandler($event)"
       >
-        <span class="text_label always_show" v-if="show_drop_container"
-          >Déposez vos fichiers ici</span
-        >
+        <span class="text_label always_show" v-if="show_drop_container">Déposez vos fichiers ici</span>
         <!-- TODO scroll to now au click -->
         <svg
           version="1.1"
@@ -181,11 +176,11 @@ export default {
     slugFolderName: String,
     collapsed: {
       type: Boolean,
-      default: false,
-    },
+      default: false
+    }
   },
   components: {
-    UploadFile,
+    UploadFile
   },
   data() {
     return {
@@ -227,8 +222,8 @@ export default {
               <path d="M20.89,12v4.63a1,1,0,0,0,1,1h4.63V28h-13V12h7.4m1-1H12.5V29h15V16.62H21.88V11Z" style="fill: currentColor"/>
               <line x1="27" y1="17.12" x2="21.38" y2="11.5" style="fill: none;stroke: currentColor;stroke-linecap: round;stroke-linejoin: round;stroke-width: 0.9900837817656861px"/>
             </svg>
-          `,
-        },
+          `
+        }
         // {
         //   key: "video",
         //   label: "Vidéo",
@@ -255,27 +250,27 @@ export default {
         //     </svg>
         //   `
         // }
-      ],
+      ]
     };
   },
-  mounted: function () {
+  mounted: function() {
     document.addEventListener("keyup", this.boitierPressed);
     document.addEventListener("dragover", this.ondragover);
     this.cancelDragOver = debounce(this.cancelDragOver, 300);
   },
-  destroyed: function () {
+  destroyed: function() {
     document.removeEventListener("keyup", this.boitierPressed);
     document.removeEventListener("dragover", this.ondragover);
   },
   watch: {
-    file: function () {},
+    file: function() {},
     show_addmedia_options() {
       if (this.show_addmedia_options) {
         this.$eventHub.$emit("showingAddmediaOptions");
       } else {
         this.$eventHub.$emit("hidingAddmediaOptions");
       }
-    },
+    }
   },
   computed: {
     is_touch() {
@@ -283,7 +278,7 @@ export default {
     },
     unique_id() {
       return (Math.random().toString(36) + "00000000000000000").slice(2, 3 + 5);
-    },
+    }
   },
   methods: {
     createMedia({ type }) {
@@ -295,10 +290,10 @@ export default {
           slugFolderName: this.slugFolderName,
           type: "corpus",
           additionalMeta: {
-            type,
-          },
+            type
+          }
         })
-        .then((mdata) => {
+        .then(mdata => {
           this.newMediaCreated({ metaFileNames: [mdata.metaFileName] });
         });
     },
@@ -363,8 +358,8 @@ export default {
           this.selected_files = Array.from($event.dataTransfer.files);
         }
       }
-    },
-  },
+    }
+  }
 };
 </script>
 <style lang="scss">
@@ -403,9 +398,15 @@ export default {
           display: flex;
           align-items: center;
           background-color: var(--color-black);
+          color: var(--color-white);
           border-radius: 20px;
           // padding: calc(var(--spacing) / 4) calc(var(--spacing) / 2);
           margin: calc(var(--spacing) / 4) 1px;
+
+          &:hover {
+            // background-color: var(--active-color);
+            color: var(--color-orange);
+          }
 
           .text_label {
             font-size: 0.8rem;
@@ -423,14 +424,15 @@ export default {
             font-family: "base12";
             font-style: italic;
 
-            color: var(--color-white);
+            color: currentColor;
+
             // margin: calc(var(--spacing) / 4);
           }
           svg,
           .svg {
             width: 30px;
             height: 30px;
-            color: var(--color-white);
+            color: currentColor;
             // padding-left: calc(var(--spacing) / 4);
           }
 
@@ -469,7 +471,10 @@ export default {
       border-radius: 14px;
       margin-bottom: 0;
 
-      transition: none;
+      transition: all 0.4s cubic-bezier(0.19, 1, 0.22, 1);
+
+      &:hover {
+      }
 
       svg {
         display: block;
