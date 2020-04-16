@@ -1,6 +1,11 @@
 <template>
   <div>
-    <transition-group name="list-complete" tag="div" class="m_keywordField">
+    <transition-group
+      name="list-complete"
+      tag="div"
+      class="m_keywordField"
+      :class="[!!type ? 'm_keywordField_' + type : '']"
+    >
       <button
         type="button"
         v-for="tag in tags"
@@ -50,15 +55,26 @@
       </div>
     </transition-group>
 
-    <div class="m_keywordField">
+    <div
+      class="m_keywordField"
+      :class="[!!type ? 'm_keywordField_' + type : '']"
+    >
       <div
         v-if="
           allKeywordsExceptCurrent.length > 0 && matchingKeywords.length === 0
         "
         class="autocomplete"
       >
-        <label>{{ $t("existing") }}</label>
-        <div>
+        <button
+          type="button"
+          class="button-small _existing_button"
+          :class="{ 'is--active': show_existing }"
+          @click="show_existing = !show_existing"
+        >
+          {{ $t("existing") }}
+        </button>
+
+        <div v-if="show_existing">
           <button
             type="button"
             v-for="keyword in allKeywordsExceptCurrent"
@@ -79,6 +95,7 @@ import { createTags } from "@johmun/vue-tags-input";
 export default {
   props: {
     placeholder: String,
+    type: String,
     keywords: Array,
     allKeywords: Array,
   },
@@ -91,6 +108,8 @@ export default {
           : [],
       tag: "",
       new_tag: "",
+
+      show_existing: false,
     };
   },
 

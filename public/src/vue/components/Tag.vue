@@ -53,6 +53,7 @@
           v-for="fragment in fragments"
           :key="fragment.metaFileName"
           :corpus="corpus"
+          :all_keywords="all_keywords"
           :all_tags="all_tags"
           :medias="medias"
           :fragment="fragment"
@@ -70,6 +71,7 @@ export default {
   props: {
     tag: String,
     all_tags: Array,
+    all_keywords: Array,
     medias: Array,
     corpus: Object,
     slugFolderName: String,
@@ -145,6 +147,8 @@ export default {
   display: flex;
   align-items: center;
   justify-content: center;
+
+  background-color: var(--body-bg);
   width: 64px;
   height: 100%;
   transition: all 1s linear;
@@ -177,7 +181,7 @@ export default {
     position: absolute;
     height: calc(100% - var(--spacing) * 4);
     width: 2px;
-    background-color: #c0d8dd;
+    background-color: var(--color-bluegreen);
     z-index: 0;
   }
 

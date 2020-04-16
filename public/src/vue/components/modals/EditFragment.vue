@@ -30,10 +30,23 @@
       </div>
 
       <div class="margin-bottom-small">
+        <label>{{ $t("keywords") }}</label>
+        <TagsInput
+          :allKeywords="all_keywords_rightly_formatted"
+          :type="'keywords'"
+          :keywords="fragmentdata.keywords"
+          :placeholder="$t('add_keyword')"
+          @tagsChanged="(newKeywords) => (fragmentdata.keywords = newKeywords)"
+        />
+      </div>
+
+      <div class="margin-bottom-small">
         <label>{{ $t("tabs") }}</label>
         <TagsInput
           :allKeywords="all_tags_rightly_formatted"
           :keywords="fragmentdata.tags"
+          :type="'tabs'"
+          :placeholder="$t('add_tab')"
           @tagsChanged="(newTags) => (fragmentdata.tags = newTags)"
         />
       </div>
@@ -50,6 +63,7 @@ export default {
     fragment: Object,
     corpus: Object,
     all_tags: Array,
+    all_keywords: Array,
   },
   components: { Modal, TagsInput, CollectMode },
   data() {
@@ -57,6 +71,7 @@ export default {
       fragmentdata: {
         title: this.fragment.title,
         contribution_moment: this.fragment.contribution_moment,
+        keywords: this.fragment.keywords,
         tags: this.fragment.tags,
       },
     };
@@ -68,6 +83,14 @@ export default {
   computed: {
     all_tags_rightly_formatted() {
       return this.all_tags.map((kw) => {
+        return {
+          text: kw,
+          classes: "tagcolorid_" + (parseInt(kw, 36) % 2),
+        };
+      });
+    },
+    all_keywords_rightly_formatted() {
+      return this.all_keywords.map((kw) => {
         return {
           text: kw,
           classes: "tagcolorid_" + (parseInt(kw, 36) % 2),
@@ -97,6 +120,7 @@ export default {
       }
 
       const tags = this.fragmentdata.tags;
+      const keywords = this.fragmentdata.keywords;
       const contribution_moment = this.fragmentdata.contribution_moment;
 
       this.$emit("close");
@@ -109,6 +133,7 @@ export default {
           title,
           contribution_moment,
           tags,
+          keywords,
         },
       });
     },

@@ -132,6 +132,7 @@
             :tag="tag"
             :medias="medias"
             :all_tags="all_tags"
+            :all_keywords="all_keywords"
             :corpus="corpus"
             :slugFolderName="corpus.slugFolderName"
             :fragments="fragments"

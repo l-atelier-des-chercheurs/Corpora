@@ -47,6 +47,7 @@
           :corpus="corpus"
           :fragment="fragment"
           :all_tags="all_tags"
+          :all_keywords="all_keywords"
           @close="show_edit_fragment = false"
         />
       </div>
@@ -106,6 +107,7 @@ export default {
     corpus: Object,
     fragment: Object,
     all_tags: Array,
+    all_keywords: Array,
     medias: Array,
     slugFolderName: String,
     fragment_width: Number,

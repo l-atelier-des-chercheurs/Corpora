@@ -47,6 +47,7 @@ export default {
   --color-white: #fff;
   --body-bg: #e2edef;
   --active-color: #ccd0da;
+  --color-bluegreen: #c0d8dd;
   --panel-width: 320px;
 }
 
@@ -569,7 +570,7 @@ audio {
     background-color: transparent;
     // border: 4px solid #000 !important;
     // padding: 4px;
-    margin-top: calc(var(--spacing) / 2);
+    margin-top: calc(var(--spacing) / 4);
     margin-bottom: calc(var(--spacing) / 4);
     padding-bottom: 0;
     flex: 1 0 100%;
@@ -611,6 +612,10 @@ audio {
   }
   .tags {
     flex-flow: row wrap !important;
+  }
+
+  ._existing_button {
+    margin-bottom: 0.2em;
   }
 
   .new-tag-input-wrapper {
@@ -711,6 +716,7 @@ audio {
       font-size: 1em;
       border-radius: 50%;
       transform: scale(1.5);
+      padding-top: 0.15em;
 
       transition: all 0.2s cubic-bezier(0.19, 1, 0.22, 1);
     }
@@ -718,8 +724,9 @@ audio {
     &.can_be_removed {
       &::before {
         content: "×";
-        transform: scale(1.5);
+        transform: scale(1.2);
         transition: transform 0.15s ease;
+        padding-top: 0.1em;
       }
       &:hover {
         &::before {
@@ -732,6 +739,36 @@ audio {
     .actions {
       margin-left: 4px;
       margin-right: 0;
+    }
+  }
+
+  &.m_keywordField_tabs {
+    .tag {
+      background-color: var(--body-bg) !important;
+      font-family: "base9";
+      font-weight: bold;
+      border-radius: 1em;
+      padding: 0.2em 1em;
+      padding-left: 0em;
+      border: 2px solid var(--color-bluegreen);
+
+      &::before {
+        // display: none !important;
+        padding-left: 0.7em;
+        padding-right: 0.5em;
+        margin: 0;
+      }
+      &.can_be_removed {
+        &::before {
+          font-size: 0.8rem;
+        }
+      }
+    }
+    .new-tag-input-wrapper {
+      button {
+        border-radius: 0;
+        padding-left: 0.5em;
+      }
     }
   }
 
@@ -764,6 +801,7 @@ audio {
 }
 .list-complete-leave-active {
   position: absolute !important;
+  z-index: -1;
 }
 
 .width_collapse-enter-active,

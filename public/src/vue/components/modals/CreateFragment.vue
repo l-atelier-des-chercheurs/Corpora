@@ -33,6 +33,7 @@
         <label>{{ $t("keywords") }}</label>
         <TagsInput
           :allKeywords="all_keywords_rightly_formatted"
+          :type="'keywords'"
           :placeholder="$t('add_keyword')"
           @tagsChanged="(newKeywords) => (fragmentdata.keywords = newKeywords)"
         />
@@ -42,6 +43,7 @@
         <label>{{ $t("tabs") }}</label>
         <TagsInput
           :allKeywords="all_tags_rightly_formatted"
+          :type="'tabs'"
           :placeholder="$t('add_tab')"
           @tagsChanged="(newTags) => (fragmentdata.tags = newTags)"
         />
