@@ -55,6 +55,14 @@ module.exports = (function () {
       fr: "Taille max. des fichiers",
       en: "Max file size",
     },
+    sort_fragments_by: {
+      fr: "Classer les fragments par",
+      en: "Sort fragments by",
+    },
+    created_on: {
+      fr: "Créé le",
+      en: "Created on",
+    },
     edit: {
       fr: "Éditer",
       en: "Edit",
@@ -67,6 +75,14 @@ module.exports = (function () {
       fr: "Nom du nouveau moment",
       en: "Name of the new moment",
     },
+    name: {
+      fr: "Nom",
+      en: "Name",
+    },
+    date_created: {
+      fr: "Date de création",
+      en: "Date created",
+    },
     protected_by_pass: {
       fr: "Protégé par mot de passe",
       en: "Protected by password",
@@ -74,6 +90,14 @@ module.exports = (function () {
     filter_by_moments_of_contribution: {
       fr: "Filtrer par moment de contribution",
       en: "Filter by moment of contribution",
+    },
+    display_options: {
+      fr: "Options d’affichage",
+      en: "Display options",
+    },
+    display_in_tags: {
+      fr: "Ranger dans les onglets",
+      en: "File in tabs",
     },
     show_password: {
       fr: "Afficher le mot de passe",
@@ -186,6 +210,10 @@ module.exports = (function () {
     create_a_fragment: {
       fr: "Créer un fragment",
       en: "Create a fragment",
+    },
+    create_a_moment: {
+      fr: "Créer un moment",
+      en: "Create a moment",
     },
     edit_a_fragment: {
       fr: "Éditer un fragment",

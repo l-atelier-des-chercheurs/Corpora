@@ -8,10 +8,7 @@
       :corpuses="Object.values($root.store.corpus)"
     />
 
-    <Corpus
-      v-else-if="$root.do_navigation.view === 'CorpusView'"
-      :corpus="$root.current_corpus"
-    />
+    <Corpus v-else-if="$root.do_navigation.view === 'CorpusView'" :corpus="$root.current_corpus" />
 
     <portal-target name="modal_container" />
   </div>
@@ -25,7 +22,7 @@ export default {
   name: "app",
   components: {
     List,
-    Corpus,
+    Corpus
   },
   props: {},
   data() {
@@ -35,7 +32,7 @@ export default {
   created() {},
   beforeDestroy() {},
   computed: {},
-  methods: {},
+  methods: {}
 };
 </script>
 <style src="../../node_modules/vue-plyr/dist/vue-plyr.css"></style>
@@ -344,6 +341,39 @@ button,
   color: var(--color-black);
 }
 
+input[type="checkbox"] {
+  -webkit-appearance: none;
+  width: 12px;
+  height: 12px;
+  background: white;
+  box-shadow: 0 1px 3px rgba(255, 255, 255, 2), 0 1px 2px rgba(0, 0, 0, 0.24);
+  border-radius: 2px;
+  border: 1px solid var(--active-color);
+  outline: 0 !important;
+  margin-left: 0;
+
+  &:checked {
+    color: var(--color-orange);
+    background-color: currentColor;
+  }
+
+  &:active {
+  }
+
+  &.disabled {
+    background-color: var(--color-black);
+    cursor: not-allowed;
+  }
+}
+.input-checkbox {
+  display: flex;
+  flex-flow: row nowrap;
+  align-items: center;
+  label {
+    margin-bottom: 0;
+  }
+}
+
 input,
 textarea {
   font-size: 1.2em;
@@ -453,6 +483,11 @@ select::-ms-expand {
 .flex-nowrap {
   display: flex;
   flex-flow: row nowrap;
+  align-items: center;
+
+  > label {
+    margin-bottom: 0;
+  }
 }
 
 html,
@@ -536,6 +571,9 @@ audio {
     display: block;
     width: 100%;
     background-color: var(--color-black);
+
+    max-height: var(--fragment-width);
+    object-fit: scale-down;
   }
 
   iframe {
@@ -1384,6 +1422,7 @@ twitter-widget.twitter-tweet {
   min-width: 100px;
   font-family: inherit;
   font-weight: 300;
+  border-radius: 8px;
 
   button {
     min-height: 0;

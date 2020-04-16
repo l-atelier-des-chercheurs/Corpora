@@ -23,10 +23,7 @@
 
         <div :title="f.name" class="m_uploadFile--filename">{{ f.name }}</div>
         <div class="m_uploadFile--size">{{ formatBytes(f.size) }}</div>
-        <div
-          class="m_uploadFile--action"
-          v-if="files_to_upload_meta.hasOwnProperty(f.name)"
-        >
+        <div class="m_uploadFile--action" v-if="files_to_upload_meta.hasOwnProperty(f.name)">
           <button
             type="button"
             class="buttonLink"
@@ -37,17 +34,9 @@
                 files_to_upload_meta[f.name].status === 'success')
             "
           >
-            <template v-if="!files_to_upload_meta.hasOwnProperty(f.name)">
-              {{ $t("import") }}
-            </template>
-            <template
-              v-else-if="files_to_upload_meta[f.name].status === 'success'"
-              >{{ $t("sent") }}</template
-            >
-            <template
-              v-else-if="files_to_upload_meta[f.name].status === 'failed'"
-              >{{ $t("retry") }}</template
-            >
+            <template v-if="!files_to_upload_meta.hasOwnProperty(f.name)">{{ $t("import") }}</template>
+            <template v-else-if="files_to_upload_meta[f.name].status === 'success'">{{ $t("sent") }}</template>
+            <template v-else-if="files_to_upload_meta[f.name].status === 'failed'">{{ $t("retry") }}</template>
           </button>
         </div>
       </div>
@@ -63,7 +52,7 @@ export default {
   props: {
     slugFolderName: String,
     type: String,
-    selected_files: Array,
+    selected_files: Array
   },
   components: {},
   data() {
@@ -72,7 +61,7 @@ export default {
       files_to_upload_meta: {},
       upload_percentages: 0,
 
-      list_of_medias_to_add_to_fragment: [],
+      list_of_medias_to_add_to_fragment: []
     };
   },
   watch: {},
@@ -82,9 +71,9 @@ export default {
   },
   beforeDestroy() {},
   computed: {
-    uriToUploadMedia: function () {
+    uriToUploadMedia: function() {
       return `_file-upload/${this.type}/${this.slugFolderName}`;
-    },
+    }
   },
   methods: {
     sendThisFile(f) {
@@ -98,14 +87,14 @@ export default {
 
         this.$set(this.files_to_upload_meta, filename, {
           upload_percentages: 0,
-          status: "sending",
+          status: "sending"
         });
 
         let formData = new FormData();
         formData.append("files", f, filename);
 
         let meta = {
-          fileCreationDate: modified,
+          fileCreationDate: modified
           // setDateTimelineToDateCreated: this.$root.settings
           //   .setDateTimelineToDateCreated,
           // authors: this.$root.settings.current_author_name
@@ -140,17 +129,17 @@ export default {
         axios
           .post(this.uriToUploadMedia, formData, {
             headers: { "Content-Type": "multipart/form-data" },
-            onUploadProgress: function (progressEvent) {
+            onUploadProgress: function(progressEvent) {
               this.files_to_upload_meta[filename].upload_percentages = parseInt(
                 Math.round((progressEvent.loaded * 100) / progressEvent.total)
               );
-            }.bind(this),
+            }.bind(this)
           })
-          .then((x) => {
+          .then(x => {
             console.log(`METHODS • sendThisFile: got answer, x ${x}`);
             return x.data;
           })
-          .then((x) => {
+          .then(x => {
             if (this.$root.state.dev_mode === "debug") {
               console.log(
                 `METHODS • sendThisFile: name = ${filename} / success uploading`
@@ -160,7 +149,7 @@ export default {
             this.files_to_upload_meta[filename].status = "success";
             this.files_to_upload_meta[filename].upload_percentages = 100;
 
-            const catchMediaCreation = (d) => {
+            const catchMediaCreation = d => {
               if (this.$root.state.dev_mode === "debug") {
                 console.log(`METHODS • sendThisFile: catchMediaCreation`);
               }
@@ -171,7 +160,7 @@ export default {
               ) {
                 const new_media = Object.values(
                   d.corpus[this.slugFolderName].medias
-                ).filter((m) => m.media_filename === x.medias_filenames[0]);
+                ).filter(m => m.media_filename === x.medias_filenames[0]);
 
                 if (new_media.length > 0) {
                   console.log(
@@ -196,7 +185,7 @@ export default {
             );
             // resolve(x.map(img => Object.assign({}, img, { url: `${BASE_URL}/images/${img.id}` })));
           })
-          .catch((err) => {
+          .catch(err => {
             console.log(
               `METHODS • sendThisFile: name = ${filename} / failed uploading`
             );
@@ -208,15 +197,15 @@ export default {
       });
     },
     sendAllFiles() {
-      const executeSequentially = (array) => {
-        return this.sendThisFile(
-          this.files_to_upload[array.shift()]
-        ).then((x) => (array.length == 0 ? x : executeSequentially(array)));
+      const executeSequentially = array => {
+        return this.sendThisFile(this.files_to_upload[array.shift()]).then(x =>
+          array.length == 0 ? x : executeSequentially(array)
+        );
       };
 
       executeSequentially(
         Array.from(Array(this.files_to_upload.length).keys())
-      ).then((x) => {
+      ).then(x => {
         this.$emit("insertMedias", this.list_of_medias_to_add_to_fragment);
         this.$emit("close");
       });
@@ -239,7 +228,7 @@ export default {
         "PB",
         "EB",
         "ZB",
-        "YB",
+        "YB"
       ];
 
       var c = 1024,
@@ -254,8 +243,8 @@ export default {
       if (this.files_to_upload_meta.hasOwnProperty(f.name)) {
         return "is--" + this.files_to_upload_meta[f.name].status;
       }
-    },
-  },
+    }
+  }
 };
 </script>
 <style lang="scss" scoped>
@@ -286,7 +275,7 @@ export default {
     transform-origin: left center;
 
     transition: all 0.1s;
-    background-color: var(--color-black);
+    background-color: var(--active-color);
   }
 
   > * {

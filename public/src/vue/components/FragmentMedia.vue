@@ -40,18 +40,14 @@
         class="button-small bg-orange"
         v-if="is_being_edited"
         @click="setBlocToEdit(false)"
-      >
-        {{ $t("save") }}
-      </button>
+      >{{ $t("save") }}</button>
 
       <template v-else>
         <button
           type="button"
           class="button-small"
           @click="setBlocToEdit(media.metaFileName)"
-        >
-          {{ $t("edit") }}
-        </button>
+        >{{ $t("edit") }}</button>
 
         <button
           type="button"
@@ -83,9 +79,7 @@
               $emit('moveMedia', { metaFileName: media.metaFileName, dir: -1 });
               show_advanced_menu_for_media = false;
             "
-          >
-            {{ $t("moveup") }}
-          </button>
+          >{{ $t("moveup") }}</button>
           <button
             type="button"
             class="button-small"
@@ -94,16 +88,13 @@
               $emit('moveMedia', { metaFileName: media.metaFileName, dir: +1 });
               show_advanced_menu_for_media = false;
             "
-          >
-            {{ $t("movedown") }}
-          </button>
+          >{{ $t("movedown") }}</button>
           <a
             class="button button-small"
             :download="media.media_filename"
             :href="mediaURL"
             target="_blank"
-            >{{ $t("download") }}
-          </a>
+          >{{ $t("download") }}</a>
           <button
             type="button"
             class="button-small"
@@ -111,18 +102,13 @@
               $emit('removeMedia', { metaFileName: media.metaFileName });
               show_advanced_menu_for_media = false;
             "
-          >
-            {{ $t("remove") }}
-          </button>
+          >{{ $t("remove") }}</button>
         </div>
       </template>
     </div>
 
     <div class="m_fragmentMedia--infos">
-      <div
-        class="m_fragmentMedia--infos--caption"
-        v-if="is_being_edited || media.caption"
-      >
+      <div class="m_fragmentMedia--infos--caption" v-if="is_being_edited || media.caption">
         <label>{{ $t("caption") }}</label>
         <div>
           <template v-if="!is_being_edited">
@@ -138,10 +124,7 @@
           </template>
         </div>
       </div>
-      <div
-        class="m_fragmentMedia--infos--source"
-        v-if="is_being_edited || media.source"
-      >
+      <div class="m_fragmentMedia--infos--source" v-if="is_being_edited || media.source">
         <label>{{ $t("source") }} (URL)</label>
         <div>
           <template v-if="!is_being_edited">
@@ -150,8 +133,7 @@
               rel="noopener noreferrer"
               :title="media.source"
               :href="media.source"
-              >{{ media.source }}</a
-            >
+            >{{ media.source }}</a>
           </template>
           <template v-else>
             <input
@@ -175,11 +157,11 @@ export default {
     slugFolderName: String,
     media: Object,
     index: Number,
-    linked_medias: Array,
+    linked_medias: Array
   },
   components: {
     MediaContent,
-    CollaborativeEditor,
+    CollaborativeEditor
   },
   data() {
     return {
@@ -187,23 +169,21 @@ export default {
       mediadata: {
         caption: this.media.caption,
         source: this.media.source,
-        content: this.media.content,
+        content: this.media.content
       },
       mediaURL: `/${this.slugFolderName}/${this.media.media_filename}`,
       is_being_edited:
-        this.$root.settings.text_media_being_edited === this.media.metaFileName,
+        this.$root.settings.text_media_being_edited === this.media.metaFileName
     };
   },
   created() {},
   mounted() {},
   beforeDestroy() {},
   watch: {
-    "$root.settings.text_media_being_edited": function () {
+    "$root.settings.text_media_being_edited": function() {
       console.log(
-        `FragmentMedia • WATCH: $root.settings.text_media_being_edited. Is self ? ${
-          this.$root.settings.text_media_being_edited ===
-          this.media.metaFileName
-        }`
+        `FragmentMedia • WATCH: $root.settings.text_media_being_edited. Is self ? ${this
+          .$root.settings.text_media_being_edited === this.media.metaFileName}`
       );
       if (this.is_being_edited) {
         this.saveMedia();
@@ -214,10 +194,10 @@ export default {
         this.mediadata = {
           caption: this.media.caption,
           source: this.media.source,
-          content: this.media.content,
+          content: this.media.content
         };
       }
-    },
+    }
   },
   computed: {},
   methods: {
@@ -237,10 +217,10 @@ export default {
         type: "corpus",
         slugFolderName: this.slugFolderName,
         slugMediaName: this.media.metaFileName,
-        data: this.mediadata,
+        data: this.mediadata
       });
-    },
-  },
+    }
+  }
 };
 </script>
 <style lang="scss" scoped>

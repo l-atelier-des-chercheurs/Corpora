@@ -44,7 +44,9 @@
     </div>
 
     <transition name="width_collapse">
-      <div
+      <transition-group
+        name="list-complete"
+        tag="div"
         class="m_tag--fragments"
         v-if="show_fragments"
         :style="`width: ${fragment_width * fragments.length}px`"
@@ -60,7 +62,7 @@
           :fragment_width="fragment_width"
           :slugFolderName="slugFolderName"
         />
-      </div>
+      </transition-group>
     </transition>
   </div>
 </template>
@@ -77,24 +79,24 @@ export default {
     slugFolderName: String,
     fragments: Array,
     fragment_width: Number,
-    corpus_scroll_left: Number,
+    corpus_scroll_left: Number
   },
   components: {
-    Fragment,
+    Fragment
   },
   data() {
     return {
       show_fragments: false,
-      tag_title_position: false,
+      tag_title_position: false
     };
   },
   created() {},
   mounted() {},
   beforeDestroy() {},
   watch: {
-    corpus_scroll_left: function () {
+    corpus_scroll_left: function() {
       this.setTitleBarRightPos();
-    },
+    }
   },
   computed: {},
   methods: {
@@ -117,8 +119,8 @@ export default {
           this.tag_title_position = false;
         }
       }
-    },
-  },
+    }
+  }
 };
 </script>
 <style lang="scss" scoped>
