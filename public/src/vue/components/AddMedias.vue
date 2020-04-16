@@ -373,7 +373,7 @@ export default {
   // width: 100px;
   height: auto;
   text-align: center;
-  margin: calc(var(--spacing) / 2);
+  margin: calc(var(--spacing) / 4);
   // color: var(--color-white);
 
   .menu_encart {
@@ -384,7 +384,7 @@ export default {
       padding: calc(var(--spacing) / 4);
 
       flex: 0 1 auto;
-      background-color: #fff4db;
+      // background-color: #fff4db;
 
       .menu_encart--options--buttonRow {
         display: flex;
@@ -425,6 +425,7 @@ export default {
             text-transform: lowercase;
             padding: calc(var(--spacing) / 4) calc(var(--spacing) / 2)
               calc(var(--spacing) / 4) 0;
+            margin-left: 0;
 
             font-family: "base12";
             font-style: italic;
@@ -465,18 +466,19 @@ export default {
       // height: 2em;
       flex: 0 1 auto;
 
-      transition: all cubic-bezier(0.19, 1, 0.22, 1) 0.8s;
       display: block;
       text-transform: initial;
       pointer-events: auto;
       // background-color: var(--color-black);
+      background-color: transparent;
       // color: var(--color-white);
       color: var(--color-black);
       padding: calc(var(--spacing) / 4);
       border-radius: 14px;
       margin-bottom: 0;
 
-      transition: all 0.4s cubic-bezier(0.19, 1, 0.22, 1);
+      transition: all cubic-bezier(0.19, 1, 0.22, 1) 0.8s 0.2s;
+      // transition: all 0.4s cubic-bezier(0.19, 1, 0.22, 1);
 
       &:hover {
       }
@@ -485,7 +487,7 @@ export default {
         display: block;
         width: 14px;
         height: 14px;
-        transition: transform cubic-bezier(0.19, 1, 0.22, 1) 0.8s;
+        transition: transform cubic-bezier(0.19, 1, 0.22, 1) 1.8s;
         transform: rotate(0);
         fill: currentColor;
 
@@ -517,7 +519,7 @@ export default {
   &.is--collapsed .menu_encart--button:not(:hover):not(.is--shown) {
     background-color: var(--color-black);
     // padding: 2px;
-    transform: scale(0.3);
+    transform: scale(0.2);
 
     svg path {
       opacity: 0;

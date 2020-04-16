@@ -1,7 +1,7 @@
 <template>
   <div
     class="m_fragment custom_scrollbar"
-    :style="`min-width: ${fragment_width}px`"
+    :style="`width: ${fragment_width}px`"
   >
     <div class="m_fragment--content">
       <div class="m_fragment--content--top">
@@ -266,7 +266,7 @@ export default {
   // padding-top: 100px;
 
   .m_fragment--content {
-    padding: var(--spacing);
+    padding: calc(var(--spacing) / 2);
     margin-top: calc(var(--spacing) * 2);
     margin-bottom: 50vh;
     margin-right: 4px;
@@ -276,7 +276,7 @@ export default {
     // background-color: #f9f3db;
     background: linear-gradient(
       180deg,
-      #fbf8e9 50%,
+      #fff 0%,
       #f9f3db calc(100% - 1px),
       #000 100%
     );

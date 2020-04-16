@@ -37,11 +37,11 @@
     <div class="m_advancedMenu">
       <button
         type="button"
-        class="button-small"
+        class="button-small bg-orange"
         v-if="is_being_edited"
         @click="setBlocToEdit(false)"
       >
-        save
+        {{ $t("save") }}
       </button>
 
       <template v-else>
@@ -250,9 +250,13 @@ export default {
 
   .m_fragmentMedia--content {
     min-height: 3em;
+
+    input {
+      background-color: var(--body-bg);
+    }
   }
 
-  &:not([data-type="text"]) {
+  &:not([data-type="text"]):not([data-type="embed"]) {
     .m_fragmentMedia--content {
       border-radius: 8px;
       overflow: hidden;
@@ -263,6 +267,7 @@ export default {
   transition: all 0.4s cubic-bezier(0.19, 1, 0.22, 1);
 
   &.is--beingEdited {
+    // background-color: var(--active-color);
     // box-shadow: 0px 4px 4px 0px #ccd0da;
     // transform: translateY(-5px);
   }

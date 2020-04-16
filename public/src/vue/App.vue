@@ -354,10 +354,12 @@ textarea {
   -webkit-appearance: none;
   // border-bottom: 2px solid white;
 
+  transition: all 0.4s cubic-bezier(0.19, 1, 0.22, 1);
+
   &:active,
   &:focus {
     outline: 0px;
-    background-color: var(--color-orange) !important;
+    border-left: 2px solid var(--color-orange);
   }
 }
 
@@ -427,6 +429,10 @@ select::-ms-expand {
   select {
     font-size: 0.8rem;
   }
+}
+
+.bg-orange {
+  background-color: var(--color-orange);
 }
 
 html,
@@ -1177,6 +1183,10 @@ audio {
       object-position: center;
     }
   }
+}
+
+twitter-widget.twitter-tweet {
+  margin: 0 !important;
 }
 
 .m_modal--close_button {

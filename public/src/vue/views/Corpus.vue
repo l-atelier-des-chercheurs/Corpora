@@ -123,7 +123,7 @@ export default {
   watch: {},
   computed: {
     fragment_width() {
-      return Math.min(400, this.$root.settings.windowWidth * 0.9);
+      return Math.min(325, this.$root.settings.windowWidth * 0.9);
     },
     can_access_corpus() {
       return this.$root.canAccessFolder({
@@ -236,6 +236,13 @@ export default {
 
   > * {
     flex: 0 0 auto;
+  }
+
+  &::after {
+    content: "";
+    display: block;
+    flex: 0 0 100px;
+    height: 100%;
   }
 }
 
