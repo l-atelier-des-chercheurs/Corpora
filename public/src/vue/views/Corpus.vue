@@ -6,6 +6,7 @@
         <!-- <div class>
           <button type="button" @click="$root.closeCorpus()">back</button>
         </div>-->
+        <Infos />
 
         <div class="m_corpus--presentation--name">
           <h1 v-if="!!corpus.name">{{ corpus.name }}</h1>
@@ -88,6 +89,7 @@
   </div>
 </template>
 <script>
+import Infos from "../components/Infos.vue";
 import CorpusPwd from "../components/modals/CorpusPwd.vue";
 import Tag from "../components/Tag.vue";
 import CreateFragment from "../components/modals/CreateFragment.vue";
@@ -97,6 +99,7 @@ export default {
     corpus: Object,
   },
   components: {
+    Infos,
     CorpusPwd,
     Tag,
     CreateFragment,

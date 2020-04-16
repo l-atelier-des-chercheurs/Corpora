@@ -37,6 +37,7 @@
     <div class="m_advancedMenu">
       <button
         type="button"
+        class="button-small"
         v-if="is_being_edited"
         @click="setBlocToEdit(false)"
       >
@@ -44,14 +45,18 @@
       </button>
 
       <template v-else>
-        <button type="button" @click="setBlocToEdit(media.metaFileName)">
+        <button
+          type="button"
+          class="button-small"
+          @click="setBlocToEdit(media.metaFileName)"
+        >
           {{ $t("edit") }}
         </button>
 
         <button
           type="button"
           @click="show_advanced_menu_for_media = !show_advanced_menu_for_media"
-          class="m_advancedMenu--toggleButton"
+          class="button-small m_advancedMenu--toggleButton"
           :class="{
             'is--active': show_advanced_menu_for_media,
           }"
@@ -72,6 +77,7 @@
         <div class="m_advancedMenu--menu" v-if="show_advanced_menu_for_media">
           <button
             type="button"
+            class="button-small"
             v-if="index > 0"
             @click="
               $emit('moveMedia', { metaFileName: media.metaFileName, dir: -1 });
@@ -82,6 +88,7 @@
           </button>
           <button
             type="button"
+            class="button-small"
             v-if="index < linked_medias.length - 1"
             @click="
               $emit('moveMedia', { metaFileName: media.metaFileName, dir: +1 });
@@ -91,7 +98,7 @@
             {{ $t("movedown") }}
           </button>
           <a
-            class="button"
+            class="button button-small"
             :download="media.media_filename"
             :href="mediaURL"
             target="_blank"
@@ -99,6 +106,7 @@
           </a>
           <button
             type="button"
+            class="button-small"
             @click="
               $emit('removeMedia', { metaFileName: media.metaFileName });
               show_advanced_menu_for_media = false;

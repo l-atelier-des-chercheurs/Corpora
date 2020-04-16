@@ -207,6 +207,18 @@ module.exports = (function () {
       fr: "Placez ici l’URL vers une vidéo Vimeo, Youtube or Twitter",
       en: "Add a URL to Vimeo, Youtube or Twitter",
     },
+    drop_files_here: {
+      fr: "Déposez vos fichier(s) ici",
+      en: "Drop file(s) here",
+    },
+    files: {
+      fr: "Fichier(s)",
+      en: "File(s)",
+    },
+    text: {
+      fr: "Texte",
+      en: "Text",
+    },
   };
 
   return messages;

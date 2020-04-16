@@ -347,11 +347,12 @@ textarea {
   width: 100%;
   max-width: 320px;
   -webkit-appearance: none;
+  border-bottom: 2px solid white;
 
   &:active,
   &:focus {
     outline: 0px;
-    outline: rgba(0, 255, 255, 0.9);
+    border-bottom-color: var(--color-orange) !important;
   }
 }
 
@@ -372,7 +373,7 @@ button,
   background: #ccd0da;
   cursor: pointer;
   text-transform: lowercase;
-  font-size: 0.8rem;
+  font-size: 1rem;
   padding: 0.2em 0.4em;
   text-decoration: none;
 
@@ -385,8 +386,26 @@ button,
     outline: 0;
   }
 
+  &.button-small {
+    font-size: 0.8rem;
+  }
+
   &.is--active {
     background: #fff4db;
+  }
+
+  &.button-bg_rounded {
+    border-radius: 0.5em;
+    padding: 0.4em 0.8em;
+  }
+
+  span {
+    display: flex;
+    align-items: center;
+  }
+
+  svg + span {
+    margin-left: var(--spacing);
   }
 }
 
@@ -521,7 +540,6 @@ audio {
       // line-height: 1;
 
       // height: auto !important;
-      border-bottom: 2px solid #ccc !important;
     }
 
     button {
