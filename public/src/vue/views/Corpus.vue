@@ -26,7 +26,10 @@
           <div class="m_corpus--presentation--contributionModes">
             <label>{{ $t("filter_by_moments_of_contribution") }}</label>
 
-            <CollectMode v-model="current_contribution_mode" :is_filter="true" />
+            <CollectMode
+              v-model="current_contribution_mode"
+              :is_filter="true"
+            />
 
             <div>
               <button
@@ -35,9 +38,7 @@
                 @click="show_create_time_modal = !show_create_time_modal"
               >
                 <template v-if="!show_create_time_modal">
-                  {{
-                  $t("create_a_moment")
-                  }}
+                  {{ $t("create_a_moment") }}
                 </template>
                 <template v-else>{{ $t("close") }}</template>
               </button>
@@ -50,7 +51,13 @@
                 <div class>
                   <label>{{ $t("moments_name") }}</label>
                   <div class="flex-nowrap">
-                    <input type="text" class v-model.trim="new_moments_name" required autofocus />
+                    <input
+                      type="text"
+                      class
+                      v-model.trim="new_moments_name"
+                      required
+                      autofocus
+                    />
                     <input
                       type="submit"
                       style="flex: 0 1 0;"
@@ -79,10 +86,11 @@
                 <div class="custom-select custom-select_tiny">
                   <select v-model="sort_fragments_by">
                     <option
-                      v-for="mode in ['date_created', 'name']"
+                      v-for="mode in ['date_created', 'title']"
                       :key="mode"
                       :value="mode"
-                    >{{ $t(mode) }}</option>
+                      >{{ $t(mode) }}</option
+                    >
                   </select>
                 </div>
               </div>
@@ -135,7 +143,11 @@
           />
         </div>
 
-        <transition-group name="list-complete" tag="div" class="m_tags--allfragments">
+        <transition-group
+          name="list-complete"
+          tag="div"
+          class="m_tags--allfragments"
+        >
           <template v-if="display_in_tags">
             <Tag
               v-for="{ tag, fragments } in tags_with_fragments"
@@ -179,7 +191,7 @@ import CollectMode from "../components/subcomponents/CollectMode.vue";
 
 export default {
   props: {
-    corpus: Object
+    corpus: Object,
   },
   components: {
     Infos,
@@ -187,7 +199,7 @@ export default {
     Tag,
     Fragment,
     CreateFragment,
-    CollectMode
+    CollectMode,
   },
   data() {
     return {
@@ -202,7 +214,7 @@ export default {
 
       show_create_time_modal: false,
       new_moments_name: "",
-      current_contribution_mode: ""
+      current_contribution_mode: "",
 
       // show_fragments_for: {},
     };
@@ -219,7 +231,7 @@ export default {
     can_access_corpus() {
       return this.$root.canAccessFolder({
         type: "corpus",
-        slugFolderName: this.corpus.slugFolderName
+        slugFolderName: this.corpus.slugFolderName,
       });
     },
     previewURL() {
@@ -229,7 +241,7 @@ export default {
       ) {
         return false;
       }
-      const thumb = this.corpus.preview.filter(p => p.size === 640);
+      const thumb = this.corpus.preview.filter((p) => p.size === 640);
       if (thumb.length > 0) {
         return `${thumb[0].path}`;
       }
@@ -251,13 +263,13 @@ export default {
       )
         return false;
       let fragments = Object.values(this.corpus.medias).filter(
-        m => m.type === "fragment"
+        (m) => m.type === "fragment"
       );
 
       // if current_contribution_mode is set
       // if current_contribution_mode === online, then we retrieve only fragments that don’t have contribution_moment
       if (this.current_contribution_mode !== "") {
-        fragments = fragments.filter(f => {
+        fragments = fragments.filter((f) => {
           if (
             this.current_contribution_mode === "online" ||
             this.current_contribution_mode === ""
@@ -270,9 +282,14 @@ export default {
           return f.contribution_moment === this.current_contribution_mode;
         });
       }
-      fragments = this.$_.sortBy(fragments, this.sort_fragments_by);
 
-      if (this.sort_fragments_by === "date_created") fragments.reverse();
+      if (this.sort_fragments_by === "date_created") {
+        fragments = this.$_.sortBy(fragments, "date_created");
+        fragments.reverse();
+      } else if (this.sort_fragments_by === "title") {
+        fragments.sort((a, b) => a.title.localeCompare(b.title));
+      }
+
       return fragments;
     },
     tags_with_fragments() {
@@ -280,28 +297,28 @@ export default {
       if (!this.fragments) return [];
 
       // get all tags
-      let fragments_by_tag = this.all_tags.map(tag => {
+      let fragments_by_tag = this.all_tags.map((tag) => {
         const fragments_for_tag = this.fragments.filter(
-          f =>
+          (f) =>
             !!f.tags &&
             Array.isArray(f.tags) &&
-            f.tags.some(t => t.title === tag)
+            f.tags.some((t) => t.title === tag)
         );
 
         return {
           tag,
-          fragments: fragments_for_tag
+          fragments: fragments_for_tag,
         };
       });
 
       // append all fragments
       const fragments_with_no_tags = this.fragments.filter(
-        f => !f.tags || !Array.isArray(f.tags) || f.tags.length === 0
+        (f) => !f.tags || !Array.isArray(f.tags) || f.tags.length === 0
       );
       if (fragments_with_no_tags.length > 0) {
         fragments_by_tag.push({
           tag: "",
-          fragments: fragments_with_no_tags
+          fragments: fragments_with_no_tags,
         });
       }
 
@@ -315,11 +332,11 @@ export default {
 
       let all_tags = this.fragments.reduce((acc, f) => {
         if (!!f.tags && Array.isArray(f.tags) && f.tags.length > 0)
-          acc = acc.concat(f.tags.map(t => t.title));
+          acc = acc.concat(f.tags.map((t) => t.title));
         return acc;
       }, []);
 
-      all_tags = all_tags.filter(function(item, pos) {
+      all_tags = all_tags.filter(function (item, pos) {
         return all_tags.indexOf(item) == pos;
       });
 
@@ -331,17 +348,17 @@ export default {
 
       let all_keywords = this.fragments.reduce((acc, f) => {
         if (!!f.keywords && Array.isArray(f.keywords) && f.keywords.length > 0)
-          acc = acc.concat(f.keywords.map(t => t.title));
+          acc = acc.concat(f.keywords.map((t) => t.title));
         return acc;
       }, []);
 
-      all_keywords = all_keywords.filter(function(item, pos) {
+      all_keywords = all_keywords.filter(function (item, pos) {
         return all_keywords.indexOf(item) == pos;
       });
 
       all_keywords.sort((a, b) => a.localeCompare(b));
       return all_keywords;
-    }
+    },
   },
   methods: {
     onScroll() {
@@ -355,7 +372,7 @@ export default {
           : [];
 
       // check if moment already exists
-      if (contribution_moments.some(m => m.name === this.new_moments_name)) {
+      if (contribution_moments.some((m) => m.name === this.new_moments_name)) {
         this.$alertify
           .closeLogOnClick(true)
           .delay(4000)
@@ -363,20 +380,20 @@ export default {
       }
 
       contribution_moments.push({
-        name: this.new_moments_name
+        name: this.new_moments_name,
       });
 
       this.$root.editFolder({
         type: "corpus",
         slugFolderName: this.corpus.slugFolderName,
         data: {
-          contribution_moments
-        }
+          contribution_moments,
+        },
       });
 
       this.show_create_time_modal = false;
-    }
-  }
+    },
+  },
 };
 </script>
 <style lang="scss" scoped>
