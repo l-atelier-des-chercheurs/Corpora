@@ -71,6 +71,10 @@ module.exports = (function () {
       fr: "Protégé par mot de passe",
       en: "Protected by password",
     },
+    filter_by_moments_of_contribution: {
+      fr: "Filtrer par moment de contribution",
+      en: "Filter by moment of contribution",
+    },
     show_password: {
       fr: "Afficher le mot de passe",
       en: "Show password",
@@ -98,6 +102,14 @@ module.exports = (function () {
     sure_to_remove_corpus: {
       fr: "Voulez-vous vraiment supprimer le corpus ?",
       en: "Do you really want to remove this corpus?",
+    },
+    all: {
+      fr: "Afficher tous les fragments",
+      en: "Show all fragments",
+    },
+    online: {
+      fr: "En ligne",
+      en: "Online",
     },
     remove: {
       fr: "Supprimer",

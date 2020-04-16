@@ -24,11 +24,12 @@
           </div>-->
 
           <div class="m_corpus--presentation--contributionModes">
-            <label
-              >{{ $t("filter_by_mode_and_moment_of_contribution") }}
-            </label>
+            <label>{{ $t("filter_by_moments_of_contribution") }} </label>
 
-            <CollectMode v-model="current_contribution_mode" />
+            <CollectMode
+              v-model="current_contribution_mode"
+              :is_filter="true"
+            />
 
             <div>
               <button
@@ -294,21 +295,21 @@ export default {
       this.corpus_scroll_left = this.$refs.corpus.scrollLeft;
     },
     createNewMoment() {
-      let contribution_moment =
+      let contribution_moments =
         this.corpus.hasOwnProperty("contribution_moment") &&
-        Array.isArray(this.corpus.contribution_moment)
-          ? JSON.parse(JSON.stringify(this.corpus.contribution_moment))
+        Array.isArray(this.corpus.contribution_moments)
+          ? JSON.parse(JSON.stringify(this.corpus.contribution_moments))
           : [];
 
       // check if moment already exists
-      if (contribution_moment.some((m) => m.name === this.new_moments_name)) {
+      if (contribution_moments.some((m) => m.name === this.new_moments_name)) {
         this.$alertify
           .closeLogOnClick(true)
           .delay(4000)
           .success(this.$t("moment_already_exists") + this.author.name);
       }
 
-      contribution_moment.push({
+      contribution_moments.push({
         name: this.new_moments_name,
       });
 
@@ -316,7 +317,7 @@ export default {
         type: "corpus",
         slugFolderName: this.corpus.slugFolderName,
         data: {
-          contribution_moment,
+          contribution_moments,
         },
       });
 

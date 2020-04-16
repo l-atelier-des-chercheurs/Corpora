@@ -44,8 +44,11 @@
     </div>
 
     <transition name="width_collapse">
-      <div class="m_tag--fragments" v-if="show_fragments">
-        <!-- :style="`width: ${fragment_width * fragments.length}px`" -->
+      <div
+        class="m_tag--fragments"
+        v-if="show_fragments"
+        :style="`width: ${fragment_width * fragments.length}px`"
+      >
         <Fragment
           v-for="fragment in fragments"
           :key="fragment.metaFileName"

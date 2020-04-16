@@ -1,7 +1,7 @@
 <template>
   <div
     class="m_fragment custom_scrollbar"
-    :style="`width: ${fragment_width}px`"
+    :style="`min-width: ${fragment_width}px`"
   >
     <div class="m_fragment--content">
       <div class="m_fragment--content--top">

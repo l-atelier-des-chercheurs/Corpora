@@ -69,7 +69,7 @@
         "password": {
           "type": "string"
         },
-        "contribution_moment": {
+        "contribution_moments": {
           "type": "array"
         }
       },
