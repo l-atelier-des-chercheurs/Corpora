@@ -79,6 +79,10 @@ module.exports = (function () {
       fr: "Nom",
       en: "Name",
     },
+    title: {
+      fr: "Titre",
+      en: "Title",
+    },
     date_created: {
       fr: "Date de création",
       en: "Date created",
