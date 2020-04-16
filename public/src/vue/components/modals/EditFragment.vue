@@ -15,7 +15,13 @@
       <!-- Human name -->
       <div class="margin-bottom-small">
         <label>{{ $t("fragment_title") }}</label>
-        <input type="text" v-model.trim="fragmentdata.title" required autofocus />
+        <input
+          type="text"
+          class="bold"
+          v-model.trim="fragmentdata.title"
+          required
+          autofocus
+        />
       </div>
 
       <div class="margin-bottom-small">
@@ -23,7 +29,7 @@
         <TagsInput
           :allKeywords="all_tags_rightly_formatted"
           :keywords="fragmentdata.tags"
-          @tagsChanged="newTags => (fragmentdata.tags = newTags)"
+          @tagsChanged="(newTags) => (fragmentdata.tags = newTags)"
         />
       </div>
     </template>
@@ -37,15 +43,15 @@ export default {
   props: {
     fragment: Object,
     corpus: Object,
-    all_tags: Array
+    all_tags: Array,
   },
   components: { Modal, TagsInput },
   data() {
     return {
       fragmentdata: {
         title: this.fragment.title,
-        tags: this.fragment.tags
-      }
+        tags: this.fragment.tags,
+      },
     };
   },
   created() {},
@@ -54,13 +60,13 @@ export default {
   watch: {},
   computed: {
     all_tags_rightly_formatted() {
-      return this.all_tags.map(kw => {
+      return this.all_tags.map((kw) => {
         return {
           text: kw,
-          classes: "tagcolorid_" + (parseInt(kw, 36) % 2)
+          classes: "tagcolorid_" + (parseInt(kw, 36) % 2),
         };
       });
-    }
+    },
   },
   methods: {
     editFragment() {
@@ -69,7 +75,7 @@ export default {
       if (this.corpus.medias && Object.values(this.corpus.medias).length > 0) {
         if (
           Object.values(this.corpus.medias).find(
-            m =>
+            (m) =>
               m.type === "fragment" &&
               m.title === title &&
               title !== this.fragment.title
@@ -93,11 +99,11 @@ export default {
         type: "corpus",
         data: {
           title,
-          tags
-        }
+          tags,
+        },
       });
-    }
-  }
+    },
+  },
 };
 </script>
 <style lang="scss"></style>

@@ -17,7 +17,7 @@
         <label>{{ $t("fragment_title") }}</label>
         <input
           type="text"
-          class
+          class="bold"
           v-model.trim="fragmentdata.title"
           required
           autofocus

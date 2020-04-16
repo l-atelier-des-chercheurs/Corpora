@@ -8,20 +8,21 @@
         </div>-->
         <Infos />
 
-        <div class="m_corpus--presentation--name">
-          <h1 v-if="!!corpus.name">{{ corpus.name }}</h1>
-          <h3 v-if="!!corpus.subtitle">{{ corpus.subtitle }}</h3>
-        </div>
+        <div class="m_corpus--presentation--content">
+          <div class="m_corpus--presentation--name">
+            <h1 v-if="!!corpus.name">{{ corpus.name }}</h1>
+            <h3 v-if="!!corpus.subtitle">{{ corpus.subtitle }}</h3>
+          </div>
 
-        <div class="m_corpus--presentation--description">
-          <!-- <label>{{ $t('description') }}</label> -->
-          <p>{{ corpus.description }}</p>
-        </div>
-
-        <!-- <div class="m_corpus--presentation--tags">
+          <div class="m_corpus--presentation--description">
+            <!-- <label>{{ $t('description') }}</label> -->
+            <p>{{ corpus.description }}</p>
+          </div>
+          <!-- <div class="m_corpus--presentation--tags">
           <label>{{ $t('keywords') }}</label>
           <button type="button" v-for="(tag, index) in all_tags" :key="index">{{ tag }}</button>
-        </div>-->
+          </div>-->
+        </div>
 
         <div v-if="previewURL" class="m_corpus--presentation--vignette">
           <img :src="previewURL" class draggable="false" />
@@ -230,7 +231,7 @@ export default {
   height: 100%;
   display: flex;
   flex-flow: row nowrap;
-  align-items: center;
+  align-items: stretch;
   overflow-x: auto;
 
   > * {
@@ -248,6 +249,9 @@ export default {
   max-width: 66ch;
   overflow-y: auto;
 
+  display: flex;
+  flex-flow: column nowrap;
+  justify-content: space-between;
   > * {
     margin-bottom: calc(var(--spacing));
   }

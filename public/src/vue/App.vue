@@ -328,6 +328,11 @@ select,
 button,
 .button {
   font-family: inherit;
+
+  &.bold {
+    font-family: "base9";
+    font-weight: bold;
+  }
 }
 
 textarea,
@@ -347,17 +352,81 @@ textarea {
   width: 100%;
   max-width: 320px;
   -webkit-appearance: none;
-  border-bottom: 2px solid white;
+  // border-bottom: 2px solid white;
 
   &:active,
   &:focus {
     outline: 0px;
-    border-bottom-color: var(--color-orange) !important;
+    background-color: var(--color-orange) !important;
   }
 }
 
 textarea {
   min-height: 12em;
+}
+
+/* IE11 hide native button (thanks Matt!) */
+select::-ms-expand {
+  display: none;
+}
+
+.custom-select {
+  width: 120px;
+  margin: 4px 0;
+  position: relative;
+}
+
+.custom-select::after {
+  content: "<>";
+  -webkit-transform: rotate(90deg);
+  -moz-transform: rotate(90deg);
+  -ms-transform: rotate(90deg);
+  transform: rotate(90deg);
+  left: 5px;
+  /*Adjust for position however you want*/
+
+  top: 6px;
+  padding: 0 0 2px;
+  // border-top: 1px solid #999;
+  /*left line */
+
+  position: absolute;
+  pointer-events: none;
+}
+
+.custom-select select {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  /* Add some styling */
+
+  display: block;
+  height: 2em;
+  padding: 0px 12px 0 24px;
+  font-size: 1rem;
+  line-height: 1.75;
+
+  background-color: transparent;
+  background-image: none;
+  // border: 1px solid #cccccc;
+  -ms-word-break: normal;
+  word-break: normal;
+
+  &:hover,
+  &:active,
+  &:focus {
+    outline: 0;
+    background-color: var(--active-color);
+  }
+}
+
+.custom-select_tiny {
+  &::after {
+    top: 3px;
+  }
+  select {
+    font-size: 0.8rem;
+  }
 }
 
 html,

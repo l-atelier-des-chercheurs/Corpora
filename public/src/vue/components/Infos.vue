@@ -5,8 +5,7 @@
     </div>
     <div class="margin-sides-medium">
       <div class="margin-vert-small">
-        <label v-html="$t('lang')" />
-        <div class="input">
+        <div class="custom-select custom-select_tiny">
           <select v-model="new_lang">
             <option
               v-for="lang in this.$root.lang.available"
@@ -39,4 +38,4 @@ export default {
   methods: {},
 };
 </script>
-<style lang="scss"></style>
+<style lang="scss" scoped></style>
