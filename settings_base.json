@@ -126,6 +126,9 @@
           "tags": {
             "type": "array"
           },
+          "keywords": {
+            "type": "array"
+          },
           "file_meta": {
             "type": "array",
             "read_only": true

@@ -114,6 +114,7 @@
           <CreateFragment
             v-if="show_create_fragment"
             :corpus="corpus"
+            :all_keywords="all_keywords"
             :all_tags="all_tags"
             :current_contribution_mode="current_contribution_mode"
             @close="show_create_fragment = false"
@@ -226,10 +227,14 @@ export default {
       // if current_contribution_mode === online, then we retrieve only fragments that don’t have contribution_moment
       if (this.current_contribution_mode !== "") {
         fragments = fragments.filter((f) => {
-          if (this.current_contribution_mode === "online")
+          if (
+            this.current_contribution_mode === "online" ||
+            this.current_contribution_mode === ""
+          )
             return (
               !f.hasOwnProperty("contribution_moment") ||
-              f.contribution_moment === "online"
+              f.contribution_moment === "online" ||
+              f.contribution_moment === ""
             );
           return f.contribution_moment === this.current_contribution_mode;
         });
@@ -288,6 +293,22 @@ export default {
 
       all_tags.sort((a, b) => a.localeCompare(b));
       return all_tags;
+    },
+    all_keywords() {
+      if (!this.fragments) return [];
+
+      let all_keywords = this.fragments.reduce((acc, f) => {
+        if (!!f.keywords && Array.isArray(f.keywords) && f.keywords.length > 0)
+          acc = acc.concat(f.keywords.map((t) => t.title));
+        return acc;
+      }, []);
+
+      all_keywords = all_keywords.filter(function (item, pos) {
+        return all_keywords.indexOf(item) == pos;
+      });
+
+      all_keywords.sort((a, b) => a.localeCompare(b));
+      return all_keywords;
     },
   },
   methods: {

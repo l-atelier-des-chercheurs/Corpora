@@ -203,6 +203,10 @@ module.exports = (function () {
       fr: "Onglet(s)",
       en: "Tab(s)",
     },
+    keywords: {
+      fr: "Mot(s)-clé(s)",
+      en: "Keyword(s)",
+    },
     remove_image: {
       fr: "Retirer l’image",
       en: "Remove image",

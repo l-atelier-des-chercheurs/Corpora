@@ -30,6 +30,15 @@
       </div>
 
       <div class="margin-bottom-small">
+        <label>{{ $t("keywords") }}</label>
+        <TagsInput
+          :allKeywords="all_keywords_rightly_formatted"
+          :placeholder="$t('add_keyword')"
+          @tagsChanged="(newKeywords) => (fragmentdata.keywords = newKeywords)"
+        />
+      </div>
+
+      <div class="margin-bottom-small">
         <label>{{ $t("tabs") }}</label>
         <TagsInput
           :allKeywords="all_tags_rightly_formatted"
@@ -71,6 +80,7 @@ export default {
   props: {
     corpus: Object,
     all_tags: Array,
+    all_keywords: Array,
     current_contribution_mode: String,
   },
   components: { Modal, TagsInput, CollectMode },
@@ -90,6 +100,14 @@ export default {
   computed: {
     all_tags_rightly_formatted() {
       return this.all_tags.map((kw) => {
+        return {
+          text: kw,
+          classes: "tagcolorid_" + (parseInt(kw, 36) % 2),
+        };
+      });
+    },
+    all_keywords_rightly_formatted() {
+      return this.all_keywords.map((kw) => {
         return {
           text: kw,
           classes: "tagcolorid_" + (parseInt(kw, 36) % 2),
@@ -116,6 +134,7 @@ export default {
       }
 
       const tags = this.fragmentdata.tags;
+      const keywords = this.fragmentdata.keywords;
       const contribution_moment = this.fragmentdata.contribution_moment;
 
       this.$root
@@ -125,8 +144,9 @@ export default {
           additionalMeta: {
             type: "fragment",
             title,
-            tags,
             contribution_moment,
+            keywords,
+            tags,
             medias_slugs: [],
           },
         })
