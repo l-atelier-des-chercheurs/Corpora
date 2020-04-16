@@ -28,11 +28,15 @@
             </svg>
           </button>
           <div class="m_advancedMenu--menu" v-if="show_advanced_menu">
-            <button type="button" @click="show_edit_fragment = true">
+            <button
+              type="button"
+              class="button-small"
+              @click="show_edit_fragment = true"
+            >
               {{ $t("edit") }}
             </button>
 
-            <button type="button" @click="removeFragment">
+            <button type="button" class="button-small" @click="removeFragment">
               {{ $t("remove") }}
             </button>
           </div>

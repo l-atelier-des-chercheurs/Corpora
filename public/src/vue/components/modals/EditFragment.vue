@@ -24,8 +24,13 @@
         />
       </div>
 
+      <div>
+        <label>{{ $t("mode_and_moment_of_contribution") }}</label>
+        <CollectMode v-model="fragmentdata.contribution_moment" />
+      </div>
+
       <div class="margin-bottom-small">
-        <label>{{ $t("tags") }}</label>
+        <label>{{ $t("tabs") }}</label>
         <TagsInput
           :allKeywords="all_tags_rightly_formatted"
           :keywords="fragmentdata.tags"
@@ -39,17 +44,19 @@
 <script>
 import Modal from "./BaseModal.vue";
 import TagsInput from "../subcomponents/TagsInput.vue";
+import CollectMode from "../subcomponents/CollectMode.vue";
 export default {
   props: {
     fragment: Object,
     corpus: Object,
     all_tags: Array,
   },
-  components: { Modal, TagsInput },
+  components: { Modal, TagsInput, CollectMode },
   data() {
     return {
       fragmentdata: {
         title: this.fragment.title,
+        contribution_moment: this.fragment.contribution_moment,
         tags: this.fragment.tags,
       },
     };
@@ -90,6 +97,7 @@ export default {
       }
 
       const tags = this.fragmentdata.tags;
+      const contribution_moment = this.fragmentdata.contribution_moment;
 
       this.$emit("close");
 
@@ -99,6 +107,7 @@ export default {
         type: "corpus",
         data: {
           title,
+          contribution_moment,
           tags,
         },
       });

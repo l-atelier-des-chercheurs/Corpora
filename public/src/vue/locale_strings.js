@@ -59,6 +59,14 @@ module.exports = (function () {
       fr: "Éditer",
       en: "Edit",
     },
+    mode_and_moment_of_contribution: {
+      fr: "Mode ou moment de contribution",
+      en: "Mode or moment of contribution",
+    },
+    moments_name: {
+      fr: "Nom du nouveau moment",
+      en: "Name of the new moment",
+    },
     protected_by_pass: {
       fr: "Protégé par mot de passe",
       en: "Protected by password",
@@ -131,6 +139,10 @@ module.exports = (function () {
       fr: "Enregistrer",
       en: "Save",
     },
+    add: {
+      fr: "Ajouter",
+      en: "Add",
+    },
     enter_password_to_connect: {
       fr: "Mot de passe pour accéder",
       en: "Enter the password to access",
@@ -175,6 +187,10 @@ module.exports = (function () {
       fr: "Mots-clés",
       en: "Tags",
     },
+    tabs: {
+      fr: "Onglet(s)",
+      en: "Tab(s)",
+    },
     remove_image: {
       fr: "Retirer l’image",
       en: "Remove image",
@@ -182,6 +198,10 @@ module.exports = (function () {
     add_keyword: {
       fr: "Ajouter un mot-clé",
       en: "Add a keyword",
+    },
+    add_tab: {
+      fr: "Rattacher à un onglet",
+      en: "Link to tab",
     },
     suggestion: {
       fr: "Suggestion",
@@ -218,6 +238,10 @@ module.exports = (function () {
     text: {
       fr: "Texte",
       en: "Text",
+    },
+    moment_already_exists: {
+      fr: "Ce temps a déjà été créé",
+      en: "This moment has already been created",
     },
   };
 

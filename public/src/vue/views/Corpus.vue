@@ -22,6 +22,52 @@
           <label>{{ $t('keywords') }}</label>
           <button type="button" v-for="(tag, index) in all_tags" :key="index">{{ tag }}</button>
           </div>-->
+
+          <div class="m_corpus--presentation--contributionModes">
+            <label
+              >{{ $t("filter_by_mode_and_moment_of_contribution") }}
+            </label>
+
+            <CollectMode v-model="current_contribution_mode" />
+
+            <div>
+              <button
+                type="button"
+                class="button-small"
+                @click="show_create_time_modal = !show_create_time_modal"
+              >
+                <template v-if="!show_create_time_modal">{{
+                  $t("create_a_moment")
+                }}</template>
+                <template v-else>{{ $t("close") }}</template>
+              </button>
+
+              <form
+                class="bordered padding-small"
+                v-if="show_create_time_modal"
+                @submit.prevent="createNewMoment"
+              >
+                <div class="">
+                  <label>{{ $t("moments_name") }}</label>
+                  <div class="flex-nowrap">
+                    <input
+                      type="text"
+                      class
+                      v-model.trim="new_moments_name"
+                      required
+                      autofocus
+                    />
+                    <input
+                      type="submit"
+                      style="flex: 0 1 0;"
+                      :disabled="!new_moments_name"
+                      :value="$t('add')"
+                    />
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div>
         </div>
 
         <div v-if="previewURL" class="m_corpus--presentation--vignette">
@@ -68,10 +114,16 @@
             v-if="show_create_fragment"
             :corpus="corpus"
             :all_tags="all_tags"
+            :current_contribution_mode="current_contribution_mode"
             @close="show_create_fragment = false"
           />
         </div>
-        <div class="m_tags--allfragments">
+
+        <transition-group
+          name="list-complete"
+          tag="div"
+          class="m_tags--allfragments"
+        >
           <Tag
             v-for="{ tag, fragments } in tags_with_fragments"
             :key="tag"
@@ -84,7 +136,7 @@
             :fragment_width="fragment_width"
             :corpus_scroll_left="corpus_scroll_left"
           />
-        </div>
+        </transition-group>
       </div>
     </div>
   </div>
@@ -94,6 +146,7 @@ import Infos from "../components/Infos.vue";
 import CorpusPwd from "../components/modals/CorpusPwd.vue";
 import Tag from "../components/Tag.vue";
 import CreateFragment from "../components/modals/CreateFragment.vue";
+import CollectMode from "../components/subcomponents/CollectMode.vue";
 
 export default {
   props: {
@@ -104,6 +157,7 @@ export default {
     CorpusPwd,
     Tag,
     CreateFragment,
+    CollectMode,
   },
   data() {
     return {
@@ -112,6 +166,10 @@ export default {
       new_fragment_tag: "",
       new_fragment_tag_custom: "",
       corpus_scroll_left: 0,
+
+      show_create_time_modal: false,
+      new_moments_name: "",
+      current_contribution_mode: "",
 
       // show_fragments_for: {},
     };
@@ -162,6 +220,19 @@ export default {
       let fragments = Object.values(this.corpus.medias).filter(
         (m) => m.type === "fragment"
       );
+
+      // if current_contribution_mode is set
+      // if current_contribution_mode === online, then we retrieve only fragments that don’t have contribution_moment
+      if (this.current_contribution_mode !== "") {
+        fragments = fragments.filter((f) => {
+          if (this.current_contribution_mode === "online")
+            return (
+              !f.hasOwnProperty("contribution_moment") ||
+              f.contribution_moment === "online"
+            );
+          return f.contribution_moment === this.current_contribution_mode;
+        });
+      }
 
       fragments = this.$_.sortBy(fragments, "date_created");
       return fragments.reverse();
@@ -221,6 +292,35 @@ export default {
   methods: {
     onScroll() {
       this.corpus_scroll_left = this.$refs.corpus.scrollLeft;
+    },
+    createNewMoment() {
+      let contribution_moment =
+        this.corpus.hasOwnProperty("contribution_moment") &&
+        Array.isArray(this.corpus.contribution_moment)
+          ? JSON.parse(JSON.stringify(this.corpus.contribution_moment))
+          : [];
+
+      // check if moment already exists
+      if (contribution_moment.some((m) => m.name === this.new_moments_name)) {
+        this.$alertify
+          .closeLogOnClick(true)
+          .delay(4000)
+          .success(this.$t("moment_already_exists") + this.author.name);
+      }
+
+      contribution_moment.push({
+        name: this.new_moments_name,
+      });
+
+      this.$root.editFolder({
+        type: "corpus",
+        slugFolderName: this.corpus.slugFolderName,
+        data: {
+          contribution_moment,
+        },
+      });
+
+      this.show_create_time_modal = false;
     },
   },
 };

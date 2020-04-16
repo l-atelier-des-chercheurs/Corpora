@@ -121,6 +121,7 @@ export default {
   position: relative;
   display: flex;
   flex-flow: row nowrap;
+  height: 100%;
 
   // min-width: max-content;
   // overflow-y: auto;

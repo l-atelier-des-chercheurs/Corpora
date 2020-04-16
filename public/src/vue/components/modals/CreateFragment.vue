@@ -24,10 +24,16 @@
         />
       </div>
 
+      <div>
+        <label>{{ $t("mode_and_moment_of_contribution") }}</label>
+        <CollectMode v-model="fragmentdata.contribution_moment" />
+      </div>
+
       <div class="margin-bottom-small">
-        <label>{{ $t("tags") }}</label>
+        <label>{{ $t("tabs") }}</label>
         <TagsInput
           :allKeywords="all_tags_rightly_formatted"
+          :placeholder="$t('add_tab')"
           @tagsChanged="(newTags) => (fragmentdata.tags = newTags)"
         />
       </div>
@@ -59,17 +65,21 @@
 <script>
 import Modal from "./BaseModal.vue";
 import TagsInput from "../subcomponents/TagsInput.vue";
+import CollectMode from "../subcomponents/CollectMode.vue";
+
 export default {
   props: {
     corpus: Object,
     all_tags: Array,
+    current_contribution_mode: String,
   },
-  components: { Modal, TagsInput },
+  components: { Modal, TagsInput, CollectMode },
   data() {
     return {
       fragmentdata: {
         title: "",
         tags: [],
+        contribution_moment: this.current_contribution_mode,
       },
     };
   },
@@ -106,6 +116,7 @@ export default {
       }
 
       const tags = this.fragmentdata.tags;
+      const contribution_moment = this.fragmentdata.contribution_moment;
 
       this.$root
         .createMedia({
@@ -115,6 +126,7 @@ export default {
             type: "fragment",
             title,
             tags,
+            contribution_moment,
             medias_slugs: [],
           },
         })
