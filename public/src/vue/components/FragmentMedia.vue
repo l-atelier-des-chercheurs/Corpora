@@ -37,21 +37,22 @@
     <div class="m_advancedMenu">
       <button
         type="button"
+        class="button-small bg-orange"
         v-if="is_being_edited"
         @click="setBlocToEdit(false)"
-      >
-        save
-      </button>
+      >{{ $t("save") }}</button>
 
       <template v-else>
-        <button type="button" @click="setBlocToEdit(media.metaFileName)">
-          {{ $t("edit") }}
-        </button>
+        <button
+          type="button"
+          class="button-small"
+          @click="setBlocToEdit(media.metaFileName)"
+        >{{ $t("edit") }}</button>
 
         <button
           type="button"
           @click="show_advanced_menu_for_media = !show_advanced_menu_for_media"
-          class="m_advancedMenu--toggleButton"
+          class="button-small m_advancedMenu--toggleButton"
           :class="{
             'is--active': show_advanced_menu_for_media,
           }"
@@ -72,49 +73,42 @@
         <div class="m_advancedMenu--menu" v-if="show_advanced_menu_for_media">
           <button
             type="button"
+            class="button-small"
             v-if="index > 0"
             @click="
               $emit('moveMedia', { metaFileName: media.metaFileName, dir: -1 });
               show_advanced_menu_for_media = false;
             "
-          >
-            {{ $t("moveup") }}
-          </button>
+          >{{ $t("moveup") }}</button>
           <button
             type="button"
+            class="button-small"
             v-if="index < linked_medias.length - 1"
             @click="
               $emit('moveMedia', { metaFileName: media.metaFileName, dir: +1 });
               show_advanced_menu_for_media = false;
             "
-          >
-            {{ $t("movedown") }}
-          </button>
+          >{{ $t("movedown") }}</button>
           <a
-            class="button"
+            class="button button-small"
             :download="media.media_filename"
             :href="mediaURL"
             target="_blank"
-            >{{ $t("download") }}
-          </a>
+          >{{ $t("download") }}</a>
           <button
             type="button"
+            class="button-small"
             @click="
               $emit('removeMedia', { metaFileName: media.metaFileName });
               show_advanced_menu_for_media = false;
             "
-          >
-            {{ $t("remove") }}
-          </button>
+          >{{ $t("remove") }}</button>
         </div>
       </template>
     </div>
 
     <div class="m_fragmentMedia--infos">
-      <div
-        class="m_fragmentMedia--infos--caption"
-        v-if="is_being_edited || media.caption"
-      >
+      <div class="m_fragmentMedia--infos--caption" v-if="is_being_edited || media.caption">
         <label>{{ $t("caption") }}</label>
         <div>
           <template v-if="!is_being_edited">
@@ -130,10 +124,7 @@
           </template>
         </div>
       </div>
-      <div
-        class="m_fragmentMedia--infos--source"
-        v-if="is_being_edited || media.source"
-      >
+      <div class="m_fragmentMedia--infos--source" v-if="is_being_edited || media.source">
         <label>{{ $t("source") }} (URL)</label>
         <div>
           <template v-if="!is_being_edited">
@@ -142,8 +133,7 @@
               rel="noopener noreferrer"
               :title="media.source"
               :href="media.source"
-              >{{ media.source }}</a
-            >
+            >{{ media.source }}</a>
           </template>
           <template v-else>
             <input
@@ -167,11 +157,11 @@ export default {
     slugFolderName: String,
     media: Object,
     index: Number,
-    linked_medias: Array,
+    linked_medias: Array
   },
   components: {
     MediaContent,
-    CollaborativeEditor,
+    CollaborativeEditor
   },
   data() {
     return {
@@ -179,23 +169,21 @@ export default {
       mediadata: {
         caption: this.media.caption,
         source: this.media.source,
-        content: this.media.content,
+        content: this.media.content
       },
       mediaURL: `/${this.slugFolderName}/${this.media.media_filename}`,
       is_being_edited:
-        this.$root.settings.text_media_being_edited === this.media.metaFileName,
+        this.$root.settings.text_media_being_edited === this.media.metaFileName
     };
   },
   created() {},
   mounted() {},
   beforeDestroy() {},
   watch: {
-    "$root.settings.text_media_being_edited": function () {
+    "$root.settings.text_media_being_edited": function() {
       console.log(
-        `FragmentMedia • WATCH: $root.settings.text_media_being_edited. Is self ? ${
-          this.$root.settings.text_media_being_edited ===
-          this.media.metaFileName
-        }`
+        `FragmentMedia • WATCH: $root.settings.text_media_being_edited. Is self ? ${this
+          .$root.settings.text_media_being_edited === this.media.metaFileName}`
       );
       if (this.is_being_edited) {
         this.saveMedia();
@@ -206,10 +194,10 @@ export default {
         this.mediadata = {
           caption: this.media.caption,
           source: this.media.source,
-          content: this.media.content,
+          content: this.media.content
         };
       }
-    },
+    }
   },
   computed: {},
   methods: {
@@ -229,10 +217,10 @@ export default {
         type: "corpus",
         slugFolderName: this.slugFolderName,
         slugMediaName: this.media.metaFileName,
-        data: this.mediadata,
+        data: this.mediadata
       });
-    },
-  },
+    }
+  }
 };
 </script>
 <style lang="scss" scoped>
@@ -242,9 +230,13 @@ export default {
 
   .m_fragmentMedia--content {
     min-height: 3em;
+
+    input {
+      background-color: var(--body-bg);
+    }
   }
 
-  &:not([data-type="text"]) {
+  &:not([data-type="text"]):not([data-type="embed"]) {
     .m_fragmentMedia--content {
       border-radius: 8px;
       overflow: hidden;
@@ -255,6 +247,7 @@ export default {
   transition: all 0.4s cubic-bezier(0.19, 1, 0.22, 1);
 
   &.is--beingEdited {
+    // background-color: var(--active-color);
     // box-shadow: 0px 4px 4px 0px #ccd0da;
     // transform: translateY(-5px);
   }

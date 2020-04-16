@@ -68,6 +68,9 @@
         },
         "password": {
           "type": "string"
+        },
+        "contribution_moments": {
+          "type": "array"
         }
       },
       "medias": {
@@ -117,7 +120,13 @@
           "medias_slugs": {
             "type": "array"
           },
+          "contribution_moment": {
+            "type": "string"
+          },
           "tags": {
+            "type": "array"
+          },
+          "keywords": {
             "type": "array"
           },
           "file_meta": {

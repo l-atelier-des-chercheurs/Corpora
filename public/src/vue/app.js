@@ -263,7 +263,6 @@ let vm = new Vue({
     });
 
     window.onpopstate = (event) => {
-      debugger;
       console.log(`ROOT EVENT: popstate`);
       if (event.state && event.state.slugFolderName)
         this.openCorpus(event.state.slugFolderName);

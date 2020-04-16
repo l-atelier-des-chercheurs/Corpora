@@ -8,10 +8,7 @@
       :corpuses="Object.values($root.store.corpus)"
     />
 
-    <Corpus
-      v-else-if="$root.do_navigation.view === 'CorpusView'"
-      :corpus="$root.current_corpus"
-    />
+    <Corpus v-else-if="$root.do_navigation.view === 'CorpusView'" :corpus="$root.current_corpus" />
 
     <portal-target name="modal_container" />
   </div>
@@ -25,7 +22,7 @@ export default {
   name: "app",
   components: {
     List,
-    Corpus,
+    Corpus
   },
   props: {},
   data() {
@@ -35,7 +32,7 @@ export default {
   created() {},
   beforeDestroy() {},
   computed: {},
-  methods: {},
+  methods: {}
 };
 </script>
 <style src="../../node_modules/vue-plyr/dist/vue-plyr.css"></style>
@@ -47,6 +44,7 @@ export default {
   --color-white: #fff;
   --body-bg: #e2edef;
   --active-color: #ccd0da;
+  --color-bluegreen: #c0d8dd;
   --panel-width: 320px;
 }
 
@@ -328,6 +326,11 @@ select,
 button,
 .button {
   font-family: inherit;
+
+  &.bold {
+    font-family: "base9";
+    font-weight: bold;
+  }
 }
 
 textarea,
@@ -336,6 +339,39 @@ select,
 button,
 .button {
   color: var(--color-black);
+}
+
+input[type="checkbox"] {
+  -webkit-appearance: none;
+  width: 12px;
+  height: 12px;
+  background: white;
+  box-shadow: 0 1px 3px rgba(255, 255, 255, 2), 0 1px 2px rgba(0, 0, 0, 0.24);
+  border-radius: 2px;
+  border: 1px solid var(--active-color);
+  outline: 0 !important;
+  margin-left: 0;
+
+  &:checked {
+    color: var(--color-orange);
+    background-color: currentColor;
+  }
+
+  &:active {
+  }
+
+  &.disabled {
+    background-color: var(--color-black);
+    cursor: not-allowed;
+  }
+}
+.input-checkbox {
+  display: flex;
+  flex-flow: row nowrap;
+  align-items: center;
+  label {
+    margin-bottom: 0;
+  }
 }
 
 input,
@@ -347,16 +383,111 @@ textarea {
   width: 100%;
   max-width: 320px;
   -webkit-appearance: none;
+  // border-bottom: 2px solid white;
+
+  transition: all 0.4s cubic-bezier(0.19, 1, 0.22, 1);
 
   &:active,
   &:focus {
     outline: 0px;
-    outline: rgba(0, 255, 255, 0.9);
+    border-left: 2px solid var(--color-orange);
   }
 }
 
 textarea {
   min-height: 12em;
+}
+
+/* IE11 hide native button (thanks Matt!) */
+select::-ms-expand {
+  display: none;
+}
+
+.custom-select {
+  width: 120px;
+  margin: 4px 0;
+  position: relative;
+  color: var(--color-black);
+}
+
+.custom-select::after {
+  content: "<>";
+  -webkit-transform: rotate(90deg);
+  -moz-transform: rotate(90deg);
+  -ms-transform: rotate(90deg);
+  transform: rotate(90deg);
+  left: 5px;
+  /*Adjust for position however you want*/
+
+  top: 6px;
+  padding: 0 0 2px;
+  color: currentColor;
+  // border-top: 1px solid #999;
+  /*left line */
+
+  position: absolute;
+  pointer-events: none;
+}
+
+.custom-select select {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  /* Add some styling */
+
+  display: block;
+  height: 2em;
+  padding: 0px 12px 0 24px;
+  font-size: 1rem;
+  line-height: 1.75;
+  border: 1px solid var(--active-color);
+
+  background-color: var(--body-bg);
+  background-image: none;
+  // border: 1px solid #cccccc;
+  -ms-word-break: normal;
+  word-break: normal;
+
+  &:hover,
+  &:active,
+  &:focus {
+    outline: 0;
+    background-color: var(--active-color);
+  }
+}
+
+.custom-select_tiny {
+  &::after {
+    top: 3px;
+  }
+  select {
+    font-size: 0.8rem;
+  }
+}
+
+.bordered {
+  border: 1px solid var(--active-color);
+}
+
+.bg-orange {
+  background-color: var(--color-orange);
+}
+
+.padding-small {
+  padding: calc(var(--spacing) / 2);
+}
+.margin-small {
+  margin: calc(var(--spacing) / 2);
+}
+
+.flex-nowrap {
+  display: flex;
+  flex-flow: row nowrap;
+  align-items: center;
+
+  > label {
+    margin-bottom: 0;
+  }
 }
 
 html,
@@ -366,13 +497,14 @@ body,
 }
 
 button,
-.button {
+.button,
+input[type="submit"] {
   border: none;
   color: var(--color-black);
   background: #ccd0da;
   cursor: pointer;
   text-transform: lowercase;
-  font-size: 0.8rem;
+  font-size: 1rem;
   padding: 0.2em 0.4em;
   text-decoration: none;
 
@@ -385,8 +517,30 @@ button,
     outline: 0;
   }
 
+  &.button-small {
+    font-size: 0.8rem;
+  }
+
   &.is--active {
     background: #fff4db;
+  }
+
+  &.button-bg_rounded {
+    border-radius: 0.5em;
+    padding: 0.4em 0.8em;
+  }
+
+  span {
+    display: flex;
+    align-items: center;
+  }
+
+  svg + span {
+    margin-left: var(--spacing);
+  }
+
+  &[type="submit"] {
+    background-color: var(--color-orange);
   }
 }
 
@@ -417,6 +571,9 @@ audio {
     display: block;
     width: 100%;
     background-color: var(--color-black);
+
+    max-height: var(--fragment-width);
+    object-fit: scale-down;
   }
 
   iframe {
@@ -451,7 +608,7 @@ audio {
     background-color: transparent;
     // border: 4px solid #000 !important;
     // padding: 4px;
-    margin-top: calc(var(--spacing) / 2);
+    margin-top: calc(var(--spacing) / 4);
     margin-bottom: calc(var(--spacing) / 4);
     padding-bottom: 0;
     flex: 1 0 100%;
@@ -495,6 +652,10 @@ audio {
     flex-flow: row wrap !important;
   }
 
+  ._existing_button {
+    margin-bottom: 0.2em;
+  }
+
   .new-tag-input-wrapper {
     position: relative;
 
@@ -521,7 +682,6 @@ audio {
       // line-height: 1;
 
       // height: auto !important;
-      border-bottom: 2px solid #ccc !important;
     }
 
     button {
@@ -594,6 +754,7 @@ audio {
       font-size: 1em;
       border-radius: 50%;
       transform: scale(1.5);
+      padding-top: 0.15em;
 
       transition: all 0.2s cubic-bezier(0.19, 1, 0.22, 1);
     }
@@ -601,8 +762,9 @@ audio {
     &.can_be_removed {
       &::before {
         content: "×";
-        transform: scale(1.5);
+        transform: scale(1.2);
         transition: transform 0.15s ease;
+        padding-top: 0.1em;
       }
       &:hover {
         &::before {
@@ -615,6 +777,36 @@ audio {
     .actions {
       margin-left: 4px;
       margin-right: 0;
+    }
+  }
+
+  &.m_keywordField_tabs {
+    .tag {
+      background-color: var(--body-bg) !important;
+      font-family: "base9";
+      font-weight: bold;
+      border-radius: 1em;
+      padding: 0.2em 1em;
+      padding-left: 0em;
+      border: 2px solid var(--color-bluegreen);
+
+      &::before {
+        // display: none !important;
+        padding-left: 0.7em;
+        padding-right: 0.5em;
+        margin: 0;
+      }
+      &.can_be_removed {
+        &::before {
+          font-size: 0.8rem;
+        }
+      }
+    }
+    .new-tag-input-wrapper {
+      button {
+        border-radius: 0;
+        padding-left: 0.5em;
+      }
     }
   }
 
@@ -637,16 +829,17 @@ audio {
 
 .list-complete-move {
   position: relative;
-  transition: transform 0.6s cubic-bezier(0.19, 1, 0.22, 1),
-    opacity 0.4s cubic-bezier(0.19, 1, 0.22, 1) !important;
+  transition: transform 1s cubic-bezier(0.19, 1, 0.22, 1),
+    opacity 0.4s cubic-bezier(0.19, 1, 0.22, 1);
 }
 .list-complete-enter,
 .list-complete-leave-to {
   opacity: 0;
+  transform: translateY(30px);
 }
 .list-complete-leave-active {
-  position: absolute;
-  z-index: 0 !important;
+  position: absolute !important;
+  z-index: -1;
 }
 
 .width_collapse-enter-active,
@@ -1092,6 +1285,10 @@ audio {
   }
 }
 
+twitter-widget.twitter-tweet {
+  margin: 0 !important;
+}
+
 .m_modal--close_button {
   position: fixed;
   top: 0;
@@ -1225,6 +1422,7 @@ audio {
   min-width: 100px;
   font-family: inherit;
   font-weight: 300;
+  border-radius: 8px;
 
   button {
     min-height: 0;

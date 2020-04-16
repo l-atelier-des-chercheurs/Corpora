@@ -44,7 +44,9 @@
     </div>
 
     <transition name="width_collapse">
-      <div
+      <transition-group
+        name="list-complete"
+        tag="div"
         class="m_tag--fragments"
         v-if="show_fragments"
         :style="`width: ${fragment_width * fragments.length}px`"
@@ -53,13 +55,14 @@
           v-for="fragment in fragments"
           :key="fragment.metaFileName"
           :corpus="corpus"
+          :all_keywords="all_keywords"
           :all_tags="all_tags"
           :medias="medias"
           :fragment="fragment"
           :fragment_width="fragment_width"
           :slugFolderName="slugFolderName"
         />
-      </div>
+      </transition-group>
     </transition>
   </div>
 </template>
@@ -70,29 +73,30 @@ export default {
   props: {
     tag: String,
     all_tags: Array,
+    all_keywords: Array,
     medias: Array,
     corpus: Object,
     slugFolderName: String,
     fragments: Array,
     fragment_width: Number,
-    corpus_scroll_left: Number,
+    corpus_scroll_left: Number
   },
   components: {
-    Fragment,
+    Fragment
   },
   data() {
     return {
       show_fragments: false,
-      tag_title_position: false,
+      tag_title_position: false
     };
   },
   created() {},
   mounted() {},
   beforeDestroy() {},
   watch: {
-    corpus_scroll_left: function () {
+    corpus_scroll_left: function() {
       this.setTitleBarRightPos();
-    },
+    }
   },
   computed: {},
   methods: {
@@ -115,8 +119,8 @@ export default {
           this.tag_title_position = false;
         }
       }
-    },
-  },
+    }
+  }
 };
 </script>
 <style lang="scss" scoped>
@@ -124,6 +128,7 @@ export default {
   position: relative;
   display: flex;
   flex-flow: row nowrap;
+  height: 100%;
 
   // min-width: max-content;
   // overflow-y: auto;
@@ -144,6 +149,8 @@ export default {
   display: flex;
   align-items: center;
   justify-content: center;
+
+  background-color: var(--body-bg);
   width: 64px;
   height: 100%;
   transition: all 1s linear;
@@ -176,7 +183,7 @@ export default {
     position: absolute;
     height: calc(100% - var(--spacing) * 4);
     width: 2px;
-    background-color: #c0d8dd;
+    background-color: var(--color-bluegreen);
     z-index: 0;
   }
 
