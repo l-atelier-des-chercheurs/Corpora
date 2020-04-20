@@ -162,17 +162,22 @@ label {
   align-items: flex-end;
   align-content: flex-end;
   z-index: 10;
-  color: white;
+  color: var(--color-black);
+
+  &.is--open {
+    z-index: 11;
+  }
 
   button,
   .button {
     color: inherit;
-    background-color: rgba(0, 0, 0, 0.4);
+    background-color: var(--color-black);
 
     &:hover,
     &:focus,
     &.is--active {
-      background-color: rgba(0, 0, 0, 0.6);
+      color: white;
+      background-color: var(--color-black);
     }
   }
 
@@ -184,7 +189,10 @@ label {
     line-height: 1;
     border-radius: 4px;
     margin: 4px;
-    background-color: rgba(0, 0, 0, 0.05);
+    margin-bottom: 1px;
+
+    // background-color: rgba(0, 0, 0, 0.3);
+    background-color: rgba(226, 237, 239, 0.4);
 
     svg {
       display: block;
@@ -192,7 +200,14 @@ label {
       height: 26px;
       padding: 4px;
       fill: currentColor;
-      filter: drop-shadow(0px 0px 4px rgba(0, 0, 0, 0.5));
+      // filter: drop-shadow(0px 0px 4px rgba(0, 0, 0, 0.4));
+      filter: drop-shadow(0px 0px 2px rgba(226, 237, 239, 0.8));
+      filter: drop-shadow(0px 0px 3px rgba(110, 110, 110, 0.4));
+
+      circle {
+        // filter: drop-shadow(0px 0px 4px rgba(0, 0, 0, 1));
+        // filter: drop-shadow(10px 0 5px red);
+      }
     }
   }
 
@@ -204,10 +219,14 @@ label {
     justify-content: flex-end;
     align-content: flex-end;
     align-items: flex-end;
+    margin: 0 4px 0;
+    color: var(--color-white);
+    // padding: 2px;
 
     button,
     .button {
-      background-color: rgba(0, 0, 0, 0.6);
+      margin-bottom: 1px;
+      box-shadow: 0px 0px 4px rgba(60, 53, 65, 0.4);
     }
 
     > * {

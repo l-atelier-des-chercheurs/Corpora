@@ -34,7 +34,12 @@
         :read_only="false"
       />
     </div>
-    <div class="m_advancedMenu">
+    <div
+      class="m_advancedMenu"
+      :class="{
+        'is--open': show_advanced_menu_for_media,
+      }"
+    >
       <button
         type="button"
         class="button-small bg-orange"
