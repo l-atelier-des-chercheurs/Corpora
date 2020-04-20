@@ -600,7 +600,7 @@ let vm = new Vue({
       localstore.set("language", newLangCode);
     },
     formatDateToHuman(date) {
-      return this.$moment(date, "YYYY-MM-DD HH:mm:ss").format("LL");
+      return this.$moment(date, "YYYY-MM-DD HH:mm:ss").calendar();
     },
     formatDateToPrecise(date) {
       return this.$moment(date, "YYYY-MM-DD HH:mm:ss").format("LTS L");

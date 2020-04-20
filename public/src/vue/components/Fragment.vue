@@ -1,11 +1,18 @@
 <template>
-  <div class="m_fragment custom_scrollbar" :style="`--fragment-width: ${fragment_width}px`">
+  <div
+    class="m_fragment custom_scrollbar"
+    :style="`--fragment-width: ${fragment_width}px`"
+  >
     <div class="m_fragment--content">
       <div class="m_fragment--content--top">
         <h2>{{ fragment.title }}</h2>
       </div>
       <div class="m_fragment--content--top">
-        <label>{{ $t('created_on') }} {{ $root.formatDateToHuman(fragment.date_created) }}</label>
+        <label>
+          {{ $t("created") }}&nbsp;{{
+            $root.formatDateToHuman(fragment.date_created)
+          }}
+        </label>
       </div>
 
       <div class="m_advancedMenu">
@@ -15,7 +22,7 @@
           class="m_advancedMenu--toggleButton"
           :class="{ 'is--active': show_advanced_menu }"
         >
-          <svg class="svg-icon" viewBox="0 0 20 20">
+          <!-- <svg class="svg-icon" viewBox="0 0 20 20">
             <path
               fill="none"
               d="M3.936,7.979c-1.116,0-2.021,0.905-2.021,2.021s0.905,2.021,2.021,2.021S5.957,11.116,5.957,10
@@ -26,6 +33,24 @@
                   S11.116,7.979,10,7.979z M10,11.011c-0.558,0-1.011-0.452-1.011-1.011S9.442,8.989,10,8.989S11.011,9.441,11.011,10
                   S10.558,11.011,10,11.011z"
             />
+          </svg> -->
+          <!-- Generator: Adobe Illustrator 24.1.0, SVG Export Plug-In  -->
+          <svg
+            version="1.1"
+            xmlns="http://www.w3.org/2000/svg"
+            xmlns:xlink="http://www.w3.org/1999/xlink"
+            x="0px"
+            y="0px"
+            width="4px"
+            height="16.2px"
+            viewBox="0 0 4 16.2"
+            style="enable-background: new 0 0 4 16.2;"
+            xml:space="preserve"
+          >
+            <path
+              d="M0,14.1c0,1.1,0.9,2,2,2s2-0.9,2-2s-0.9-2-2-2S0,13,0,14.1z M0,2c0,1.1,0.9,2,2,2s2-0.9,2-2S3.1,0,2,0
+	S0,0.9,0,2z M0,8.1c0,1.1,0.9,2,2,2s2-0.9,2-2s-0.9-2-2-2S0,7,0,8.1z"
+            />
           </svg>
         </button>
         <div class="m_advancedMenu--menu" v-if="show_advanced_menu">
@@ -33,9 +58,13 @@
             type="button"
             class="button-small"
             @click="show_edit_fragment = true"
-          >{{ $t("edit") }}</button>
+          >
+            {{ $t("edit") }}
+          </button>
 
-          <button type="button" class="button-small" @click="removeFragment">{{ $t("remove") }}</button>
+          <button type="button" class="button-small" @click="removeFragment">
+            {{ $t("remove") }}
+          </button>
         </div>
       </div>
 
@@ -94,7 +123,7 @@ import AddMedias from "./AddMedias.vue";
 import FragmentMedia from "./FragmentMedia.vue";
 import EditFragment from "./modals/EditFragment.vue";
 
-Array.prototype.move = function(from, to) {
+Array.prototype.move = function (from, to) {
   this.splice(to, 0, this.splice(from, 1)[0]);
 };
 
@@ -106,17 +135,17 @@ export default {
     all_keywords: Array,
     medias: Array,
     slugFolderName: String,
-    fragment_width: Number
+    fragment_width: Number,
   },
   components: {
     AddMedias,
     FragmentMedia,
-    EditFragment
+    EditFragment,
   },
   data() {
     return {
       show_advanced_menu: false,
-      show_edit_fragment: false
+      show_edit_fragment: false,
     };
   },
   created() {},
@@ -133,12 +162,12 @@ export default {
 
       return this.fragment.medias_slugs.reduce((acc, item) => {
         const linked_media = this.medias.find(
-          m => m.metaFileName === item.metaFileName
+          (m) => m.metaFileName === item.metaFileName
         );
         if (linked_media) acc.push(linked_media);
         return acc;
       }, []);
-    }
+    },
   },
   methods: {
     removeFragment() {
@@ -149,7 +178,7 @@ export default {
           this.$root.removeMedia({
             type: "corpus",
             slugFolderName: this.slugFolderName,
-            slugMediaName: this.fragment.metaFileName
+            slugMediaName: this.fragment.metaFileName,
           });
         });
     },
@@ -158,7 +187,9 @@ export default {
         JSON.stringify(this.fragment.medias_slugs)
       );
 
-      const idx = _medias_slugs.findIndex(m => m.metaFileName === metaFileName);
+      const idx = _medias_slugs.findIndex(
+        (m) => m.metaFileName === metaFileName
+      );
 
       console.log(`METHODS • Fragment: move idx = ${idx} and dir = ${dir}`);
 
@@ -173,8 +204,8 @@ export default {
         slugFolderName: this.slugFolderName,
         slugMediaName: this.fragment.metaFileName,
         data: {
-          medias_slugs: _medias_slugs
-        }
+          medias_slugs: _medias_slugs,
+        },
       });
     },
     addMediasToFragment({ metaFileNames, index = 0, after_metaFileName }) {
@@ -189,13 +220,13 @@ export default {
 
       if (after_metaFileName)
         index =
-          medias_slugs.findIndex(m => m.metaFileName === after_metaFileName) +
+          medias_slugs.findIndex((m) => m.metaFileName === after_metaFileName) +
           1;
 
       medias_slugs.splice(
         index,
         0,
-        ...metaFileNames.map(metaFileName => ({ metaFileName }))
+        ...metaFileNames.map((metaFileName) => ({ metaFileName }))
       );
 
       // this.fragment.medias_slugs = medias_slugs;
@@ -205,8 +236,8 @@ export default {
         slugFolderName: this.slugFolderName,
         slugMediaName: this.fragment.metaFileName,
         data: {
-          medias_slugs
-        }
+          medias_slugs,
+        },
       });
 
       // set created media(s) to edit mode
@@ -227,27 +258,27 @@ export default {
             this.$root.removeMedia({
               type: "corpus",
               slugFolderName: this.slugFolderName,
-              slugMediaName: metaFileName
+              slugMediaName: metaFileName,
             });
 
             if (this.fragment.medias_slugs.length > 0) {
               let new_medias_slugs = this.fragment.medias_slugs.filter(
-                m => m.metaFileName !== metaFileName
+                (m) => m.metaFileName !== metaFileName
               );
               this.$root.editMedia({
                 type: "corpus",
                 slugFolderName: this.slugFolderName,
                 slugMediaName: this.fragment.metaFileName,
                 data: {
-                  medias_slugs: new_medias_slugs
-                }
+                  medias_slugs: new_medias_slugs,
+                },
               });
             }
           },
           () => {}
         );
-    }
-  }
+    },
+  },
 };
 </script>
 <style lang="scss" scoped>

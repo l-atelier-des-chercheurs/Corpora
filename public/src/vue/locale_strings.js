@@ -63,6 +63,10 @@ module.exports = (function () {
       fr: "Créé le",
       en: "Created on",
     },
+    created: {
+      fr: "Créé",
+      en: "Created",
+    },
     edit: {
       fr: "Éditer",
       en: "Edit",
@@ -156,12 +160,12 @@ module.exports = (function () {
       en: "No",
     },
     moveup: {
-      fr: "Déplacer ↑",
-      en: "Move up",
+      fr: "Déplacer ▲",
+      en: "Move up ▲",
     },
     movedown: {
-      fr: "Déplacer ↓",
-      en: "Move down",
+      fr: "Déplacer ▼",
+      en: "Move down ▼",
     },
     import_medias: {
       fr: "Importer des fichiers",
