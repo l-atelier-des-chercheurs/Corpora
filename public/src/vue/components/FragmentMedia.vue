@@ -40,15 +40,11 @@
         class="button-small bg-orange"
         v-if="is_being_edited"
         @click="setBlocToEdit(false)"
-      >{{ $t("save") }}</button>
+      >
+        {{ $t("save") }}
+      </button>
 
       <template v-else>
-        <button
-          type="button"
-          class="button-small"
-          @click="setBlocToEdit(media.metaFileName)"
-        >{{ $t("edit") }}</button>
-
         <button
           type="button"
           @click="show_advanced_menu_for_media = !show_advanced_menu_for_media"
@@ -57,20 +53,32 @@
             'is--active': show_advanced_menu_for_media,
           }"
         >
-          <svg class="svg-icon" viewBox="0 0 20 20">
+          <svg
+            version="1.1"
+            xmlns="http://www.w3.org/2000/svg"
+            xmlns:xlink="http://www.w3.org/1999/xlink"
+            x="0px"
+            y="0px"
+            width="4px"
+            height="16.2px"
+            viewBox="0 0 4 16.2"
+            style="enable-background: new 0 0 4 16.2;"
+            xml:space="preserve"
+          >
             <path
-              fill="none"
-              d="M3.936,7.979c-1.116,0-2.021,0.905-2.021,2.021s0.905,2.021,2.021,2.021S5.957,11.116,5.957,10
-                      S5.052,7.979,3.936,7.979z M3.936,11.011c-0.558,0-1.011-0.452-1.011-1.011s0.453-1.011,1.011-1.011S4.946,9.441,4.946,10
-                      S4.494,11.011,3.936,11.011z M16.064,7.979c-1.116,0-2.021,0.905-2.021,2.021s0.905,2.021,2.021,2.021s2.021-0.905,2.021-2.021
-                      S17.181,7.979,16.064,7.979z M16.064,11.011c-0.559,0-1.011-0.452-1.011-1.011s0.452-1.011,1.011-1.011S17.075,9.441,17.075,10
-                      S16.623,11.011,16.064,11.011z M10,7.979c-1.116,0-2.021,0.905-2.021,2.021S8.884,12.021,10,12.021s2.021-0.905,2.021-2.021
-                      S11.116,7.979,10,7.979z M10,11.011c-0.558,0-1.011-0.452-1.011-1.011S9.442,8.989,10,8.989S11.011,9.441,11.011,10
-                      S10.558,11.011,10,11.011z"
+              d="M0,14.1c0,1.1,0.9,2,2,2s2-0.9,2-2s-0.9-2-2-2S0,13,0,14.1z M0,2c0,1.1,0.9,2,2,2s2-0.9,2-2S3.1,0,2,0
+	S0,0.9,0,2z M0,8.1c0,1.1,0.9,2,2,2s2-0.9,2-2s-0.9-2-2-2S0,7,0,8.1z"
             />
           </svg>
         </button>
         <div class="m_advancedMenu--menu" v-if="show_advanced_menu_for_media">
+          <button
+            type="button"
+            class="button-small"
+            @click="setBlocToEdit(media.metaFileName)"
+          >
+            {{ $t("edit") }}
+          </button>
           <button
             type="button"
             class="button-small"
@@ -79,7 +87,9 @@
               $emit('moveMedia', { metaFileName: media.metaFileName, dir: -1 });
               show_advanced_menu_for_media = false;
             "
-          >{{ $t("moveup") }}</button>
+          >
+            {{ $t("moveup") }}
+          </button>
           <button
             type="button"
             class="button-small"
@@ -88,13 +98,16 @@
               $emit('moveMedia', { metaFileName: media.metaFileName, dir: +1 });
               show_advanced_menu_for_media = false;
             "
-          >{{ $t("movedown") }}</button>
+          >
+            {{ $t("movedown") }}
+          </button>
           <a
             class="button button-small"
             :download="media.media_filename"
             :href="mediaURL"
             target="_blank"
-          >{{ $t("download") }}</a>
+            >{{ $t("download") }}</a
+          >
           <button
             type="button"
             class="button-small"
@@ -102,13 +115,18 @@
               $emit('removeMedia', { metaFileName: media.metaFileName });
               show_advanced_menu_for_media = false;
             "
-          >{{ $t("remove") }}</button>
+          >
+            {{ $t("remove") }}
+          </button>
         </div>
       </template>
     </div>
 
     <div class="m_fragmentMedia--infos">
-      <div class="m_fragmentMedia--infos--caption" v-if="is_being_edited || media.caption">
+      <div
+        class="m_fragmentMedia--infos--caption"
+        v-if="is_being_edited || media.caption"
+      >
         <label>{{ $t("caption") }}</label>
         <div>
           <template v-if="!is_being_edited">
@@ -124,7 +142,10 @@
           </template>
         </div>
       </div>
-      <div class="m_fragmentMedia--infos--source" v-if="is_being_edited || media.source">
+      <div
+        class="m_fragmentMedia--infos--source"
+        v-if="is_being_edited || media.source"
+      >
         <label>{{ $t("source") }} (URL)</label>
         <div>
           <template v-if="!is_being_edited">
@@ -133,7 +154,8 @@
               rel="noopener noreferrer"
               :title="media.source"
               :href="media.source"
-            >{{ media.source }}</a>
+              >{{ media.source }}</a
+            >
           </template>
           <template v-else>
             <input
@@ -157,11 +179,11 @@ export default {
     slugFolderName: String,
     media: Object,
     index: Number,
-    linked_medias: Array
+    linked_medias: Array,
   },
   components: {
     MediaContent,
-    CollaborativeEditor
+    CollaborativeEditor,
   },
   data() {
     return {
@@ -169,21 +191,23 @@ export default {
       mediadata: {
         caption: this.media.caption,
         source: this.media.source,
-        content: this.media.content
+        content: this.media.content,
       },
       mediaURL: `/${this.slugFolderName}/${this.media.media_filename}`,
       is_being_edited:
-        this.$root.settings.text_media_being_edited === this.media.metaFileName
+        this.$root.settings.text_media_being_edited === this.media.metaFileName,
     };
   },
   created() {},
   mounted() {},
   beforeDestroy() {},
   watch: {
-    "$root.settings.text_media_being_edited": function() {
+    "$root.settings.text_media_being_edited": function () {
       console.log(
-        `FragmentMedia • WATCH: $root.settings.text_media_being_edited. Is self ? ${this
-          .$root.settings.text_media_being_edited === this.media.metaFileName}`
+        `FragmentMedia • WATCH: $root.settings.text_media_being_edited. Is self ? ${
+          this.$root.settings.text_media_being_edited ===
+          this.media.metaFileName
+        }`
       );
       if (this.is_being_edited) {
         this.saveMedia();
@@ -194,10 +218,10 @@ export default {
         this.mediadata = {
           caption: this.media.caption,
           source: this.media.source,
-          content: this.media.content
+          content: this.media.content,
         };
       }
-    }
+    },
   },
   computed: {},
   methods: {
@@ -217,10 +241,10 @@ export default {
         type: "corpus",
         slugFolderName: this.slugFolderName,
         slugMediaName: this.media.metaFileName,
-        data: this.mediadata
+        data: this.mediadata,
       });
-    }
-  }
+    },
+  },
 };
 </script>
 <style lang="scss" scoped>
@@ -319,5 +343,16 @@ export default {
   text-transform: uppercase;
   font-size: 70%;
   padding: 4px;
+}
+</style>
+<style lang="scss">
+.m_fragmentMedia {
+  &[data-type="audio"] {
+    .m_fragmentMedia--content {
+      .plyr__controls {
+        padding-right: 35px;
+      }
+    }
+  }
 }
 </style>

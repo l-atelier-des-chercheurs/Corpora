@@ -8,7 +8,10 @@
       :corpuses="Object.values($root.store.corpus)"
     />
 
-    <Corpus v-else-if="$root.do_navigation.view === 'CorpusView'" :corpus="$root.current_corpus" />
+    <Corpus
+      v-else-if="$root.do_navigation.view === 'CorpusView'"
+      :corpus="$root.current_corpus"
+    />
 
     <portal-target name="modal_container" />
   </div>
@@ -22,7 +25,7 @@ export default {
   name: "app",
   components: {
     List,
-    Corpus
+    Corpus,
   },
   props: {},
   data() {
@@ -32,7 +35,7 @@ export default {
   created() {},
   beforeDestroy() {},
   computed: {},
-  methods: {}
+  methods: {},
 };
 </script>
 <style src="../../node_modules/vue-plyr/dist/vue-plyr.css"></style>
@@ -159,8 +162,18 @@ label {
   align-items: flex-end;
   align-content: flex-end;
   z-index: 10;
+  color: white;
 
-  > * {
+  button,
+  .button {
+    color: inherit;
+    background-color: rgba(0, 0, 0, 0.4);
+
+    &:hover,
+    &:focus,
+    &.is--active {
+      background-color: rgba(0, 0, 0, 0.6);
+    }
   }
 
   .m_advancedMenu--toggleButton {
@@ -169,14 +182,17 @@ label {
     width: auto;
     height: auto;
     line-height: 1;
-    padding: 0;
+    border-radius: 4px;
+    margin: 4px;
+    background-color: rgba(0, 0, 0, 0.05);
+
     svg {
       display: block;
-      width: 26px;
-      height: 16px;
-      padding: 0 5px;
-      // fill: #000;
-      filter: drop-shadow(0px 0px 2px #fff);
+      width: 12px;
+      height: 26px;
+      padding: 4px;
+      fill: currentColor;
+      filter: drop-shadow(0px 0px 4px rgba(0, 0, 0, 0.5));
     }
   }
 
@@ -188,6 +204,11 @@ label {
     justify-content: flex-end;
     align-content: flex-end;
     align-items: flex-end;
+
+    button,
+    .button {
+      background-color: rgba(0, 0, 0, 0.6);
+    }
 
     > * {
       display: block;
@@ -507,6 +528,7 @@ input[type="submit"] {
   font-size: 1rem;
   padding: 0.2em 0.4em;
   text-decoration: none;
+  border-radius: 2px;
 
   transition: background 0.4s cubic-bezier(0.19, 1, 0.22, 1);
 
