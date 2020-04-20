@@ -26,15 +26,17 @@
           <div class="m_corpus--presentation--contributionModes">
             <label>{{ $t("filter_by_moments_of_contribution") }}</label>
 
-            <CollectMode
-              v-model="current_contribution_mode"
-              :is_filter="true"
-            />
+            <div class="margin-bottom-verysmall">
+              <CollectMode
+                v-model="current_contribution_mode"
+                :is_filter="true"
+              />
+            </div>
 
-            <div>
+            <div class="">
               <button
                 type="button"
-                class="button-small"
+                class="button-small margin-bottom-verysmall"
                 @click="show_create_time_modal = !show_create_time_modal"
               >
                 <template v-if="!show_create_time_modal">
@@ -44,13 +46,13 @@
               </button>
 
               <form
-                class="bordered padding-small"
+                class=""
                 v-if="show_create_time_modal"
                 @submit.prevent="createNewMoment"
               >
                 <div class>
-                  <label>{{ $t("moments_name") }}</label>
-                  <div class="flex-nowrap">
+                  <label>{{ $t("new_moments_name") }}</label>
+                  <div class="flex-nowrap align-items-stretch">
                     <input
                       type="text"
                       class
@@ -79,10 +81,10 @@
                   id="display_in_tags"
                   v-model="display_in_tags"
                 />
-                <label for="display_in_tags">{{ $t("display_in_tags") }}</label>
+                <span for="display_in_tags">{{ $t("display_in_tags") }}</span>
               </div>
               <div class="flex-nowrap">
-                <label>{{ $t("sort_fragments_by") }}&nbsp;</label>
+                <span>{{ $t("sort_fragments_by") }}&nbsp;</span>
                 <div class="custom-select custom-select_tiny">
                   <select v-model="sort_fragments_by">
                     <option
@@ -430,8 +432,15 @@ export default {
   display: flex;
   flex-flow: column nowrap;
   justify-content: space-between;
+
   > * {
     margin-bottom: calc(var(--spacing));
+  }
+
+  .m_corpus--presentation--content {
+    display: flex;
+    flex-flow: column nowrap;
+    align-items: flex-start;
   }
 }
 
@@ -446,10 +455,20 @@ export default {
   margin-bottom: calc(var(--spacing) * 1.5);
 }
 
+.m_corpus--presentation--contributionModes,
 .m_corpus--presentation--displayOptions {
+  padding: calc(var(--spacing) / 2);
+  background-color: #c0d1d5;
+  border-radius: 4px;
+
+  button,
+  .button {
+    background-color: var(--color-white);
+  }
+
   > div {
-    border-left: 2px solid var(--color-bluegreen);
-    padding-left: calc(var(--spacing) / 2);
+    // border-left: 2px solid var(--body-bg);
+    // padding-left: calc(var(--spacing) / 2);
 
     > *:last-child {
       margin-bottom: 0;
