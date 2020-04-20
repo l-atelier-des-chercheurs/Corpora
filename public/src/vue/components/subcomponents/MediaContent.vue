@@ -275,7 +275,10 @@ export default {
           type: "tweet",
           id: this.getTweetIdFromURL(this.media.content),
         };
-      else if (this.media.content.includes("youtube.com"))
+      else if (
+        this.media.content.includes("youtube.com") ||
+        this.media.content.includes("youtu.be")
+      )
         return {
           type: "youtube",
           src: this.getYoutubeEmbedURLFromURL(this.media.content),

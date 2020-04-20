@@ -98,8 +98,8 @@
           </div>
         </div>
 
-        <div v-if="previewURL" class="m_corpus--presentation--vignette">
-          <img :src="previewURL" class draggable="false" />
+        <div class="m_corpus--presentation--vignette">
+          <img v-if="previewURL" :src="previewURL" class draggable="false" />
         </div>
       </div>
 
