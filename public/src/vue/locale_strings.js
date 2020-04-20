@@ -63,6 +63,10 @@ module.exports = (function () {
       fr: "Créé le",
       en: "Created on",
     },
+    close: {
+      fr: "Fermer",
+      en: "Close",
+    },
     created: {
       fr: "Créé",
       en: "Created",
