@@ -63,6 +63,10 @@ module.exports = (function () {
       fr: "Créé le",
       en: "Created on",
     },
+    close: {
+      fr: "Fermer",
+      en: "Close",
+    },
     created: {
       fr: "Créé",
       en: "Created",
@@ -75,7 +79,7 @@ module.exports = (function () {
       fr: "Mode ou moment de contribution",
       en: "Mode or moment of contribution",
     },
-    moments_name: {
+    new_moments_name: {
       fr: "Nom du nouveau moment",
       en: "Name of the new moment",
     },

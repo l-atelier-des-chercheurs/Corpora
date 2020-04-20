@@ -110,6 +110,9 @@ label {
 .margin-bottom-small {
   margin-bottom: var(--spacing);
 }
+.margin-bottom-verysmall {
+  margin-bottom: calc(var(--spacing) / 2);
+}
 
 .svg-icon {
   width: 1em;
@@ -444,7 +447,7 @@ select::-ms-expand {
 }
 
 .custom-select {
-  width: 120px;
+  max-width: 220px;
   margin: 4px 0;
   position: relative;
   color: var(--color-black);
@@ -480,6 +483,7 @@ select::-ms-expand {
   padding: 0px 12px 0 24px;
   font-size: 1rem;
   line-height: 1.75;
+  max-width: 220px;
   border: 1px solid var(--active-color);
 
   background-color: var(--body-bg);
@@ -528,6 +532,9 @@ select::-ms-expand {
   > label {
     margin-bottom: 0;
   }
+}
+.align-items-stretch {
+  align-items: stretch;
 }
 
 html,
