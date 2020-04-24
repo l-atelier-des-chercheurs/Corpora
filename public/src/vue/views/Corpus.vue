@@ -426,7 +426,7 @@ export default {
   z-index: 1;
   // in case of very small height of viewport
   max-height: 100vh;
-  max-width: 66ch;
+  max-width: 52ch;
   overflow-y: auto;
 
   display: flex;
@@ -438,9 +438,6 @@ export default {
   }
 
   .m_corpus--presentation--content {
-    display: flex;
-    flex-flow: column nowrap;
-    align-items: flex-start;
   }
 }
 
@@ -482,6 +479,12 @@ export default {
 
 .m_corpus--presentation--vignette {
   max-width: 240px;
+  margin-bottom: 0;
+  flex: 0 0 140px;
+
+  img {
+    object-fit: scale-down;
+  }
 }
 
 .m_tags {
