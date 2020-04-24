@@ -174,7 +174,7 @@ export default {
       this.$alertify
         .okBtn(this.$t("yes"))
         .cancelBtn(this.$t("cancel"))
-        .confirm(this.$t("sure_to_remove"), () => {
+        .confirm(this.$t("sure_to_remove_fragment"), () => {
           this.$root.removeMedia({
             type: "corpus",
             slugFolderName: this.slugFolderName,
@@ -253,7 +253,7 @@ export default {
         .okBtn(this.$t("yes"))
         .cancelBtn(this.$t("cancel"))
         .confirm(
-          this.$t("sure_to_remove"),
+          this.$t("sure_to_remove_media"),
           () => {
             this.$root.removeMedia({
               type: "corpus",

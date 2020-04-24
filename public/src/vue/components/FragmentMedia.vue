@@ -334,6 +334,10 @@ export default {
     font-size: inherit;
     // width: 260px;
   }
+
+  a {
+    color: inherit;
+  }
 }
 
 .m_fragmentMedia--infos--source {

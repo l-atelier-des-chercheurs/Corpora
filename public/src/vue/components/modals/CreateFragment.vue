@@ -25,7 +25,7 @@
       </div>
 
       <div>
-        <label>{{ $t("mode_and_moment_of_contribution") }}</label>
+        <label>{{ $t("source_of_contribution") }}</label>
         <CollectMode v-model="fragmentdata.contribution_moment" />
       </div>
 
@@ -45,6 +45,7 @@
           :allKeywords="all_tags_rightly_formatted"
           :type="'tabs'"
           :placeholder="$t('add_tab')"
+          :show_existing_by_default="true"
           @tagsChanged="(newTags) => (fragmentdata.tags = newTags)"
         />
       </div>
