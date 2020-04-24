@@ -167,7 +167,7 @@
           </template>
           <template v-else>
             <Fragment
-              v-for="fragment in fragments"
+              v-for="fragment in filtered_fragments"
               :key="fragment.metaFileName"
               :corpus="corpus"
               :all_keywords="all_keywords"
@@ -258,7 +258,7 @@ export default {
         return false;
       return Object.values(this.corpus.medias);
     },
-    fragments() {
+    sorted_fragments() {
       if (
         typeof this.corpus.medias !== "object" ||
         Object.values(this.corpus.medias).length === 0
@@ -267,6 +267,18 @@ export default {
       let fragments = Object.values(this.corpus.medias).filter(
         (m) => m.type === "fragment"
       );
+
+      if (this.sort_fragments_by === "date_created") {
+        fragments = this.$_.sortBy(fragments, "date_created");
+        fragments.reverse();
+      } else if (this.sort_fragments_by === "title") {
+        fragments.sort((a, b) => a.title.localeCompare(b.title));
+      }
+
+      return fragments;
+    },
+    filtered_fragments() {
+      let fragments = this.sorted_fragments;
 
       // if current_contribution_mode is set
       // if current_contribution_mode === online, then we retrieve only fragments that don’t have contribution_moment
@@ -285,22 +297,15 @@ export default {
         });
       }
 
-      if (this.sort_fragments_by === "date_created") {
-        fragments = this.$_.sortBy(fragments, "date_created");
-        fragments.reverse();
-      } else if (this.sort_fragments_by === "title") {
-        fragments.sort((a, b) => a.title.localeCompare(b.title));
-      }
-
       return fragments;
     },
     tags_with_fragments() {
       // get all tags from fragments
-      if (!this.fragments) return [];
+      if (!this.sorted_fragments) return [];
 
       // get all tags
       let fragments_by_tag = this.all_tags.map((tag) => {
-        const fragments_for_tag = this.fragments.filter(
+        const fragments_for_tag = this.filtered_fragments.filter(
           (f) =>
             !!f.tags &&
             Array.isArray(f.tags) &&
@@ -314,9 +319,10 @@ export default {
       });
 
       // append all fragments
-      const fragments_with_no_tags = this.fragments.filter(
+      const fragments_with_no_tags = this.filtered_fragments.filter(
         (f) => !f.tags || !Array.isArray(f.tags) || f.tags.length === 0
       );
+
       if (fragments_with_no_tags.length > 0) {
         fragments_by_tag.push({
           tag: "",
@@ -330,9 +336,9 @@ export default {
       return fragments_by_tag;
     },
     all_tags() {
-      if (!this.fragments) return [];
+      if (!this.sorted_fragments) return [];
 
-      let all_tags = this.fragments.reduce((acc, f) => {
+      let all_tags = this.sorted_fragments.reduce((acc, f) => {
         if (!!f.tags && Array.isArray(f.tags) && f.tags.length > 0)
           acc = acc.concat(f.tags.map((t) => t.title));
         return acc;
@@ -346,9 +352,9 @@ export default {
       return all_tags;
     },
     all_keywords() {
-      if (!this.fragments) return [];
+      if (!this.sorted_fragments) return [];
 
-      let all_keywords = this.fragments.reduce((acc, f) => {
+      let all_keywords = this.sorted_fragments.reduce((acc, f) => {
         if (!!f.keywords && Array.isArray(f.keywords) && f.keywords.length > 0)
           acc = acc.concat(f.keywords.map((t) => t.title));
         return acc;

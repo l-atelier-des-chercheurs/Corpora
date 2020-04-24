@@ -834,7 +834,8 @@ audio {
   }
 
   &.m_keywordField_tabs {
-    .tag {
+    .tag,
+    > button {
       background-color: var(--body-bg) !important;
       font-family: "base9";
       font-weight: bold;
