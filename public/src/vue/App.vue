@@ -90,7 +90,7 @@ h3 {
   line-height: 1.15;
 }
 
-label {
+label:not(.no-style) {
   display: block;
   margin-bottom: calc(var(--spacing) / 4);
   font-size: 0.7rem;

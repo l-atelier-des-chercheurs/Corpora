@@ -78,10 +78,12 @@
                 <input
                   type="checkbox"
                   class="switch"
-                  id="display_in_tags"
-                  v-model="display_in_tags"
+                  id="display_in_tabs"
+                  v-model="display_in_tabs"
                 />
-                <span for="display_in_tags">{{ $t("display_in_tags") }}</span>
+                <label class="no-style" for="display_in_tabs">{{
+                  $t("display_in_tabs")
+                }}</label>
               </div>
               <div class="flex-nowrap">
                 <span>{{ $t("sort_fragments_by") }}&nbsp;</span>
@@ -150,7 +152,7 @@
           tag="div"
           class="m_tags--allfragments"
         >
-          <template v-if="display_in_tags">
+          <template v-if="display_in_tabs">
             <Tag
               v-for="{ tag, fragments } in tags_with_fragments"
               :key="tag"
@@ -205,7 +207,7 @@ export default {
   },
   data() {
     return {
-      display_in_tags: true,
+      display_in_tabs: false,
       sort_fragments_by: "date_created",
 
       show_create_fragment: false,

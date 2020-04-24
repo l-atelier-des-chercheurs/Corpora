@@ -107,7 +107,7 @@ module.exports = (function () {
       fr: "Options d’affichage",
       en: "Display options",
     },
-    display_in_tags: {
+    display_in_tabs: {
       fr: "Ranger dans les onglets",
       en: "File in tabs",
     },
