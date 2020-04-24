@@ -391,11 +391,16 @@ input[type="checkbox"] {
   background: white;
   box-shadow: 0 1px 3px rgba(255, 255, 255, 2), 0 1px 2px rgba(0, 0, 0, 0.24);
   border-radius: 2px;
-  border: 1px solid var(--active-color);
+  border: 0px !important;
   outline: 0 !important;
   margin-left: 0;
+  background-position: center center;
+  background-repeat: no-repeat;
 
   &:checked {
+    // background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAG0lEQVQImWNgYGD4z4AK/qMz0BVgAgyVGGYCAJbgB/la+vz5AAAAAElFTkSuQmCC);
+    background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAkAAAAJCAYAAADgkQYQAAAAKUlEQVQYlWNgYGD4z4Af/Mdg4FKASwCnDf8JKSBoAtEmEXQTQd8RDCcA6+4Q8DuoBAIAAAAASUVORK5CYII=);
+    // background-size: 100% 100%;
     color: var(--color-orange);
     background-color: currentColor;
   }
