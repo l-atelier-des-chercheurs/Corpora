@@ -173,7 +173,7 @@ label:not(.no-style) {
 
   button,
   .button {
-    color: inherit;
+    color: white;
     background-color: var(--color-black);
 
     &:hover,

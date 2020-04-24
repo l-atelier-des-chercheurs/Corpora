@@ -24,7 +24,7 @@
           </div>-->
 
           <div class="m_corpus--presentation--contributionModes">
-            <label>{{ $t("filter_by_moments_of_contribution") }}</label>
+            <label>{{ $t("filter_by_source_of_contribution") }}</label>
 
             <div class="margin-bottom-verysmall">
               <CollectMode
@@ -40,7 +40,7 @@
                 @click="show_create_time_modal = !show_create_time_modal"
               >
                 <template v-if="!show_create_time_modal">
-                  {{ $t("create_a_moment") }}
+                  {{ $t("create_a_source") }}
                 </template>
                 <template v-else>{{ $t("close") }}</template>
               </button>
@@ -51,19 +51,19 @@
                 @submit.prevent="createNewMoment"
               >
                 <div class>
-                  <label>{{ $t("new_moments_name") }}</label>
+                  <label>{{ $t("new_source_name") }}</label>
                   <div class="flex-nowrap align-items-stretch">
                     <input
                       type="text"
                       class
-                      v-model.trim="new_moments_name"
+                      v-model.trim="new_source_name"
                       required
                       autofocus
                     />
                     <input
                       type="submit"
                       style="flex: 0 1 0;"
-                      :disabled="!new_moments_name"
+                      :disabled="!new_source_name"
                       :value="$t('add')"
                     />
                   </div>
@@ -217,7 +217,7 @@ export default {
       corpus_scroll_left: 0,
 
       show_create_time_modal: false,
-      new_moments_name: "",
+      new_source_name: "",
       current_contribution_mode: "",
 
       // show_fragments_for: {},
@@ -382,7 +382,7 @@ export default {
           : [];
 
       // check if moment already exists
-      if (contribution_moments.some((m) => m.name === this.new_moments_name)) {
+      if (contribution_moments.some((m) => m.name === this.new_source_name)) {
         this.$alertify
           .closeLogOnClick(true)
           .delay(4000)
@@ -390,7 +390,7 @@ export default {
       }
 
       contribution_moments.push({
-        name: this.new_moments_name,
+        name: this.new_source_name,
       });
 
       this.$root.editFolder({

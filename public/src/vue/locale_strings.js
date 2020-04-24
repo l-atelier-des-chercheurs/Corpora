@@ -75,13 +75,9 @@ module.exports = (function () {
       fr: "Éditer",
       en: "Edit",
     },
-    mode_and_moment_of_contribution: {
-      fr: "Mode ou moment de contribution",
-      en: "Mode or moment of contribution",
-    },
-    new_moments_name: {
-      fr: "Nom du nouveau moment",
-      en: "Name of the new moment",
+    new_source_name: {
+      fr: "Nom de la nouvelle source",
+      en: "Name of the new source",
     },
     name: {
       fr: "Nom",
@@ -99,9 +95,13 @@ module.exports = (function () {
       fr: "Protégé par mot de passe",
       en: "Protected by password",
     },
-    filter_by_moments_of_contribution: {
-      fr: "Filtrer par moment de contribution",
-      en: "Filter by moment of contribution",
+    filter_by_source_of_contribution: {
+      fr: "Filtrer par source de contribution",
+      en: "Filter by source of contribution",
+    },
+    source_of_contribution: {
+      fr: "Source de contribution",
+      en: "Source of contribution",
     },
     display_options: {
       fr: "Options d’affichage",
@@ -109,7 +109,7 @@ module.exports = (function () {
     },
     display_in_tabs: {
       fr: "Ranger dans les onglets",
-      en: "File in tabs",
+      en: "By tabs",
     },
     show_password: {
       fr: "Afficher le mot de passe",
@@ -231,9 +231,9 @@ module.exports = (function () {
       fr: "Créer un fragment",
       en: "Create a fragment",
     },
-    create_a_moment: {
-      fr: "Créer un moment",
-      en: "Create a moment",
+    create_a_source: {
+      fr: "Créer une source de contribution",
+      en: "Create a source of contribution",
     },
     edit_a_fragment: {
       fr: "Éditer un fragment",
@@ -304,8 +304,8 @@ module.exports = (function () {
       en: "Text",
     },
     moment_already_exists: {
-      fr: "Ce temps a déjà été créé",
-      en: "This moment has already been created",
+      fr: "Cette source a déjà été créé",
+      en: "This source has already been created",
     },
   };
 
