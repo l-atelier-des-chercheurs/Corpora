@@ -45,6 +45,7 @@
           :allKeywords="all_tags_rightly_formatted"
           :type="'tabs'"
           :placeholder="$t('add_tab')"
+          :show_existing_by_default="true"
           @tagsChanged="(newTags) => (fragmentdata.tags = newTags)"
         />
       </div>

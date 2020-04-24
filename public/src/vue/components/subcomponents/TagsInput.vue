@@ -98,6 +98,10 @@ export default {
     type: String,
     keywords: Array,
     allKeywords: Array,
+    show_existing_by_default: {
+      type: Boolean,
+      default: false,
+    },
   },
   components: {},
   data() {
@@ -109,7 +113,7 @@ export default {
       tag: "",
       new_tag: "",
 
-      show_existing: false,
+      show_existing: this.show_existing_by_default,
     };
   },
 
