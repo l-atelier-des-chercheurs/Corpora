@@ -136,8 +136,16 @@ module.exports = (function () {
       en: "Open",
     },
     sure_to_remove_corpus: {
-      fr: "Voulez-vous vraiment supprimer le corpus ?",
+      fr: "Voulez-vous vraiment supprimer ce corpus ?",
       en: "Do you really want to remove this corpus?",
+    },
+    sure_to_remove_fragment: {
+      fr: "Voulez-vous vraiment supprimer ce fragment ?",
+      en: "Do you really want to remove this fragment?",
+    },
+    sure_to_remove_media: {
+      fr: "Voulez-vous vraiment supprimer ce média ?",
+      en: "Do you really want to remove this media?",
     },
     all: {
       fr: "Afficher tous les fragments",
