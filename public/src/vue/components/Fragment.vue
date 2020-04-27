@@ -326,7 +326,7 @@ export default {
   .m_fragment--content--top {
     display: flex;
     justify-content: space-between;
-    margin-bottom: var(--spacing);
+    margin-bottom: calc(var(--spacing) / 2);
     padding-right: var(--spacing);
     h2 {
       margin: 0;
