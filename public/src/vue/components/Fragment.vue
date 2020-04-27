@@ -1,8 +1,5 @@
 <template>
-  <div
-    class="m_fragment custom_scrollbar"
-    :style="`--fragment-width: ${fragment_width}px`"
-  >
+  <div class="m_fragment custom_scrollbar">
     <div class="m_fragment--content">
       <div class="m_fragment--content--top">
         <h2>{{ fragment.title }}</h2>
@@ -135,7 +132,6 @@ export default {
     all_keywords: Array,
     medias: Array,
     slugFolderName: String,
-    fragment_width: Number,
   },
   components: {
     AddMedias,
@@ -289,8 +285,14 @@ export default {
   // flex: 1 0 100vw;
   // width: 95vw;
 
-  flex: 0 0 var(--fragment-width);
+  // flex: 0 0 var(--fragment-width);
+  width: var(--fragment-width);
+  // max-height: 100%;
   overflow-y: auto;
+
+  // break-inside: avoid;
+  // break-after: auto;
+
   // padding-right: calc(var(--spacing) / 4);
   // columns: 50ch;
   // column-gap: 1em;
@@ -300,8 +302,9 @@ export default {
 
   .m_fragment--content {
     position: relative;
-    margin-top: calc(var(--spacing) * 2);
-    margin-bottom: 50vh;
+    margin-top: calc(var(--spacing) / 2);
+    margin-bottom: calc(var(--spacing) / 2);
+    // margin-bottom: 50vh;
     margin-right: 4px;
     margin-left: 4px;
 

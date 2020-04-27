@@ -163,7 +163,6 @@
               :corpus="corpus"
               :slugFolderName="corpus.slugFolderName"
               :fragments="fragments"
-              :fragment_width="fragment_width"
               :corpus_scroll_left="corpus_scroll_left"
             />
           </template>
@@ -176,7 +175,6 @@
               :all_tags="all_tags"
               :medias="medias"
               :fragment="fragment"
-              :fragment_width="fragment_width"
               :slugFolderName="corpus.slugFolderName"
             />
           </template>
@@ -229,9 +227,6 @@ export default {
   destroyed() {},
   watch: {},
   computed: {
-    fragment_width() {
-      return Math.min(325, this.$root.settings.windowWidth * 0.9);
-    },
     can_access_corpus() {
       return this.$root.canAccessFolder({
         type: "corpus",
@@ -548,11 +543,13 @@ export default {
 
 .m_tags--allfragments {
   height: 100%;
-  display: flex;
-  flex-flow: row nowrap;
-  align-content: stretch;
-  min-width: max-content;
-  overflow-y: auto;
+  // display: flex;
+  // flex-flow: row nowrap;
+  // align-content: stretch;
+  // min-width: max-content;
+  // overflow-y: auto;
+
+  columns: auto var(--fragment-width);
 
   padding-left: var(--spacing);
 }

@@ -49,7 +49,6 @@
         tag="div"
         class="m_tag--fragments"
         v-if="show_fragments"
-        :style="`width: ${fragment_width * fragments.length}px`"
       >
         <Fragment
           v-for="fragment in fragments"
@@ -59,7 +58,6 @@
           :all_tags="all_tags"
           :medias="medias"
           :fragment="fragment"
-          :fragment_width="fragment_width"
           :slugFolderName="slugFolderName"
         />
       </transition-group>
@@ -78,25 +76,24 @@ export default {
     corpus: Object,
     slugFolderName: String,
     fragments: Array,
-    fragment_width: Number,
-    corpus_scroll_left: Number
+    corpus_scroll_left: Number,
   },
   components: {
-    Fragment
+    Fragment,
   },
   data() {
     return {
       show_fragments: false,
-      tag_title_position: false
+      tag_title_position: false,
     };
   },
   created() {},
   mounted() {},
   beforeDestroy() {},
   watch: {
-    corpus_scroll_left: function() {
+    corpus_scroll_left: function () {
       this.setTitleBarRightPos();
-    }
+    },
   },
   computed: {},
   methods: {
@@ -119,8 +116,8 @@ export default {
           this.tag_title_position = false;
         }
       }
-    }
-  }
+    },
+  },
 };
 </script>
 <style lang="scss" scoped>

@@ -373,7 +373,8 @@ export default {
   // width: 100px;
   height: auto;
   text-align: center;
-  margin: calc(var(--spacing) / 4);
+  margin-top: calc(var(--spacing) / 4);
+  margin-bottom: calc(var(--spacing) / 4);
   // color: var(--color-white);
 
   .menu_encart {

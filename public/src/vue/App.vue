@@ -49,6 +49,7 @@ export default {
   --active-color: #ccd0da;
   --color-bluegreen: #c0d8dd;
   --panel-width: 320px;
+  --fragment-width: 200px;
 }
 
 body {
