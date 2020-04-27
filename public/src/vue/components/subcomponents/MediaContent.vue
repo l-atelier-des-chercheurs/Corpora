@@ -136,7 +136,7 @@
     </template>
 
     <template v-else-if="media.type === 'embed'">
-      <div v-if="context !== 'edit' && embedURL" class="padding-small">
+      <div v-if="context !== 'edit' && embedURL" class="">
         <iframe
           v-if="embedURL.type !== 'tweet'"
           :src="embedURL.src"
