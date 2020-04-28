@@ -289,6 +289,7 @@ export default {
   // flex: 1 0 100vw;
   // width: 95vw;
 
+  width: var(--fragment-width);
   flex: 0 0 var(--fragment-width);
   overflow-y: auto;
   // padding-right: calc(var(--spacing) / 4);
