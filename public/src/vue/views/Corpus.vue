@@ -376,7 +376,7 @@ export default {
     },
     createNewMoment() {
       let contribution_moments =
-        this.corpus.hasOwnProperty("contribution_moment") &&
+        this.corpus.hasOwnProperty("contribution_moments") &&
         Array.isArray(this.corpus.contribution_moments)
           ? JSON.parse(JSON.stringify(this.corpus.contribution_moments))
           : [];
