@@ -456,7 +456,7 @@ let vm = new Vue({
           } else {
             this.$eventHub.$once(
               "socketio.corpus.folderCreated",
-              catchFolderCreation
+              catchFolderEdition
             );
           }
         };
