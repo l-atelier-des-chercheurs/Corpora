@@ -7,7 +7,12 @@
   >
     <template slot="header">{{ media.media_filename}}</template>
     <template slot="preview">
-      <MediaContent :context="'edit'" :media="media" :read_only="false" />
+      <MediaContent
+        :context="'edit'"
+        :media="media"
+        :slugFolderName="slugFolderName"
+        :read_only="false"
+      />
     </template>
   </Modal>
 </template>
@@ -17,7 +22,8 @@ import MediaContent from "../subcomponents/MediaContent.vue";
 
 export default {
   props: {
-    media: Object
+    media: Object,
+    slugFolderName: String
   },
   components: { Modal, MediaContent },
   data() {

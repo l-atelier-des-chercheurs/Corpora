@@ -29,7 +29,7 @@
         v-else
         ref="mediaContent"
         v-model="media.content"
-        :context="!is_being_edited ? '' : 'edit'"
+        :context="media_context"
         :slugFolderName="slugFolderName"
         :media="media"
         :read_only="false"
@@ -38,7 +38,7 @@
         type="button"
         class="plyr__controls__item plyr__control _open_fullscreen"
         @click="openMedia"
-        v-if="media.type === 'image'"
+        v-if="media.type === 'image' ||media.type === 'document' "
       >
         <svg class="icon--pressed" role="presentation" focusable="false">
           <use
@@ -184,7 +184,12 @@
       class="ta-ce tt-lc padding-small font-verysmall"
       style="width: 100%; display:block;"
     >{{ $t('editable_for')}} {{ editable_delay_in_minutes - media_was_created_x_minutes_ago }} {{ $t('minutes')}}</small>
-    <ShowMedia v-if="show_in_modal" :media="media" @close="show_in_modal = false" />
+    <ShowMedia
+      v-if="show_in_modal"
+      :media="media"
+      :slugFolderName="slugFolderName"
+      @close="show_in_modal = false"
+    />
   </div>
 </template>
 <script>
@@ -271,6 +276,11 @@ export default {
         return true;
       }
       return false;
+    },
+    media_context() {
+      if (this.is_being_edited) return "edit";
+      if (this.media.type === "document") return "edit";
+      return "";
     }
   },
   methods: {
