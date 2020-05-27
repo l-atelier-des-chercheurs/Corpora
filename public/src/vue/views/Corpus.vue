@@ -232,8 +232,12 @@ export default {
     };
   },
   created() {},
-  mounted() {},
-  beforeDestroy() {},
+  mounted() {
+    this.$eventHub.$on("scrollCorpus", this.scrollCorpus);
+  },
+  beforeDestroy() {
+    this.$eventHub.$off("scrollCorpus", this.scrollCorpus);
+  },
   destroyed() {},
   watch: {},
   computed: {
@@ -382,6 +386,9 @@ export default {
     onScroll() {
       this.corpus_scroll_left = this.$refs.corpus.scrollLeft;
     },
+    scrollCorpus(px) {
+      this.$refs.corpus.scrollLeft = px - window.innerWidth / 3;
+    },
     createNewMoment() {
       let contribution_moments =
         this.corpus.hasOwnProperty("contribution_moments") &&
@@ -422,6 +429,7 @@ export default {
   flex-flow: row nowrap;
   align-items: stretch;
   overflow-x: auto;
+  scroll-behavior: smooth;
 
   > * {
     flex: 0 0 auto;

@@ -1,5 +1,9 @@
 <template>
-  <div class="m_fragment custom_scrollbar" :style="`--fragment-width: ${fragment_width}px`">
+  <div
+    class="m_fragment custom_scrollbar"
+    :style="`--fragment-width: ${fragment_width}px`"
+    :class="{ 'is--highlighted': highlight_corpus }"
+  >
     <div class="m_fragment--content">
       <div class="m_fragment--content--top">
         <h2>{{ fragment.title }}</h2>
@@ -138,12 +142,17 @@ export default {
   data() {
     return {
       show_advanced_menu: false,
-      show_edit_fragment: false
+      show_edit_fragment: false,
+      highlight_corpus: false
     };
   },
   created() {},
-  mounted() {},
-  beforeDestroy() {},
+  mounted() {
+    this.$eventHub.$on("scrollToFragment", this.scrollToFragment);
+  },
+  beforeDestroy() {
+    this.$eventHub.$off("scrollToFragment", this.scrollToFragment);
+  },
   watch: {},
   computed: {
     linked_medias() {
@@ -163,6 +172,19 @@ export default {
     }
   },
   methods: {
+    scrollToFragment(metaFileName) {
+      if (this.fragment.metaFileName === metaFileName) {
+        this.$eventHub.$emit(
+          "scrollCorpus",
+          this.$el.getBoundingClientRect().x
+        );
+
+        this.highlight_corpus = true;
+        setTimeout(() => {
+          this.highlight_corpus = false;
+        }, 2000);
+      }
+    },
     removeFragment() {
       this.$alertify
         .okBtn(this.$t("yes"))
@@ -305,13 +327,22 @@ export default {
       180deg,
       #fff 0%,
       #f9f3db calc(100% - 1px),
-      #000 100%
+      var(--color-black) 100%
     );
 
     border-radius: 2px;
 
+    transition: opacity 4s cubic-bezier(0.19, 1, 0.22, 1);
+
     > *:first-child {
       margin-top: 0;
+    }
+  }
+
+  &.is--highlighted {
+    .m_fragment--content {
+      opacity: 0;
+      transition: all 0s cubic-bezier(0.19, 1, 0.22, 1);
     }
   }
 

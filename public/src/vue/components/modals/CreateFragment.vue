@@ -146,8 +146,11 @@ export default {
             medias_slugs: []
           }
         })
-        .then(() => {
+        .then(mdata => {
           this.$emit("close");
+          this.$nextTick(() => {
+            this.$eventHub.$emit("scrollToFragment", mdata.metaFileName);
+          });
         });
     }
   }
