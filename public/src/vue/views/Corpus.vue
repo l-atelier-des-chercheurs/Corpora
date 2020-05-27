@@ -11,10 +11,25 @@
             <h3 v-if="!!corpus.subtitle">{{ corpus.subtitle }}</h3>
           </div>
 
-          <div class="m_corpus--presentation--description">
-            <!-- <label>{{ $t('description') }}</label> -->
-            <p>{{ corpus.description }}</p>
-          </div>
+          <div
+            class="m_corpus--presentation--description mediaTextContent"
+            v-html="corpus.description"
+          />
+
+          <button
+            type="button"
+            v-if="$root.can_admin_corpora"
+            @click="show_edit_corpus_for = true"
+          >{{ $t("edit") }}</button>
+
+          <EditCorpus
+            v-if="show_edit_corpus_for"
+            :corpus="corpus"
+            :corpus_password="corpus_password"
+            :slugCorpusName="corpus.slugFolderName"
+            @close="show_edit_corpus_for = false"
+          />
+
           <!-- <div class="m_corpus--presentation--tags">
           <label>{{ $t('keywords') }}</label>
           <button type="button" v-for="(tag, index) in all_tags" :key="index">{{ tag }}</button>
@@ -171,6 +186,7 @@ import Tag from "../components/Tag.vue";
 import Fragment from "../components/Fragment.vue";
 import CreateFragment from "../components/modals/CreateFragment.vue";
 import CollectMode from "../components/subcomponents/CollectMode.vue";
+import EditCorpus from "../components/modals/EditCorpus.vue";
 
 export default {
   props: {
@@ -182,7 +198,8 @@ export default {
     Tag,
     Fragment,
     CreateFragment,
-    CollectMode
+    CollectMode,
+    EditCorpus
   },
   data() {
     return {
@@ -197,7 +214,9 @@ export default {
 
       show_create_time_modal: false,
       new_source_name: "",
-      current_contribution_mode: ""
+      current_contribution_mode: "",
+
+      show_edit_corpus_for: false
 
       // show_fragments_for: {},
     };

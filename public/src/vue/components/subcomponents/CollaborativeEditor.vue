@@ -1824,19 +1824,5 @@ export default {
     color: rgba(0, 0, 0, 0.4);
     font-style: normal;
   }
-
-  .mediaTextContent {
-    color: inherit;
-    font-family: inherit;
-    overflow: visible;
-
-    > *:first-child {
-      margin-top: 0;
-
-      > *:first-child {
-        margin-top: 0;
-      }
-    }
-  }
 }
 </style>
