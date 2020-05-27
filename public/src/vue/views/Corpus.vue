@@ -5,6 +5,14 @@
       <div class="m_corpus--presentation custom_scrollbar">
         <Infos />
 
+        <div class="m_feedbacks">
+          <a
+            class="js--openInBrowser"
+            target="_blank"
+            href="mailto:info@plurality-university.org?subject=feedbacks%20on%20Corpora"
+          >{{ $t('feedbacks') }}</a>
+        </div>
+
         <div class="m_corpus--presentation--content">
           <div class="m_corpus--presentation--name">
             <h1 v-if="!!corpus.name">{{ corpus.name }}</h1>
@@ -16,11 +24,13 @@
             v-html="corpus.description"
           />
 
-          <button
-            type="button"
-            v-if="$root.can_admin_corpora"
-            @click="show_edit_corpus_for = true"
-          >{{ $t("edit") }}</button>
+          <div class="margin-bottom-small" v-if="$root.can_admin_corpora">
+            <button
+              type="button"
+              class="button-small"
+              @click="show_edit_corpus_for = true"
+            >{{ $t("edit") }}</button>
+          </div>
 
           <EditCorpus
             v-if="show_edit_corpus_for"
@@ -553,5 +563,20 @@ export default {
   overflow-y: auto;
 
   padding-left: var(--spacing);
+}
+
+.m_feedbacks {
+  position: fixed;
+  bottom: var(--spacing);
+  right: 50px;
+  background-color: var(--color-black);
+  color: white;
+  margin: 0;
+  padding: calc(var(--spacing) / 2) var(--spacing);
+  border-radius: 24px;
+
+  a {
+    color: inherit;
+  }
 }
 </style>
