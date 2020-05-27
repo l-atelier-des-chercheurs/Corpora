@@ -45,13 +45,9 @@
               class="m_modal--sidebar--toggle"
               @click="toggleSidebar"
               v-if="can_minimize"
-            >
-              &#x2630;
-            </button>
+            >&#x2630;</button>
 
-            <template
-              v-if="!!this.$slots['sidebar'] && show_sidebar && !is_minimized"
-            >
+            <template v-if="!!this.$slots['sidebar'] && show_sidebar && !is_minimized">
               <div class="m_modal--header">
                 <h3 class="margin-none">
                   <slot name="header">default header</slot>
@@ -62,10 +58,7 @@
                 <slot name="sidebar">default sidebar</slot>
               </div>
 
-              <div
-                v-if="!!this.$slots['submit_button']"
-                class="m_modal--buttons"
-              >
+              <div v-if="!!this.$slots['submit_button']" class="m_modal--buttons">
                 <button
                   type="submit"
                   :disabled="read_only || is_loading"
@@ -85,11 +78,7 @@
             v-on:submit.prevent="$emit('submit')"
             ref="form"
           >
-            <button
-              type="button"
-              @click="closeModal"
-              class="button button-bg_rounded bg-orange"
-            >
+            <button type="button" @click="closeModal" class="button button-bg_rounded bg-orange">
               <img src="/images/i_clear.svg" draggable="false" />
               <span class="text-cap font-verysmall">
                 <slot name="cancel_button">{{ $t("cancel") }}</slot>
@@ -177,57 +166,57 @@ export default {
   props: {
     backgroundColor: {
       type: String,
-      default: "white",
+      default: "white"
     },
     read_only: {
       type: Boolean,
-      default: true,
+      default: true
     },
     typeOfModal: {
       type: String,
-      default: "EditMeta",
+      default: "EditMeta"
     },
     askBeforeClosingModal: {
       type: Boolean,
-      default: false,
+      default: false
     },
     isFile: {
       type: Boolean,
-      default: false,
+      default: false
     },
     show_sidebar: {
       type: Boolean,
-      default: true,
+      default: true
     },
     can_minimize: {
       type: Boolean,
-      default: false,
+      default: false
     },
     media_navigation: {
       type: Boolean,
-      default: false,
+      default: false
     },
     is_minimized: {
       type: Boolean,
-      default: false,
+      default: false
     },
     prevent_close: {
       type: Boolean,
-      default: false,
+      default: false
     },
     is_loading: {
       type: Boolean,
-      default: false,
-    },
+      default: false
+    }
   },
   data() {
     return {
       showModal: false,
       windowHeight: window.innerHeight,
-      has_confirm_close_modal_open: false,
+      has_confirm_close_modal_open: false
     };
   },
-  mounted: function () {
+  mounted: function() {
     console.log(`MOUNTED • BaseModal`);
 
     setTimeout(() => {
@@ -258,7 +247,7 @@ export default {
   },
   computed: {},
   methods: {
-    modalKeyListener: function (event) {
+    modalKeyListener: function(event) {
       if (window.state.dev_mode === "debug") {
         console.log("METHODS • BaseModal: modalKeyListener");
       }
@@ -287,7 +276,7 @@ export default {
         return;
       }
     },
-    closeModal: function () {
+    closeModal: function() {
       console.log(
         `METHODS • BaseModal: closeModal with askBeforeClosingModal = ${this.askBeforeClosingModal}`
       );
@@ -322,7 +311,7 @@ export default {
         }, 400);
       }
     },
-    prevMedia: function () {
+    prevMedia: function() {
       console.log(
         `METHODS • BaseModal: prevMedia with askBeforeClosingModal = ${this.askBeforeClosingModal}`
       );
@@ -349,7 +338,7 @@ export default {
         this.$eventHub.$emit("modal.prev_media");
       }
     },
-    nextMedia: function () {
+    nextMedia: function() {
       console.log(
         `METHODS • BaseModal: nextMedia with askBeforeClosingModal = ${this.askBeforeClosingModal}`
       );
@@ -376,27 +365,18 @@ export default {
       } else {
         this.$eventHub.$emit("modal.next_media");
       }
-    },
-    toggleMinimize: function () {
-      console.log(`METHODS • BaseModal: toggleMinimize`);
-      this.$root.media_modal.minimized = !this.$root.media_modal.minimized;
-    },
-    toggleSidebar: function () {
-      console.log(`METHODS • BaseModal: toggleSidebar`);
-      this.$root.media_modal.show_sidebar = !this.$root.media_modal
-        .show_sidebar;
-    },
+    }
   },
-  created: function () {
+  created: function() {
     document.addEventListener("keyup", this.modalKeyListener);
     document.body.classList.add("has_modal_opened");
     this.$root.settings.has_modal_opened = true;
   },
-  destroyed: function () {
+  destroyed: function() {
     document.removeEventListener("keyup", this.modalKeyListener);
     document.body.classList.remove("has_modal_opened");
     this.$root.settings.has_modal_opened = false;
-  },
+  }
 };
 </script>
 <style scoped lang="scss">

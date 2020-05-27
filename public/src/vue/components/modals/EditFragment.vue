@@ -15,13 +15,7 @@
       <!-- Human name -->
       <div class="margin-bottom-small">
         <label>{{ $t("fragment_title") }}</label>
-        <input
-          type="text"
-          class="bold"
-          v-model.trim="fragmentdata.title"
-          required
-          autofocus
-        />
+        <input type="text" class="bold" v-model.trim="fragmentdata.title" required autofocus />
       </div>
 
       <div>
@@ -33,6 +27,7 @@
         <label>{{ $t("keywords") }}</label>
         <TagsInput
           :allKeywords="all_keywords_rightly_formatted"
+          :allow_new_terms="$root.can_admin_corpora"
           :type="'keywords'"
           :keywords="fragmentdata.keywords"
           :placeholder="$t('add_keyword')"
@@ -63,7 +58,7 @@ export default {
     fragment: Object,
     corpus: Object,
     all_tags: Array,
-    all_keywords: Array,
+    all_keywords: Array
   },
   components: { Modal, TagsInput, CollectMode },
   data() {
@@ -72,8 +67,8 @@ export default {
         title: this.fragment.title,
         contribution_moment: this.fragment.contribution_moment,
         keywords: this.fragment.keywords,
-        tags: this.fragment.tags,
-      },
+        tags: this.fragment.tags
+      }
     };
   },
   created() {},
@@ -82,21 +77,21 @@ export default {
   watch: {},
   computed: {
     all_tags_rightly_formatted() {
-      return this.all_tags.map((kw) => {
+      return this.all_tags.map(kw => {
         return {
           text: kw,
-          classes: "tagcolorid_" + (parseInt(kw, 36) % 2),
+          classes: "tagcolorid_" + (parseInt(kw, 36) % 2)
         };
       });
     },
     all_keywords_rightly_formatted() {
-      return this.all_keywords.map((kw) => {
+      return this.all_keywords.map(kw => {
         return {
           text: kw,
-          classes: "tagcolorid_" + (parseInt(kw, 36) % 2),
+          classes: "tagcolorid_" + (parseInt(kw, 36) % 2)
         };
       });
-    },
+    }
   },
   methods: {
     editFragment() {
@@ -105,7 +100,7 @@ export default {
       if (this.corpus.medias && Object.values(this.corpus.medias).length > 0) {
         if (
           Object.values(this.corpus.medias).find(
-            (m) =>
+            m =>
               m.type === "fragment" &&
               m.title === title &&
               title !== this.fragment.title
@@ -133,11 +128,11 @@ export default {
           title,
           contribution_moment,
           tags,
-          keywords,
-        },
+          keywords
+        }
       });
-    },
-  },
+    }
+  }
 };
 </script>
 <style lang="scss"></style>

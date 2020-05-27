@@ -7,12 +7,7 @@
       "
       :corpuses="Object.values($root.store.corpus)"
     />
-
-    <Corpus
-      v-else-if="$root.do_navigation.view === 'CorpusView'"
-      :corpus="$root.current_corpus"
-    />
-
+    <Corpus v-else-if="$root.do_navigation.view === 'CorpusView'" :corpus="$root.current_corpus" />
     <portal-target name="modal_container" />
   </div>
 </template>
@@ -25,7 +20,7 @@ export default {
   name: "app",
   components: {
     List,
-    Corpus,
+    Corpus
   },
   props: {},
   data() {
@@ -35,7 +30,7 @@ export default {
   created() {},
   beforeDestroy() {},
   computed: {},
-  methods: {},
+  methods: {}
 };
 </script>
 <style src="../../node_modules/vue-plyr/dist/vue-plyr.css"></style>
@@ -322,7 +317,8 @@ b {
   font-weight: bold;
 }
 
-a {
+a,
+.a {
   text-decoration: underline;
   text-decoration-style: solid;
   color: var(--active-color);
@@ -334,6 +330,13 @@ h2 {
   -webkit-hyphens: auto;
   -ms-hyphens: auto;
   hyphens: auto;
+}
+
+.ta-ce {
+  text-align: center;
+}
+.tt-lc {
+  text-transform: lowercase;
 }
 
 blockquote {
@@ -594,6 +597,14 @@ input[type="submit"] {
 
   &[type="submit"] {
     background-color: var(--color-orange);
+  }
+
+  &.button-nostyle {
+    background-color: transparent;
+    color: inherit;
+    font-size: inherit;
+    margin: 0;
+    padding: 0;
   }
 }
 
@@ -1099,6 +1110,9 @@ audio {
           position: fixed;
           height: 50vh;
         }
+
+        display: flex;
+        flex-flow: column nowrap;
       }
       .m_modal--sidebar {
         #app:not(.is--wide) & {

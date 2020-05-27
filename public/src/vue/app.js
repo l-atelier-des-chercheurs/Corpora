@@ -244,7 +244,18 @@ let vm = new Vue({
       const slugFolderName = pathname.substring(0, pathname.indexOf("/"));
       this.settings.is_loading_corpus = true;
       this.$eventHub.$once("socketio.corpus.folders_listed", () => {
-        this.openCorpus(slugFolderName);
+        // this.openCorpus(slugFolderName);
+        // bypass history
+
+        this.do_navigation.view = "CorpusView";
+        this.do_navigation.slug = slugFolderName;
+
+        this.$socketio.listMedias({
+          type: "corpus",
+          slugFolderName,
+        });
+
+        this.settings.is_loading_corpus = false;
       });
     }
 
@@ -341,6 +352,11 @@ let vm = new Vue({
     },
   },
   computed: {
+    can_admin_corpora() {
+      // todo actual admin checks
+      return this.hashCode(this.$root.admin_pwd) === 2678;
+    },
+
     current_corpus: function () {
       if (
         !this.store.hasOwnProperty("corpus") ||
@@ -406,6 +422,13 @@ let vm = new Vue({
     },
   },
   methods: {
+    hashCode(s) {
+      return s.split("").reduce(function (a, b) {
+        a = (a << 5) - a + b.charCodeAt(0);
+        return a & a;
+      }, 0);
+    },
+
     createFolder(fdata) {
       return new Promise((resolve, reject) => {
         if (window.state.dev_mode === "debug") {

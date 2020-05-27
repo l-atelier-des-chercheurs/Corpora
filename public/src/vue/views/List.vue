@@ -1,6 +1,6 @@
 <template>
   <div class="m_list">
-    <div v-if="!can_admin_corpora">
+    <div v-if="!$root.can_admin_corpora">
       <p>Enter password to admin</p>
       <input type="password" autofocus v-model="$root.admin_pwd" />
     </div>
@@ -53,20 +53,8 @@ export default {
   mounted() {},
   beforeDestroy() {},
   watch: {},
-  computed: {
-    can_admin_corpora() {
-      // todo actual admin checks
-      return this.hashCode(this.$root.admin_pwd) === 2678;
-    }
-  },
-  methods: {
-    hashCode(s) {
-      return s.split("").reduce(function(a, b) {
-        a = (a << 5) - a + b.charCodeAt(0);
-        return a & a;
-      }, 0);
-    }
-  }
+  computed: {},
+  methods: {}
 };
 </script>
 <style lang="scss" scoped>

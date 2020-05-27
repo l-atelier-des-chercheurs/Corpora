@@ -88,6 +88,11 @@
             "default": "current",
             "override": true
           },
+          "date_uploaded": {
+            "type": "date",
+            "default": "current",
+            "read_only": true
+          },
           "media_filename": {
             "type": "string"
           },

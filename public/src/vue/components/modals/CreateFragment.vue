@@ -15,13 +15,7 @@
       <!-- Human name -->
       <div class="margin-bottom-small">
         <label>{{ $t("fragment_title") }}</label>
-        <input
-          type="text"
-          class="bold"
-          v-model.trim="fragmentdata.title"
-          required
-          autofocus
-        />
+        <input type="text" class="bold" v-model.trim="fragmentdata.title" required autofocus />
       </div>
 
       <div>
@@ -43,6 +37,7 @@
         <label>{{ $t("tabs") }}</label>
         <TagsInput
           :allKeywords="all_tags_rightly_formatted"
+          :allow_new_terms="$root.can_admin_corpora"
           :type="'tabs'"
           :placeholder="$t('add_tab')"
           :show_existing_by_default="true"
@@ -68,9 +63,7 @@
           d="M0,10.5h10.5V0h2.9v10.5H24v2.9H13.5V24h-2.9V13.5H0V10.5z"
         />
       </svg>
-      <span>
-        {{ $t("create") }}
-      </span>
+      <span>{{ $t("create") }}</span>
     </template>
   </Modal>
 </template>
@@ -84,7 +77,7 @@ export default {
     corpus: Object,
     all_tags: Array,
     all_keywords: Array,
-    current_contribution_mode: String,
+    current_contribution_mode: String
   },
   components: { Modal, TagsInput, CollectMode },
   data() {
@@ -92,8 +85,8 @@ export default {
       fragmentdata: {
         title: "",
         tags: [],
-        contribution_moment: this.current_contribution_mode,
-      },
+        contribution_moment: this.current_contribution_mode
+      }
     };
   },
   created() {},
@@ -102,21 +95,21 @@ export default {
   watch: {},
   computed: {
     all_tags_rightly_formatted() {
-      return this.all_tags.map((kw) => {
+      return this.all_tags.map(kw => {
         return {
           text: kw,
-          classes: "tagcolorid_" + (parseInt(kw, 36) % 2),
+          classes: "tagcolorid_" + (parseInt(kw, 36) % 2)
         };
       });
     },
     all_keywords_rightly_formatted() {
-      return this.all_keywords.map((kw) => {
+      return this.all_keywords.map(kw => {
         return {
           text: kw,
-          classes: "tagcolorid_" + (parseInt(kw, 36) % 2),
+          classes: "tagcolorid_" + (parseInt(kw, 36) % 2)
         };
       });
-    },
+    }
   },
   methods: {
     newFragment() {
@@ -125,7 +118,7 @@ export default {
       if (this.corpus.medias && Object.values(this.corpus.medias).length > 0) {
         if (
           Object.values(this.corpus.medias).find(
-            (m) => m.type === "fragment" && m.title === title
+            m => m.type === "fragment" && m.title === title
           )
         ) {
           this.$alertify
@@ -150,14 +143,14 @@ export default {
             contribution_moment,
             keywords,
             tags,
-            medias_slugs: [],
-          },
+            medias_slugs: []
+          }
         })
         .then(() => {
           this.$emit("close");
         });
-    },
-  },
+    }
+  }
 };
 </script>
 <style lang="scss"></style>

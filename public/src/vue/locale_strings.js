@@ -111,6 +111,14 @@ module.exports = (function () {
       fr: "Ranger dans les onglets",
       en: "By tabs",
     },
+    editable_for: {
+      fr: "Modifiable pendant encore",
+      en: "Editable for",
+    },
+    minutes: {
+      fr: "Minutes",
+      en: "Minutes",
+    },
     show_password: {
       fr: "Afficher le mot de passe",
       en: "Show password",
