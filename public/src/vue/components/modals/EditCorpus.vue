@@ -27,7 +27,8 @@
       <!-- Human name -->
       <div class="margin-bottom-small">
         <label>{{ $t("description") }}</label>
-        <textarea v-model.trim="corpusdata.description" @keydown.enter.stop />
+        <!-- <textarea v-model.trim="corpusdata.description" @keydown.enter.stop /> -->
+        <CollaborativeEditor v-model="corpusdata.description" />
       </div>
 
       <!-- Preview -->
@@ -82,6 +83,7 @@
 <script>
 import Modal from "./BaseModal.vue";
 import ImageSelect from "../subcomponents/ImageSelect.vue";
+import CollaborativeEditor from "../subcomponents/CollaborativeEditor.vue";
 
 export default {
   props: {
@@ -91,6 +93,7 @@ export default {
   },
   components: {
     Modal,
+    CollaborativeEditor,
     ImageSelect
   },
   data() {

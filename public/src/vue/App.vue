@@ -7,12 +7,7 @@
       "
       :corpuses="Object.values($root.store.corpus)"
     />
-
-    <Corpus
-      v-else-if="$root.do_navigation.view === 'CorpusView'"
-      :corpus="$root.current_corpus"
-    />
-
+    <Corpus v-else-if="$root.do_navigation.view === 'CorpusView'" :corpus="$root.current_corpus" />
     <portal-target name="modal_container" />
   </div>
 </template>
@@ -25,7 +20,7 @@ export default {
   name: "app",
   components: {
     List,
-    Corpus,
+    Corpus
   },
   props: {},
   data() {
@@ -35,7 +30,7 @@ export default {
   created() {},
   beforeDestroy() {},
   computed: {},
-  methods: {},
+  methods: {}
 };
 </script>
 <style src="../../node_modules/vue-plyr/dist/vue-plyr.css"></style>
@@ -322,10 +317,11 @@ b {
   font-weight: bold;
 }
 
-a {
+a,
+.a {
   text-decoration: underline;
   text-decoration-style: solid;
-  color: var(--active-color);
+  color: hsl(216, 54%, 63%);
   // font-weight: 600;
 }
 
@@ -334,6 +330,13 @@ h2 {
   -webkit-hyphens: auto;
   -ms-hyphens: auto;
   hyphens: auto;
+}
+
+.ta-ce {
+  text-align: center;
+}
+.tt-lc {
+  text-transform: lowercase;
 }
 
 blockquote {
@@ -594,6 +597,14 @@ input[type="submit"] {
 
   &[type="submit"] {
     background-color: var(--color-orange);
+  }
+
+  &.button-nostyle {
+    background-color: transparent;
+    color: inherit;
+    font-size: inherit;
+    margin: 0;
+    padding: 0;
   }
 }
 
@@ -1099,6 +1110,9 @@ audio {
           position: fixed;
           height: 50vh;
         }
+
+        display: flex;
+        flex-flow: column nowrap;
       }
       .m_modal--sidebar {
         #app:not(.is--wide) & {
@@ -1143,7 +1157,7 @@ audio {
 
         .m_modal--sidebar {
           position: relative;
-          // .bg-noir;
+          // background-color: var(--color-black);
           flex-grow: 1;
 
           .m_modal--metaOptions {
@@ -1186,7 +1200,7 @@ audio {
     padding: calc(var(--spacing) * 0.5);
     font-weight: 700;
     font-size: 2em;
-    // .bg-noir;
+    // background-color: var(--color-black);
     // color: white;
 
     border-radius: 50% 0 0 50%;
@@ -1246,7 +1260,7 @@ audio {
     position: relative;
     // background-color: #fff;
     background-color: #ccd0da;
-    // .bg-noir;
+    // background-color: var(--color-black);
 
     &[data-context="edit"] {
       > * {
@@ -1498,7 +1512,7 @@ twitter-widget.twitter-tweet {
     background-color: var(--color-black);
   }
   &.plyr--audio {
-    // .bg-noir;
+    // background-color: var(--color-black);
 
     .plyr__controls {
       // background: @c-noir;
@@ -1533,6 +1547,219 @@ twitter-widget.twitter-tweet {
 
   .plyr__progress__container {
     flex: 1;
+  }
+}
+</style>
+<style lang="less">
+.mediaTextContent {
+  position: relative;
+  color: inherit;
+
+  > *:first-child {
+    margin-top: 0;
+
+    > *:first-child {
+      margin-top: 0;
+    }
+  }
+
+  ._no_textcontent {
+    font-style: italic;
+    color: #999;
+  }
+
+  // https://www.gridlover.net/try
+  // fz : 16px
+  // lh : 1.41
+  // scale : 1.31
+
+  font-size: 1em;
+  line-height: 1.2375;
+  // max-width: 773px;
+  // margin: auto;
+
+  h1,
+  .h1 {
+    font-size: 2.25em;
+    line-height: 1.27777778em;
+    margin-top: 0.63888889em;
+    margin-bottom: 0em;
+  }
+  h2,
+  .h2 {
+    font-size: 1.6875em;
+    line-height: 1.7037037em;
+    margin-top: 0.65185185em;
+    margin-bottom: 0em;
+  }
+  h3,
+  .h3 {
+    font-size: 1em;
+    line-height: 1.4375em;
+    margin-top: 1.4375em;
+    margin-bottom: 0em;
+  }
+  h4,
+  .h4 {
+    font-size: 1em;
+    line-height: 1.4375em;
+    margin-top: 1.4375em;
+    margin-bottom: 0em;
+  }
+  h5,
+  .h5 {
+    font-size: 1em;
+    line-height: 1.4375em;
+    margin-top: 1.4375em;
+    margin-bottom: 0em;
+  }
+  p,
+  ul,
+  ol,
+  pre,
+  table,
+  blockquote {
+    margin-top: 0em;
+    margin-bottom: 0em;
+  }
+  ul ul,
+  ol ol,
+  ul ol,
+  ol ul {
+    margin-top: 0em;
+    margin-bottom: 0em;
+  }
+
+  /* Let's make sure all's aligned */
+  hr,
+  .hr {
+    border: none;
+    height: 4px;
+    background-color: var(--c-bleuvert);
+    border-radius: 4px;
+    // border-bottom: 4px solid var(--c-bleuvert);
+    margin: ~"calc(var(--spacing) / 2)" 0;
+  }
+  a,
+  b,
+  i,
+  strong,
+  em,
+  small,
+  code {
+    // line-height: 0;
+  }
+  sub,
+  sup {
+    // line-height: 0;
+    position: relative;
+    vertical-align: baseline;
+  }
+  sup {
+    top: -0.5em;
+  }
+  sub {
+    bottom: -0.25em;
+  }
+  // gridlover end
+
+  h1,
+  h2 {
+    & + h2 {
+      margin-top: 0;
+    }
+  }
+
+  ol,
+  ul {
+    padding-left: 1.5em;
+
+    > li {
+      list-style-type: none;
+    }
+  }
+  ul > li::before {
+    content: "\2022";
+  }
+
+  li::before {
+    display: inline-block;
+    white-space: nowrap;
+    width: 1.2em;
+  }
+
+  ol li {
+    counter-reset: list-1 list-2 list-3 list-4 list-5 list-6 list-7 list-8
+      list-9;
+    counter-increment: list-0;
+  }
+  ol li:before {
+    content: counter(list-0, decimal) ". ";
+  }
+
+  strong,
+  b {
+    font-weight: 700;
+  }
+
+  a {
+    text-decoration: underline;
+    text-decoration-style: solid;
+    // color: var(--color-orange);
+    font-weight: inherit;
+  }
+
+  h1,
+  h2 {
+    -webkit-hyphens: auto;
+    -ms-hyphens: auto;
+    hyphens: auto;
+  }
+
+  h1 {
+    font-weight: 700;
+  }
+
+  h2,
+  h3,
+  h4 {
+    font-weight: 700;
+  }
+
+  blockquote {
+    border-left: 4px solid #ccc;
+    margin-bottom: 5px;
+    margin-top: 5px;
+    padding-left: 16px;
+  }
+
+  code,
+  pre {
+    background-color: var(--color-black);
+    color: white;
+    border-radius: 3px;
+    font-family: "Fira Code";
+    font-weight: 500;
+  }
+  pre {
+    white-space: pre-wrap;
+    margin-bottom: 5px;
+    margin-top: 5px;
+    padding: 5px 10px;
+  }
+  code {
+    // font-size: 85%;
+    // padding: 2px 4px;
+  }
+
+  .ql-align-center {
+    text-align: center;
+  }
+  .ql-align-justify {
+    text-align: justify;
+  }
+  .ql-align-right {
+    text-align: right;
   }
 }
 </style>

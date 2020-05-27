@@ -3,10 +3,15 @@
     <CorpusPwd v-if="!can_access_corpus" :corpus="corpus" />
     <div v-else class="m_corpus" ref="corpus" @scroll="onScroll">
       <div class="m_corpus--presentation custom_scrollbar">
-        <!-- <div class>
-          <button type="button" @click="$root.closeCorpus()">back</button>
-        </div>-->
         <Infos />
+
+        <div class="m_feedbacks">
+          <a
+            class="js--openInBrowser"
+            target="_blank"
+            href="mailto:info@plurality-university.org?subject=feedbacks%20on%20Corpora"
+          >{{ $t('feedbacks') }}</a>
+        </div>
 
         <div class="m_corpus--presentation--content">
           <div class="m_corpus--presentation--name">
@@ -14,10 +19,27 @@
             <h3 v-if="!!corpus.subtitle">{{ corpus.subtitle }}</h3>
           </div>
 
-          <div class="m_corpus--presentation--description">
-            <!-- <label>{{ $t('description') }}</label> -->
-            <p>{{ corpus.description }}</p>
+          <div
+            class="m_corpus--presentation--description mediaTextContent"
+            v-html="corpus.description"
+          />
+
+          <div class="margin-bottom-small" v-if="$root.can_admin_corpora">
+            <button
+              type="button"
+              class="button-small"
+              @click="show_edit_corpus_for = true"
+            >{{ $t("edit") }}</button>
           </div>
+
+          <EditCorpus
+            v-if="show_edit_corpus_for"
+            :corpus="corpus"
+            :corpus_password="corpus_password"
+            :slugCorpusName="corpus.slugFolderName"
+            @close="show_edit_corpus_for = false"
+          />
+
           <!-- <div class="m_corpus--presentation--tags">
           <label>{{ $t('keywords') }}</label>
           <button type="button" v-for="(tag, index) in all_tags" :key="index">{{ tag }}</button>
@@ -27,39 +49,24 @@
             <label>{{ $t("filter_by_source_of_contribution") }}</label>
 
             <div class="margin-bottom-verysmall">
-              <CollectMode
-                v-model="current_contribution_mode"
-                :is_filter="true"
-              />
+              <CollectMode v-model="current_contribution_mode" :is_filter="true" />
             </div>
 
-            <div class="">
+            <div class>
               <button
                 type="button"
                 class="button-small margin-bottom-verysmall"
                 @click="show_create_time_modal = !show_create_time_modal"
               >
-                <template v-if="!show_create_time_modal">
-                  {{ $t("create_a_source") }}
-                </template>
+                <template v-if="!show_create_time_modal">{{ $t("create_a_source") }}</template>
                 <template v-else>{{ $t("close") }}</template>
               </button>
 
-              <form
-                class=""
-                v-if="show_create_time_modal"
-                @submit.prevent="createNewMoment"
-              >
+              <form class v-if="show_create_time_modal" @submit.prevent="createNewMoment">
                 <div class>
                   <label>{{ $t("new_source_name") }}</label>
                   <div class="flex-nowrap align-items-stretch">
-                    <input
-                      type="text"
-                      class
-                      v-model.trim="new_source_name"
-                      required
-                      autofocus
-                    />
+                    <input type="text" class v-model.trim="new_source_name" required autofocus />
                     <input
                       type="submit"
                       style="flex: 0 1 0;"
@@ -81,9 +88,11 @@
                   id="display_in_tabs"
                   v-model="display_in_tabs"
                 />
-                <label class="no-style" for="display_in_tabs">{{
+                <label class="no-style" for="display_in_tabs">
+                  {{
                   $t("display_in_tabs")
-                }}</label>
+                  }}
+                </label>
               </div>
               <div class="flex-nowrap">
                 <span>{{ $t("sort_fragments_by") }}&nbsp;</span>
@@ -93,8 +102,7 @@
                       v-for="mode in ['date_created', 'title']"
                       :key="mode"
                       :value="mode"
-                      >{{ $t(mode) }}</option
-                    >
+                    >{{ $t(mode) }}</option>
                   </select>
                 </div>
               </div>
@@ -147,11 +155,7 @@
           />
         </div>
 
-        <transition-group
-          name="list-complete"
-          tag="div"
-          class="m_tags--allfragments"
-        >
+        <transition-group name="list-complete" tag="div" class="m_tags--allfragments">
           <template v-if="display_in_tabs">
             <Tag
               v-for="{ tag, fragments } in tags_with_fragments"
@@ -192,10 +196,11 @@ import Tag from "../components/Tag.vue";
 import Fragment from "../components/Fragment.vue";
 import CreateFragment from "../components/modals/CreateFragment.vue";
 import CollectMode from "../components/subcomponents/CollectMode.vue";
+import EditCorpus from "../components/modals/EditCorpus.vue";
 
 export default {
   props: {
-    corpus: Object,
+    corpus: Object
   },
   components: {
     Infos,
@@ -204,6 +209,7 @@ export default {
     Fragment,
     CreateFragment,
     CollectMode,
+    EditCorpus
   },
   data() {
     return {
@@ -220,12 +226,18 @@ export default {
       new_source_name: "",
       current_contribution_mode: "",
 
+      show_edit_corpus_for: false
+
       // show_fragments_for: {},
     };
   },
   created() {},
-  mounted() {},
-  beforeDestroy() {},
+  mounted() {
+    this.$eventHub.$on("scrollCorpus", this.scrollCorpus);
+  },
+  beforeDestroy() {
+    this.$eventHub.$off("scrollCorpus", this.scrollCorpus);
+  },
   destroyed() {},
   watch: {},
   computed: {
@@ -235,7 +247,7 @@ export default {
     can_access_corpus() {
       return this.$root.canAccessFolder({
         type: "corpus",
-        slugFolderName: this.corpus.slugFolderName,
+        slugFolderName: this.corpus.slugFolderName
       });
     },
     previewURL() {
@@ -245,9 +257,9 @@ export default {
       ) {
         return false;
       }
-      const thumb = this.corpus.preview.filter((p) => p.size === 640);
+      const thumb = this.corpus.preview.filter(p => p.size === 640);
       if (thumb.length > 0) {
-        return `${thumb[0].path}`;
+        return `/${thumb[0].path}`;
       }
       return false;
     },
@@ -267,7 +279,7 @@ export default {
       )
         return false;
       let fragments = Object.values(this.corpus.medias).filter(
-        (m) => m.type === "fragment"
+        m => m.type === "fragment"
       );
 
       if (this.sort_fragments_by === "date_created") {
@@ -285,7 +297,7 @@ export default {
       // if current_contribution_mode is set
       // if current_contribution_mode === online, then we retrieve only fragments that don’t have contribution_moment
       if (this.current_contribution_mode !== "") {
-        fragments = fragments.filter((f) => {
+        fragments = fragments.filter(f => {
           if (
             this.current_contribution_mode === "online" ||
             this.current_contribution_mode === ""
@@ -306,29 +318,29 @@ export default {
       if (!this.sorted_fragments) return [];
 
       // get all tags
-      let fragments_by_tag = this.all_tags.map((tag) => {
+      let fragments_by_tag = this.all_tags.map(tag => {
         const fragments_for_tag = this.filtered_fragments.filter(
-          (f) =>
+          f =>
             !!f.tags &&
             Array.isArray(f.tags) &&
-            f.tags.some((t) => t.title === tag)
+            f.tags.some(t => t.title === tag)
         );
 
         return {
           tag,
-          fragments: fragments_for_tag,
+          fragments: fragments_for_tag
         };
       });
 
       // append all fragments
       const fragments_with_no_tags = this.filtered_fragments.filter(
-        (f) => !f.tags || !Array.isArray(f.tags) || f.tags.length === 0
+        f => !f.tags || !Array.isArray(f.tags) || f.tags.length === 0
       );
 
       if (fragments_with_no_tags.length > 0) {
         fragments_by_tag.push({
           tag: "",
-          fragments: fragments_with_no_tags,
+          fragments: fragments_with_no_tags
         });
       }
 
@@ -342,11 +354,11 @@ export default {
 
       let all_tags = this.sorted_fragments.reduce((acc, f) => {
         if (!!f.tags && Array.isArray(f.tags) && f.tags.length > 0)
-          acc = acc.concat(f.tags.map((t) => t.title));
+          acc = acc.concat(f.tags.map(t => t.title));
         return acc;
       }, []);
 
-      all_tags = all_tags.filter(function (item, pos) {
+      all_tags = all_tags.filter(function(item, pos) {
         return all_tags.indexOf(item) == pos;
       });
 
@@ -358,21 +370,24 @@ export default {
 
       let all_keywords = this.sorted_fragments.reduce((acc, f) => {
         if (!!f.keywords && Array.isArray(f.keywords) && f.keywords.length > 0)
-          acc = acc.concat(f.keywords.map((t) => t.title));
+          acc = acc.concat(f.keywords.map(t => t.title));
         return acc;
       }, []);
 
-      all_keywords = all_keywords.filter(function (item, pos) {
+      all_keywords = all_keywords.filter(function(item, pos) {
         return all_keywords.indexOf(item) == pos;
       });
 
       all_keywords.sort((a, b) => a.localeCompare(b));
       return all_keywords;
-    },
+    }
   },
   methods: {
     onScroll() {
       this.corpus_scroll_left = this.$refs.corpus.scrollLeft;
+    },
+    scrollCorpus(px) {
+      this.$refs.corpus.scrollLeft = px - window.innerWidth / 3;
     },
     createNewMoment() {
       let contribution_moments =
@@ -382,7 +397,7 @@ export default {
           : [];
 
       // check if moment already exists
-      if (contribution_moments.some((m) => m.name === this.new_source_name)) {
+      if (contribution_moments.some(m => m.name === this.new_source_name)) {
         this.$alertify
           .closeLogOnClick(true)
           .delay(4000)
@@ -390,20 +405,20 @@ export default {
       }
 
       contribution_moments.push({
-        name: this.new_source_name,
+        name: this.new_source_name
       });
 
       this.$root.editFolder({
         type: "corpus",
         slugFolderName: this.corpus.slugFolderName,
         data: {
-          contribution_moments,
-        },
+          contribution_moments
+        }
       });
 
       this.show_create_time_modal = false;
-    },
-  },
+    }
+  }
 };
 </script>
 <style lang="scss" scoped>
@@ -414,6 +429,7 @@ export default {
   flex-flow: row nowrap;
   align-items: stretch;
   overflow-x: auto;
+  scroll-behavior: smooth;
 
   > * {
     flex: 0 0 auto;
@@ -555,5 +571,20 @@ export default {
   overflow-y: auto;
 
   padding-left: var(--spacing);
+}
+
+.m_feedbacks {
+  position: fixed;
+  bottom: var(--spacing);
+  right: 50px;
+  background-color: var(--color-black);
+  color: white;
+  margin: 0;
+  padding: calc(var(--spacing) / 2) var(--spacing);
+  border-radius: 24px;
+
+  a {
+    color: inherit;
+  }
 }
 </style>

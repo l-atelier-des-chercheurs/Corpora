@@ -27,12 +27,34 @@
 
       <MediaContent
         v-else
+        ref="mediaContent"
         v-model="media.content"
-        :context="!is_being_edited ? '' : 'edit'"
+        :context="media_context"
         :slugFolderName="slugFolderName"
         :media="media"
         :read_only="false"
       />
+      <button
+        type="button"
+        class="plyr__controls__item plyr__control _open_fullscreen"
+        @click="openMedia"
+        v-if="media.type === 'image' ||media.type === 'document' "
+      >
+        <svg class="icon--pressed" role="presentation" focusable="false">
+          <use
+            xmlns:xlink="http://www.w3.org/1999/xlink"
+            xlink:href="/images/plyr.svg#plyr-exit-fullscreen"
+          />
+        </svg>
+        <svg class="icon--not-pressed" role="presentation" focusable="false">
+          <use
+            xmlns:xlink="http://www.w3.org/1999/xlink"
+            xlink:href="/images/plyr.svg#plyr-enter-fullscreen"
+          />
+        </svg>
+        <span class="label--pressed plyr__sr-only">Exit fullscreen</span>
+        <span class="label--not-pressed plyr__sr-only">Enter fullscreen</span>
+      </button>
     </div>
     <div
       class="m_advancedMenu"
@@ -45,9 +67,7 @@
         class="button-small bg-orange"
         v-if="is_being_edited"
         @click="setBlocToEdit(false)"
-      >
-        {{ $t("save") }}
-      </button>
+      >{{ $t("save") }}</button>
 
       <template v-else>
         <button
@@ -80,10 +100,9 @@
           <button
             type="button"
             class="button-small"
+            v-if="can_be_edited"
             @click="setBlocToEdit(media.metaFileName)"
-          >
-            {{ $t("edit") }}
-          </button>
+          >{{ $t("edit") }}</button>
           <button
             type="button"
             class="button-small"
@@ -92,9 +111,7 @@
               $emit('moveMedia', { metaFileName: media.metaFileName, dir: -1 });
               show_advanced_menu_for_media = false;
             "
-          >
-            {{ $t("moveup") }}
-          </button>
+          >{{ $t("moveup") }}</button>
           <button
             type="button"
             class="button-small"
@@ -103,35 +120,28 @@
               $emit('moveMedia', { metaFileName: media.metaFileName, dir: +1 });
               show_advanced_menu_for_media = false;
             "
-          >
-            {{ $t("movedown") }}
-          </button>
+          >{{ $t("movedown") }}</button>
           <a
             class="button button-small"
             :download="media.media_filename"
             :href="mediaURL"
             target="_blank"
-            >{{ $t("download") }}</a
-          >
+          >{{ $t("download") }}</a>
           <button
             type="button"
             class="button-small"
+            v-if="can_be_edited || $root.can_admin_corpora"
             @click="
               $emit('removeMedia', { metaFileName: media.metaFileName });
               show_advanced_menu_for_media = false;
             "
-          >
-            {{ $t("remove") }}
-          </button>
+          >{{ $t("remove") }}</button>
         </div>
       </template>
     </div>
 
     <div class="m_fragmentMedia--infos">
-      <div
-        class="m_fragmentMedia--infos--caption"
-        v-if="is_being_edited || media.caption"
-      >
+      <div class="m_fragmentMedia--infos--caption" v-if="is_being_edited || media.caption">
         <label>{{ $t("caption") }}</label>
         <div>
           <template v-if="!is_being_edited">
@@ -147,10 +157,7 @@
           </template>
         </div>
       </div>
-      <div
-        class="m_fragmentMedia--infos--source"
-        v-if="is_being_edited || media.source"
-      >
+      <div class="m_fragmentMedia--infos--source" v-if="is_being_edited || media.source">
         <label>{{ $t("source") }} (URL)</label>
         <div>
           <template v-if="!is_being_edited">
@@ -159,8 +166,7 @@
               rel="noopener noreferrer"
               :title="media.source"
               :href="media.source"
-              >{{ media.source }}</a
-            >
+            >{{ media.source }}</a>
           </template>
           <template v-else>
             <input
@@ -173,10 +179,22 @@
         </div>
       </div>
     </div>
+    <small
+      v-if="can_be_edited && media_was_created_x_minutes_ago !== false && !$root.can_admin_corpora"
+      class="ta-ce tt-lc padding-small font-verysmall"
+      style="width: 100%; display:block;"
+    >{{ $t('editable_for')}} {{ editable_delay_in_minutes - media_was_created_x_minutes_ago }} {{ $t('minutes')}}</small>
+    <ShowMedia
+      v-if="show_in_modal"
+      :media="media"
+      :slugFolderName="slugFolderName"
+      @close="show_in_modal = false"
+    />
   </div>
 </template>
 <script>
 import MediaContent from "./subcomponents/MediaContent.vue";
+import ShowMedia from "./modals/ShowMedia.vue";
 import CollaborativeEditor from "./subcomponents/CollaborativeEditor.vue";
 
 export default {
@@ -184,11 +202,12 @@ export default {
     slugFolderName: String,
     media: Object,
     index: Number,
-    linked_medias: Array,
+    linked_medias: Array
   },
   components: {
     MediaContent,
-    CollaborativeEditor,
+    ShowMedia,
+    CollaborativeEditor
   },
   data() {
     return {
@@ -196,23 +215,26 @@ export default {
       mediadata: {
         caption: this.media.caption,
         source: this.media.source,
-        content: this.media.content,
+        content: this.media.content
       },
+
+      show_in_modal: false,
+
+      editable_delay_in_minutes: 30,
+
       mediaURL: `/${this.slugFolderName}/${this.media.media_filename}`,
       is_being_edited:
-        this.$root.settings.text_media_being_edited === this.media.metaFileName,
+        this.$root.settings.text_media_being_edited === this.media.metaFileName
     };
   },
   created() {},
   mounted() {},
   beforeDestroy() {},
   watch: {
-    "$root.settings.text_media_being_edited": function () {
+    "$root.settings.text_media_being_edited": function() {
       console.log(
-        `FragmentMedia • WATCH: $root.settings.text_media_being_edited. Is self ? ${
-          this.$root.settings.text_media_being_edited ===
-          this.media.metaFileName
-        }`
+        `FragmentMedia • WATCH: $root.settings.text_media_being_edited. Is self ? ${this
+          .$root.settings.text_media_being_edited === this.media.metaFileName}`
       );
       if (this.is_being_edited) {
         this.saveMedia();
@@ -223,12 +245,44 @@ export default {
         this.mediadata = {
           caption: this.media.caption,
           source: this.media.source,
-          content: this.media.content,
+          content: this.media.content
         };
       }
-    },
+    }
   },
-  computed: {},
+  computed: {
+    media_was_created_x_minutes_ago() {
+      if (this.media.hasOwnProperty("date_uploaded")) {
+        const media_uploaded_on = this.$moment(this.media.date_uploaded);
+        if (media_uploaded_on.isValid()) {
+          const ellapsed = this.$moment
+            .duration(media_uploaded_on.diff(this.$moment()))
+            .minutes();
+          return Math.abs(ellapsed);
+        }
+
+        this.$moment
+          .duration(this.$moment(this.media.date_uploaded).diff(this.$moment()))
+          .minutes();
+      }
+      return false;
+    },
+    can_be_edited() {
+      if (this.$root.can_admin_corpora) return true;
+      if (
+        this.media_was_created_x_minutes_ago !== false &&
+        this.media_was_created_x_minutes_ago < this.editable_delay_in_minutes
+      ) {
+        return true;
+      }
+      return false;
+    },
+    media_context() {
+      if (this.is_being_edited) return "edit";
+      if (this.media.type === "document") return "edit";
+      return "";
+    }
+  },
   methods: {
     setBlocToEdit(metaFileName) {
       if (window.state.dev_mode === "debug")
@@ -238,6 +292,7 @@ export default {
 
       if (this.$root.settings.text_media_being_edited !== metaFileName) {
         this.$root.settings.text_media_being_edited = metaFileName;
+      } else {
       }
     },
     saveMedia() {
@@ -246,10 +301,14 @@ export default {
         type: "corpus",
         slugFolderName: this.slugFolderName,
         slugMediaName: this.media.metaFileName,
-        data: this.mediadata,
+        data: this.mediadata
       });
+      this.show_advanced_menu_for_media = false;
     },
-  },
+    openMedia() {
+      this.show_in_modal = true;
+    }
+  }
 };
 </script>
 <style lang="scss" scoped>
@@ -259,6 +318,7 @@ export default {
 
   .m_fragmentMedia--content {
     min-height: 3em;
+    position: relative;
 
     input {
       background-color: var(--body-bg);
@@ -352,6 +412,23 @@ export default {
   text-transform: uppercase;
   font-size: 70%;
   padding: 4px;
+}
+
+._open_fullscreen {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  background-color: rgba(226, 237, 239, 0.4);
+  margin: 4px;
+
+  svg {
+    // width: 16px;
+    // height: 16px;
+    // padding: 4px;
+    fill: white;
+    filter: drop-shadow(0px 0px 2px rgba(226, 237, 239, 0.8));
+    filter: drop-shadow(0px 0px 3px rgba(110, 110, 110, 0.4));
+  }
 }
 </style>
 <style lang="scss">

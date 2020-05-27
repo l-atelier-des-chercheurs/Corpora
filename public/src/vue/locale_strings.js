@@ -43,6 +43,10 @@ module.exports = (function () {
       oc: "Durada",
       de: "Dauer",
     },
+    feedbacks: {
+      fr: "Retours/aide",
+      en: "Feedbacks",
+    },
     link: {
       fr: "Lien",
       en: "Link",
@@ -110,6 +114,14 @@ module.exports = (function () {
     display_in_tabs: {
       fr: "Ranger dans les onglets",
       en: "By tabs",
+    },
+    editable_for: {
+      fr: "Modifiable pendant encore",
+      en: "Editable for",
+    },
+    minutes: {
+      fr: "Minutes",
+      en: "Minutes",
     },
     show_password: {
       fr: "Afficher le mot de passe",

@@ -91,8 +91,12 @@ export default {
     };
   },
   created() {},
-  mounted() {},
-  beforeDestroy() {},
+  mounted() {
+    this.$eventHub.$on("scrollToFragment", this.scrollToFragment);
+  },
+  beforeDestroy() {
+    this.$eventHub.$on("scrollToFragment", this.scrollToFragment);
+  },
   watch: {
     corpus_scroll_left: function() {
       this.setTitleBarRightPos();
@@ -100,7 +104,20 @@ export default {
   },
   computed: {},
   methods: {
-    showFragments(tag) {
+    scrollToFragment(metaFileName) {
+      const called_fragment = this.fragments.find(
+        f => f.metaFileName === metaFileName
+      );
+      if (called_fragment && !this.show_fragments) {
+        this.showFragments();
+        this.$nextTick(() => {
+          setTimeout(() => {
+            this.$eventHub.$emit("scrollToFragment", metaFileName);
+          }, 500);
+        });
+      }
+    },
+    showFragments() {
       this.show_fragments = !this.show_fragments;
       this.$nextTick(() => {
         this.setTitleBarRightPos();
