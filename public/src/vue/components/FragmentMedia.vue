@@ -257,13 +257,9 @@ export default {
         if (media_uploaded_on.isValid()) {
           const ellapsed = this.$moment
             .duration(media_uploaded_on.diff(this.$moment()))
-            .minutes();
+            .asMinutes();
           return Math.abs(ellapsed);
         }
-
-        this.$moment
-          .duration(this.$moment(this.media.date_uploaded).diff(this.$moment()))
-          .minutes();
       }
       return false;
     },
