@@ -258,7 +258,7 @@ export default {
           const ellapsed = this.$moment
             .duration(media_uploaded_on.diff(this.$moment()))
             .asMinutes();
-          return Math.abs(ellapsed);
+          return Math.floor(Math.abs(ellapsed));
         }
       }
       return false;
