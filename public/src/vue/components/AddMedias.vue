@@ -144,6 +144,7 @@
         }}</span>
         <!-- TODO scroll to now au click -->
         <svg
+          v-if="!show_drop_container"
           version="1.1"
           xmlns="http://www.w3.org/2000/svg"
           xmlns:xlink="http://www.w3.org/1999/xlink"
@@ -192,7 +193,7 @@ export default {
       selected_files: [],
       show_addmedia_options: false,
 
-      show_drop_container: false,
+      show_drop_container: true,
 
       input_file_fields: [
         // {
@@ -487,6 +488,7 @@ export default {
         display: block;
         width: 14px;
         height: 14px;
+        margin: 0 auto;
         transition: transform cubic-bezier(0.19, 1, 0.22, 1) 1.8s;
         transform: rotate(0);
         fill: currentColor;
@@ -498,7 +500,7 @@ export default {
       &.is--dragover {
         width: 120px;
         // height: 64px;
-        padding: 0;
+        padding: calc(var(--spacing) / 4);
         margin: 0;
       }
 
@@ -516,7 +518,8 @@ export default {
     }
   }
 
-  &.is--collapsed .menu_encart--button:not(:hover):not(.is--shown) {
+  &.is--collapsed
+    .menu_encart--button:not(:hover):not(.is--shown):not(.is--dragover) {
     background-color: var(--color-black);
     // padding: 2px;
     transform: scale(0.2);
