@@ -193,7 +193,7 @@ export default {
       selected_files: [],
       show_addmedia_options: false,
 
-      show_drop_container: true,
+      show_drop_container: false,
 
       input_file_fields: [
         // {
