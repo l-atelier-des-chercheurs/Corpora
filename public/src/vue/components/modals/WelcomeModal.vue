@@ -18,7 +18,8 @@
               v-for="lang in this.$root.lang.available"
               :key="lang.key"
               :value="lang.key"
-            >{{ lang.name }}</option>
+              >{{ lang.name }}</option
+            >
           </select>
         </div>
       </div>
@@ -26,18 +27,20 @@
       <template v-if="$root.lang.current === 'fr'">
         <p>
           Ce site est un dispositif expérimental développé par
-          <a
-            href="https://latelier-des-chercheurs.fr"
-            target="_blank"
-          >l&#39;Atelier des chercheurs</a> et
+          <a href="https://latelier-des-chercheurs.fr" target="_blank"
+            >l&#39;Atelier des chercheurs</a
+          >
+          et
           <a href="https://plurality-university.org" target="_blank">
-            le réseau
-            Université de la Pluralité
-          </a> pour constituer collectivement des corpus d&#39;œuvres et de
+            le réseau Université de la Pluralité
+          </a>
+          pour constituer collectivement des corpus d&#39;œuvres et de
           connaissances.
         </p>
         <p>
-          Il ne collecte pour lui-même aucune donnée personnelle. En revanche, il peut inclure des contenus issus de services tiers (Twitter, vidéo) dont l'affichage provoque le dépôt de cookies sur votre ordinateur.
+          Il ne collecte pour lui-même aucune donnée personnelle. En revanche,
+          il peut inclure des contenus issus de services tiers (Twitter, vidéo)
+          dont l'affichage provoque le dépôt de cookies sur votre ordinateur.
           Nous vous proposons deux modes de navigation :
         </p>
         <p>
@@ -46,50 +49,65 @@
               type="checkbox"
               id="CreateQRCode"
               v-model="load_all_embeds_option"
-              true-value="true"
-              false-value="false"
+              :true-value="true"
+              :false-value="false"
             />
-            Autoriser les cookies le site : affichera d'emblée tous les contenus, y compris issus de plateformes tierces
+            Autoriser les cookies : le site affichera d'emblée tous les
+            contenus, y compris issus de plateformes tierces
           </label>
           <label for="ScanQRCode">
             <input
               type="checkbox"
               id="ScanQRCode"
-              true-value="false"
-              false-value="true"
+              :true-value="false"
+              :false-value="true"
               v-model="load_all_embeds_option"
             />
-            Refuser les cookies : vous devrez cliquer pour afficher chaque contenus tiers, et accepter ou refuser le dépôt de cookies pour chaque contenu
+            Refuser les cookies : vous devrez cliquer pour afficher chaque
+            contenus tiers, et accepter ou refuser le dépôt de cookies pour
+            chaque contenu
           </label>
         </p>
-        <p>Pour exercer vos droits sur les données collectées par les tiers ou pour toute question sur ces traitements, contactez directement les sites en question.</p>
+        <p>
+          Pour exercer vos droits sur les données collectées par les tiers ou
+          pour toute question sur ces traitements, contactez directement les
+          sites en question.
+        </p>
         <p>Plus d’informations :</p>
         <button
           type="button"
           @click="show_legal = !show_legal"
-          :class="{ 'is--active' : show_legal}"
+          :class="{ 'is--active': show_legal }"
         >
-          <small>{{ $t('legal_notice') }}</small>
+          <small>{{ $t("legal_notice") }}</small>
         </button>
       </template>
       <template v-else>
         <p>
           This website is an experimental platform developed by
-          <a
-            href="https://latelier-des-chercheurs.fr"
-            target="_blank"
-          >l&#39;Atelier des chercheurs</a> and
-          <a href="plurality-university.org" target="_blank">the Plurality University Network</a> in order to collectively build corpuses.
+          <a href="https://latelier-des-chercheurs.fr" target="_blank"
+            >l&#39;Atelier des chercheurs</a
+          >
+          and
+          <a href="plurality-university.org" target="_blank"
+            >the Plurality University Network</a
+          >
+          in order to collectively build corpuses.
         </p>
-        <p>We strive to minimize the collection of personal data and will not use them to any other purpose than that of facilitating access to the content. However, this content may include third-party cookies (from Twitter and video platforms).</p>
+        <p>
+          We strive to minimize the collection of personal data and will not use
+          them to any other purpose than that of facilitating access to the
+          content. However, this content may include third-party cookies (from
+          Twitter and video platforms).
+        </p>
         <p>For more informations:</p>
 
         <button
           type="button"
           @click="show_legal = !show_legal"
-          :class="{ 'is--active' : show_legal}"
+          :class="{ 'is--active': show_legal }"
         >
-          <small>{{ $t('legal_notice') }}</small>
+          <small>{{ $t("legal_notice") }}</small>
         </button>
       </template>
 
@@ -97,13 +115,21 @@
         <template v-if="$root.lang.current === 'fr'">
           <h2>Informations légales et protection des données personnelles</h2>
           <h3>Informations éditeur</h3>
-          <p>Association Réseau Université de la Pluralité (Plurality University Network) – 5 rue de la Véga, 75012 Paris</p>
-          <p>Responsable de la publication et webmaster : Chloé Luchs – chloe.luchs(at)plurality-university.org</p>
+          <p>
+            Association Réseau Université de la Pluralité (Plurality University
+            Network) – 5 rue de la Véga, 75012 Paris
+          </p>
+          <p>
+            Responsable de la publication et webmaster : Chloé Luchs –
+            chloe.luchs(at)plurality-university.org
+          </p>
           <h3>Hébergeur</h3>
           <ul>
             <li>Société : DigitalOcean</li>
             <li>Adresse web : www.digitalocean.com</li>
-            <li>Adresse postale : 101 Avenue of the Americas, New York 10013</li>
+            <li>
+              Adresse postale : 101 Avenue of the Americas, New York 10013
+            </li>
             <li>Adresse électronique (Email) : contact@digitalocean.com</li>
             <li>Serveur situé à Frankfort, Allemagne.</li>
           </ul>
@@ -111,40 +137,49 @@
           <h3>Vos données personnelles</h3>
           <p>
             Ce site est un dispositif expérimental développé par
-            <a
-              href="https://latelier-des-chercheurs.fr"
-              target="_blank"
-            >l&#39;Atelier des chercheurs</a> et
+            <a href="https://latelier-des-chercheurs.fr" target="_blank"
+              >l&#39;Atelier des chercheurs</a
+            >
+            et
             <a href="plurality-university.org" target="_blank">
-              le réseau
-              Université de la Pluralité
-            </a> pour constituer collectivement des corpus d&#39;œuvres et de
+              le réseau Université de la Pluralité
+            </a>
+            pour constituer collectivement des corpus d&#39;œuvres et de
             connaissances.
           </p>
           <p>
-            Nous nous efforçons de minimiser la collecte de données à caractère personnelle et nous
-            engageons à n’en faire aucun usage autre que celui qui consiste à faciliter la navigation dans
-            le site. En revanche, cet affichage peut inclure des contenus issus de services tiers (Twitter,
-            vidéo) dont l&#39;affichage provoque le dépôt de cookies sur votre ordinateur.
+            Nous nous efforçons de minimiser la collecte de données à caractère
+            personnelle et nous engageons à n’en faire aucun usage autre que
+            celui qui consiste à faciliter la navigation dans le site. En
+            revanche, cet affichage peut inclure des contenus issus de services
+            tiers (Twitter, vidéo) dont l&#39;affichage provoque le dépôt de
+            cookies sur votre ordinateur.
           </p>
 
           <p>
-            Pour toute information ou exercice de vos droits sur les traitements de données personnelles
-            gérés par le site, vous pouvez nous contacter
+            Pour toute information ou exercice de vos droits sur les traitements
+            de données personnelles gérés par le site, vous pouvez nous
+            contacter
           </p>
           <ul>
             <li>Par mail : info@plurality-university.org</li>
             <li>
-              Par courrier : Réseau Université de la Pluralité (Plurality University Network) – 5 rue
-              de la Véga, 75012 Paris - France
+              Par courrier : Réseau Université de la Pluralité (Plurality
+              University Network) – 5 rue de la Véga, 75012 Paris - France
             </li>
           </ul>
         </template>
         <template v-else>
           <h2>Legal Notice, Personal Data Management</h2>
           <h3>Publisher Information</h3>
-          <p>Association Réseau Université de la Pluralité (Plurality University Network) – 5 rue de la Véga, 75012 Paris</p>
-          <p>Editor and webmaster : Chloé Luchs – chloe.luchs(at)plurality-university.org</p>
+          <p>
+            Association Réseau Université de la Pluralité (Plurality University
+            Network) – 5 rue de la Véga, 75012 Paris
+          </p>
+          <p>
+            Editor and webmaster : Chloé Luchs –
+            chloe.luchs(at)plurality-university.org
+          </p>
           <h3>Hoster</h3>
           <ul>
             <li>Company: DigitalOcean</li>
@@ -157,18 +192,32 @@
           <h3>Your Personal Data</h3>
           <p>
             This website is an experimental platform developed by
-            <a
-              href="https://latelier-des-chercheurs.fr"
-              target="_blank"
-            >l&#39;Atelier des chercheurs</a> and
-            <a href="plurality-university.org" target="_blank">the Plurality University Network</a> in order to collectively build corpuses.
+            <a href="https://latelier-des-chercheurs.fr" target="_blank"
+              >l&#39;Atelier des chercheurs</a
+            >
+            and
+            <a href="plurality-university.org" target="_blank"
+              >the Plurality University Network</a
+            >
+            in order to collectively build corpuses.
           </p>
-          <p>We strive to minimize the collection of personal data and will not use them to any other purpose than that of facilitating access to the content. However, this content may include third-party cookies (from Twitter and video platforms).</p>
+          <p>
+            We strive to minimize the collection of personal data and will not
+            use them to any other purpose than that of facilitating access to
+            the content. However, this content may include third-party cookies
+            (from Twitter and video platforms).
+          </p>
 
-          <p>If you need information or want to exercise your rights on your personal data, please contact us:</p>
+          <p>
+            If you need information or want to exercise your rights on your
+            personal data, please contact us:
+          </p>
           <ul>
             <li>Email : info@plurality-university.org</li>
-            <li>Mail : Réseau Université de la Pluralité (Plurality University Network) – 5 rue de la Véga, 75012 Paris - France</li>
+            <li>
+              Mail : Réseau Université de la Pluralité (Plurality University
+              Network) – 5 rue de la Véga, 75012 Paris - France
+            </li>
           </ul>
         </template>
       </div>
