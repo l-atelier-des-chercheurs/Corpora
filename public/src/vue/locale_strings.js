@@ -67,6 +67,10 @@ module.exports = (function () {
       fr: "Classer les fragments par",
       en: "Sort fragments by",
     },
+    personal_data_and_legal_notices: {
+      fr: "données personnelles et mentions légales",
+      en: "Personal data and legal notices",
+    },
     created_on: {
       fr: "Créé le",
       en: "Created on",
@@ -82,6 +86,10 @@ module.exports = (function () {
     edit: {
       fr: "Éditer",
       en: "Edit",
+    },
+    legal_notice: {
+      fr: "Mentions légales et données personnelles",
+      en: "Legal notices and personal data",
     },
     new_source_name: {
       fr: "Nom de la nouvelle source",

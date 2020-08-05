@@ -20,7 +20,7 @@ export default {
   name: "app",
   components: {
     List,
-    Corpus
+    Corpus,
   },
   props: {},
   data() {
@@ -30,7 +30,7 @@ export default {
   created() {},
   beforeDestroy() {},
   computed: {},
-  methods: {}
+  methods: {},
 };
 </script>
 <style src="../../node_modules/vue-plyr/dist/vue-plyr.css"></style>
@@ -322,6 +322,7 @@ a,
   text-decoration: underline;
   text-decoration-style: solid;
   color: hsl(216, 54%, 63%);
+  text-align: left;
   // font-weight: 600;
 }
 
@@ -443,6 +444,10 @@ textarea {
     outline: 0px;
     border-left: 2px solid var(--color-orange);
   }
+}
+
+input[type="radio"] {
+  width: auto;
 }
 
 textarea {

@@ -41,15 +41,15 @@ import Modal from "./BaseModal.vue";
 
 export default {
   props: {
-    corpus: Object
+    corpus: Object,
   },
   components: {
-    Modal
+    Modal,
   },
   data() {
     return {
       pwd: "",
-      remember_password_on_this_device: true
+      remember_password_on_this_device: true,
     };
   },
 
@@ -65,8 +65,8 @@ export default {
 
       this.$auth.updateFoldersPasswords({
         corpus: {
-          [this.corpus.slugFolderName]: this.pwd
-        }
+          [this.corpus.slugFolderName]: this.pwd,
+        },
       });
 
       this.$socketio.sendAuth();
@@ -74,7 +74,7 @@ export default {
       // check if password matches or not
       this.$eventHub.$once("socketio.authentificated", () => {
         const has_passworded_folder = window.state.list_authorized_folders.filter(
-          f =>
+          (f) =>
             f.type === "corpus" &&
             f.allowed_slugFolderNames.includes(this.corpus.slugFolderName)
         );
@@ -100,8 +100,8 @@ export default {
           this.$root.openCorpus(this.corpus.slugFolderName);
         }
       });
-    }
-  }
+    },
+  },
 };
 </script>
 <style></style>

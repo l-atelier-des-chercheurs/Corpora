@@ -38,6 +38,13 @@
           <p>Connected as admin</p>
         </template>
       </div>
+
+      <button
+        type="button"
+        class="button-nostyle a"
+        @click="$root.show_welcome_modal = true"
+        :class="{ 'is--active' : $root.show_welcome_modal }"
+      >{{ $t('personal_data_and_legal_notices')}}</button>
     </div>
   </div>
 </template>
@@ -50,17 +57,17 @@ export default {
       new_lang: this.$root.lang.current,
       current_role: "contributor",
 
-      show_admin_login: false
+      show_admin_login: false,
     };
   },
   watch: {
     new_lang() {
       this.$root.updateLocalLang(this.new_lang);
-    }
+    },
   },
   mounted() {},
   computed: {},
-  methods: {}
+  methods: {},
 };
 </script>
 <style lang="scss" scoped></style>
