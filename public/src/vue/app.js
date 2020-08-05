@@ -201,6 +201,8 @@ let vm = new Vue({
       slug: false,
     },
 
+    show_welcome_modal: true,
+
     // persistant, par device (dans le localstorage)
     settings: {
       windowWidth: window.innerWidth,
@@ -208,6 +210,7 @@ let vm = new Vue({
       enable_system_bar: window.state.is_electron && window.state.is_darwin,
       text_media_being_edited: false,
       is_loading_corpus: false,
+      load_all_embeds: false,
     },
     lang: {
       available: lang_settings.available,

@@ -52,8 +52,12 @@ module.exports = (function () {
       en: "Link",
     },
     embed: {
-      fr: "Embed",
+      fr: "Intégration",
       en: "Embed",
+    },
+    load: {
+      fr: "Charger",
+      en: "Load",
     },
     file_max_size: {
       fr: "Taille max. des fichiers",
@@ -62,6 +66,10 @@ module.exports = (function () {
     sort_fragments_by: {
       fr: "Classer les fragments par",
       en: "Sort fragments by",
+    },
+    personal_data_and_legal_notices: {
+      fr: "données personnelles et mentions légales",
+      en: "Personal data and legal notices",
     },
     created_on: {
       fr: "Créé le",
@@ -78,6 +86,10 @@ module.exports = (function () {
     edit: {
       fr: "Éditer",
       en: "Edit",
+    },
+    legal_notice: {
+      fr: "Mentions légales et données personnelles",
+      en: "Legal notices and personal data",
     },
     new_source_name: {
       fr: "Nom de la nouvelle source",
