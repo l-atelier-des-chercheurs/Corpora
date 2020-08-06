@@ -38,10 +38,9 @@
           connaissances.
         </p>
         <p>
-          Il ne collecte pour lui-même aucune donnée personnelle. En revanche,
-          il peut inclure des contenus issus de services tiers (Twitter, vidéo)
+          Il peut inclure des contenus issus de services tiers (Twitter, vidéo)
           dont l'affichage provoque le dépôt de cookies sur votre ordinateur.
-          Nous vous proposons deux modes de navigation :
+          Pour cette raison, nous vous proposons deux modes de navigation :
         </p>
         <p>
           <label for="CreateQRCode">
@@ -64,8 +63,8 @@
               v-model="load_all_embeds_option"
             />
             Refuser les cookies : vous devrez cliquer pour afficher chaque
-            contenus tiers, et accepter ou refuser le dépôt de cookies pour
-            chaque contenu
+            contenus tiers, ce qui provoquera en général le dépôt de cookies de
+            la part du site d'origine.
           </label>
         </p>
         <p>
@@ -95,11 +94,39 @@
           in order to collectively build corpuses.
         </p>
         <p>
-          We strive to minimize the collection of personal data and will not use
-          them to any other purpose than that of facilitating access to the
-          content. However, this content may include third-party cookies (from
-          Twitter and video platforms).
+          It may include content from third-party platforms which install
+          cookies on your computer. We offer two modes of navigation:
         </p>
+
+        <p>
+          <label for="CreateQRCode">
+            <input
+              type="checkbox"
+              id="CreateQRCode"
+              v-model="load_all_embeds_option"
+              :true-value="true"
+              :false-value="false"
+            />
+            Authorize 3rd-party cookies: the website will display all content,
+            including that of 3rd-party platforms
+          </label>
+          <label for="ScanQRCode">
+            <input
+              type="checkbox"
+              id="ScanQRCode"
+              :true-value="false"
+              :false-value="true"
+              v-model="load_all_embeds_option"
+            />
+            Refuse cookies: you will have to click in order to display 3rd-party
+            content, which will usually generate cookies on your computer.
+          </label>
+        </p>
+        <p>
+          If you want to exercise your rights data collected by 3rd-party
+          content providers, please contact the providers directly.
+        </p>
+
         <p>For more informations:</p>
 
         <button
