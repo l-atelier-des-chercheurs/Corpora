@@ -15,7 +15,8 @@
               v-for="lang in this.$root.lang.available"
               :key="lang.key"
               :value="lang.key"
-            >{{ lang.name }}</option>
+              >{{ lang.name }}</option
+            >
           </select>
         </div>
       </div>
@@ -27,8 +28,10 @@
             type="button"
             class="button-nostyle a"
             @click="show_admin_login = !show_admin_login"
-            :class="{ 'is--active' : show_admin_login }"
-          >admin</button>
+            :class="{ 'is--active': show_admin_login }"
+          >
+            admin
+          </button>
           <div v-if="show_admin_login">
             <p>Enter password to admin</p>
             <input type="password" autofocus v-model="$root.admin_pwd" />
@@ -42,9 +45,14 @@
       <button
         type="button"
         class="button-nostyle a"
-        @click="$root.show_welcome_modal = true"
-        :class="{ 'is--active' : $root.show_welcome_modal }"
-      >{{ $t('personal_data_and_legal_notices')}}</button>
+        @click="
+          $root.settings.show_welcome_modal = true;
+          $root.settings.unfold_legal_pane = true;
+        "
+        :class="{ 'is--active': $root.settings.show_welcome_modal }"
+      >
+        {{ $t("personal_data_and_legal_notices") }}
+      </button>
     </div>
   </div>
 </template>
