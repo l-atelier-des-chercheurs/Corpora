@@ -1,192 +1,215 @@
 <template>
   <div style="width: 100%; height: 100%;">
     <CorpusPwd v-if="!can_access_corpus" :corpus="corpus" />
-    <WelcomeModal v-else-if="$root.show_welcome_modal" />
-    <div v-else class="m_corpus" ref="corpus" @scroll="onScroll">
-      <div class="m_corpus--presentation custom_scrollbar">
-        <Infos />
+    <template v-else>
+      <WelcomeModal v-if="$root.settings.show_welcome_modal" />
+      <div class="m_corpus" ref="corpus" @scroll="onScroll">
+        <div class="m_corpus--presentation custom_scrollbar">
+          <Infos />
 
-        <div class="m_feedbacks">
-          <a
-            class="js--openInBrowser"
-            target="_blank"
-            href="mailto:info@plurality-university.org?subject=feedbacks%20on%20Corpora"
-          >{{ $t('feedbacks') }}</a>
-        </div>
-
-        <div class="m_corpus--presentation--content">
-          <div class="m_corpus--presentation--name">
-            <h1 v-if="!!corpus.name">{{ corpus.name }}</h1>
-            <h3 v-if="!!corpus.subtitle">{{ corpus.subtitle }}</h3>
+          <div class="m_feedbacks">
+            <a
+              class="js--openInBrowser"
+              target="_blank"
+              href="mailto:info@plurality-university.org?subject=feedbacks%20on%20Corpora"
+              >{{ $t("feedbacks") }}</a
+            >
           </div>
 
-          <div
-            class="m_corpus--presentation--description mediaTextContent"
-            v-html="corpus.description"
-          />
+          <div class="m_corpus--presentation--content">
+            <div class="m_corpus--presentation--name">
+              <h1 v-if="!!corpus.name">{{ corpus.name }}</h1>
+              <h3 v-if="!!corpus.subtitle">{{ corpus.subtitle }}</h3>
+            </div>
 
-          <div class="margin-bottom-small" v-if="$root.can_admin_corpora">
-            <button
-              type="button"
-              class="button-small"
-              @click="show_edit_corpus_for = true"
-            >{{ $t("edit") }}</button>
-          </div>
-          <EditCorpus
-            v-if="show_edit_corpus_for"
-            :corpus="corpus"
-            :corpus_password="corpus_password"
-            :slugCorpusName="corpus.slugFolderName"
-            @close="show_edit_corpus_for = false"
-          />
+            <div
+              class="m_corpus--presentation--description mediaTextContent"
+              v-html="corpus.description"
+            />
 
-          <!-- <div class="m_corpus--presentation--tags">
+            <div class="margin-bottom-small" v-if="$root.can_admin_corpora">
+              <button
+                type="button"
+                class="button-small"
+                @click="show_edit_corpus_for = true"
+              >
+                {{ $t("edit") }}
+              </button>
+            </div>
+            <EditCorpus
+              v-if="show_edit_corpus_for"
+              :corpus="corpus"
+              :corpus_password="corpus_password"
+              :slugCorpusName="corpus.slugFolderName"
+              @close="show_edit_corpus_for = false"
+            />
+
+            <!-- <div class="m_corpus--presentation--tags">
           <label>{{ $t('keywords') }}</label>
           <button type="button" v-for="(tag, index) in all_tags" :key="index">{{ tag }}</button>
           </div>-->
 
-          <div class="m_corpus--presentation--contributionModes">
-            <label>{{ $t("filter_by_source_of_contribution") }}</label>
+            <div class="m_corpus--presentation--contributionModes">
+              <label>{{ $t("filter_by_source_of_contribution") }}</label>
 
-            <div class="margin-bottom-verysmall">
-              <CollectMode v-model="current_contribution_mode" :is_filter="true" />
+              <div class="margin-bottom-verysmall">
+                <CollectMode
+                  v-model="current_contribution_mode"
+                  :is_filter="true"
+                />
+              </div>
+
+              <div class>
+                <button
+                  type="button"
+                  class="button-small margin-bottom-verysmall"
+                  @click="show_create_time_modal = !show_create_time_modal"
+                >
+                  <template v-if="!show_create_time_modal">{{
+                    $t("create_a_source")
+                  }}</template>
+                  <template v-else>{{ $t("close") }}</template>
+                </button>
+
+                <form
+                  class
+                  v-if="show_create_time_modal"
+                  @submit.prevent="createNewMoment"
+                >
+                  <div class>
+                    <label>{{ $t("new_source_name") }}</label>
+                    <div class="flex-nowrap align-items-stretch">
+                      <input
+                        type="text"
+                        class
+                        v-model.trim="new_source_name"
+                        required
+                        autofocus
+                      />
+                      <input
+                        type="submit"
+                        style="flex: 0 1 0;"
+                        :disabled="!new_source_name"
+                        :value="$t('add')"
+                      />
+                    </div>
+                  </div>
+                </form>
+              </div>
             </div>
-
-            <div class>
-              <button
-                type="button"
-                class="button-small margin-bottom-verysmall"
-                @click="show_create_time_modal = !show_create_time_modal"
-              >
-                <template v-if="!show_create_time_modal">{{ $t("create_a_source") }}</template>
-                <template v-else>{{ $t("close") }}</template>
-              </button>
-
-              <form class v-if="show_create_time_modal" @submit.prevent="createNewMoment">
-                <div class>
-                  <label>{{ $t("new_source_name") }}</label>
-                  <div class="flex-nowrap align-items-stretch">
-                    <input type="text" class v-model.trim="new_source_name" required autofocus />
-                    <input
-                      type="submit"
-                      style="flex: 0 1 0;"
-                      :disabled="!new_source_name"
-                      :value="$t('add')"
-                    />
+            <div class="m_corpus--presentation--displayOptions">
+              <label>{{ $t("display_options") }}</label>
+              <div>
+                <div class="input-checkbox">
+                  <input
+                    type="checkbox"
+                    class="switch"
+                    id="display_in_tabs"
+                    v-model="display_in_tabs"
+                  />
+                  <label class="no-style" for="display_in_tabs">
+                    {{ $t("display_in_tabs") }}
+                  </label>
+                </div>
+                <div class="flex-nowrap">
+                  <span>{{ $t("sort_fragments_by") }}&nbsp;</span>
+                  <div class="custom-select custom-select_tiny">
+                    <select v-model="sort_fragments_by">
+                      <option
+                        v-for="mode in ['date_created', 'title']"
+                        :key="mode"
+                        :value="mode"
+                        >{{ $t(mode) }}</option
+                      >
+                    </select>
                   </div>
                 </div>
-              </form>
-            </div>
-          </div>
-          <div class="m_corpus--presentation--displayOptions">
-            <label>{{ $t("display_options") }}</label>
-            <div>
-              <div class="input-checkbox">
-                <input
-                  type="checkbox"
-                  class="switch"
-                  id="display_in_tabs"
-                  v-model="display_in_tabs"
-                />
-                <label class="no-style" for="display_in_tabs">
-                  {{
-                  $t("display_in_tabs")
-                  }}
-                </label>
-              </div>
-              <div class="flex-nowrap">
-                <span>{{ $t("sort_fragments_by") }}&nbsp;</span>
-                <div class="custom-select custom-select_tiny">
-                  <select v-model="sort_fragments_by">
-                    <option
-                      v-for="mode in ['date_created', 'title']"
-                      :key="mode"
-                      :value="mode"
-                    >{{ $t(mode) }}</option>
-                  </select>
-                </div>
               </div>
             </div>
           </div>
+
+          <div class="m_corpus--presentation--vignette">
+            <img v-if="previewURL" :src="previewURL" class draggable="false" />
+          </div>
         </div>
 
-        <div class="m_corpus--presentation--vignette">
-          <img v-if="previewURL" :src="previewURL" class draggable="false" />
-        </div>
-      </div>
-
-      <div
-        class="m_tags"
-        ref="corpus_content"
-        @wheel="/* onMousewheel */"
-        @scroll="/* onTimelineScroll */"
-      >
-        <div class="m_tags--options">
-          <button
-            type="button"
-            class="m_tags--options--addFragmentButton"
-            @click="show_create_fragment = !show_create_fragment"
-          >
-            <svg
-              version="1.1"
-              xmlns="http://www.w3.org/2000/svg"
-              xmlns:xlink="http://www.w3.org/1999/xlink"
-              x="0px"
-              y="0px"
-              width="24px"
-              height="24px"
-              viewBox="0 0 24 24"
-              style="enable-background: new 0 0 24 24;"
-              xml:space="preserve"
+        <div
+          class="m_tags"
+          ref="corpus_content"
+          @wheel="/* onMousewheel */"
+          @scroll="/* onTimelineScroll */"
+        >
+          <div class="m_tags--options">
+            <button
+              type="button"
+              class="m_tags--options--addFragmentButton"
+              @click="show_create_fragment = !show_create_fragment"
             >
-              <path
-                style="fill: currentColor;"
-                d="M0,10.5h10.5V0h2.9v10.5H24v2.9H13.5V24h-2.9V13.5H0V10.5z"
-              />
-            </svg>
-          </button>
-          <CreateFragment
-            v-if="show_create_fragment"
-            :corpus="corpus"
-            :all_keywords="all_keywords"
-            :all_tags="all_tags"
-            :current_contribution_mode="current_contribution_mode"
-            @close="show_create_fragment = false"
-          />
-        </div>
+              <svg
+                version="1.1"
+                xmlns="http://www.w3.org/2000/svg"
+                xmlns:xlink="http://www.w3.org/1999/xlink"
+                x="0px"
+                y="0px"
+                width="24px"
+                height="24px"
+                viewBox="0 0 24 24"
+                style="enable-background: new 0 0 24 24;"
+                xml:space="preserve"
+              >
+                <path
+                  style="fill: currentColor;"
+                  d="M0,10.5h10.5V0h2.9v10.5H24v2.9H13.5V24h-2.9V13.5H0V10.5z"
+                />
+              </svg>
+            </button>
+            <CreateFragment
+              v-if="show_create_fragment"
+              :corpus="corpus"
+              :all_keywords="all_keywords"
+              :all_tags="all_tags"
+              :current_contribution_mode="current_contribution_mode"
+              @close="show_create_fragment = false"
+            />
+          </div>
 
-        <transition-group name="list-complete" tag="div" class="m_tags--allfragments">
-          <template v-if="display_in_tabs">
-            <Tag
-              v-for="{ tag, fragments } in tags_with_fragments"
-              :key="tag"
-              :tag="tag"
-              :medias="medias"
-              :all_keywords="all_keywords"
-              :all_tags="all_tags"
-              :corpus="corpus"
-              :slugFolderName="corpus.slugFolderName"
-              :fragments="fragments"
-              :fragment_width="fragment_width"
-              :corpus_scroll_left="corpus_scroll_left"
-            />
-          </template>
-          <template v-else>
-            <Fragment
-              v-for="fragment in filtered_fragments"
-              :key="fragment.metaFileName"
-              :corpus="corpus"
-              :all_keywords="all_keywords"
-              :all_tags="all_tags"
-              :medias="medias"
-              :fragment="fragment"
-              :fragment_width="fragment_width"
-              :slugFolderName="corpus.slugFolderName"
-            />
-          </template>
-        </transition-group>
+          <transition-group
+            name="list-complete"
+            tag="div"
+            class="m_tags--allfragments"
+          >
+            <template v-if="display_in_tabs">
+              <Tag
+                v-for="{ tag, fragments } in tags_with_fragments"
+                :key="tag"
+                :tag="tag"
+                :medias="medias"
+                :all_keywords="all_keywords"
+                :all_tags="all_tags"
+                :corpus="corpus"
+                :slugFolderName="corpus.slugFolderName"
+                :fragments="fragments"
+                :fragment_width="fragment_width"
+                :corpus_scroll_left="corpus_scroll_left"
+              />
+            </template>
+            <template v-else>
+              <Fragment
+                v-for="fragment in filtered_fragments"
+                :key="fragment.metaFileName"
+                :corpus="corpus"
+                :all_keywords="all_keywords"
+                :all_tags="all_tags"
+                :medias="medias"
+                :fragment="fragment"
+                :fragment_width="fragment_width"
+                :slugFolderName="corpus.slugFolderName"
+              />
+            </template>
+          </transition-group>
+        </div>
       </div>
-    </div>
+    </template>
   </div>
 </template>
 <script>

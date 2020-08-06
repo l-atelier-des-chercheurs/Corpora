@@ -75,8 +75,10 @@
         <p>Plus d’informations :</p>
         <button
           type="button"
-          @click="show_legal = !show_legal"
-          :class="{ 'is--active': show_legal }"
+          @click="
+            $root.settings.unfold_legal_pane = !$root.settings.unfold_legal_pane
+          "
+          :class="{ 'is--active': $root.settings.unfold_legal_pane }"
         >
           <small>{{ $t("legal_notice") }}</small>
         </button>
@@ -131,14 +133,16 @@
 
         <button
           type="button"
-          @click="show_legal = !show_legal"
-          :class="{ 'is--active': show_legal }"
+          @click="
+            $root.settings.unfold_legal_pane = !$root.settings.unfold_legal_pane
+          "
+          :class="{ 'is--active': $root.settings.unfold_legal_pane }"
         >
           <small>{{ $t("legal_notice") }}</small>
         </button>
       </template>
 
-      <div v-if="show_legal">
+      <div v-if="$root.settings.unfold_legal_pane">
         <template v-if="$root.lang.current === 'fr'">
           <h2>Informations légales et protection des données personnelles</h2>
           <h3>Informations éditeur</h3>
@@ -266,7 +270,7 @@ export default {
   data() {
     return {
       new_lang: this.$root.lang.current,
-      show_legal: false,
+
       load_all_embeds_option: this.$root.settings.load_all_embeds,
     };
   },
@@ -284,7 +288,7 @@ export default {
   methods: {
     submitAction() {
       this.$root.settings.load_all_embeds = this.load_all_embeds_option;
-      this.$root.show_welcome_modal = false;
+      this.$root.settings.show_welcome_modal = false;
     },
   },
 };
