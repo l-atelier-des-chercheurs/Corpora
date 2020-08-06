@@ -160,7 +160,7 @@ module.exports = (function () {
       en: "Open",
     },
     go_to_website: {
-      fr: "Afficher le corpus",
+      fr: "Afficher le site",
       en: "Go to website"
     }
     sure_to_remove_corpus: {
