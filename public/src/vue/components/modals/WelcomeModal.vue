@@ -255,7 +255,7 @@
       </div>
     </template>
 
-    <template slot="submit_button">{{ $t("open") }}</template>
+    <template slot="submit_button">{{ $t("go_to_website") }}</template>
   </Modal>
 </template>
 <script>
