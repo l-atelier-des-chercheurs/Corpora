@@ -159,6 +159,10 @@ module.exports = (function () {
       fr: "Ouvrir",
       en: "Open",
     },
+    go_to_website: {
+      fr: "Afficher le site",
+      en: "Go to website"
+    }
     sure_to_remove_corpus: {
       fr: "Voulez-vous vraiment supprimer ce corpus ?",
       en: "Do you really want to remove this corpus?",

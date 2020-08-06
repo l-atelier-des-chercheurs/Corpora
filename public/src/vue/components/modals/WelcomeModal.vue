@@ -125,7 +125,7 @@
           </label>
         </p>
         <p>
-          If you want to exercise your rights data collected by 3rd-party
+          If you want to exercise your rights on data collected by 3rd-party
           content providers, please contact the providers directly.
         </p>
 
@@ -241,7 +241,8 @@
 
           <p>
             If you need information or want to exercise your rights on your
-            personal data, please contact us:
+            personal data, please contact the third-party providers, or contact
+            us:
           </p>
           <ul>
             <li>Email : info@plurality-university.org</li>
