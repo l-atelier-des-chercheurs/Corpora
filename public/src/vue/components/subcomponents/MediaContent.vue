@@ -41,10 +41,9 @@
             />
           </svg>
 
-          <div
-            v-if="media_duration"
-            class="_duration"
-          >{{ $root.formatDurationToMinuteHours(media_duration * 1000) }}</div>
+          <div v-if="media_duration" class="_duration">
+            {{ $root.formatDurationToMinuteHours(media_duration * 1000) }}
+          </div>
         </div>
       </template>
       <template v-else>
@@ -54,7 +53,12 @@
           :emit="['volumechange']"
           @volumechange="volumeChanged"
         >
-          <video :poster="linkToVideoThumb" :src="mediaURL" preload="none" :autoplay="autoplay" />
+          <video
+            :poster="linkToVideoThumb"
+            :src="mediaURL"
+            preload="none"
+            :autoplay="autoplay"
+          />
         </vue-plyr>
       </template>
     </template>
@@ -134,15 +138,21 @@
     <template v-else-if="media.type === 'embed'">
       <div v-if="context !== 'edit' && embedURL" class>
         <template v-if="!should_load_embed">
-          <label class="margin-bottom-verysmall">{{ $t('embed')}}</label>
+          <label class="margin-bottom-verysmall">{{ $t("embed") }}</label>
           <div
             class="margin-bottom-verysmall"
-            style="text-overflow: ellipsis; white-space: nowrap; overflow: hidden;"
+            style="
+              text-overflow: ellipsis;
+              white-space: nowrap;
+              overflow: hidden;
+            "
           >
             <a :href="media.content" target="_blank">{{ media.content }}</a>
           </div>
           <div class="margin-bottom-verysmall">
-            <button type="button" @click="load_this_embed = true">{{ $t('load')}}</button>
+            <button type="button" @click="load_this_embed = true">
+              {{ $t("load") }}
+            </button>
           </div>
         </template>
         <template v-else>
@@ -152,14 +162,22 @@
             frameborder="0"
             allowfullscreen
           />
-          <Tweet v-else :id="embedURL.id" :options="{ cards: 'hidden', theme: 'light' }" />
+          <Tweet
+            v-else
+            :id="embedURL.id"
+            :options="{ cards: 'hidden', theme: 'light' }"
+          />
         </template>
       </div>
     </template>
 
     <template v-else-if="media.type === 'document'">
-      <div v-if="context !== 'edit' && context !== 'full'" class="padding-small font-verysmall">
-        <pre>{{ media.media_filename }}
+      <div
+        v-if="context !== 'edit' && context !== 'full'"
+        class="padding-small font-verysmall"
+      >
+        <pre
+          >{{ media.media_filename }}
         </pre>
       </div>
       <iframe v-else :src="mediaURL" />
@@ -227,7 +245,7 @@ export default {
     return {
       available_resolutions: {
         preview_hovered: 360,
-        default: 600,
+        default: 1600,
       },
       htmlForEditor: this.value,
 
