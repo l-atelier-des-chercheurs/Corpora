@@ -1767,4 +1767,42 @@ twitter-widget.twitter-tweet {
     text-align: right;
   }
 }
+
+@media print {
+  :root {
+    --body-bg: white !important;
+  }
+
+  .m_corpus {
+    height: auto !important;
+  }
+  .m_corpus--presentation {
+    margin: 0 auto !important;
+  }
+  .m_tags,
+  .m_tags--allfragments {
+    /* display: block !important; */
+    flex: 1 1 auto;
+    flex-flow: row wrap !important;
+    min-width: auto !important;
+    height: auto !important;
+    justify-content: center;
+    flex-flow: row wrap;
+  }
+
+  .m_tags--options {
+    display: none !important;
+  }
+  .m_fragment--content {
+    margin-bottom: 0 !important;
+    page-break-inside: avoid;
+    page-break-after: always;
+  }
+
+  .m_corpus {
+    margin: 0 auto;
+    display: block !important;
+    height: auto !important;
+  }
+}
 </style>
