@@ -120,7 +120,7 @@ import AddMedias from "./AddMedias.vue";
 import FragmentMedia from "./FragmentMedia.vue";
 import EditFragment from "./modals/EditFragment.vue";
 
-Array.prototype.move = function(from, to) {
+Array.prototype.move = function (from, to) {
   this.splice(to, 0, this.splice(from, 1)[0]);
 };
 
@@ -132,18 +132,18 @@ export default {
     all_keywords: Array,
     medias: Array,
     slugFolderName: String,
-    fragment_width: Number
+    fragment_width: Number,
   },
   components: {
     AddMedias,
     FragmentMedia,
-    EditFragment
+    EditFragment,
   },
   data() {
     return {
       show_advanced_menu: false,
       show_edit_fragment: false,
-      highlight_corpus: false
+      highlight_corpus: false,
     };
   },
   created() {},
@@ -164,12 +164,12 @@ export default {
 
       return this.fragment.medias_slugs.reduce((acc, item) => {
         const linked_media = this.medias.find(
-          m => m.metaFileName === item.metaFileName
+          (m) => m.metaFileName === item.metaFileName
         );
         if (linked_media) acc.push(linked_media);
         return acc;
       }, []);
-    }
+    },
   },
   methods: {
     scrollToFragment(metaFileName) {
@@ -193,7 +193,7 @@ export default {
           this.$root.removeMedia({
             type: "corpus",
             slugFolderName: this.slugFolderName,
-            slugMediaName: this.fragment.metaFileName
+            slugMediaName: this.fragment.metaFileName,
           });
         });
     },
@@ -202,7 +202,9 @@ export default {
         JSON.stringify(this.fragment.medias_slugs)
       );
 
-      const idx = _medias_slugs.findIndex(m => m.metaFileName === metaFileName);
+      const idx = _medias_slugs.findIndex(
+        (m) => m.metaFileName === metaFileName
+      );
 
       console.log(`METHODS • Fragment: move idx = ${idx} and dir = ${dir}`);
 
@@ -217,8 +219,8 @@ export default {
         slugFolderName: this.slugFolderName,
         slugMediaName: this.fragment.metaFileName,
         data: {
-          medias_slugs: _medias_slugs
-        }
+          medias_slugs: _medias_slugs,
+        },
       });
     },
     addMediasToFragment({ metaFileNames, index = 0, after_metaFileName }) {
@@ -233,13 +235,13 @@ export default {
 
       if (after_metaFileName)
         index =
-          medias_slugs.findIndex(m => m.metaFileName === after_metaFileName) +
+          medias_slugs.findIndex((m) => m.metaFileName === after_metaFileName) +
           1;
 
       medias_slugs.splice(
         index,
         0,
-        ...metaFileNames.map(metaFileName => ({ metaFileName }))
+        ...metaFileNames.map((metaFileName) => ({ metaFileName }))
       );
 
       // this.fragment.medias_slugs = medias_slugs;
@@ -249,8 +251,8 @@ export default {
         slugFolderName: this.slugFolderName,
         slugMediaName: this.fragment.metaFileName,
         data: {
-          medias_slugs
-        }
+          medias_slugs,
+        },
       });
 
       // set created media(s) to edit mode
@@ -271,27 +273,27 @@ export default {
             this.$root.removeMedia({
               type: "corpus",
               slugFolderName: this.slugFolderName,
-              slugMediaName: metaFileName
+              slugMediaName: metaFileName,
             });
 
             if (this.fragment.medias_slugs.length > 0) {
               let new_medias_slugs = this.fragment.medias_slugs.filter(
-                m => m.metaFileName !== metaFileName
+                (m) => m.metaFileName !== metaFileName
               );
               this.$root.editMedia({
                 type: "corpus",
                 slugFolderName: this.slugFolderName,
                 slugMediaName: this.fragment.metaFileName,
                 data: {
-                  medias_slugs: new_medias_slugs
-                }
+                  medias_slugs: new_medias_slugs,
+                },
               });
             }
           },
           () => {}
         );
-    }
-  }
+    },
+  },
 };
 </script>
 <style lang="scss" scoped>
@@ -315,7 +317,7 @@ export default {
   .m_fragment--content {
     position: relative;
     margin-top: calc(var(--spacing) * 2);
-    margin-bottom: 50vh;
+    margin-bottom: 33vh;
     margin-right: 4px;
     margin-left: 4px;
 
