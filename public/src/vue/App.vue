@@ -395,6 +395,16 @@ button,
   color: var(--color-black);
 }
 
+input {
+  &[type="text"],
+  &[type="url"] {
+    &[readonly] {
+      cursor: not-allowed;
+      background-color: rgb(226, 226, 226) !important;
+    }
+  }
+}
+
 input[type="checkbox"] {
   -webkit-appearance: none;
   width: 12px;

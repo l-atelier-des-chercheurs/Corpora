@@ -20,7 +20,7 @@
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40">
                 <path
                   d="M26.51,12V28h-13V12h13m1-1h-15V29h15V11Z"
-                  style="fill: currentColor;"
+                  style="fill: currentColor"
                 />
                 <line
                   x1="15.21"
@@ -71,10 +71,34 @@
             </button>
 
             <button
-              key="add_link"
+              key="add_embed"
               type="button"
               class="button button-round button-round-small margin-bottom-small padding-none bg-noir c-blanc"
               @click="createMedia({ type: 'embed' })"
+              :disabled="read_only"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                xmlns:xlink="http://www.w3.org/1999/xlink"
+                version="1.1"
+                x="0px"
+                y="0px"
+                viewBox="-10 -10 100 125"
+              >
+                <path
+                  d="M378,370 c-25,-24,-25,-24,-49,1 l-195,205 c-20,23,-20,23,0,46 l195,205 c24,25,24,25,49,1 l38,-40 c23,-22,23,-22,0,-46 l-114,-120 c-22,-23,-22,-23,0,-47 l114,-119 c23,-24,23,-24,0,-48 Z M494,240 c-45,0,-46,0,-36,44 l161,651 c6,25,5,25,30,25 l57,0 c45,0,46,0,36,-44 l-161,-651 c-6,-25,-5,-25,-30,-25 Z M822,370 l-38,38 c-23,24,-23,24,0,48 l114,119 c22,24,22,24,0,47 l-114,120 c-23,24,-23,24,0,46 l38,40 c25,24,25,24,49,-1 l195,-205 c20,-23,20,-23,0,-46 l-195,-205 c-24,-25,-24,-25,-49,-1 Z M125,0 l950,0 c75,0,125,25,125,125 l0,950 c0,75,-50,125,-125,125 l-950,0 c-100,0,-125,-50,-125,-125 l0,-950 c0,-100,25,-125,125,-125 Z M125,0 "
+                  fill="white"
+                  transform="matrix(0.05,0.0,0.0,-0.05,20.0,80.0)"
+                />
+              </svg>
+              <span class="text_label">{{ $t("embed") }}</span>
+            </button>
+
+            <button
+              key="add_link"
+              type="button"
+              class="button button-round button-round-small margin-bottom-small padding-none bg-noir c-blanc"
+              @click="createMedia({ type: 'link' })"
               :disabled="read_only"
             >
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="-80 -70 250 250">
@@ -95,7 +119,7 @@
 		C46.2,25.6,47.5,25.5,48.8,25.5L48.8,25.5L48.8,25.5z"
                 />
               </svg>
-              <span class="text_label">{{ $t("embed") }}</span>
+              <span class="text_label">{{ $t("link") }}</span>
             </button>
 
             <template>
@@ -116,7 +140,7 @@
                   :accept="field.accept"
                   :capture="field.capture"
                   multiple
-                  style="width: 1px; height: 1px; overflow: hidden;"
+                  style="width: 1px; height: 1px; overflow: hidden"
                 />
               </label>
             </template>
@@ -153,11 +177,11 @@
           width="24px"
           height="24px"
           viewBox="0 0 24 24"
-          style="enable-background: new 0 0 24 24;"
+          style="enable-background: new 0 0 24 24"
           xml:space="preserve"
         >
           <path
-            style="fill: currentColor;"
+            style="fill: currentColor"
             d="M0,10.5h10.5V0h2.9v10.5H24v2.9H13.5V24h-2.9V13.5H0V10.5z"
           />
         </svg>

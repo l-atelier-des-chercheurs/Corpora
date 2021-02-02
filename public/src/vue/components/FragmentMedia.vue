@@ -25,6 +25,18 @@
         <small v-html="$t('embed_instructions')" />
       </template>
 
+      <template v-else-if="media.type === 'link' && is_being_edited">
+        <input
+          type="url"
+          class="border-none bg-transparent"
+          placeholder="URL"
+          v-model="mediadata.content"
+          ref="textField"
+          :readonly="!!media.content && media.content.length > 0"
+        />
+        <small v-html="$t('link_instructions')" />
+      </template>
+
       <MediaContent
         v-else
         ref="mediaContent"
@@ -33,6 +45,7 @@
         :slugFolderName="slugFolderName"
         :media="media"
         :read_only="false"
+        :preview_size="600"
       />
       <button
         type="button"
@@ -89,7 +102,7 @@
             width="4px"
             height="16.2px"
             viewBox="0 0 4 16.2"
-            style="enable-background: new 0 0 4 16.2;"
+            style="enable-background: new 0 0 4 16.2"
             xml:space="preserve"
           >
             <path
@@ -173,7 +186,7 @@
       </div>
       <div
         class="m_fragmentMedia--infos--source"
-        v-if="is_being_edited || media.source"
+        v-if="(is_being_edited || media.source) && media.type !== 'link'"
       >
         <label>{{ $t("source") }} (URL)</label>
         <div>
@@ -204,7 +217,7 @@
         !$root.can_admin_corpora
       "
       class="ta-ce tt-lc padding-small font-verysmall"
-      style="width: 100%; display: block;"
+      style="width: 100%; display: block"
       >{{ $t("editable_for") }}
       {{ editable_delay_in_minutes - media_was_created_x_minutes_ago }}
       {{ $t("minutes") }}</small
@@ -461,6 +474,24 @@ export default {
       .plyr__controls {
         padding-right: 35px;
       }
+    }
+  }
+
+  ._linkCaption {
+    position: absolute;
+    bottom: 0;
+
+    a {
+      color: white;
+
+      --c-shadowOutline: rgba(0, 0, 0, 0.4);
+      text-shadow: 1px 1px var(--c-shadowOutline),
+        -1px 1px var(--c-shadowOutline), -1px -1px var(--c-shadowOutline),
+        1px -1px var(--c-shadowOutline);
+
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      overflow: hidden;
     }
   }
 }

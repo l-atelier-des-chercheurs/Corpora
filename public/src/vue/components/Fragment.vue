@@ -11,7 +11,7 @@
       <div class="m_fragment--content--top">
         <label>
           {{ $t("created") }}&nbsp;{{
-          $root.formatDateToHuman(fragment.date_created)
+            $root.formatDateToHuman(fragment.date_created)
           }}
         </label>
       </div>
@@ -45,7 +45,7 @@
             width="4px"
             height="16.2px"
             viewBox="0 0 4 16.2"
-            style="enable-background: new 0 0 4 16.2;"
+            style="enable-background: new 0 0 4 16.2"
             xml:space="preserve"
           >
             <path
@@ -59,9 +59,13 @@
             type="button"
             class="button-small"
             @click="show_edit_fragment = true"
-          >{{ $t("edit") }}</button>
+          >
+            {{ $t("edit") }}
+          </button>
 
-          <button type="button" class="button-small" @click="removeFragment">{{ $t("remove") }}</button>
+          <button type="button" class="button-small" @click="removeFragment">
+            {{ $t("remove") }}
+          </button>
         </div>
       </div>
 
