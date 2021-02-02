@@ -197,7 +197,7 @@ label:not(.no-style) {
     margin-bottom: 1px;
 
     // background-color: rgba(0, 0, 0, 0.3);
-    background-color: rgba(226, 237, 239, 0.4);
+    background-color: rgba(226, 237, 239, 0.5);
 
     svg {
       display: block;
@@ -539,6 +539,13 @@ select::-ms-expand {
   }
 }
 
+select {
+  &:focus,
+  &:active {
+    outline: 1px solid var(--color-black);
+  }
+}
+
 .bordered {
   border: 1px solid var(--active-color);
 }
@@ -664,6 +671,7 @@ audio {
 
   iframe {
     min-height: 202px;
+    background-color: transparent;
   }
 }
 

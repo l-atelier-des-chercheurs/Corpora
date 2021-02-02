@@ -15,6 +15,11 @@
       />
 
       <template v-else-if="media.type === 'embed' && is_being_edited">
+        <select v-model="expected_embed_format">
+          <option>Vimeo</option>
+          <option>YouTube</option>
+          <option>Twitter</option>
+        </select>
         <input
           type="url"
           class="border-none bg-transparent"
@@ -22,7 +27,11 @@
           v-model="mediadata.content"
           ref="textField"
         />
-        <small v-html="$t('embed_instructions')" />
+        <small
+          v-html="
+            $t('embed_instructions_' + expected_embed_format.toLowerCase())
+          "
+        />
       </template>
 
       <template v-else-if="media.type === 'link' && is_being_edited">
@@ -257,6 +266,7 @@ export default {
       },
 
       show_in_modal: false,
+      expected_embed_format: "Vimeo",
 
       editable_delay_in_minutes: 30,
 

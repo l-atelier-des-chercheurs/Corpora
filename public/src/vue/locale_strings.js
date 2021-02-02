@@ -316,9 +316,24 @@ module.exports = (function () {
       en: "Download",
     },
     embed_instructions: {
-      fr: "Placez ici l’URL vers une vidéo Vimeo, Youtube or Twitter",
+      fr: "Placez ici l’URL vers une vidéo Vimeo, Youtube ou Twitter",
       en: "Add a URL to Vimeo, Youtube or Twitter",
     },
+    embed_instructions_vimeo: {
+      fr: "Format attendu : https://vimeo.com/399094491",
+      en: "Expected format: https://vimeo.com/399094491",
+    },
+    embed_instructions_youtube: {
+      fr: "Format attendu : https://www.youtube.com/watch?v=8yj9X2YHTP4",
+      en: "Expected format: https://www.youtube.com/watch?v=8yj9X2YHTP4",
+    },
+    embed_instructions_twitter: {
+      fr:
+        "Format attendu : https://twitter.com/PluralityU/status/1349280309116891138",
+      en:
+        "Expected format: https://twitter.com/PluralityU/status/1349280309116891138",
+    },
+
     drop_files_here: {
       fr: "Déposez vos fichier(s) ici",
       en: "Drop file(s) here",
