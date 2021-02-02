@@ -7,7 +7,10 @@
       "
       :corpuses="Object.values($root.store.corpus)"
     />
-    <Corpus v-else-if="$root.do_navigation.view === 'CorpusView'" :corpus="$root.current_corpus" />
+    <Corpus
+      v-else-if="$root.do_navigation.view === 'CorpusView'"
+      :corpus="$root.current_corpus"
+    />
     <portal-target name="modal_container" />
   </div>
 </template>
@@ -60,6 +63,10 @@ body {
 
 * {
   box-sizing: border-box;
+}
+
+.t-indent {
+  text-indent: 2em;
 }
 
 h1,

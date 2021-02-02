@@ -10,7 +10,7 @@
       <span class>Corpora</span>
     </template>
 
-    <template slot="sidebar">
+    <template slot="sidebar" class="custom_scrollbar">
       <div class="margin-vert-small">
         <div class="custom-select custom-select_tiny">
           <select v-model="new_lang">
@@ -18,8 +18,9 @@
               v-for="lang in this.$root.lang.available"
               :key="lang.key"
               :value="lang.key"
-              >{{ lang.name }}</option
             >
+              {{ lang.name }}
+            </option>
           </select>
         </div>
       </div>
@@ -125,6 +126,7 @@
             content, which will usually generate cookies on your computer.
           </label>
         </p>
+
         <p>
           If you want to exercise your rights on data collected by 3rd-party
           content providers, please contact the providers directly.
@@ -254,6 +256,15 @@
           </ul>
         </template>
       </div>
+
+      <label for="rememberChoice" v-if="load_all_embeds_option">
+        <input
+          type="checkbox"
+          id="rememberChoice"
+          v-model="remember_embeds_option_choice"
+        />
+        {{ $t("remember_settings") }}
+      </label>
     </template>
 
     <template slot="submit_button">{{ $t("go_to_website") }}</template>
@@ -261,6 +272,7 @@
 </template>
 <script>
 import Modal from "./BaseModal.vue";
+import localstore from "store";
 
 export default {
   props: {
@@ -274,6 +286,7 @@ export default {
       new_lang: this.$root.lang.current,
 
       load_all_embeds_option: this.$root.settings.load_all_embeds,
+      remember_embeds_option_choice: true,
     };
   },
 
@@ -291,6 +304,15 @@ export default {
     submitAction() {
       this.$root.settings.load_all_embeds = this.load_all_embeds_option;
       this.$root.settings.show_welcome_modal = false;
+
+      if (this.load_all_embeds_option) {
+        localstore.set(
+          "remember_embeds_option_choice",
+          this.remember_embeds_option_choice
+        );
+      } else if (localstore.hasOwnProperty("remember_embeds_option_choice")) {
+        localstore.set("remember_embeds_option_choice", undefined);
+      }
     },
   },
 };

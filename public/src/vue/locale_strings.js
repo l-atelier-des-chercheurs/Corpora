@@ -335,6 +335,10 @@ module.exports = (function () {
       fr: "Cette source a déjà été créé",
       en: "This source has already been created",
     },
+    remember_settings: {
+      fr: "Ne plus afficher cette fenêtre",
+      en: "Do not show this windows again",
+    },
   };
 
   return messages;
