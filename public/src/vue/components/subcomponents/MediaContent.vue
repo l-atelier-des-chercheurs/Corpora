@@ -366,8 +366,6 @@ export default {
         return this.mediaURL;
       }
 
-      debugger;
-
       const small_thumb = this.media.thumbs.filter(
         (m) => !!m && m.hasOwnProperty("size") && m.size === this.thumbRes
       );

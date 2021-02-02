@@ -314,8 +314,8 @@ export default {
       return false;
     },
     media_context() {
+      if (this.media.type === "image") return "preview";
       if (this.is_being_edited) return "edit";
-      // if (this.media.type === "document") return "edit";
       return "";
     },
   },
