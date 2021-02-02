@@ -147,6 +147,9 @@ module.exports = (function () {
       fr: "Mot de passe",
       en: "Password",
     },
+    close_the_window: {
+      fr: "Annul",
+    },
     caption: {
       fr: "Légende",
       en: "Caption",
@@ -353,6 +356,29 @@ module.exports = (function () {
     remember_settings: {
       fr: "Ne plus afficher cette fenêtre",
       en: "Do not show this windows again",
+    },
+    changes_not_saved_sureToCloseModal: {
+      fr: "Des modifications ont eu lieu, souhaitez-vous les enregistrer ?",
+      en:
+        "All changes were not saved. Do you really want to close this window?",
+      nl: "Er zijn wijzigingen gebeurd , wilt u deze opslaan?",
+      oc: "De modificacions se faguèron, desiratz de las enregistrar ?",
+      de: "Änderungen wurden vorgenommen, wollen Sie sie speichern?",
+    },
+    close_the_window: {
+      fr: "Non, fermer sans enregistrer",
+      en: "No, close without saving",
+      nl: "Nee, sluiten zonder opslaan",
+      oc: "Non, clavar sens enregistrar",
+      de: "Nein, schliessen Sie ohne zu speichern",
+    },
+
+    save_changes: {
+      fr: "Oui, enregistrer les modifications",
+      en: "Yes, save changes",
+      nl: "Ja, wijzigingen opslaan. ",
+      oc: "Òc, enregistrar las modificacions",
+      de: "Ja, Änderungen speichern",
     },
   };
 
