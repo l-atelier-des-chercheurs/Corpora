@@ -22,8 +22,11 @@
         <div v-else class="m_uploadFile--image" />
 
         <div :title="f.name" class="m_uploadFile--filename">{{ f.name }}</div>
-        <div class="m_uploadFile--size">{{ formatBytes(f.size) }}</div>
-        <div class="m_uploadFile--action" v-if="files_to_upload_meta.hasOwnProperty(f.name)">
+        <div class="m_uploadFile--size">{{ $root.formatBytes(f.size) }}</div>
+        <div
+          class="m_uploadFile--action"
+          v-if="files_to_upload_meta.hasOwnProperty(f.name)"
+        >
           <button
             type="button"
             class="buttonLink"
@@ -34,9 +37,17 @@
                 files_to_upload_meta[f.name].status === 'success')
             "
           >
-            <template v-if="!files_to_upload_meta.hasOwnProperty(f.name)">{{ $t("import") }}</template>
-            <template v-else-if="files_to_upload_meta[f.name].status === 'success'">{{ $t("sent") }}</template>
-            <template v-else-if="files_to_upload_meta[f.name].status === 'failed'">{{ $t("retry") }}</template>
+            <template v-if="!files_to_upload_meta.hasOwnProperty(f.name)">{{
+              $t("import")
+            }}</template>
+            <template
+              v-else-if="files_to_upload_meta[f.name].status === 'success'"
+              >{{ $t("sent") }}</template
+            >
+            <template
+              v-else-if="files_to_upload_meta[f.name].status === 'failed'"
+              >{{ $t("retry") }}</template
+            >
           </button>
         </div>
       </div>
@@ -52,7 +63,7 @@ export default {
   props: {
     slugFolderName: String,
     type: String,
-    selected_files: Array
+    selected_files: Array,
   },
   components: {},
   data() {
@@ -61,22 +72,21 @@ export default {
       files_to_upload_meta: {},
       upload_percentages: 0,
 
-      list_of_medias_to_add_to_fragment: []
+      list_of_medias_to_add_to_fragment: [],
     };
   },
   watch: {},
   mounted() {
-    console.log("MOUNTED • TimeLineView: onScroll");
     this.sendAllFiles();
   },
   beforeDestroy() {},
   computed: {
-    uriToUploadMedia: function() {
+    uriToUploadMedia: function () {
       return (
         window.location.origin +
         `/_file-upload/${this.type}/${this.slugFolderName}/?socketid=${this.$root.$socketio.socket.id}`
       );
-    }
+    },
   },
   methods: {
     sendThisFile(f) {
@@ -90,21 +100,17 @@ export default {
 
         this.$set(this.files_to_upload_meta, filename, {
           upload_percentages: 0,
-          status: "sending"
+          status: "sending",
         });
 
         let formData = new FormData();
         formData.append("files", f, filename);
 
         let meta = {
-          fileCreationDate: modified
-          // setDateTimelineToDateCreated: this.$root.settings
-          //   .setDateTimelineToDateCreated,
-          // authors: this.$root.settings.current_author_name
-          //   ? [{ name: this.$root.settings.current_author_name }]
-          //   : "",
-          // w: 4,
-          // h: 3
+          fileCreationDate: modified,
+          authors: this.$root.current_author
+            ? [{ slugFolderName: this.$root.current_author.slugFolderName }]
+            : "",
         };
 
         // const parser = new UAparser();
@@ -124,93 +130,69 @@ export default {
           formData.append("socketid", socketid);
         }
 
-        console.log(
-          `METHODS • sendThisFile: name = ${filename} / formData is ready / sending to ${this.uriToUploadMedia}`
-        );
+        if (this.$root.state.dev_mode === "debug")
+          console.log(
+            `UploadFile • METHODS: name = ${filename} / formData is ready / sending to ${this.uriToUploadMedia}`
+          );
 
         // TODO : possibilité de cancel
         axios
           .post(this.uriToUploadMedia, formData, {
             headers: { "Content-Type": "multipart/form-data" },
-            onUploadProgress: function(progressEvent) {
+            onUploadProgress: function (progressEvent) {
               this.files_to_upload_meta[filename].upload_percentages = parseInt(
                 Math.round((progressEvent.loaded * 100) / progressEvent.total)
               );
-            }.bind(this)
+            }.bind(this),
           })
-          .then(x => {
-            console.log(`METHODS • sendThisFile: got answer, x ${x}`);
-            return x.data;
-          })
-          .then(x => {
-            if (this.$root.state.dev_mode === "debug") {
+          .then((x) => x.data)
+          .then((x) => {
+            if (this.$root.state.dev_mode === "debug")
               console.log(
-                `METHODS • sendThisFile: name = ${filename} / success uploading`
+                `UploadFile • METHODS: name = ${filename} / success uploading`
               );
-            }
 
             this.files_to_upload_meta[filename].status = "success";
             this.files_to_upload_meta[filename].upload_percentages = 100;
 
-            const catchMediaCreation = d => {
-              if (this.$root.state.dev_mode === "debug") {
-                console.log(`METHODS • sendThisFile: catchMediaCreation`);
-              }
-
-              if (
-                d.hasOwnProperty("corpus") &&
-                d.corpus.hasOwnProperty(this.slugFolderName)
-              ) {
-                const new_media = Object.values(
-                  d.corpus[this.slugFolderName].medias
-                ).filter(m => m.media_filename === x.medias_filenames[0]);
-
-                if (new_media.length > 0) {
-                  console.log(
-                    `UploadFile • METHODS: sendThisFile. Will emit insertMedia for = ${new_media[0].metaFileName}`
-                  );
-
-                  this.list_of_medias_to_add_to_fragment.push(
-                    new_media[0].metaFileName
-                  );
-
-                  return resolve();
-                }
-              }
-              this.$eventHub.$once(
-                "socketio.corpus.listMedia",
-                catchMediaCreation
-              );
-            };
-            this.$eventHub.$once(
-              "socketio.corpus.listMedia",
-              catchMediaCreation
-            );
-            // resolve(x.map(img => Object.assign({}, img, { url: `${BASE_URL}/images/${img.id}` })));
+            this.list_of_medias_to_add_to_fragment.push(x.metaFileNames[0]);
+            return resolve();
           })
-          .catch(err => {
-            console.log(
-              `METHODS • sendThisFile: name = ${filename} / failed uploading`
-            );
+          .catch((err) => {
+            if (this.$root.state.dev_mode === "debug")
+              console.log(
+                `METHODS • sendThisFile: name = ${filename} / failed uploading`
+              );
 
             this.files_to_upload_meta[filename].status = "failed";
             this.files_to_upload_meta[filename].upload_percentages = 0;
-            reject();
+            return reject();
           });
       });
     },
     sendAllFiles() {
-      const executeSequentially = array => {
-        return this.sendThisFile(this.files_to_upload[array.shift()]).then(x =>
-          array.length == 0 ? x : executeSequentially(array)
+      const executeSequentially = (array) => {
+        return this.sendThisFile(this.files_to_upload[array.shift()]).then(
+          (x) => {
+            if (this.$root.state.dev_mode === "debug")
+              console.log(
+                `UploadFile • METHODS: sendAllFiles / finished sending file, onto next`
+              );
+
+            return array.length === 0 ? x : executeSequentially(array);
+          }
         );
       };
 
       executeSequentially(
         Array.from(Array(this.files_to_upload.length).keys())
-      ).then(x => {
+      ).then((x) => {
+        if (this.$root.state.dev_mode === "debug")
+          console.log(
+            `UploadFile • METHODS: sendAllFiles / finished uploading sequentially`
+          );
         this.$emit("insertMedias", this.list_of_medias_to_add_to_fragment);
-        this.$emit("close");
+        this.$emit("close", "");
       });
 
       // const test = async () => {
@@ -219,26 +201,6 @@ export default {
       //   }
       // }
     },
-    formatBytes(a, b) {
-      if (0 == a) return `0 ${this.$t("bytes")}`;
-
-      var e = [
-        this.$t("bytes"),
-        this.$t("kb"),
-        this.$t("mb"),
-        this.$t("gb"),
-        "TB",
-        "PB",
-        "EB",
-        "ZB",
-        "YB"
-      ];
-
-      var c = 1024,
-        d = b || 2,
-        f = Math.floor(Math.log(a) / Math.log(c));
-      return parseFloat((a / Math.pow(c, f)).toFixed(d)) + " " + e[f];
-    },
     getImgPreview(file) {
       return URL.createObjectURL(file);
     },
@@ -246,8 +208,8 @@ export default {
       if (this.files_to_upload_meta.hasOwnProperty(f.name)) {
         return "is--" + this.files_to_upload_meta[f.name].status;
       }
-    }
-  }
+    },
+  },
 };
 </script>
 <style lang="scss" scoped>
