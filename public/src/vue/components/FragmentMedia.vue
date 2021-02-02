@@ -178,10 +178,17 @@
         class="m_fragmentMedia--infos--caption"
         v-if="is_being_edited || media.caption"
       >
-        <label>{{ $t("caption") }}</label>
+        <label v-if="is_being_edited">{{ $t("caption") }}</label>
         <div>
           <template v-if="!is_being_edited">
-            <span>{{ media.caption }}</span>
+            <span
+              :content="$t('caption')"
+              v-tippy="{
+                placement: 'bottom',
+                delay: [600, 0],
+              }"
+              >{{ media.caption }}</span
+            >
           </template>
           <template v-else>
             <input
@@ -195,9 +202,13 @@
       </div>
       <div
         class="m_fragmentMedia--infos--source"
-        v-if="(is_being_edited || media.source) && media.type !== 'link'"
+        v-if="
+          (is_being_edited || media.source) &&
+          media.type !== 'link' &&
+          media.type !== 'embed'
+        "
       >
-        <label>{{ $t("source") }} (URL)</label>
+        <label v-if="is_being_edited">{{ $t("source") }} (URL)</label>
         <div>
           <template v-if="!is_being_edited">
             <a
@@ -205,6 +216,11 @@
               rel="noopener noreferrer"
               :title="media.source"
               :href="media.source"
+              :content="$t('source')"
+              v-tippy="{
+                placement: 'bottom',
+                delay: [600, 0],
+              }"
               >{{ media.source }}</a
             >
           </template>
@@ -417,7 +433,7 @@ export default {
   // background-color: var(--active-color);
   border-radius: 4px;
   padding: 2px;
-  color: #666;
+  color: #999;
 
   /* These are technically the same, but use both */
   overflow-wrap: break-word;
