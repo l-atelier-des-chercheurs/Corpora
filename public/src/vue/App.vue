@@ -7,7 +7,10 @@
       "
       :corpuses="Object.values($root.store.corpus)"
     />
-    <Corpus v-else-if="$root.do_navigation.view === 'CorpusView'" :corpus="$root.current_corpus" />
+    <Corpus
+      v-else-if="$root.do_navigation.view === 'CorpusView'"
+      :corpus="$root.current_corpus"
+    />
     <portal-target name="modal_container" />
   </div>
 </template>
@@ -60,6 +63,10 @@ body {
 
 * {
   box-sizing: border-box;
+}
+
+.t-indent {
+  text-indent: 2em;
 }
 
 h1,
@@ -190,7 +197,7 @@ label:not(.no-style) {
     margin-bottom: 1px;
 
     // background-color: rgba(0, 0, 0, 0.3);
-    background-color: rgba(226, 237, 239, 0.4);
+    background-color: rgba(226, 237, 239, 0.5);
 
     svg {
       display: block;
@@ -388,6 +395,16 @@ button,
   color: var(--color-black);
 }
 
+input {
+  &[type="text"],
+  &[type="url"] {
+    &[readonly] {
+      cursor: not-allowed;
+      background-color: rgb(226, 226, 226) !important;
+    }
+  }
+}
+
 input[type="checkbox"] {
   -webkit-appearance: none;
   width: 12px;
@@ -522,6 +539,13 @@ select::-ms-expand {
   }
 }
 
+select {
+  &:focus,
+  &:active {
+    outline: 1px solid var(--color-black);
+  }
+}
+
 .bordered {
   border: 1px solid var(--active-color);
 }
@@ -647,6 +671,7 @@ audio {
 
   iframe {
     min-height: 202px;
+    background-color: transparent;
   }
 }
 

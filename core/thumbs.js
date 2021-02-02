@@ -891,6 +891,79 @@ module.exports = (function () {
           dev.logverbose(
             `Screenshots already exist at path ${fullScreenshotPath}`
           );
+          return resolve({ screenshotPath, screenshotName });
+        }
+      });
+    });
+  }
+
+  function _makeLinkThumb({
+    slugFolderName,
+    thumbFolderPath,
+    filename,
+    scroll,
+    mediaData,
+  }) {
+    return new Promise(function (resolve, reject) {
+      dev.logverbose(
+        `Looking to make a link screenshot for ${slugFolderName}/${filename}`
+      );
+
+      // todo : use scroll to get screenshots all around an stl
+
+      let screenshotName = `${filename}.${scroll}.png`;
+      let screenshotPath = path.join(thumbFolderPath, screenshotName);
+      let fullScreenshotPath = api.getFolderPath(screenshotPath);
+
+      // check first if it exists, resolve if it does
+      fs.pathExists(fullScreenshotPath).then((exists) => {
+        if (!exists) {
+          const url = mediaData.content;
+
+          if (!url) return reject();
+
+          screenshotWebsite({
+            url,
+          })
+            .then((image) => {
+              fs.writeFile(fullScreenshotPath, image.toPNG(1.0), (error) => {
+                if (error) throw error;
+                dev.logverbose(
+                  `THUMBS — _makeSTLScreenshot : created image at ${fullScreenshotPath}`
+                );
+                return resolve({ screenshotPath, screenshotName });
+              });
+            })
+            .catch((err) => {
+              dev.error(
+                `THUMBS — _makeSTLScreenshot / Failed to make link thumbs with error ${err}`
+              );
+              return reject();
+            });
+
+          // var thumbnailer = new StlThumbnailer({
+          //   filePath: mediaPath,
+          //   requestThumbnails: [
+          //     {
+          //       width: 1800,
+          //       height: 1800,
+          //     },
+          //   ],
+          // }).then(function (thumbnails) {
+          //   // thumbnails is an array (in matching order to your requests) of Canvas objects
+          //   // you can write them to disk, return them to web users, etc
+          //   // see node-canvas documentation at https://github.com/Automattic/node-canvas
+          //   thumbnails[0].toBuffer(function (err, buf) {
+          //     if (err) return reject();
+
+          //     fs.writeFileSync(fullScreenshotPath, buf);
+          //     return resolve({ screenshotPath, screenshotName });
+          //   });
+          // });
+        } else {
+          dev.logverbose(
+            `Screenshots already exist at path ${fullScreenshotPath}`
+          );
           resolve({ screenshotPath, screenshotName });
         }
       });

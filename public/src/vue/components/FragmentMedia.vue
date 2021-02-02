@@ -15,6 +15,11 @@
       />
 
       <template v-else-if="media.type === 'embed' && is_being_edited">
+        <select v-model="expected_embed_format">
+          <option>Vimeo</option>
+          <option>YouTube</option>
+          <option>Twitter</option>
+        </select>
         <input
           type="url"
           class="border-none bg-transparent"
@@ -22,7 +27,23 @@
           v-model="mediadata.content"
           ref="textField"
         />
-        <small v-html="$t('embed_instructions')" />
+        <small
+          v-html="
+            $t('embed_instructions_' + expected_embed_format.toLowerCase())
+          "
+        />
+      </template>
+
+      <template v-else-if="media.type === 'link' && is_being_edited">
+        <input
+          type="url"
+          class="border-none bg-transparent"
+          placeholder="URL"
+          v-model="mediadata.content"
+          ref="textField"
+          :readonly="!!media.content && media.content.length > 0"
+        />
+        <small v-html="$t('link_instructions')" />
       </template>
 
       <MediaContent
@@ -33,6 +54,7 @@
         :slugFolderName="slugFolderName"
         :media="media"
         :read_only="false"
+        :preview_size="600"
       />
       <button
         type="button"
@@ -89,7 +111,7 @@
             width="4px"
             height="16.2px"
             viewBox="0 0 4 16.2"
-            style="enable-background: new 0 0 4 16.2;"
+            style="enable-background: new 0 0 4 16.2"
             xml:space="preserve"
           >
             <path
@@ -156,10 +178,17 @@
         class="m_fragmentMedia--infos--caption"
         v-if="is_being_edited || media.caption"
       >
-        <label>{{ $t("caption") }}</label>
+        <label v-if="is_being_edited">{{ $t("caption") }}</label>
         <div>
           <template v-if="!is_being_edited">
-            <span>{{ media.caption }}</span>
+            <span
+              :content="$t('caption')"
+              v-tippy="{
+                placement: 'bottom',
+                delay: [600, 0],
+              }"
+              >{{ media.caption }}</span
+            >
           </template>
           <template v-else>
             <input
@@ -173,9 +202,13 @@
       </div>
       <div
         class="m_fragmentMedia--infos--source"
-        v-if="is_being_edited || media.source"
+        v-if="
+          (is_being_edited || media.source) &&
+          media.type !== 'link' &&
+          media.type !== 'embed'
+        "
       >
-        <label>{{ $t("source") }} (URL)</label>
+        <label v-if="is_being_edited">{{ $t("source") }} (URL)</label>
         <div>
           <template v-if="!is_being_edited">
             <a
@@ -183,6 +216,11 @@
               rel="noopener noreferrer"
               :title="media.source"
               :href="media.source"
+              :content="$t('source')"
+              v-tippy="{
+                placement: 'bottom',
+                delay: [600, 0],
+              }"
               >{{ media.source }}</a
             >
           </template>
@@ -204,7 +242,7 @@
         !$root.can_admin_corpora
       "
       class="ta-ce tt-lc padding-small font-verysmall"
-      style="width: 100%; display: block;"
+      style="width: 100%; display: block"
       >{{ $t("editable_for") }}
       {{ editable_delay_in_minutes - media_was_created_x_minutes_ago }}
       {{ $t("minutes") }}</small
@@ -244,6 +282,7 @@ export default {
       },
 
       show_in_modal: false,
+      expected_embed_format: "Vimeo",
 
       editable_delay_in_minutes: 30,
 
@@ -301,8 +340,8 @@ export default {
       return false;
     },
     media_context() {
+      if (this.media.type === "image") return "preview";
       if (this.is_being_edited) return "edit";
-      // if (this.media.type === "document") return "edit";
       return "";
     },
   },
@@ -394,7 +433,7 @@ export default {
   // background-color: var(--active-color);
   border-radius: 4px;
   padding: 2px;
-  color: #666;
+  color: #999;
 
   /* These are technically the same, but use both */
   overflow-wrap: break-word;
@@ -461,6 +500,24 @@ export default {
       .plyr__controls {
         padding-right: 35px;
       }
+    }
+  }
+
+  ._linkCaption {
+    position: absolute;
+    bottom: 0;
+
+    a {
+      color: white;
+
+      --c-shadowOutline: rgba(0, 0, 0, 0.4);
+      text-shadow: 1px 1px var(--c-shadowOutline),
+        -1px 1px var(--c-shadowOutline), -1px -1px var(--c-shadowOutline),
+        1px -1px var(--c-shadowOutline);
+
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      overflow: hidden;
     }
   }
 }

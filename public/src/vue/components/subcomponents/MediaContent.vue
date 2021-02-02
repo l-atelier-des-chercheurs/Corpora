@@ -33,7 +33,7 @@
             width="169px"
             height="169px"
             viewBox="0 0 169 169"
-            style="enable-background: new 0 0 169 169;"
+            style="enable-background: new 0 0 169 169"
             xml:space="preserve"
           >
             <path
@@ -76,7 +76,7 @@
             width="169px"
             height="169px"
             viewBox="0 0 169 169"
-            style="enable-background: new 0 0 169 169;"
+            style="enable-background: new 0 0 169 169"
             xml:space="preserve"
           >
             <path
@@ -170,7 +170,20 @@
         </template>
       </div>
     </template>
-
+    <template v-else-if="media.type === 'link'">
+      <img
+        v-if="context !== 'edit'"
+        :srcset="complexMediaSrcSetAttr({ type: 'scroll', option: 0 })"
+        :sizes="imageSizesAttr"
+        :src="linkToComplexMediaThumb({ type: 'scroll', option: 0 })"
+        draggable="false"
+      />
+      <div class="padding-small font-verysmall _linkCaption">
+        <a :href="media.content" target="_blank">
+          {{ media.content }}
+        </a>
+      </div>
+    </template>
     <template v-else-if="media.type === 'document'">
       <div
         v-if="context !== 'edit' && context !== 'full'"
@@ -347,7 +360,7 @@ export default {
 
       if (
         // if image is gif and context is not 'preview', let’s show the original gif
-        this.context !== "preview" &&
+        // this.context !== "preview" &&
         this.mediaURL.toLowerCase().endsWith(".gif")
       ) {
         return this.mediaURL;
@@ -491,6 +504,57 @@ export default {
 
       const videoId = getId(url);
       return `https://player.vimeo.com/video/${videoId}`;
+    },
+    linkToComplexMediaThumb: function ({ type, option }) {
+      if (
+        !this.media["thumbs"] ||
+        (typeof this.media.thumbs === "object" &&
+          this.media.thumbs.length === 0)
+      ) {
+        return this.mediaURL;
+      }
+
+      let firstThumbs = this.media.thumbs.find(
+        (t) => !!t && t[type] === option
+      );
+
+      const small_thumb = firstThumbs.thumbsData.find(
+        (m) => m && m.size === this.thumbRes
+      );
+      if (!small_thumb) return this.mediaURL;
+
+      let pathToSmallestThumb = small_thumb.path;
+
+      let url =
+        this.$root.state.mode === "export_publication"
+          ? "./" + pathToSmallestThumb
+          : "/" + pathToSmallestThumb;
+      return pathToSmallestThumb !== undefined ? url : this.mediaURL;
+    },
+    complexMediaSrcSetAttr: function ({ type, option }) {
+      if (this.element_width_for_sizes === 0) {
+        return;
+      }
+
+      let firstThumbs = this.media.thumbs.filter(
+        (t) => !!t && t[type] === option
+      );
+      if (!firstThumbs || firstThumbs.length === 0) return;
+
+      // get all available sizes
+      const img_srcset = firstThumbs[0].thumbsData.reduce((acc, t) => {
+        if (t.hasOwnProperty("path")) {
+          const path =
+            this.$root.state.mode === "export_publication"
+              ? "./" + t.path
+              : "/" + t.path;
+
+          acc.push(path + " " + t.size + "w");
+        }
+        return acc;
+      }, []);
+
+      return img_srcset.join(", ");
     },
   },
 };

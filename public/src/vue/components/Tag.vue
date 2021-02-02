@@ -17,6 +17,13 @@
             <small>{{ fragments.length * 1 }}</small>
           </h2>
         </button>
+        <button
+          type="button"
+          v-if="$root.can_admin_corpora"
+          @click="show_rename_tag_modal = true"
+        >
+          {{ $t("rename") }}
+        </button>
       </div>
     </div>
     <div
@@ -39,6 +46,13 @@
             </span>
             <small>{{ fragments.length * 1 }}</small>
           </h2>
+        </button>
+        <button
+          type="button"
+          v-if="$root.can_admin_corpora"
+          @click="show_rename_tag_modal = true"
+        >
+          {{ $t("rename") }}
         </button>
       </div>
     </div>
@@ -64,10 +78,18 @@
         />
       </transition-group>
     </transition>
+
+    <RenameTag
+      v-if="show_rename_tag_modal"
+      :old_tag="tag"
+      :slugFolderName="slugFolderName"
+      :fragments="fragments"
+    />
   </div>
 </template>
 <script>
 import Fragment from "./Fragment.vue";
+import RenameTag from "./modals/RenameTag.vue";
 
 export default {
   props: {
@@ -79,15 +101,17 @@ export default {
     slugFolderName: String,
     fragments: Array,
     fragment_width: Number,
-    corpus_scroll_left: Number
+    corpus_scroll_left: Number,
   },
   components: {
-    Fragment
+    Fragment,
+    RenameTag,
   },
   data() {
     return {
       show_fragments: false,
-      tag_title_position: false
+      tag_title_position: false,
+      show_rename_tag_modal: false,
     };
   },
   created() {},
@@ -98,15 +122,15 @@ export default {
     this.$eventHub.$on("scrollToFragment", this.scrollToFragment);
   },
   watch: {
-    corpus_scroll_left: function() {
+    corpus_scroll_left: function () {
       this.setTitleBarRightPos();
-    }
+    },
   },
   computed: {},
   methods: {
     scrollToFragment(metaFileName) {
       const called_fragment = this.fragments.find(
-        f => f.metaFileName === metaFileName
+        (f) => f.metaFileName === metaFileName
       );
       if (called_fragment && !this.show_fragments) {
         this.showFragments();
@@ -136,8 +160,8 @@ export default {
           this.tag_title_position = false;
         }
       }
-    }
-  }
+    },
+  },
 };
 </script>
 <style lang="scss" scoped>

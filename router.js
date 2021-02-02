@@ -18,7 +18,7 @@ module.exports = function (app) {
   app.get("/", load_index);
   app.get("/:slug", load_index);
   app.get("/_archives/:type/:slugFolderName", downloadArchive);
-  app.post("/_file-upload/:type/:slugFolderName", postFile2);
+  app.post("/_file-upload/:type/:slugFolderName", postFile);
 
   remote_api.init(app);
 
@@ -140,9 +140,28 @@ module.exports = function (app) {
       });
   }
 
-  function postFile2(req, res) {
-    let type = req.param("type");
-    let slugFolderName = req.param("slugFolderName");
-    importer.handleForm({ req, res, type, slugFolderName });
+  async function postFile(req, res) {
+    let type = req.params.type;
+    let slugFolderName = req.params.slugFolderName;
+
+    importer
+      .handleForm({ req, type, slugFolderName })
+      .then(({ msg }) => {
+        sockets.notify({
+          socketid: req.query.socketid,
+          localized_string: `imported_files_successfully`,
+          type: "success",
+        });
+        res.end(JSON.stringify(msg));
+      })
+      .catch(({ err }) => {
+        sockets.notify({
+          socketid: req.query.socketid,
+          localized_string: `action_not_allowed`,
+          not_localized_string: err.message,
+          type: "error",
+        });
+        res.end();
+      });
   }
 };

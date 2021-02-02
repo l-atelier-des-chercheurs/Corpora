@@ -116,6 +116,7 @@
               "audio",
               "text",
               "embed",
+              "link",
               "document",
               "fragment",
               "other"

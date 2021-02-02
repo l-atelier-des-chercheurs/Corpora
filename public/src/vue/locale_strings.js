@@ -147,6 +147,9 @@ module.exports = (function () {
       fr: "Mot de passe",
       en: "Password",
     },
+    close_the_window: {
+      fr: "Annul",
+    },
     caption: {
       fr: "Légende",
       en: "Caption",
@@ -316,9 +319,24 @@ module.exports = (function () {
       en: "Download",
     },
     embed_instructions: {
-      fr: "Placez ici l’URL vers une vidéo Vimeo, Youtube or Twitter",
+      fr: "Placez ici l’URL vers une vidéo Vimeo, Youtube ou Twitter",
       en: "Add a URL to Vimeo, Youtube or Twitter",
     },
+    embed_instructions_vimeo: {
+      fr: "Format attendu : https://vimeo.com/399094491",
+      en: "Expected format: https://vimeo.com/399094491",
+    },
+    embed_instructions_youtube: {
+      fr: "Format attendu : https://www.youtube.com/watch?v=8yj9X2YHTP4",
+      en: "Expected format: https://www.youtube.com/watch?v=8yj9X2YHTP4",
+    },
+    embed_instructions_twitter: {
+      fr:
+        "Format attendu : https://twitter.com/PluralityU/status/1349280309116891138",
+      en:
+        "Expected format: https://twitter.com/PluralityU/status/1349280309116891138",
+    },
+
     drop_files_here: {
       fr: "Déposez vos fichier(s) ici",
       en: "Drop file(s) here",
@@ -334,6 +352,33 @@ module.exports = (function () {
     moment_already_exists: {
       fr: "Cette source a déjà été créé",
       en: "This source has already been created",
+    },
+    remember_settings: {
+      fr: "Ne plus afficher cette fenêtre",
+      en: "Do not show this windows again",
+    },
+    changes_not_saved_sureToCloseModal: {
+      fr: "Des modifications ont eu lieu, souhaitez-vous les enregistrer ?",
+      en:
+        "All changes were not saved. Do you really want to close this window?",
+      nl: "Er zijn wijzigingen gebeurd , wilt u deze opslaan?",
+      oc: "De modificacions se faguèron, desiratz de las enregistrar ?",
+      de: "Änderungen wurden vorgenommen, wollen Sie sie speichern?",
+    },
+    close_the_window: {
+      fr: "Non, fermer sans enregistrer",
+      en: "No, close without saving",
+      nl: "Nee, sluiten zonder opslaan",
+      oc: "Non, clavar sens enregistrar",
+      de: "Nein, schliessen Sie ohne zu speichern",
+    },
+
+    save_changes: {
+      fr: "Oui, enregistrer les modifications",
+      en: "Yes, save changes",
+      nl: "Ja, wijzigingen opslaan. ",
+      oc: "Òc, enregistrar las modificacions",
+      de: "Ja, Änderungen speichern",
     },
   };
 
