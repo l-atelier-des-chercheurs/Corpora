@@ -5,15 +5,14 @@ ShareDB.types.register(require("rich-text").type);
 
 const WebSocket = require("ws");
 const WebSocketJSONStream = require("websocket-json-stream");
-const http = require("http");
-const uuid = require("uuid");
+const { v4: uuidv4 } = require("uuid");
 const url = require("url");
 const { URLSearchParams } = require("url");
 
 const dev = require("./dev-log"),
   file = require("./file");
 
-module.exports = function(server) {
+module.exports = function (server) {
   dev.log(`server-realtime_text_collaboration • init`);
 
   // Share DB
@@ -31,12 +30,12 @@ module.exports = function(server) {
 
   const sharewss = new WebSocket.Server({ noServer: true });
 
-  sharewss.on("connection", client => {
+  sharewss.on("connection", (client) => {
     dev.logfunction(
       `server-realtime_text_collaboration • sharewss new client connection`
     );
 
-    client.id = uuid();
+    client.id = uuidv4();
     client.isAlive = true;
 
     dev.logverbose(
@@ -106,22 +105,22 @@ module.exports = function(server) {
 
     share.listen(new WebSocketJSONStream(client));
 
-    client.on("message", function(data, flags) {
+    client.on("message", function (data, flags) {
       dev.logverbose(
         `server-realtime_text_collaboration • sharewss: message for ${client.id}`
       );
     });
 
-    client.on("pong", function(data, flags) {
+    client.on("pong", function (data, flags) {
       dev.logverbose(
         `server-realtime_text_collaboration • sharewss: pong received for ${client.id}`
       );
       client.isAlive = true;
     });
 
-    client.on("message", function() {});
+    client.on("message", function () {});
 
-    client.on("error", function(error) {
+    client.on("error", function (error) {
       dev.error(
         `server-realtime_text_collaboration • sharewss: client connection errored for ${client.id} with error = ${error}`
       );
@@ -138,8 +137,8 @@ module.exports = function(server) {
     }
   });
 
-  setInterval(function() {
-    sharewss.clients.forEach(function(client) {
+  setInterval(function () {
+    sharewss.clients.forEach(function (client) {
       if (client.isAlive === false) return client.terminate();
 
       client.isAlive = false;
