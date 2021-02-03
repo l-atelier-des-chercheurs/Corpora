@@ -31,6 +31,15 @@ Vue.use(VueI18n);
 import VuePlyr from "vue-plyr";
 Vue.use(VuePlyr);
 
+Vue.component("Loader", {
+  name: "Loader",
+  template: `
+    <div class="_loader">
+      <div class="lds-ellipsis"><div></div><div></div><div></div><div></div></div>    
+    </div>
+  `,
+});
+
 Vue.directive("visible", function (el, binding) {
   el.style.visibility = !!binding.value ? "visible" : "hidden";
 });
@@ -502,31 +511,50 @@ let vm = new Vue({
       this.$socketio.removeFolder({ type, slugFolderName });
     },
 
-    createMedia(mdata) {
+    createMedia: function (mdata) {
       return new Promise((resolve, reject) => {
-        if (window.state.dev_mode === "debug")
-          console.log(
-            `ROOT EVENT: createMedia: ${JSON.stringify(mdata, null, 4)}`
-          );
-
+        if (window.state.dev_mode === "debug") {
+          console.log(`ROOT EVENT: createMedia`);
+        }
         mdata.id =
           Math.random().toString(36).substring(2, 15) +
           Math.random().toString(36).substring(2, 15);
 
+        if (this.current_author) {
+          if (!mdata.hasOwnProperty("additionalMeta")) {
+            mdata.additionalMeta = {};
+          }
+          mdata.additionalMeta.authors = [
+            { slugFolderName: this.current_author.slugFolderName },
+          ];
+        }
+
         this.$socketio.createMedia(mdata);
 
-        const catchMediaCreation = function (d) {
+        const editMediaTimeout = setTimeout(() => {
+          this.$eventHub.$off(
+            `socketio.media_created_or_updated`,
+            catchMediaCreation
+          );
+          return reject();
+        }, 120000);
+
+        const catchMediaCreation = (d) => {
           if (mdata.id === d.id) {
-            return resolve(d);
+            clearTimeout(editMediaTimeout);
+            this.$nextTick(() => {
+              return resolve(d);
+            });
           } else {
             this.$eventHub.$once(
-              "socketio.corpus.mediaCreated",
+              `socketio.media_created_or_updated`,
               catchMediaCreation
             );
           }
         };
+
         this.$eventHub.$once(
-          "socketio.corpus.mediaCreated",
+          `socketio.media_created_or_updated`,
           catchMediaCreation
         );
       });
@@ -541,10 +569,46 @@ let vm = new Vue({
       this.$socketio.removeMedia(mdata);
     },
     editMedia: function (mdata) {
-      if (window.state.dev_mode === "debug") {
-        console.log(`ROOT EVENT: editMedia: ${JSON.stringify(mdata, null, 4)}`);
-      }
-      this.$socketio.editMedia(mdata);
+      return new Promise((resolve, reject) => {
+        if (window.state.dev_mode === "debug") {
+          console.log(
+            `ROOT EVENT: editMedia: ${JSON.stringify(mdata, null, 4)}`
+          );
+        }
+
+        mdata.id =
+          Math.random().toString(36).substring(2, 15) +
+          Math.random().toString(36).substring(2, 15);
+
+        this.$socketio.editMedia(mdata);
+
+        const editMediaTimeout = setTimeout(() => {
+          this.$eventHub.$off(
+            `socketio.media_created_or_updated`,
+            catchMediaCreation
+          );
+          return reject();
+        }, 30000);
+
+        const catchMediaCreation = (d) => {
+          if (mdata.id === d.id) {
+            clearTimeout(editMediaTimeout);
+            this.$nextTick(() => {
+              return resolve(d);
+            });
+          } else {
+            this.$eventHub.$once(
+              `socketio.media_created_or_updated`,
+              catchMediaCreation
+            );
+          }
+        };
+
+        this.$eventHub.$once(
+          `socketio.media_created_or_updated`,
+          catchMediaCreation
+        );
+      });
     },
     canAccessFolder: function ({ type, slugFolderName }) {
       if (!this.store[type].hasOwnProperty(slugFolderName)) return false;

@@ -2,7 +2,10 @@
   <div
     class="m_fragmentMedia"
     :data-type="media.type"
-    :class="{ 'is--beingEdited': is_being_edited }"
+    :class="{
+      'is--beingEdited': is_being_edited,
+      'is--savingMedia': is_saving_media,
+    }"
   >
     <div class="m_fragmentMedia--content">
       <CollaborativeEditor
@@ -87,8 +90,8 @@
       <button
         type="button"
         class="button-small bg-orange"
-        v-if="is_being_edited"
-        @click="setBlocToEdit(false)"
+        v-if="is_being_edited && !is_saving_media"
+        @click="saveMedia"
       >
         {{ $t("save") }}
       </button>
@@ -124,8 +127,8 @@
           <button
             type="button"
             class="button-small"
-            v-if="can_be_edited"
-            @click="setBlocToEdit(media.metaFileName)"
+            v-if="can_be_edited && !is_being_edited"
+            @click="enableEdition(media.metaFileName)"
           >
             {{ $t("edit") }}
           </button>
@@ -191,12 +194,7 @@
             >
           </template>
           <template v-else>
-            <input
-              type="text"
-              v-model="mediadata.caption"
-              placeholder="…"
-              @keyup.enter="setBlocToEdit(false)"
-            />
+            <input type="text" v-model="mediadata.caption" placeholder="…" />
           </template>
         </div>
       </div>
@@ -224,12 +222,7 @@
             >
           </template>
           <template v-else>
-            <input
-              type="url"
-              v-model="mediadata.source"
-              placeholder="www."
-              @keyup.enter="setBlocToEdit(false)"
-            />
+            <input type="url" v-model="mediadata.source" placeholder="www." />
           </template>
         </div>
       </div>
@@ -252,6 +245,10 @@
       :slugFolderName="slugFolderName"
       @close="show_in_modal = false"
     />
+
+    <transition name="fade" :duration="600">
+      <Loader v-if="is_saving_media" />
+    </transition>
   </div>
 </template>
 <script>
@@ -286,34 +283,38 @@ export default {
       editable_delay_in_minutes: 30,
 
       mediaURL: `/${this.slugFolderName}/${this.media.media_filename}`,
-      is_being_edited:
-        this.$root.settings.text_media_being_edited === this.media.metaFileName,
+      is_being_edited: false,
+      is_saving_media: false,
     };
   },
   created() {},
-  mounted() {},
-  beforeDestroy() {},
+  mounted() {
+    this.$eventHub.$on("fragmentMedia.enableEdition", this.enableEdition);
+  },
+  beforeDestroy() {
+    this.$eventHub.$off("fragmentMedia.enableEdition", this.enableEdition);
+  },
   watch: {
-    "$root.settings.text_media_being_edited": function () {
-      console.log(
-        `FragmentMedia • WATCH: $root.settings.text_media_being_edited. Is self ? ${
-          this.$root.settings.text_media_being_edited ===
-          this.media.metaFileName
-        }`
-      );
-      if (this.is_being_edited) {
-        this.saveMedia();
-      } else if (
-        this.$root.settings.text_media_being_edited === this.media.metaFileName
-      ) {
-        this.is_being_edited = true;
-        this.mediadata = {
-          caption: this.media.caption,
-          source: this.media.source,
-          content: this.media.content,
-        };
-      }
-    },
+    // "$root.settings.text_media_being_edited": function () {
+    //   console.log(
+    //     `FragmentMedia • WATCH: $root.settings.text_media_being_edited. Is self ? ${
+    //       this.$root.settings.text_media_being_edited ===
+    //       this.media.metaFileName
+    //     }`
+    //   );
+    //   if (this.is_being_edited) {
+    //     this.saveMedia();
+    //   } else if (
+    //     this.$root.settings.text_media_being_edited === this.media.metaFileName
+    //   ) {
+    //     this.is_being_edited = true;
+    //     this.mediadata = {
+    //       caption: this.media.caption,
+    //       source: this.media.source,
+    //       content: this.media.content,
+    //     };
+    //   }
+    // },
   },
   computed: {
     media_was_created_x_minutes_ago() {
@@ -345,25 +346,39 @@ export default {
     },
   },
   methods: {
-    setBlocToEdit(metaFileName) {
-      if (window.state.dev_mode === "debug")
-        console.log(
-          `FragmentMedia • METHODS: setBlocToEdit for ${metaFileName}`
-        );
-
-      if (this.$root.settings.text_media_being_edited !== metaFileName) {
-        this.$root.settings.text_media_being_edited = metaFileName;
-      } else {
+    enableEdition(metaFileName) {
+      if (this.media.metaFileName === metaFileName) {
+        this.is_being_edited = true;
       }
     },
     saveMedia() {
-      this.is_being_edited = false;
-      this.$root.editMedia({
-        type: "corpus",
-        slugFolderName: this.slugFolderName,
-        slugMediaName: this.media.metaFileName,
-        data: this.mediadata,
-      });
+      this.is_saving_media = true;
+
+      this.$root
+        .editMedia({
+          type: "corpus",
+          slugFolderName: this.slugFolderName,
+          slugMediaName: this.media.metaFileName,
+          data: this.mediadata,
+        })
+        .then(() => {
+          setTimeout(() => {
+            this.is_being_edited = false;
+            this.is_saving_media = false;
+            this.$alertify
+              .closeLogOnClick(true)
+              .delay(4000)
+              .success(this.$t("notifications.saved_media"));
+          }, 500);
+        })
+        .catch(() => {
+          this.$alertify
+            .closeLogOnClick(true)
+            .delay(4000)
+            .error(this.$t("notifications.failed_to_save_media"));
+
+          this.is_saving_media = false;
+        });
       this.show_advanced_menu_for_media = false;
     },
     openMedia() {
@@ -400,6 +415,10 @@ export default {
     // background-color: var(--active-color);
     // box-shadow: 0px 4px 4px 0px #ccd0da;
     // transform: translateY(-5px);
+  }
+
+  &.is--savingMedia {
+    // opacity: 0.7;
   }
 }
 .m_advancedMenu {

@@ -344,7 +344,7 @@ module.exports = (function () {
     },
     link_instructions: {
       fr:
-        "Collez ici lien vers une page web. Format attendu : https://www.plurality-university.org/",
+        "Renseignez une URL pour afficher une capture d’écran de la page. Format attendu : https://www.plurality-university.org/",
       en:
         "Paste a link to a URL such as: https://www.plurality-university.org/",
     },

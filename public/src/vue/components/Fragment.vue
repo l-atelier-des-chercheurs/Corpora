@@ -248,19 +248,25 @@ export default {
         ...metaFileNames.map((metaFileName) => ({ metaFileName }))
       );
 
-      // this.fragment.medias_slugs = medias_slugs;
-
-      this.$root.editMedia({
-        type: "corpus",
-        slugFolderName: this.slugFolderName,
-        slugMediaName: this.fragment.metaFileName,
-        data: {
-          medias_slugs,
-        },
-      });
-
-      // set created media(s) to edit mode
-      this.$root.settings.text_media_being_edited = metaFileNames[0];
+      this.$root
+        .editMedia({
+          type: "corpus",
+          slugFolderName: this.slugFolderName,
+          slugMediaName: this.fragment.metaFileName,
+          data: {
+            medias_slugs,
+          },
+        })
+        .then(() => {
+          this.$nextTick(() => {
+            const last_metaFileName = metaFileNames[metaFileNames.length - 1];
+            this.$eventHub.$emit(
+              "fragmentMedia.enableEdition",
+              last_metaFileName
+            );
+          });
+          // set media to edit mode
+        });
     },
     removeMedia({ metaFileName }) {
       if (this.$root.state.dev_mode === "debug")
@@ -336,7 +342,7 @@ export default {
       var(--color-black) 100%
     );
 
-    border-radius: 2px;
+    border-radius: 4px;
 
     transition: opacity 4s cubic-bezier(0.19, 1, 0.22, 1);
 
