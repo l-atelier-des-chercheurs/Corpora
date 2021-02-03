@@ -178,6 +178,22 @@ module.exports = (function () {
       fr: "Voulez-vous vraiment supprimer ce fragment ?",
       en: "Do you really want to remove this fragment?",
     },
+    rename_tag: {
+      fr: "Renommer l’onglet",
+      en: "Rename tag",
+    },
+    rename: {
+      fr: "Renommer",
+      en: "Rename",
+    },
+    current_tag_name: {
+      fr: "Nom actuel",
+      en: "Current name",
+    },
+    new_tag_name: {
+      fr: "Nouveau nom",
+      en: "New name",
+    },
     sure_to_remove_media: {
       fr: "Voulez-vous vraiment supprimer ce média ?",
       en: "Do you really want to remove this media?",

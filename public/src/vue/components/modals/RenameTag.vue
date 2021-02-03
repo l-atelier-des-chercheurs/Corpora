@@ -14,7 +14,7 @@
     <template slot="sidebar">
       <!-- Human name -->
       <div class="margin-bottom-small">
-        <label>{{ $t("old_tag_name") }}</label>
+        <label>{{ $t("current_tag_name") }}</label>
         {{ old_tag }}
       </div>
       <div class="margin-bottom-small">
