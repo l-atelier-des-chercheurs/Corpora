@@ -446,7 +446,7 @@ input[type="checkbox"] {
 input,
 textarea {
   font-size: 1.2em;
-  padding: 0.4em calc(0.2em - 2px);
+  padding: 0.4em calc(0.4em - 2px) 0.4em 0.4em;
   border: none;
   border-radius: 2px;
   width: 100%;
