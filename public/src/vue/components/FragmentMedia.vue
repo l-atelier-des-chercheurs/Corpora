@@ -387,7 +387,7 @@ export default {
     }
   }
 
-  &:not([data-type="text"]):not([data-type="embed"]) {
+  &:not([data-type="text"]):not([data-type="embed"]):not([data-type="link"]) {
     .m_fragmentMedia--content {
       border-radius: 8px;
       overflow: hidden;
@@ -429,7 +429,7 @@ export default {
 }
 .m_fragmentMedia--infos--caption,
 .m_fragmentMedia--infos--source {
-  margin-top: calc(var(--spacing) / 2);
+  margin-top: calc(var(--spacing) / 4);
   // background-color: var(--active-color);
   border-radius: 4px;
   padding: 2px;
@@ -504,20 +504,30 @@ export default {
   }
 
   ._linkCaption {
-    position: absolute;
-    bottom: 0;
+    // position: absolute;
+    // bottom: 0;
+    width: 100%;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+
+    // background: linear-gradient(
+    //   to top,
+    //   white,
+    //   white 20%,
+    //   rgba(255, 255, 255, 0.1) 100%
+    // );
 
     a {
-      color: white;
+      // display: inline-block;
+      color: black;
+      font-size: 0.8em;
+      // padding: 0 calc(var(--spacing) / 2);
 
-      --c-shadowOutline: rgba(0, 0, 0, 0.4);
-      text-shadow: 1px 1px var(--c-shadowOutline),
-        -1px 1px var(--c-shadowOutline), -1px -1px var(--c-shadowOutline),
-        1px -1px var(--c-shadowOutline);
-
-      text-overflow: ellipsis;
-      white-space: nowrap;
-      overflow: hidden;
+      // --c-shadowOutline: rgba(0, 0, 0, 0.4);
+      // text-shadow: 1px 1px var(--c-shadowOutline),
+      //   -1px 1px var(--c-shadowOutline), -1px -1px var(--c-shadowOutline),
+      //   1px -1px var(--c-shadowOutline);
     }
   }
 }

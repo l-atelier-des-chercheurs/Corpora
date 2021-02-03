@@ -322,6 +322,12 @@ module.exports = (function () {
       fr: "Placez ici l’URL vers une vidéo Vimeo, Youtube ou Twitter",
       en: "Add a URL to Vimeo, Youtube or Twitter",
     },
+    link_instructions: {
+      fr:
+        "Collez ici lien vers une page web. Format attendu : https://www.plurality-university.org/",
+      en:
+        "Paste a link to a URL such as: https://www.plurality-university.org/",
+    },
     embed_instructions_vimeo: {
       fr: "Format attendu : https://vimeo.com/399094491",
       en: "Expected format: https://vimeo.com/399094491",

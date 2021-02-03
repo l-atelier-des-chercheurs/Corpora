@@ -178,7 +178,7 @@
         :src="linkToComplexMediaThumb({ type: 'scroll', option: 0 })"
         draggable="false"
       />
-      <div class="padding-small font-verysmall _linkCaption">
+      <div class="_linkCaption">
         <a :href="media.content" target="_blank">
           {{ media.content }}
         </a>
