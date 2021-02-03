@@ -154,6 +154,10 @@ module.exports = (function () {
       fr: "Légende",
       en: "Caption",
     },
+    description: {
+      fr: "Description",
+      en: "Description",
+    },
     source: {
       fr: "Source",
       en: "Source",
@@ -173,6 +177,22 @@ module.exports = (function () {
     sure_to_remove_fragment: {
       fr: "Voulez-vous vraiment supprimer ce fragment ?",
       en: "Do you really want to remove this fragment?",
+    },
+    rename_tag: {
+      fr: "Renommer l’onglet",
+      en: "Rename tag",
+    },
+    rename: {
+      fr: "Renommer",
+      en: "Rename",
+    },
+    current_tag_name: {
+      fr: "Nom actuel",
+      en: "Current name",
+    },
+    new_tag_name: {
+      fr: "Nouveau nom",
+      en: "New name",
     },
     sure_to_remove_media: {
       fr: "Voulez-vous vraiment supprimer ce média ?",
@@ -321,6 +341,12 @@ module.exports = (function () {
     embed_instructions: {
       fr: "Placez ici l’URL vers une vidéo Vimeo, Youtube ou Twitter",
       en: "Add a URL to Vimeo, Youtube or Twitter",
+    },
+    link_instructions: {
+      fr:
+        "Renseignez une URL pour afficher une capture d’écran de la page. Format attendu : https://www.plurality-university.org/",
+      en:
+        "Paste a link to a URL such as: https://www.plurality-university.org/",
     },
     embed_instructions_vimeo: {
       fr: "Format attendu : https://vimeo.com/399094491",

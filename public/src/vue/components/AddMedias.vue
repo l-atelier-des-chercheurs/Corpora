@@ -71,30 +71,6 @@
             </button>
 
             <button
-              key="add_embed"
-              type="button"
-              class="button button-round button-round-small margin-bottom-small padding-none bg-noir c-blanc"
-              @click="createMedia({ type: 'embed' })"
-              :disabled="read_only"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                xmlns:xlink="http://www.w3.org/1999/xlink"
-                version="1.1"
-                x="0px"
-                y="0px"
-                viewBox="-10 -10 100 125"
-              >
-                <path
-                  d="M378,370 c-25,-24,-25,-24,-49,1 l-195,205 c-20,23,-20,23,0,46 l195,205 c24,25,24,25,49,1 l38,-40 c23,-22,23,-22,0,-46 l-114,-120 c-22,-23,-22,-23,0,-47 l114,-119 c23,-24,23,-24,0,-48 Z M494,240 c-45,0,-46,0,-36,44 l161,651 c6,25,5,25,30,25 l57,0 c45,0,46,0,36,-44 l-161,-651 c-6,-25,-5,-25,-30,-25 Z M822,370 l-38,38 c-23,24,-23,24,0,48 l114,119 c22,24,22,24,0,47 l-114,120 c-23,24,-23,24,0,46 l38,40 c25,24,25,24,49,-1 l195,-205 c20,-23,20,-23,0,-46 l-195,-205 c-24,-25,-24,-25,-49,-1 Z M125,0 l950,0 c75,0,125,25,125,125 l0,950 c0,75,-50,125,-125,125 l-950,0 c-100,0,-125,-50,-125,-125 l0,-950 c0,-100,25,-125,125,-125 Z M125,0 "
-                  fill="white"
-                  transform="matrix(0.05,0.0,0.0,-0.05,20.0,80.0)"
-                />
-              </svg>
-              <span class="text_label">{{ $t("embed") }}</span>
-            </button>
-
-            <button
               key="add_link"
               type="button"
               class="button button-round button-round-small margin-bottom-small padding-none bg-noir c-blanc"
@@ -122,28 +98,50 @@
               <span class="text_label">{{ $t("link") }}</span>
             </button>
 
-            <template>
-              <label
-                :key="`add_${field.key}`"
-                class="button button-round button-round-small margin-bottom-small bg-noir c-blanc padding-none"
-                v-for="field in input_file_fields"
-                :disabled="read_only"
-                :for="`add_${field.key + unique_id}`"
+            <label
+              :key="`add_${field.key}`"
+              class="button button-round button-round-small margin-bottom-small bg-noir c-blanc padding-none"
+              v-for="field in input_file_fields"
+              :disabled="read_only"
+              :for="`add_${field.key + unique_id}`"
+            >
+              <div class="svg" v-html="field.svg" />
+              <span class="text_label">{{ $t(field.label) }}</span>
+              <input
+                type="file"
+                :id="`add_${field.key + unique_id}`"
+                :name="field.key"
+                @change="updateInputFiles($event)"
+                :accept="field.accept"
+                :capture="field.capture"
+                multiple
+                style="width: 1px; height: 1px; overflow: hidden"
+              />
+            </label>
+
+            <button
+              key="add_embed"
+              type="button"
+              class="button button-round button-round-small margin-bottom-small padding-none bg-noir c-blanc"
+              @click="createMedia({ type: 'embed' })"
+              :disabled="read_only"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                xmlns:xlink="http://www.w3.org/1999/xlink"
+                version="1.1"
+                x="0px"
+                y="0px"
+                viewBox="-10 -10 100 125"
               >
-                <div class="svg" v-html="field.svg" />
-                <span class="text_label">{{ $t(field.label) }}</span>
-                <input
-                  type="file"
-                  :id="`add_${field.key + unique_id}`"
-                  :name="field.key"
-                  @change="updateInputFiles($event)"
-                  :accept="field.accept"
-                  :capture="field.capture"
-                  multiple
-                  style="width: 1px; height: 1px; overflow: hidden"
+                <path
+                  d="M378,370 c-25,-24,-25,-24,-49,1 l-195,205 c-20,23,-20,23,0,46 l195,205 c24,25,24,25,49,1 l38,-40 c23,-22,23,-22,0,-46 l-114,-120 c-22,-23,-22,-23,0,-47 l114,-119 c23,-24,23,-24,0,-48 Z M494,240 c-45,0,-46,0,-36,44 l161,651 c6,25,5,25,30,25 l57,0 c45,0,46,0,36,-44 l-161,-651 c-6,-25,-5,-25,-30,-25 Z M822,370 l-38,38 c-23,24,-23,24,0,48 l114,119 c22,24,22,24,0,47 l-114,120 c-23,24,-23,24,0,46 l38,40 c25,24,25,24,49,-1 l195,-205 c20,-23,20,-23,0,-46 l-195,-205 c-24,-25,-24,-25,-49,-1 Z M125,0 l950,0 c75,0,125,25,125,125 l0,950 c0,75,-50,125,-125,125 l-950,0 c-100,0,-125,-50,-125,-125 l0,-950 c0,-100,25,-125,125,-125 Z M125,0 "
+                  fill="white"
+                  transform="matrix(0.05,0.0,0.0,-0.05,20.0,80.0)"
                 />
-              </label>
-            </template>
+              </svg>
+              <span class="text_label">{{ $t("embed") }}</span>
+            </button>
           </div>
           <div>
             <small>{{ $t("file_max_size") }}: 20mo</small>
@@ -399,6 +397,7 @@ export default {
   height: auto;
   text-align: center;
   margin: calc(var(--spacing) / 4);
+  // background-color: rgba(255, 255, 255, 0.4);
   // color: var(--color-white);
 
   .menu_encart {
@@ -406,7 +405,7 @@ export default {
     justify-content: center;
 
     .menu_encart--options {
-      padding: calc(var(--spacing) / 4);
+      padding: calc(var(--spacing) / 4) calc(var(--spacing) / 2);
 
       flex: 0 1 auto;
       // background-color: #fff4db;
@@ -414,7 +413,8 @@ export default {
       .menu_encart--options--buttonRow {
         display: flex;
         flex-flow: row wrap;
-        justify-content: flex-end;
+        justify-content: center;
+
         > button,
         > label {
           display: block;
@@ -422,7 +422,7 @@ export default {
           cursor: pointer;
           opacity: 0;
           padding: 0;
-          transition: all 0.4s cubic-bezier(0.19, 1, 0.22, 1);
+          transition: all 0.2s cubic-bezier(0.19, 1, 0.22, 1);
           background-color: transparent;
 
           display: flex;
@@ -431,7 +431,7 @@ export default {
           color: var(--color-white);
           border-radius: 20px;
           // padding: calc(var(--spacing) / 4) calc(var(--spacing) / 2);
-          margin: calc(var(--spacing) / 4) 1px;
+          margin: calc(var(--spacing) / 8);
 
           &:hover {
             // background-color: var(--active-color);
@@ -474,6 +474,8 @@ export default {
     }
     &.is--showing_options {
       pointer-events: auto;
+      margin: var(--spacing) 0;
+      // background-color: rgba(150, 150, 150, 0.1);
 
       .menu_encart--options .menu_encart--options--buttonRow > * {
         opacity: 1;
@@ -502,7 +504,7 @@ export default {
       border-radius: 14px;
       margin-bottom: 0;
 
-      transition: all cubic-bezier(0.19, 1, 0.22, 1) 0.8s 0.2s;
+      transition: all cubic-bezier(0.19, 1, 0.22, 1) 0.4s;
       // transition: all 0.4s cubic-bezier(0.19, 1, 0.22, 1);
 
       &:hover {
@@ -513,12 +515,12 @@ export default {
         width: 14px;
         height: 14px;
         margin: 0 auto;
-        transition: transform cubic-bezier(0.19, 1, 0.22, 1) 1.8s;
+        transition: transform cubic-bezier(0.19, 1, 0.22, 1) 0.8s;
         transform: rotate(0);
         fill: currentColor;
 
         path {
-          transition: opacity 0.4s ease-out;
+          transition: opacity 0.2s ease-out;
         }
       }
       &.is--dragover {

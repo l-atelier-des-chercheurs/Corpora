@@ -7,7 +7,7 @@
       <h3>{{ corpus.subtitle }}</h3>
     </div>
     <div class="m_corpusPreview--description">
-      <p>{{ corpus.description }}</p>
+      <p v-html="corpus.description" />
     </div>
     <div v-if="previewURL" class="m_corpusPreview--preview">
       <img :src="previewURL" class draggable="false" />
@@ -18,7 +18,9 @@
         type="button"
         v-if="can_access_corpus"
         @click="show_edit_corpus_for = true"
-      >{{ $t("edit") }}</button>
+      >
+        {{ $t("edit") }}
+      </button>
 
       <EditCorpus
         v-if="show_edit_corpus_for"
@@ -28,7 +30,13 @@
         @close="show_edit_corpus_for = false"
       />
 
-      <button type="button" v-if="can_access_corpus" @click="removeThisCorpus()">{{ $t("remove") }}</button>
+      <button
+        type="button"
+        v-if="can_access_corpus"
+        @click="removeThisCorpus()"
+      >
+        {{ $t("remove") }}
+      </button>
     </div>
 
     <div class="m_corpusPreview--open">
@@ -36,8 +44,8 @@
         class
         v-if="
           can_access_corpus &&
-            corpus.password === 'has_pass' &&
-            context !== 'full'
+          corpus.password === 'has_pass' &&
+          context !== 'full'
         "
       >
         <label>{{ $t("protected_by_pass") }}</label>
@@ -50,9 +58,14 @@
         style
         :readonly="read_only"
         @click="showInputPasswordField = !showInputPasswordField"
-      >{{ $t("password_required_to_edit") }}</button>
+      >
+        {{ $t("password_required_to_edit") }}
+      </button>
 
-      <div class="padding-verysmall _pwd_input" v-if="showInputPasswordField && !can_access_corpus">
+      <div
+        class="padding-verysmall _pwd_input"
+        v-if="showInputPasswordField && !can_access_corpus"
+      >
         <div class="margin-bottom-small">
           <label>{{ $t("password") }}</label>
           <input
@@ -80,7 +93,9 @@
           type="button"
           class="button bg-bleuvert button-thin"
           @click="submitPassword"
-        >{{ $t("send") }}</button>
+        >
+          {{ $t("send") }}
+        </button>
       </div>
 
       <div v-if="can_access_corpus && corpus_password" class="m_metaField">
@@ -91,10 +106,16 @@
             !showCurrentPassword ? $t('show_password') : $t('hide_password')
           "
         />
-        <div v-if="showCurrentPassword && can_access_corpus">{{ corpus_password }}</div>
+        <div v-if="showCurrentPassword && can_access_corpus">
+          {{ corpus_password }}
+        </div>
       </div>
 
-      <button type="button" class @click="$root.openCorpus(corpus.slugFolderName)">
+      <button
+        type="button"
+        class
+        @click="$root.openCorpus(corpus.slugFolderName)"
+      >
         <span class>{{ $t("open") }}</span>
       </button>
     </div>
@@ -105,16 +126,16 @@ import EditCorpus from "../components/modals/EditCorpus.vue";
 
 export default {
   props: {
-    corpus: Object
+    corpus: Object,
   },
   components: {
-    EditCorpus
+    EditCorpus,
   },
   data() {
     return {
       show_edit_corpus_for: false,
       showInputPasswordField: false,
-      showCurrentPassword: true
+      showCurrentPassword: true,
     };
   },
   created() {},
@@ -129,7 +150,7 @@ export default {
       ) {
         return false;
       }
-      const thumb = this.corpus.preview.filter(p => p.size === 640);
+      const thumb = this.corpus.preview.filter((p) => p.size === 640);
       if (thumb.length > 0) {
         return `${thumb[0].path}`;
       }
@@ -138,7 +159,7 @@ export default {
     can_access_corpus() {
       return this.$root.canAccessFolder({
         type: "corpus",
-        slugFolderName: this.corpus.slugFolderName
+        slugFolderName: this.corpus.slugFolderName,
       });
     },
     corpus_password() {
@@ -152,7 +173,7 @@ export default {
         return corpus_password["corpus"][this.corpus.slugFolderName];
       }
       return "";
-    }
+    },
   },
   methods: {
     submitPassword() {
@@ -160,8 +181,8 @@ export default {
 
       this.$auth.updateFoldersPasswords({
         corpus: {
-          [this.corpus.slugFolderName]: this.$refs.passwordField.value
-        }
+          [this.corpus.slugFolderName]: this.$refs.passwordField.value,
+        },
       });
 
       this.$socketio.sendAuth();
@@ -169,7 +190,7 @@ export default {
       // check if password matches or not
       this.$eventHub.$once("socketio.authentificated", () => {
         const has_passworded_folder = window.state.list_authorized_folders.filter(
-          f =>
+          (f) =>
             f.type === "corpus" &&
             f.allowed_slugFolderNames.includes(this.corpus.slugFolderName)
         );
@@ -199,13 +220,13 @@ export default {
           () => {
             this.$root.removeFolder({
               type: "corpus",
-              slugFolderName: this.corpus.slugFolderName
+              slugFolderName: this.corpus.slugFolderName,
             });
           },
           () => {}
         );
-    }
-  }
+    },
+  },
 };
 </script>
 <style lang="scss" scoped>
@@ -228,9 +249,9 @@ export default {
 
   .m_corpusPreview--description > p {
     display: block;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    overflow: hidden;
+    // text-overflow: ellipsis;
+    // white-space: nowrap;
+    // overflow: hidden;
   }
 
   .m_corpusPreview--preview {

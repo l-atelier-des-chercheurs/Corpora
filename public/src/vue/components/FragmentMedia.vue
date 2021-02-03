@@ -2,7 +2,10 @@
   <div
     class="m_fragmentMedia"
     :data-type="media.type"
-    :class="{ 'is--beingEdited': is_being_edited }"
+    :class="{
+      'is--beingEdited': is_being_edited,
+      'is--savingMedia': is_saving_media,
+    }"
   >
     <div class="m_fragmentMedia--content">
       <CollaborativeEditor
@@ -87,8 +90,8 @@
       <button
         type="button"
         class="button-small bg-orange"
-        v-if="is_being_edited"
-        @click="setBlocToEdit(false)"
+        v-if="is_being_edited && !is_saving_media"
+        @click="saveMedia"
       >
         {{ $t("save") }}
       </button>
@@ -124,8 +127,8 @@
           <button
             type="button"
             class="button-small"
-            v-if="can_be_edited"
-            @click="setBlocToEdit(media.metaFileName)"
+            v-if="can_be_edited && !is_being_edited"
+            @click="enableEdition(media.metaFileName)"
           >
             {{ $t("edit") }}
           </button>
@@ -178,7 +181,7 @@
         class="m_fragmentMedia--infos--caption"
         v-if="is_being_edited || media.caption"
       >
-        <label v-if="is_being_edited">{{ $t("caption") }}</label>
+        <label v-if="is_being_edited">{{ $t("description") }}</label>
         <div>
           <template v-if="!is_being_edited">
             <span
@@ -191,12 +194,7 @@
             >
           </template>
           <template v-else>
-            <input
-              type="text"
-              v-model="mediadata.caption"
-              :placeholder="$t('caption')"
-              @keyup.enter="setBlocToEdit(false)"
-            />
+            <input type="text" v-model="mediadata.caption" placeholder="…" />
           </template>
         </div>
       </div>
@@ -214,7 +212,6 @@
             <a
               target="_blank"
               rel="noopener noreferrer"
-              :title="media.source"
               :href="media.source"
               :content="$t('source')"
               v-tippy="{
@@ -225,12 +222,7 @@
             >
           </template>
           <template v-else>
-            <input
-              type="url"
-              v-model="mediadata.source"
-              :placeholder="$t('source')"
-              @keyup.enter="setBlocToEdit(false)"
-            />
+            <input type="url" v-model="mediadata.source" placeholder="www." />
           </template>
         </div>
       </div>
@@ -253,6 +245,10 @@
       :slugFolderName="slugFolderName"
       @close="show_in_modal = false"
     />
+
+    <transition name="fade" :duration="600">
+      <Loader v-if="is_saving_media" />
+    </transition>
   </div>
 </template>
 <script>
@@ -287,34 +283,38 @@ export default {
       editable_delay_in_minutes: 30,
 
       mediaURL: `/${this.slugFolderName}/${this.media.media_filename}`,
-      is_being_edited:
-        this.$root.settings.text_media_being_edited === this.media.metaFileName,
+      is_being_edited: false,
+      is_saving_media: false,
     };
   },
   created() {},
-  mounted() {},
-  beforeDestroy() {},
+  mounted() {
+    this.$eventHub.$on("fragmentMedia.enableEdition", this.enableEdition);
+  },
+  beforeDestroy() {
+    this.$eventHub.$off("fragmentMedia.enableEdition", this.enableEdition);
+  },
   watch: {
-    "$root.settings.text_media_being_edited": function () {
-      console.log(
-        `FragmentMedia • WATCH: $root.settings.text_media_being_edited. Is self ? ${
-          this.$root.settings.text_media_being_edited ===
-          this.media.metaFileName
-        }`
-      );
-      if (this.is_being_edited) {
-        this.saveMedia();
-      } else if (
-        this.$root.settings.text_media_being_edited === this.media.metaFileName
-      ) {
-        this.is_being_edited = true;
-        this.mediadata = {
-          caption: this.media.caption,
-          source: this.media.source,
-          content: this.media.content,
-        };
-      }
-    },
+    // "$root.settings.text_media_being_edited": function () {
+    //   console.log(
+    //     `FragmentMedia • WATCH: $root.settings.text_media_being_edited. Is self ? ${
+    //       this.$root.settings.text_media_being_edited ===
+    //       this.media.metaFileName
+    //     }`
+    //   );
+    //   if (this.is_being_edited) {
+    //     this.saveMedia();
+    //   } else if (
+    //     this.$root.settings.text_media_being_edited === this.media.metaFileName
+    //   ) {
+    //     this.is_being_edited = true;
+    //     this.mediadata = {
+    //       caption: this.media.caption,
+    //       source: this.media.source,
+    //       content: this.media.content,
+    //     };
+    //   }
+    // },
   },
   computed: {
     media_was_created_x_minutes_ago() {
@@ -346,25 +346,39 @@ export default {
     },
   },
   methods: {
-    setBlocToEdit(metaFileName) {
-      if (window.state.dev_mode === "debug")
-        console.log(
-          `FragmentMedia • METHODS: setBlocToEdit for ${metaFileName}`
-        );
-
-      if (this.$root.settings.text_media_being_edited !== metaFileName) {
-        this.$root.settings.text_media_being_edited = metaFileName;
-      } else {
+    enableEdition(metaFileName) {
+      if (this.media.metaFileName === metaFileName) {
+        this.is_being_edited = true;
       }
     },
     saveMedia() {
-      this.is_being_edited = false;
-      this.$root.editMedia({
-        type: "corpus",
-        slugFolderName: this.slugFolderName,
-        slugMediaName: this.media.metaFileName,
-        data: this.mediadata,
-      });
+      this.is_saving_media = true;
+
+      this.$root
+        .editMedia({
+          type: "corpus",
+          slugFolderName: this.slugFolderName,
+          slugMediaName: this.media.metaFileName,
+          data: this.mediadata,
+        })
+        .then(() => {
+          setTimeout(() => {
+            this.is_being_edited = false;
+            this.is_saving_media = false;
+            this.$alertify
+              .closeLogOnClick(true)
+              .delay(4000)
+              .success(this.$t("notifications.saved_media"));
+          }, 500);
+        })
+        .catch(() => {
+          this.$alertify
+            .closeLogOnClick(true)
+            .delay(4000)
+            .error(this.$t("notifications.failed_to_save_media"));
+
+          this.is_saving_media = false;
+        });
       this.show_advanced_menu_for_media = false;
     },
     openMedia() {
@@ -387,7 +401,7 @@ export default {
     }
   }
 
-  &:not([data-type="text"]):not([data-type="embed"]) {
+  &:not([data-type="text"]):not([data-type="embed"]):not([data-type="link"]) {
     .m_fragmentMedia--content {
       border-radius: 8px;
       overflow: hidden;
@@ -401,6 +415,10 @@ export default {
     // background-color: var(--active-color);
     // box-shadow: 0px 4px 4px 0px #ccd0da;
     // transform: translateY(-5px);
+  }
+
+  &.is--savingMedia {
+    // opacity: 0.7;
   }
 }
 .m_advancedMenu {
@@ -429,7 +447,7 @@ export default {
 }
 .m_fragmentMedia--infos--caption,
 .m_fragmentMedia--infos--source {
-  margin-top: calc(var(--spacing) / 2);
+  margin-top: calc(var(--spacing) / 4);
   // background-color: var(--active-color);
   border-radius: 4px;
   padding: 2px;
@@ -454,7 +472,12 @@ export default {
   input {
     background-color: var(--body-bg);
     font-size: inherit;
+    padding: 0.2em 0.4em;
     // width: 260px;
+  }
+
+  label {
+    margin-bottom: 0;
   }
 
   a {
@@ -504,20 +527,30 @@ export default {
   }
 
   ._linkCaption {
-    position: absolute;
-    bottom: 0;
+    // position: absolute;
+    // bottom: 0;
+    width: 100%;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+
+    // background: linear-gradient(
+    //   to top,
+    //   white,
+    //   white 20%,
+    //   rgba(255, 255, 255, 0.1) 100%
+    // );
 
     a {
-      color: white;
+      // display: inline-block;
+      color: black;
+      font-size: 0.8em;
+      // padding: 0 calc(var(--spacing) / 2);
 
-      --c-shadowOutline: rgba(0, 0, 0, 0.4);
-      text-shadow: 1px 1px var(--c-shadowOutline),
-        -1px 1px var(--c-shadowOutline), -1px -1px var(--c-shadowOutline),
-        1px -1px var(--c-shadowOutline);
-
-      text-overflow: ellipsis;
-      white-space: nowrap;
-      overflow: hidden;
+      // --c-shadowOutline: rgba(0, 0, 0, 0.4);
+      // text-shadow: 1px 1px var(--c-shadowOutline),
+      //   -1px 1px var(--c-shadowOutline), -1px -1px var(--c-shadowOutline),
+      //   1px -1px var(--c-shadowOutline);
     }
   }
 }

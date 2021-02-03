@@ -5,7 +5,7 @@
       'is--focused': is_focused,
       'is--receptiveToDrop': !!$root.settings.media_being_dragged,
       'is--dragover': is_being_dragover,
-      'is--disabled': editor_not_enabled
+      'is--disabled': editor_not_enabled,
     }"
     autofocus="autofocus"
     @dragover="ondragover($event)"
@@ -76,7 +76,7 @@ class MediaBlot extends BlockEmbed {
 
     // todo for later: allow drag from cards in quill
     // to move inside document or to composition
-    node.addEventListener("dragstart", $event => {
+    node.addEventListener("dragstart", ($event) => {
       $event.dataTransfer.setData("text/plain", "media_in_quill");
       $event.dataTransfer.effectAllowed = "move";
       // this.is_dragged = true;
@@ -168,7 +168,7 @@ class MediaBlot extends BlockEmbed {
         src: img.getAttribute("src"),
         metaFileName: node.dataset.metaFileName,
         type: node.dataset.type,
-        caption: figcaption ? figcaption.innerText : null
+        caption: figcaption ? figcaption.innerText : null,
       };
     } else if (node.dataset.type === "video") {
       let video = node.querySelector("video");
@@ -179,7 +179,7 @@ class MediaBlot extends BlockEmbed {
         src: video.getAttribute("src"),
         metaFileName: node.dataset.metaFileName,
         type: node.dataset.type,
-        caption: figcaption ? figcaption.innerText : null
+        caption: figcaption ? figcaption.innerText : null,
       };
     }
   }
@@ -190,7 +190,7 @@ class CardEditableModule extends Module {
     super(quill, options);
     let is_selected = false;
 
-    let listener = e => {
+    let listener = (e) => {
       if (!document.body.contains(quill.root)) {
         return document.body.removeEventListener("click", listener);
       }
@@ -215,14 +215,14 @@ class CardEditableModule extends Module {
         console.log("selectCard");
 
         elm.__onSelect(quill);
-        let handleKeyPress = e => {
+        let handleKeyPress = (e) => {
           if (e.keyCode === 27 || e.keyCode === 13) {
             window.removeEventListener("keypress", handleKeyPress);
             quill.enable(true);
             deselectCard();
           }
         };
-        let handleClick = e => {
+        let handleClick = (e) => {
           const path = e.path || (e.composedPath && e.composedPath());
           if (e.which === 1 && !path.includes(elm)) {
             window.removeEventListener("click", handleClick);
@@ -230,7 +230,7 @@ class CardEditableModule extends Module {
             deselectCard();
           }
         };
-        let handleDrag = e => {
+        let handleDrag = (e) => {
           window.removeEventListener("dragover", handleDrag);
           quill.enable(true);
           deselectCard();
@@ -248,7 +248,7 @@ Quill.register(
   {
     // Other formats or modules
     "formats/media": MediaBlot,
-    "modules/cardEditable": CardEditableModule
+    "modules/cardEditable": CardEditableModule,
   },
   true
 );
@@ -269,7 +269,7 @@ var quill_kb_bindings = {
   // so this will be added without overwriting anything
   backspace: {
     key: 8,
-    handler: function(range, context) {
+    handler: function (range, context) {
       if (
         range.index &&
         this.quill.getLine(range.index) &&
@@ -278,8 +278,8 @@ var quill_kb_bindings = {
       ) {
       }
       return true;
-    }
-  }
+    },
+  },
 
   // list: {
   //   key: "backspace",
@@ -301,22 +301,22 @@ export default {
   props: {
     value: {
       type: String,
-      default: "…"
+      default: "…",
     },
     enable_collaboration: {
       type: Boolean,
-      default: false
+      default: false,
     },
     media: Object,
     slugFolderName: String,
     spellcheck: {
       type: Boolean,
-      default: true
+      default: true,
     },
     folder_type: {
       type: String,
-      default: "corpus"
-    }
+      default: "corpus",
+    },
   },
 
   components: {},
@@ -335,7 +335,7 @@ export default {
       debounce_textUpdate: undefined,
       caret_position: {
         top: undefined,
-        left: undefined
+        left: undefined,
       },
       focused_lines: [],
 
@@ -345,13 +345,13 @@ export default {
           [{ header: 1 }, { header: 2 }],
           ["bold", "italic", "link", "blockquote"],
           [{ list: "ordered" }, { list: "bullet" }],
-          ["clean"]
-        ]
+          ["clean"],
+        ],
       },
 
       socket: null,
       connection_state: !this.enable_collaboration ? "disabled" : "connecting…",
-      requested_resource_url: undefined
+      requested_resource_url: undefined,
     };
   },
 
@@ -377,8 +377,8 @@ export default {
         //           selectionChangeSource: null
         //         },
         keyboard: {
-          bindings: quill_kb_bindings
-        }
+          bindings: quill_kb_bindings,
+        },
       },
       bounds: this.$refs.editor,
 
@@ -392,9 +392,9 @@ export default {
         "blockquote",
         "indent",
         "list",
-        "media"
+        "media",
       ],
-      placeholder: "Écrire le texte ici…"
+      placeholder: "Écrire le texte ici…",
     });
 
     this.$refs.editor.dataset.quill = this.editor;
@@ -456,36 +456,36 @@ export default {
     this.$root.settings.medias_present_in_writeup = [];
   },
   watch: {
-    "$root.preview_mode": function() {
+    "$root.preview_mode": function () {
       if (this.$root.preview_mode) {
         this.editor.disable();
       } else {
         this.editor.enable();
       }
     },
-    spellcheck: function() {
+    spellcheck: function () {
       this.setSpellCheck();
     },
-    value: function() {
+    value: function () {
       this.broadcastMediasPresentInWriteup();
     },
-    editor_not_enabled: function() {
+    editor_not_enabled: function () {
       if (this.editor_not_enabled) {
         this.editor.disable();
       } else {
         this.editor.enable();
       }
-    }
+    },
   },
   computed: {
     _customCaret_style() {
       return {
-        transform: `translate3d(${this.caret_position.left}px, ${this.caret_position.top}px, 0px)`
+        transform: `translate3d(${this.caret_position.left}px, ${this.caret_position.top}px, 0px)`,
       };
     },
     editor_not_enabled() {
       return this.enable_collaboration && this.connection_state !== "connected";
-    }
+    },
   },
   methods: {
     initWebsocketMode() {
@@ -493,7 +493,7 @@ export default {
       const params = new URLSearchParams({
         type: this.folder_type,
         slugFolderName: this.slugFolderName,
-        metaFileName: this.media.metaFileName
+        metaFileName: this.media.metaFileName,
       });
 
       const requested_querystring = "?" + params.toString();
@@ -513,7 +513,7 @@ export default {
       connection.on("state", this.wsState);
 
       const doc = connection.get("textMedias", requested_querystring);
-      doc.subscribe(err => {
+      doc.subscribe((err) => {
         if (err) {
           console.error(`ON • CollaborativeEditor: err ${err}`);
         }
@@ -563,7 +563,7 @@ export default {
         });
       });
 
-      doc.on("error", err => {
+      doc.on("error", (err) => {
         // soucis : les situations ou le serveur a été fermé et en le rouvrant il ne possède plus d’instance du doc dans sharedb…
 
         this.$forceUpdate();
@@ -587,7 +587,7 @@ export default {
 
       this.editor
         .getLines()
-        .map(b => b.domNode.classList.remove("is--focused"));
+        .map((b) => b.domNode.classList.remove("is--focused"));
 
       const range = this.editor.getSelection();
 
@@ -619,8 +619,8 @@ export default {
           slugFolderName: this.slugFolderName,
           slugMediaName: this.media.metaFileName,
           data: {
-            content: this.editor.getText() ? this.editor.root.innerHTML : ""
-          }
+            content: this.editor.getText() ? this.editor.root.innerHTML : "",
+          },
         });
       }, 1000);
     },
@@ -666,7 +666,7 @@ export default {
       this.editor.setSelection(index, Quill.sources.SILENT);
 
       if (media.type === "image") {
-        const thumb = media.thumbs.find(m => m.size === 1600);
+        const thumb = media.thumbs.find((m) => m.size === 1600);
         if (!!thumb) {
           // this.editor.insertText(index, "\n", Quill.sources.USER);
           this.editor.insertEmbed(
@@ -675,7 +675,7 @@ export default {
             {
               type: media.type,
               src: thumb.path,
-              metaFileName: media.metaFileName
+              metaFileName: media.metaFileName,
             },
             Quill.sources.USER
           );
@@ -689,7 +689,7 @@ export default {
           {
             type: media.type,
             src: mediaURL,
-            metaFileName: media.metaFileName
+            metaFileName: media.metaFileName,
           },
           Quill.sources.USER
         );
@@ -780,7 +780,7 @@ export default {
       }
     },
     removeDragoverFromBlots() {
-      this.editor.getLines().map(b => {
+      this.editor.getLines().map((b) => {
         while (b.parent !== b.scroll) {
           b = b.parent;
           if (b === b.scroll) {
@@ -802,8 +802,8 @@ export default {
         return _blot;
       }
       return false;
-    }
-  }
+    },
+  },
 };
 </script>
 <style>
@@ -842,6 +842,7 @@ export default {
   outline: none;
   overflow-y: auto;
   padding: 12px 15px;
+  min-height: 2em;
   tab-size: 4;
   -moz-tab-size: 4;
   text-align: left;

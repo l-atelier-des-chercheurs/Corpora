@@ -5,6 +5,7 @@
         <button
           type="button"
           @click="showFragments"
+          class="m_tag--tag--toggleTag"
           :class="{
             'is--active': show_fragments,
           }"
@@ -19,7 +20,8 @@
         </button>
         <button
           type="button"
-          v-if="$root.can_admin_corpora"
+          class="button-small"
+          v-if="$root.can_admin_corpora && show_fragments && tag !== ''"
           @click="show_rename_tag_modal = true"
         >
           {{ $t("rename") }}
@@ -35,6 +37,7 @@
         <button
           type="button"
           @click="showFragments"
+          class="m_tag--tag--toggleTag"
           :class="{
             'is--active': show_fragments,
           }"
@@ -49,7 +52,8 @@
         </button>
         <button
           type="button"
-          v-if="$root.can_admin_corpora"
+          class="button-small"
+          v-if="$root.can_admin_corpora && show_fragments && tag !== ''"
           @click="show_rename_tag_modal = true"
         >
           {{ $t("rename") }}
@@ -228,7 +232,7 @@ export default {
     z-index: 0;
   }
 
-  button {
+  .m_tag--tag--toggleTag {
     background-color: transparent;
     padding: calc(var(--spacing) / 2) calc(var(--spacing) * 1)
       calc(var(--spacing) / 2) calc(var(--spacing) * 1.5);
