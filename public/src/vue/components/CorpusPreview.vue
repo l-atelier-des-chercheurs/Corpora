@@ -249,9 +249,9 @@ export default {
 
   .m_corpusPreview--description > p {
     display: block;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    overflow: hidden;
+    // text-overflow: ellipsis;
+    // white-space: nowrap;
+    // overflow: hidden;
   }
 
   .m_corpusPreview--preview {
