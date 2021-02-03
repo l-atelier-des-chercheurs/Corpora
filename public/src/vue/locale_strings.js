@@ -251,8 +251,8 @@ module.exports = (function () {
       en: "Add",
     },
     enter_password_to_connect: {
-      fr: "Mot de passe pour accéder",
-      en: "Enter the password to access",
+      fr: "Renseignez le mot de passe pour accéder au corpus",
+      en: "Enter the password to access corpus",
     },
     create_a_corpus: {
       fr: "Créer un corpus",
@@ -405,6 +405,14 @@ module.exports = (function () {
       nl: "Ja, wijzigingen opslaan. ",
       oc: "Òc, enregistrar las modificacions",
       de: "Ja, Änderungen speichern",
+    },
+    password_required_to_edit: {
+      fr: "Mot de passe requis pour contribuer",
+      en: "Password required to contribute",
+    },
+    remember_password_on_this_device: {
+      fr: "Sauvegarder pour cet appareil",
+      en: "Remember for this device",
     },
   };
 

@@ -14,7 +14,7 @@
       <p>{{ $t("enter_password_to_connect") }}</p>
 
       <div class="margin-bottom-small">
-        <label>{{ $t("password") }}</label>
+        <!-- <label>{{ $t("password") }}</label> -->
         <input type="password" v-model="pwd" required autofocus autoselect />
       </div>
 
@@ -26,9 +26,7 @@
           disabled
         />
         <label for="remember_password_on_this_device">
-          {{
-          $t("remember_password_on_this_device")
-          }}
+          {{ $t("remember_password_on_this_device") }}
         </label>
       </span>
     </template>
