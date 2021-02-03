@@ -446,13 +446,14 @@ input[type="checkbox"] {
 input,
 textarea {
   font-size: 1.2em;
-  padding: 0.4em 0.4em;
+  padding: 0.4em calc(0.2em - 2px);
   border: none;
   border-radius: 2px;
   width: 100%;
   max-width: 320px;
   -webkit-appearance: none;
-  // border-bottom: 2px solid white;
+
+  border-left: 2px solid transparent;
 
   transition: all 0.4s cubic-bezier(0.19, 1, 0.22, 1);
 
@@ -975,7 +976,7 @@ audio {
 }
 
 .ql-editor {
-  background-color: rgba(141, 141, 141, 0.05);
+  background-color: rgba(141, 141, 141, 0.1);
 }
 
 .m_modal--mask {

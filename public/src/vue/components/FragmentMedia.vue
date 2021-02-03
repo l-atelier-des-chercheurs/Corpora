@@ -178,7 +178,7 @@
         class="m_fragmentMedia--infos--caption"
         v-if="is_being_edited || media.caption"
       >
-        <label v-if="is_being_edited">{{ $t("caption") }}</label>
+        <label v-if="is_being_edited">{{ $t("description") }}</label>
         <div>
           <template v-if="!is_being_edited">
             <span
@@ -194,7 +194,7 @@
             <input
               type="text"
               v-model="mediadata.caption"
-              :placeholder="$t('caption')"
+              placeholder="…"
               @keyup.enter="setBlocToEdit(false)"
             />
           </template>
@@ -214,7 +214,6 @@
             <a
               target="_blank"
               rel="noopener noreferrer"
-              :title="media.source"
               :href="media.source"
               :content="$t('source')"
               v-tippy="{
@@ -228,7 +227,7 @@
             <input
               type="url"
               v-model="mediadata.source"
-              :placeholder="$t('source')"
+              placeholder="www."
               @keyup.enter="setBlocToEdit(false)"
             />
           </template>
@@ -454,7 +453,12 @@ export default {
   input {
     background-color: var(--body-bg);
     font-size: inherit;
+    padding: 0.2em 0.4em;
     // width: 260px;
+  }
+
+  label {
+    margin-bottom: 0;
   }
 
   a {

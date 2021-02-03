@@ -154,6 +154,10 @@ module.exports = (function () {
       fr: "Légende",
       en: "Caption",
     },
+    description: {
+      fr: "Description",
+      en: "Description",
+    },
     source: {
       fr: "Source",
       en: "Source",
