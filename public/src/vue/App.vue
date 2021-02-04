@@ -455,7 +455,7 @@ textarea {
 
   border-left: 2px solid transparent;
 
-  transition: all 0.4s cubic-bezier(0.19, 1, 0.22, 1);
+  transition: all 0.2s cubic-bezier(0.19, 1, 0.22, 1);
 
   &:active,
   &:focus {
@@ -594,7 +594,7 @@ input[type="submit"] {
   text-decoration: none;
   border-radius: 2px;
 
-  transition: background 0.4s cubic-bezier(0.19, 1, 0.22, 1);
+  transition: background 0.2s cubic-bezier(0.19, 1, 0.22, 1);
 
   &:hover,
   &:active,
@@ -933,7 +933,7 @@ audio {
 .list-complete-move {
   position: relative;
   transition: transform 1s cubic-bezier(0.19, 1, 0.22, 1),
-    opacity 0.4s cubic-bezier(0.19, 1, 0.22, 1);
+    opacity 0.2s cubic-bezier(0.19, 1, 0.22, 1);
 }
 .list-complete-enter,
 .list-complete-leave-to {
@@ -1071,7 +1071,7 @@ audio {
     display: flex;
     flex-flow: row wrap;
 
-    transition: background-color 0.4s ease-out;
+    transition: background-color 0.2s ease-out;
 
     > * {
       flex: 1 1 200px;
