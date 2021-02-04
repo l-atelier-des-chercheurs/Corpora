@@ -206,7 +206,7 @@
           media.type !== 'embed'
         "
       >
-        <label v-if="is_being_edited">{{ $t("source") }} (URL)</label>
+        <label v-if="is_being_edited">{{ $t("source") }}</label>
         <div>
           <template v-if="!is_being_edited">
             <a
