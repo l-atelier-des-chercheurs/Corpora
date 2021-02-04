@@ -159,8 +159,8 @@ module.exports = (function () {
       en: "Description",
     },
     source: {
-      fr: "Source",
-      en: "Source",
+      fr: "Lien externe",
+      en: "External link",
     },
     open: {
       fr: "Ouvrir",
