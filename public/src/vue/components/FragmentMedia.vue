@@ -514,6 +514,10 @@ export default {
     filter: drop-shadow(0px 0px 2px rgba(226, 237, 239, 0.8));
     filter: drop-shadow(0px 0px 3px rgba(110, 110, 110, 0.4));
   }
+
+  &:hover {
+    background: var(--color-black);
+  }
 }
 </style>
 <style lang="scss">

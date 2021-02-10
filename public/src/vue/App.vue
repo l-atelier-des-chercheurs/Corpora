@@ -362,12 +362,13 @@ code,
 pre {
   background-color: #f0f0f0;
   border-radius: 3px;
+  font-family: "base12";
 }
 pre {
   white-space: pre-wrap;
   margin-bottom: var(--spacing);
   margin-top: var(--spacing);
-  padding: var(--spacing) calc(var(--spacing) * 2);
+  padding: var(--spacing) calc(var(--spacing) * 1);
 }
 code {
   font-size: 85%;
@@ -558,6 +559,10 @@ select {
 .padding-small {
   padding: calc(var(--spacing) / 2);
 }
+.padding-vert-small {
+  padding-top: calc(var(--spacing) / 2);
+  padding-bottom: calc(var(--spacing) / 2);
+}
 .margin-small {
   margin: calc(var(--spacing) / 2);
 }
@@ -673,6 +678,10 @@ audio {
   iframe {
     min-height: 202px;
     background-color: transparent;
+  }
+
+  pre {
+    margin: 0;
   }
 }
 

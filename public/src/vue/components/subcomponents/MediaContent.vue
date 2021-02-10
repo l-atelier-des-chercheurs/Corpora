@@ -187,18 +187,20 @@
     <template v-else-if="media.type === 'document'">
       <div
         v-if="context !== 'edit' && context !== 'full'"
-        class="padding-small font-verysmall"
+        class="padding-vert-small font-verysmall"
       >
-        <pre
-          >{{ media.media_filename }}
-        </pre>
+        <a :href="mediaURL" :download="media.media_filename">
+          <pre>{{ media.media_filename }}</pre>
+        </a>
       </div>
       <iframe v-else :src="mediaURL" />
     </template>
 
     <template v-else-if="media.type === 'other'">
-      <div class="padding-small font-verysmall">
-        <pre>{{ media.media_filename }}</pre>
+      <div class="font-verysmall">
+        <a :href="mediaURL" :download="media.media_filename">
+          <pre>{{ media.media_filename }}</pre>
+        </a>
       </div>
     </template>
   </div>
