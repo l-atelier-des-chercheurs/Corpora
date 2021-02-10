@@ -1,5 +1,5 @@
 <template>
-  <div style="width: 100%; height: 100%;">
+  <div style="width: 100%; height: 100%">
     <CorpusPwd v-if="!can_access_corpus" :corpus="corpus" />
     <template v-else>
       <WelcomeModal v-if="$root.settings.show_welcome_modal" />
@@ -88,7 +88,7 @@
                       />
                       <input
                         type="submit"
-                        style="flex: 0 1 0;"
+                        style="flex: 0 1 0"
                         :disabled="!new_source_name"
                         :value="$t('add')"
                       />
@@ -119,8 +119,9 @@
                         v-for="mode in ['date_created', 'title']"
                         :key="mode"
                         :value="mode"
-                        >{{ $t(mode) }}</option
                       >
+                        {{ $t(mode) }}
+                      </option>
                     </select>
                   </div>
                 </div>
@@ -154,11 +155,11 @@
                 width="24px"
                 height="24px"
                 viewBox="0 0 24 24"
-                style="enable-background: new 0 0 24 24;"
+                style="enable-background: new 0 0 24 24"
                 xml:space="preserve"
               >
                 <path
-                  style="fill: currentColor;"
+                  style="fill: currentColor"
                   d="M0,10.5h10.5V0h2.9v10.5H24v2.9H13.5V24h-2.9V13.5H0V10.5z"
                 />
               </svg>
@@ -238,7 +239,7 @@ export default {
   },
   data() {
     return {
-      display_in_tabs: false,
+      display_in_tabs: this.corpus.sort_in_tabs,
       sort_fragments_by: "date_created",
 
       show_create_fragment: false,

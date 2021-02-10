@@ -99,6 +99,10 @@ module.exports = (function () {
       fr: "Nom",
       en: "Name",
     },
+    sort_in_tabs_by_default: {
+      fr: "Ranger dans des onglets par défaut",
+      en: "Sort in tabs by default",
+    },
     title: {
       fr: "Titre",
       en: "Title",
@@ -124,7 +128,7 @@ module.exports = (function () {
       en: "Display options",
     },
     display_in_tabs: {
-      fr: "Ranger dans les onglets",
+      fr: "Ranger dans des onglets",
       en: "By tabs",
     },
     editable_for: {

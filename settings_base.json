@@ -71,6 +71,10 @@
         },
         "contribution_moments": {
           "type": "array"
+        },
+        "sort_in_tabs": {
+          "type": "boolean",
+          "default": false
         }
       },
       "medias": {

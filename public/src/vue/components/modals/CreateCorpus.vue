@@ -15,7 +15,13 @@
       <!-- Human name -->
       <div class="margin-bottom-small">
         <label>{{ $t("corpus_name") }}</label>
-        <input type="text" class v-model.trim="corpusdata.name" required autofocus />
+        <input
+          type="text"
+          class
+          v-model.trim="corpusdata.name"
+          required
+          autofocus
+        />
       </div>
 
       <!-- Human name -->
@@ -35,18 +41,34 @@
         <label>{{ $t("cover_image") }}</label>
         <ImageSelect
           @newPreview="
-              value => {
-                preview = value;
-              }
-            "
+            (value) => {
+              preview = value;
+            }
+          "
         />
+      </div>
+
+      <!-- Sort in tabs -->
+      <div class="margin-bottom-small">
+        <label for="sortInTabs">
+          <input
+            type="checkbox"
+            id="sortInTabs"
+            v-model="corpusdata.sort_in_tabs"
+          />
+          {{ $t("sort_in_tabs_by_default") }}
+        </label>
       </div>
 
       <!-- Password -->
       <div class="margin-bottom-small">
         <label>{{ $t("password") }}</label>
         <div>
-          <input type="password" v-model="corpusdata.password" autocomplete="new-password" />
+          <input
+            type="password"
+            v-model="corpusdata.password"
+            autocomplete="new-password"
+          />
         </div>
       </div>
     </template>
@@ -64,7 +86,7 @@ export default {
   components: {
     Modal,
     ImageSelect,
-    CollaborativeEditor
+    CollaborativeEditor,
   },
   data() {
     return {
@@ -86,16 +108,17 @@ export default {
         subtitle: "",
         description: "",
         password: "",
-        keywords: []
+        keywords: [],
+        sort_in_tabs: false,
       },
       preview: undefined,
-      askBeforeClosingModal: false
+      askBeforeClosingModal: false,
     };
   },
   watch: {},
   computed: {},
   methods: {
-    newCorpus: function(event) {
+    newCorpus: function (event) {
       console.log("newCorpus");
 
       function getAllCorpusNames() {
@@ -131,14 +154,14 @@ export default {
 
       this.$root
         .createFolder({ type: "corpus", data: this.corpusdata })
-        .then(fdata => {
+        .then((fdata) => {
           this.is_sending_content_to_server = true;
 
           if (fdata.password === "has_pass") {
             this.$auth.updateFoldersPasswords({
               corpus: {
-                [fdata.slugFolderName]: this.corpusdata.password
-              }
+                [fdata.slugFolderName]: this.corpusdata.password,
+              },
             });
             this.$socketio.sendAuth();
 
@@ -153,8 +176,8 @@ export default {
             });
           }
         });
-    }
-  }
+    },
+  },
 };
 </script>
 <style></style>

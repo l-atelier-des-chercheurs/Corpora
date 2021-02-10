@@ -641,6 +641,45 @@ input[type="submit"] {
     margin: 0;
     padding: 0;
   }
+
+  &.button-triangle {
+    &::after {
+      content: "◄";
+      display: inline-block;
+      margin-left: 0.5em;
+      transition: transform 0.5s, color 0.5s;
+    }
+
+    &:hover {
+      background-color: transparent;
+
+      &::after {
+        color: var(--color-orange);
+      }
+    }
+
+    &.is--active {
+      color: var(--color-orange);
+      &::after {
+        transform: rotate(-90deg);
+      }
+
+      &:hover {
+        background-color: transparent;
+      }
+    }
+
+    &.bg-rouge {
+      &:hover {
+        &::after {
+          color: var(--color-black);
+        }
+      }
+      &.is--active {
+        color: var(--color-black);
+      }
+    }
+  }
 }
 
 img,

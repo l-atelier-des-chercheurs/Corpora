@@ -15,7 +15,12 @@
       <!-- Human name -->
       <div class="margin-bottom-small">
         <label>{{ $t("corpus_name") }}</label>
-        <input type="text" v-model.trim="corpusdata.name" required :readonly="read_only" />
+        <input
+          type="text"
+          v-model.trim="corpusdata.name"
+          required
+          :readonly="read_only"
+        />
       </div>
 
       <!-- Human name -->
@@ -39,18 +44,32 @@
             class="button-nostyle text-uc button-triangle"
             :class="{ 'is--active': show_image }"
             @click="show_image = !show_image"
-          >{{ $t("cover_image") }}</button>
+          >
+            {{ $t("cover_image") }}
+          </button>
         </label>
         <template v-if="show_image">
           <ImageSelect
             :previewURL="previewURL"
             @newPreview="
-              value => {
+              (value) => {
                 preview_rawdata = value;
               }
             "
           />
         </template>
+      </div>
+
+      <!-- Sort in tabs -->
+      <div class="margin-bottom-small">
+        <label for="sortInTabs">
+          <input
+            type="checkbox"
+            id="sortInTabs"
+            v-model="corpusdata.sort_in_tabs"
+          />
+          {{ $t("sort_in_tabs_by_default") }}
+        </label>
       </div>
 
       <!-- Password -->
@@ -61,15 +80,19 @@
             class="button-nostyle text-uc button-triangle"
             :class="{ 'is--active': show_password }"
             @click="show_password = !show_password"
-          >{{ $t("password") }}</button>
+          >
+            {{ $t("password") }}
+          </button>
         </label>
         <template v-if="show_password">
-          <input type="password" v-model="corpusdata.password" :readonly="read_only" />
+          <input
+            type="password"
+            v-model="corpusdata.password"
+            :readonly="read_only"
+          />
           <small>
             <template v-if="!!corpus_password && corpusdata.password === ''">
-              {{
-              $t("removing_password_warning")
-              }}
+              {{ $t("removing_password_warning") }}
             </template>
             <template v-else>{{ $t("adding_password_warning") }}</template>
           </small>
@@ -89,12 +112,12 @@ export default {
   props: {
     slugCorpusName: String,
     corpus_password: String,
-    corpus: Object
+    corpus: Object,
   },
   components: {
     Modal,
     CollaborativeEditor,
-    ImageSelect
+    ImageSelect,
   },
   data() {
     return {
@@ -108,11 +131,12 @@ export default {
         name: this.corpus.name,
         subtitle: this.corpus.subtitle,
         description: this.corpus.description,
-        password: this.corpus_password ? this.corpus_password : ""
+        sort_in_tabs: this.corpus.sort_in_tabs,
+        password: this.corpus_password ? this.corpus_password : "",
       },
       tag: "",
       preview_rawdata: undefined,
-      askBeforeClosingModal: false
+      askBeforeClosingModal: false,
     };
   },
   watch: {
@@ -120,11 +144,11 @@ export default {
       handler() {
         this.askBeforeClosingModal = true;
       },
-      deep: true
+      deep: true,
     },
-    preview_rawdata: function() {
+    preview_rawdata: function () {
       this.askBeforeClosingModal = true;
-    }
+    },
   },
   mounted() {},
   computed: {
@@ -135,15 +159,15 @@ export default {
       ) {
         return "";
       }
-      const thumb = this.corpus.preview.filter(p => p.size === 640);
+      const thumb = this.corpus.preview.filter((p) => p.size === 640);
       if (thumb.length > 0) {
         return `${thumb[0].path}`;
       }
       return "";
-    }
+    },
   },
   methods: {
-    editThiscorpus: function(event) {
+    editThiscorpus: function (event) {
       console.log("editThiscorpus");
 
       // only if user changed the name of this folder
@@ -178,8 +202,8 @@ export default {
       if (this.corpusdata.password) {
         this.$auth.updateFoldersPasswords({
           corpus: {
-            [this.slugCorpusName]: this.corpusdata.password
-          }
+            [this.slugCorpusName]: this.corpusdata.password,
+          },
         });
       }
 
@@ -195,12 +219,12 @@ export default {
       this.$root.editFolder({
         type: "corpus",
         slugFolderName: this.slugCorpusName,
-        data: this.corpusdata
+        data: this.corpusdata,
       });
 
       this.$emit("close", "");
-    }
-  }
+    },
+  },
 };
 </script>
 <style></style>
