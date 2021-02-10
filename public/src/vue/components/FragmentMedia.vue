@@ -95,6 +95,17 @@
       >
         {{ $t("save") }}
       </button>
+      <button
+        type="button"
+        class="button-small bg-orange"
+        v-if="is_being_edited && !is_saving_media && is_empty"
+        @click="
+          $emit('removeMedia', { metaFileName: media.metaFileName });
+          show_advanced_menu_for_media = false;
+        "
+      >
+        {{ $t("remove") }}
+      </button>
 
       <template v-else>
         <button
@@ -327,6 +338,23 @@ export default {
           return Math.floor(Math.abs(ellapsed));
         }
       }
+      return false;
+    },
+    is_empty() {
+      if (
+        this.media.type === "text" ||
+        this.media.type === "embed" ||
+        this.media.type === "link"
+      ) {
+        if (
+          !this.mediadata.content &&
+          !this.mediadata.caption &&
+          !this.mediadata.source
+        ) {
+          return true;
+        }
+      }
+
       return false;
     },
     can_be_edited() {
