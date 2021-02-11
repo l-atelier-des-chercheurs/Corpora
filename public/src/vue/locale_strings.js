@@ -348,9 +348,9 @@ module.exports = (function () {
     },
     link_instructions: {
       fr:
-        "Renseignez une URL pour afficher une capture d’écran de la page. Format attendu : https://www.plurality-university.org/",
+        "Renseignez une URL type <u>https://www.plurality-university.org/</u>",
       en:
-        "Paste a link to a URL such as: https://www.plurality-university.org/",
+        "Paste a link to a URL such as <u>https://www.plurality-university.org/</u>",
     },
     embed_instructions_vimeo: {
       fr: "Format attendu : https://vimeo.com/399094491",
