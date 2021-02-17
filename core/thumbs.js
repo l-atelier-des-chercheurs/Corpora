@@ -892,31 +892,59 @@ module.exports = (function () {
 
   function _getPageMetadata({ url }) {
     return new Promise((resolve, reject) => {
-      const { BrowserWindow } = require("electron");
-      let win = new BrowserWindow({
-        show: false,
-      });
+      let browser;
 
-      win.loadURL(url);
+      puppeteer
+        .launch({
+          headless: true,
+          ignoreHTTPSErrors: true,
+          args: ["--no-sandbox", "--font-render-hinting=none"],
+        })
+        .then((_browser) => {
+          browser = _browser;
+          return browser.newPage();
+        })
+        .then(async (page) => {
+          page.setViewport({
+            width: 1800,
+            height: 1800,
+            deviceScaleFactor: 2,
+          });
 
-      win.webContents.on("did-finish-load", () => {
-        dev.logverbose(`THUMBS — _getPageMetadata : finished loading page`);
+          dev.logverbose(`THUMBS — _getPageMetadata : loading URL ${url}`);
 
-        let code = `var promise = Promise.resolve(document.documentElement.innerHTML); 
-                  promise.then(data => data)`;
+          function delay(duration) {
+            return new Promise((resolve) => {
+              setTimeout(() => resolve(), duration);
+            });
+          }
 
-        win.webContents.executeJavaScript(code, true).then((html) => {
-          // console.log(html); // will be your innherhtml
-          const parsed_meta = _parseHTMLMetaTags({ html });
-          return resolve(parsed_meta);
+          page
+            .goto(url, {
+              waitUntil: "domcontentloaded",
+            })
+            .then(async () => {
+              let html = await page.evaluate(
+                () => document.documentElement.innerHTML
+              );
+              browser.close();
+
+              dev.logverbose(
+                `THUMBS — _getPageMetadata : finished loading page`
+              );
+
+              // console.log(html); // will be your innherhtml
+              const parsed_meta = _parseHTMLMetaTags({ html });
+              return resolve(parsed_meta);
+            })
+            .catch((err) => {
+              browser.close();
+              dev.error(
+                `THUMBS — _getPageMetadata : failed to get OG tags = ${err}`
+              );
+              return reject();
+            });
         });
-      });
-      win.webContents.on("did-fail-load", (err) => {
-        dev.error(
-          `THUMBS — _getPageMetadata / Failed to load link page with error ${err}`
-        );
-        return reject(err);
-      });
     });
   }
 
