@@ -461,13 +461,13 @@ let vm = new Vue({
             return resolve(d);
           } else {
             this.$eventHub.$once(
-              "socketio.corpus.folderCreated",
+              "socketio.folder_created_or_updated",
               catchFolderCreation
             );
           }
         };
         this.$eventHub.$once(
-          "socketio.corpus.folderCreated",
+          "socketio.folder_created_or_updated",
           catchFolderCreation
         );
       });
@@ -491,13 +491,13 @@ let vm = new Vue({
             return resolve(d);
           } else {
             this.$eventHub.$once(
-              "socketio.corpus.folderCreated",
+              "socketio.folder_created_or_updated",
               catchFolderEdition
             );
           }
         };
         this.$eventHub.$once(
-          "socketio.corpus.folderCreated",
+          "socketio.folder_created_or_updated",
           catchFolderEdition
         );
       });

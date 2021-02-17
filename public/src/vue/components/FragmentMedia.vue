@@ -408,8 +408,6 @@ export default {
     saveMedia() {
       this.is_saving_media = true;
 
-      debugger;
-
       if (this.media.type === "link" && this.should_be_embed)
         this.mediadata.type = "embed";
 

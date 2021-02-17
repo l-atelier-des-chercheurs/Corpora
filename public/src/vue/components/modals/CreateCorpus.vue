@@ -145,11 +145,6 @@ export default {
         this.corpusdata.preview_rawdata = this.preview;
       }
 
-      this.$eventHub.$on(
-        "socketio.folder_created_or_updated",
-        this.newFolderCreated
-      );
-
       this.is_sending_content_to_server = true;
 
       this.$root
@@ -168,11 +163,15 @@ export default {
             this.$eventHub.$once("socketio.authentificated", () => {
               this.$emit("close", "");
               this.$root.openCorpus(fdata.slugFolderName);
+
+              this.is_sending_content_to_server = false;
             });
           } else {
             this.$nextTick(() => {
               this.$emit("close", "");
               this.$root.openCorpus(fdata.slugFolderName);
+
+              this.is_sending_content_to_server = false;
             });
           }
         });
