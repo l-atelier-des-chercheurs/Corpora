@@ -270,6 +270,7 @@ module.exports = (function () {
             let makeLinkCard = new Promise((resolve, reject) => {
               _getLinkOpenGraph({
                 slugFolderName,
+                thumbFolderPath,
                 filename,
                 mediaData,
               })
@@ -862,33 +863,69 @@ module.exports = (function () {
     });
   }
 
-  function _getLinkOpenGraph({ slugFolderName, filename, mediaData }) {
+  function _getLinkOpenGraph({
+    slugFolderName,
+    thumbFolderPath,
+    filename,
+    mediaData,
+  }) {
     return new Promise(function (resolve, reject) {
       dev.logfunction(
         `THUMBS — _getLinkOpenGraph: ${slugFolderName}/${filename}`
       );
 
-      const url = mediaData.content;
-      if (!url) {
-        dev.error(`THUMBS — _getLinkOpenGraph / no URL`);
-        return reject(`no url`);
-      }
+      let meta_cache_filename = `${filename}.sitemeta.json`;
+      let meta_cache_path = path.join(thumbFolderPath, meta_cache_filename);
+      let meta_cache_fullpath = api.getFolderPath(meta_cache_path);
 
-      _getPageMetadata({ url })
-        .then((_metadata) => {
-          let results = {};
-          if (_metadata.hasOwnProperty("title"))
-            results.title = _metadata.title;
-          if (_metadata.hasOwnProperty("description"))
-            results.description = _metadata.description;
-          if (_metadata.hasOwnProperty("image"))
-            results.image = _metadata.image;
+      fs.pathExists(meta_cache_fullpath).then((exists) => {
+        if (!exists) {
+          const url = mediaData.content;
+          if (!url) {
+            dev.error(`THUMBS — _getLinkOpenGraph / no URL`);
+            return reject(`no url`);
+          }
 
-          return resolve(results);
-        })
-        .catch((err) => {
-          return reject(err);
-        });
+          _getPageMetadata({ url })
+            .then((_metadata) => {
+              let results = {};
+              if (_metadata.hasOwnProperty("title"))
+                results.title = _metadata.title;
+              if (_metadata.hasOwnProperty("description"))
+                results.description = _metadata.description;
+              if (_metadata.hasOwnProperty("image"))
+                results.image = _metadata.image;
+
+              fs.writeFile(
+                meta_cache_fullpath,
+                JSON.stringify(results),
+                (error) => {
+                  if (error) return reject(error);
+                  dev.logverbose(
+                    `THUMBS — _getLinkOpenGraph : stored meta at ${meta_cache_fullpath}`
+                  );
+                  return resolve(results);
+                }
+              );
+            })
+            .catch((err) => {
+              return reject(err);
+            });
+        } else {
+          dev.logverbose(
+            `Site metadata already exist at path ${meta_cache_fullpath}`
+          );
+
+          fs.readFile(
+            meta_cache_fullpath,
+            global.settings.textEncoding,
+            (err, results) => {
+              debugger;
+              return resolve(JSON.parse(results));
+            }
+          );
+        }
+      });
       // if image
     });
   }
