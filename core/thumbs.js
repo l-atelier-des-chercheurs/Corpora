@@ -920,7 +920,6 @@ module.exports = (function () {
             meta_cache_fullpath,
             global.settings.textEncoding,
             (err, results) => {
-              debugger;
               return resolve(JSON.parse(results));
             }
           );
