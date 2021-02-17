@@ -284,7 +284,7 @@ module.exports = (function () {
                 })
                 .catch((err) => {
                   dev.error(`Couldn’t make link og tags : ${err}`);
-                  resolve();
+                  return resolve();
                 });
             });
 
@@ -869,7 +869,10 @@ module.exports = (function () {
       );
 
       const url = mediaData.content;
-      if (!url) return reject();
+      if (!url) {
+        dev.error(`THUMBS — _getLinkOpenGraph / no URL`);
+        return reject(`no url`);
+      }
 
       _getPageMetadata({ url })
         .then((_metadata) => {
@@ -1012,7 +1015,10 @@ module.exports = (function () {
         if (!exists) {
           const url = mediaData.content;
 
-          if (!url) return reject();
+          if (!url) {
+            dev.error(`THUMBS — _makeLinkThumb / no URL`);
+            return reject(`no url`);
+          }
 
           screenshotWebsite({
             url,
@@ -1021,22 +1027,22 @@ module.exports = (function () {
               fs.writeFile(fullScreenshotPath, image, (error) => {
                 if (error) throw error;
                 dev.logverbose(
-                  `THUMBS — _makeSTLScreenshot : created image at ${fullScreenshotPath}`
+                  `THUMBS — _makeLinkThumb : created image at ${fullScreenshotPath}`
                 );
                 return resolve({ screenshotPath, screenshotName });
               });
             })
             .catch((err) => {
               dev.error(
-                `THUMBS — _makeSTLScreenshot / Failed to make link thumbs with error ${err}`
+                `THUMBS — _makeLinkThumb / Failed to make link thumbs with error ${err}`
               );
-              return reject();
+              return reject(err);
             });
         } else {
           dev.logverbose(
             `Screenshots already exist at path ${fullScreenshotPath}`
           );
-          resolve({ screenshotPath, screenshotName });
+          return resolve({ screenshotPath, screenshotName });
         }
       });
     });

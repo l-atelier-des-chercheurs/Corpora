@@ -418,6 +418,10 @@ module.exports = (function () {
       fr: "Sauvegarder pour cet appareil",
       en: "Remember for this device",
     },
+    no_preview_available: {
+      fr: "Aucun aperçu disponible pour ce site",
+      en: "No preview available for this website",
+    },
   };
 
   return messages;

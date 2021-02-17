@@ -743,12 +743,13 @@ audio {
   font-size: 0.7em;
 
   ._siteCard--image {
-    flex: 0 0 25%;
+    flex: 0 0 50%;
 
     img {
       width: 100%;
       height: 100%;
-      object-fit: cover;
+      object-fit: contain;
+      background: white;
     }
   }
   ._siteCard--text {
