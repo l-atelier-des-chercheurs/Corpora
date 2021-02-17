@@ -733,6 +733,35 @@ audio {
 //   }
 // }
 
+._siteCard {
+  display: flex;
+  flex-flow: row nowrap;
+  background-color: rgba(141, 141, 141, 0.1);
+  border-radius: 2px;
+  overflow: hidden;
+
+  font-size: 0.7em;
+
+  ._siteCard--image {
+    flex: 0 0 25%;
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+  }
+  ._siteCard--text {
+    padding: calc(var(--spacing) / 2);
+  }
+  ._siteCard--text--title {
+    font-family: "base9";
+    font-weight: bold;
+  }
+  ._siteCard--text--description {
+  }
+}
+
 .m_keywordField,
 .vue-tags-input {
   position: relative;
@@ -1541,8 +1570,7 @@ twitter-widget.twitter-tweet {
 
   display: flex;
   justify-content: center;
-
-  min-height: 3em;
+  min-height: 2em;
 
   #app:not(.is--wide) & {
     position: fixed;

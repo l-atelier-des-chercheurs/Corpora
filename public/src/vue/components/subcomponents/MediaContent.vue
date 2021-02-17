@@ -171,13 +171,35 @@
       </div>
     </template>
     <template v-else-if="media.type === 'link'">
-      <img
+      <!-- <pre>{{ media }}</pre> -->
+
+      <!-- <img
         v-if="context !== 'edit'"
         :srcset="complexMediaSrcSetAttr({ type: 'scroll', option: 0 })"
         :sizes="imageSizesAttr"
         :src="linkToComplexMediaThumb({ type: 'scroll', option: 0 })"
         draggable="false"
       />
+     -->
+      <div
+        v-if="siteOG && (siteOG.image || siteOG.title || siteOG.description)"
+        class="_siteCard"
+      >
+        <div v-if="siteOG.image" class="_siteCard--image">
+          <img v-if="should_load_embed" :src="siteOG.image" />
+          <button type="button" v-else @click="load_this_embed = true">
+            {{ $t("load") }}
+          </button>
+        </div>
+        <div class="_siteCard--text">
+          <div v-if="siteOG.title" class="_siteCard--text--title">
+            {{ siteOG.title }}
+          </div>
+          <div v-if="siteOG.description" class="_siteCard--text--description">
+            {{ siteOG.description }}
+          </div>
+        </div>
+      </div>
       <div class="_linkCaption">
         <a :href="media.content" target="_blank">
           {{ media.content }}
@@ -304,6 +326,23 @@ export default {
       return this.$root.state.mode === "export_publication"
         ? `./${this.subfolder}${this.slugFolderName}/${this.media.media_filename}`
         : `/${this.subfolder}${this.slugFolderName}/${this.media.media_filename}`;
+    },
+    siteOG: function () {
+      if (
+        !this.media["thumbs"] ||
+        (typeof this.media.thumbs === "object" &&
+          this.media.thumbs.length === 0)
+      ) {
+        return false;
+      }
+
+      const siteData = this.media.thumbs.find((m) =>
+        m.hasOwnProperty("siteData")
+      );
+      if (!siteData) return false;
+
+      return siteData.siteData;
+      // return this.media.thumbs.find(t => t.)
     },
     embedURL: function () {
       if (!this.media.content) return false;
