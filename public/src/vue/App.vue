@@ -362,12 +362,13 @@ code,
 pre {
   background-color: #f0f0f0;
   border-radius: 3px;
+  font-family: "base12";
 }
 pre {
   white-space: pre-wrap;
   margin-bottom: var(--spacing);
   margin-top: var(--spacing);
-  padding: var(--spacing) calc(var(--spacing) * 2);
+  padding: var(--spacing) calc(var(--spacing) * 1);
 }
 code {
   font-size: 85%;
@@ -558,6 +559,10 @@ select {
 .padding-small {
   padding: calc(var(--spacing) / 2);
 }
+.padding-vert-small {
+  padding-top: calc(var(--spacing) / 2);
+  padding-bottom: calc(var(--spacing) / 2);
+}
 .margin-small {
   margin: calc(var(--spacing) / 2);
 }
@@ -636,6 +641,45 @@ input[type="submit"] {
     margin: 0;
     padding: 0;
   }
+
+  &.button-triangle {
+    &::after {
+      content: "◄";
+      display: inline-block;
+      margin-left: 0.5em;
+      transition: transform 0.5s, color 0.5s;
+    }
+
+    &:hover {
+      background-color: transparent;
+
+      &::after {
+        color: var(--color-orange);
+      }
+    }
+
+    &.is--active {
+      color: var(--color-orange);
+      &::after {
+        transform: rotate(-90deg);
+      }
+
+      &:hover {
+        background-color: transparent;
+      }
+    }
+
+    &.bg-rouge {
+      &:hover {
+        &::after {
+          color: var(--color-black);
+        }
+      }
+      &.is--active {
+        color: var(--color-black);
+      }
+    }
+  }
 }
 
 img,
@@ -674,6 +718,10 @@ audio {
     min-height: 202px;
     background-color: transparent;
   }
+
+  pre {
+    margin: 0;
+  }
 }
 
 // .m_keywordField {
@@ -684,6 +732,35 @@ audio {
 //     font-size: 1.2em;
 //   }
 // }
+
+._siteCard {
+  display: flex;
+  flex-flow: row nowrap;
+  background-color: rgba(141, 141, 141, 0.1);
+  border-radius: 2px;
+  overflow: hidden;
+
+  font-size: 0.7em;
+
+  ._siteCard--image {
+    flex: 0 0 25%;
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+  }
+  ._siteCard--text {
+    padding: calc(var(--spacing) / 2);
+  }
+  ._siteCard--text--title {
+    font-family: "base9";
+    font-weight: bold;
+  }
+  ._siteCard--text--description {
+  }
+}
 
 .m_keywordField,
 .vue-tags-input {
@@ -1493,8 +1570,7 @@ twitter-widget.twitter-tweet {
 
   display: flex;
   justify-content: center;
-
-  min-height: 3em;
+  min-height: 2em;
 
   #app:not(.is--wide) & {
     position: fixed;

@@ -1822,7 +1822,8 @@ export default {
 
   .ql-editor.ql-blank::before {
     left: 0;
-    color: rgba(0, 0, 0, 0.4);
+    color: currentColor;
+    opacity: 0.4;
     font-style: normal;
   }
 }

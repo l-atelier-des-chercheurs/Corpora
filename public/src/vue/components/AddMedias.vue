@@ -119,7 +119,7 @@
               />
             </label>
 
-            <button
+            <!-- <button
               key="add_embed"
               type="button"
               class="button button-round button-round-small margin-bottom-small padding-none bg-noir c-blanc"
@@ -141,7 +141,7 @@
                 />
               </svg>
               <span class="text_label">{{ $t("embed") }}</span>
-            </button>
+            </button> -->
           </div>
           <div>
             <small>{{ $t("file_max_size") }}: 20mo</small>

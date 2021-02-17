@@ -17,7 +17,7 @@
         ref="textField"
       />
 
-      <template v-else-if="media.type === 'embed' && is_being_edited">
+      <!-- <template v-else-if="media.type === 'embed' && is_being_edited">
         <select v-model="expected_embed_format">
           <option>Vimeo</option>
           <option>YouTube</option>
@@ -35,18 +35,35 @@
             $t('embed_instructions_' + expected_embed_format.toLowerCase())
           "
         />
-      </template>
+      </template> -->
 
-      <template v-else-if="media.type === 'link' && is_being_edited">
-        <input
-          type="url"
-          class="border-none bg-transparent"
-          placeholder="URL"
-          v-model="mediadata.content"
-          ref="textField"
-          :readonly="!!media.content && media.content.length > 0"
-        />
-        <small v-html="$t('link_instructions')" />
+      <template
+        v-else-if="
+          (media.type === 'link' || media.type === 'embed') && is_being_edited
+        "
+      >
+        <div v-if="!!media.content && media.content.length > 0">
+          {{ mediadata.content }}
+        </div>
+        <template v-else>
+          <input
+            type="url"
+            class="border-none bg-transparent"
+            placeholder="URL"
+            v-model="mediadata.content"
+            ref="textField"
+          />
+          <small v-html="$t('link_instructions')" />
+        </template>
+        <template v-if="should_be_embed">
+          <div>
+            <small>
+              <i>
+                {{ $t("embed") }}
+              </i>
+            </small>
+          </div>
+        </template>
       </template>
 
       <MediaContent
@@ -87,14 +104,25 @@
         'is--open': show_advanced_menu_for_media,
       }"
     >
-      <button
-        type="button"
-        class="button-small bg-orange"
+      <div
+        class="m_advancedMenu--editingMenu"
         v-if="is_being_edited && !is_saving_media"
-        @click="saveMedia"
       >
-        {{ $t("save") }}
-      </button>
+        <button type="button" class="button-small bg-orange" @click="saveMedia">
+          {{ $t("save") }}
+        </button>
+        <button
+          type="button"
+          class="button-small bg-orange"
+          v-if="is_empty"
+          @click="
+            $emit('removeMedia', { metaFileName: media.metaFileName });
+            show_advanced_menu_for_media = false;
+          "
+        >
+          {{ $t("remove") }}
+        </button>
+      </div>
 
       <template v-else>
         <button
@@ -329,6 +357,32 @@ export default {
       }
       return false;
     },
+    should_be_embed() {
+      if (
+        this.mediadata.content.includes("vimeo.com") ||
+        this.mediadata.content.includes("youtube.com") ||
+        this.mediadata.content.includes("twitter.com")
+      )
+        return true;
+      return false;
+    },
+    is_empty() {
+      if (
+        this.media.type === "text" ||
+        this.media.type === "embed" ||
+        this.media.type === "link"
+      ) {
+        if (
+          !this.mediadata.content &&
+          !this.mediadata.caption &&
+          !this.mediadata.source
+        ) {
+          return true;
+        }
+      }
+
+      return false;
+    },
     can_be_edited() {
       if (this.$root.can_admin_corpora) return true;
       if (
@@ -353,6 +407,9 @@ export default {
     },
     saveMedia() {
       this.is_saving_media = true;
+
+      if (this.media.type === "link" && this.should_be_embed)
+        this.mediadata.type = "embed";
 
       this.$root
         .editMedia({
@@ -432,6 +489,10 @@ export default {
   // &:hover {
   //   background-color: #eee;
   // }
+}
+.m_advancedMenu--editingMenu {
+  position: absolute;
+  bottom: 100%;
 }
 
 .m_fragmentMedia--infos {
@@ -513,6 +574,10 @@ export default {
     fill: white;
     filter: drop-shadow(0px 0px 2px rgba(226, 237, 239, 0.8));
     filter: drop-shadow(0px 0px 3px rgba(110, 110, 110, 0.4));
+  }
+
+  &:hover {
+    background: var(--color-black);
   }
 }
 </style>

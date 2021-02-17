@@ -99,6 +99,10 @@ module.exports = (function () {
       fr: "Nom",
       en: "Name",
     },
+    sort_in_tabs_by_default: {
+      fr: "Ranger dans des onglets par défaut",
+      en: "Sort in tabs by default",
+    },
     title: {
       fr: "Titre",
       en: "Title",
@@ -124,7 +128,7 @@ module.exports = (function () {
       en: "Display options",
     },
     display_in_tabs: {
-      fr: "Ranger dans les onglets",
+      fr: "Ranger dans des onglets",
       en: "By tabs",
     },
     editable_for: {
@@ -344,9 +348,9 @@ module.exports = (function () {
     },
     link_instructions: {
       fr:
-        "Renseignez une URL pour afficher une capture d’écran de la page. Format attendu : https://www.plurality-university.org/",
+        "Renseignez une URL type <u>https://www.plurality-university.org/</u>",
       en:
-        "Paste a link to a URL such as: https://www.plurality-university.org/",
+        "Paste a link to a URL such as <u>https://www.plurality-university.org/</u>",
     },
     embed_instructions_vimeo: {
       fr: "Format attendu : https://vimeo.com/399094491",
