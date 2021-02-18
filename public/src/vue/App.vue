@@ -559,6 +559,9 @@ select {
 .padding-small {
   padding: calc(var(--spacing) / 2);
 }
+.padding-verysmall {
+  padding: calc(var(--spacing) / 4);
+}
 .padding-vert-small {
   padding-top: calc(var(--spacing) / 2);
   padding-bottom: calc(var(--spacing) / 2);
@@ -743,7 +746,7 @@ audio {
   font-size: 0.7em;
 
   ._siteCard--image {
-    flex: 0 0 50%;
+    flex: 0 0 33%;
 
     img {
       width: 100%;

@@ -19,6 +19,7 @@
           type="text"
           v-model.trim="corpusdata.name"
           required
+          autofocus
           :readonly="read_only"
         />
       </div>
