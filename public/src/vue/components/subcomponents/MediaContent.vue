@@ -171,6 +171,11 @@
       </div>
     </template>
     <template v-else-if="media.type === 'link'">
+      <div class="_linkCaption">
+        <a :href="media.content" target="_blank">
+          {{ media.content }}
+        </a>
+      </div>
       <div class="_siteCard">
         <template
           v-if="siteOG && (siteOG.image || siteOG.title || siteOG.description)"
@@ -191,15 +196,10 @@
           </div>
         </template>
         <template v-else>
-          <div class="padding-small">
+          <div class="padding-verysmall">
             {{ $t("no_preview_available") }}
           </div>
         </template>
-      </div>
-      <div class="_linkCaption">
-        <a :href="media.content" target="_blank">
-          {{ media.content }}
-        </a>
       </div>
     </template>
     <template v-else-if="media.type === 'document'">
