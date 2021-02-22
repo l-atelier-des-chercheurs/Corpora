@@ -68,8 +68,8 @@ module.exports = (function () {
       en: "Sort fragments by",
     },
     personal_data_and_legal_notices: {
-      fr: "données personnelles et mentions légales",
-      en: "Personal data and legal notices",
+      fr: "cookies, données personnelles et mentions légales",
+      en: "Cookies, personal data and legal notices",
     },
     created_on: {
       fr: "Créé le",
@@ -163,8 +163,8 @@ module.exports = (function () {
       en: "Description",
     },
     source: {
-      fr: "Lien externe",
-      en: "External link",
+      fr: "Lien",
+      en: "link",
     },
     open: {
       fr: "Ouvrir",
