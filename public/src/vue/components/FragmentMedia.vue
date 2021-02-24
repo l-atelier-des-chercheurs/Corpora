@@ -258,15 +258,16 @@
     <small
       v-if="
         can_be_edited &&
-        media_was_created_x_minutes_ago !== false &&
+        media_was_created_x_hours_ago !== false &&
         !$root.can_admin_corpora
       "
       class="ta-ce tt-lc padding-small font-verysmall"
       style="width: 100%; display: block"
-      >{{ $t("editable_for") }}
-      {{ editable_delay_in_minutes - media_was_created_x_minutes_ago }}
-      {{ $t("minutes") }}</small
     >
+      {{ $t("editable_for") }}
+      {{ editable_delay_in_hours - media_was_created_x_hours_ago }}
+      {{ $t("hours") }}
+    </small>
     <ShowMedia
       v-if="show_in_modal"
       :media="media"
@@ -308,7 +309,7 @@ export default {
       show_in_modal: false,
       expected_embed_format: "Vimeo",
 
-      editable_delay_in_minutes: 30,
+      editable_delay_in_hours: 24,
 
       mediaURL: `/${this.slugFolderName}/${this.media.media_filename}`,
       is_being_edited: false,
@@ -345,13 +346,13 @@ export default {
     // },
   },
   computed: {
-    media_was_created_x_minutes_ago() {
+    media_was_created_x_hours_ago() {
       if (this.media.hasOwnProperty("date_uploaded")) {
         const media_uploaded_on = this.$moment(this.media.date_uploaded);
         if (media_uploaded_on.isValid()) {
           const ellapsed = this.$moment
             .duration(media_uploaded_on.diff(this.$moment()))
-            .asMinutes();
+            .asHours();
           return Math.floor(Math.abs(ellapsed));
         }
       }
@@ -387,8 +388,8 @@ export default {
     can_be_edited() {
       if (this.$root.can_admin_corpora) return true;
       if (
-        this.media_was_created_x_minutes_ago !== false &&
-        this.media_was_created_x_minutes_ago < this.editable_delay_in_minutes
+        this.media_was_created_x_hours_ago !== false &&
+        this.media_was_created_x_hours_ago < this.editable_delay_in_hours
       ) {
         return true;
       }
