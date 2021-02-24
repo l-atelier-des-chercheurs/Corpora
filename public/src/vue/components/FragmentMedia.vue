@@ -6,6 +6,8 @@
       'is--beingEdited': is_being_edited,
       'is--savingMedia': is_saving_media,
     }"
+    @mouseenter="is_touch ? '' : (is_hovered = true)"
+    @mouseleave="is_touch ? '' : (is_hovered = false)"
   >
     <div class="m_fragmentMedia--content">
       <CollaborativeEditor
@@ -132,6 +134,7 @@
           :class="{
             'is--active': show_advanced_menu_for_media,
           }"
+          v-if="is_touch || is_hovered"
         >
           <svg
             version="1.1"
@@ -307,6 +310,8 @@ export default {
         content: this.media.content,
       },
 
+      is_hovered: false,
+
       show_in_modal: false,
       expected_embed_format: "Vimeo",
 
@@ -358,6 +363,9 @@ export default {
         }
       }
       return false;
+    },
+    is_touch() {
+      return Modernizr.touchevents;
     },
     should_be_embed() {
       if (
@@ -429,7 +437,7 @@ export default {
             //   .closeLogOnClick(true)
             //   .delay(4000)
             //   .success(this.$t("saved_media"));
-          }, 500);
+          }, 250);
         })
         .catch(() => {
           this.$alertify

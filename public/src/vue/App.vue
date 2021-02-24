@@ -241,7 +241,7 @@ label:not(.no-style) {
     button,
     .button {
       margin-bottom: 1px;
-      box-shadow: 0px 0px 4px rgba(60, 53, 65, 0.4);
+      // box-shadow: 0px 0px 4px rgba(60, 53, 65, 0.4);
     }
 
     > * {

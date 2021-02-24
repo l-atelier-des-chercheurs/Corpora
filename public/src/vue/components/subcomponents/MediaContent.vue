@@ -212,10 +212,7 @@
       </div>
     </template>
     <template v-else-if="media.type === 'document'">
-      <div
-        v-if="context !== 'edit' && context !== 'full'"
-        class="padding-vert-small font-verysmall"
-      >
+      <div v-if="context !== 'full'" class="padding-vert-small font-verysmall">
         <a :href="mediaURL" :download="media.media_filename">
           <pre>{{ media.media_filename }}</pre>
         </a>
