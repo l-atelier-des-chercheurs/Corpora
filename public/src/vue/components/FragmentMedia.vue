@@ -483,7 +483,7 @@ export default {
 }
 .m_advancedMenu {
   position: absolute;
-  top: 0;
+  top: -0.1em;
   right: 0;
   // background: transparent;
   font-size: 1.5em;

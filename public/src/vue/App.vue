@@ -198,22 +198,26 @@ label:not(.no-style) {
     width: auto;
     height: auto;
     line-height: 1;
-    border-radius: 4px;
-    margin: 4px;
+    // border-radius: 4px;
+    margin: 0px;
+    padding: 2px;
     margin-bottom: 1px;
 
     // background-color: rgba(0, 0, 0, 0.3);
-    background-color: rgba(226, 237, 239, 0.5);
+    // border: 1px solid currentColor;
+    color: black;
+    background-color: rgba(226, 237, 239, 0.4);
 
     svg {
       display: block;
-      width: 12px;
-      height: 26px;
-      padding: 4px;
+      width: 22px;
+      height: 14px;
+      padding: 0px;
       fill: currentColor;
+      transform: rotate(90deg);
       // filter: drop-shadow(0px 0px 4px rgba(0, 0, 0, 0.4));
-      filter: drop-shadow(0px 0px 2px rgba(226, 237, 239, 0.8));
-      filter: drop-shadow(0px 0px 3px rgba(110, 110, 110, 0.4));
+      // filter: drop-shadow(0px 0px 2px rgba(226, 237, 239, 0.8));
+      // filter: drop-shadow(0px 0px 2px rgba(110, 110, 110, 1));
 
       circle {
         // filter: drop-shadow(0px 0px 4px rgba(0, 0, 0, 1));
@@ -230,7 +234,7 @@ label:not(.no-style) {
     justify-content: flex-end;
     align-content: flex-end;
     align-items: flex-end;
-    margin: 0 4px 0;
+    margin: 0 0 0;
     color: var(--color-white);
     // padding: 2px;
 
