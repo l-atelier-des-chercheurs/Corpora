@@ -184,6 +184,7 @@
           </button>
           <a
             class="button button-small"
+            v-if="!['link', 'embed'].includes(media.type)"
             :download="media.media_filename"
             :href="mediaURL"
             target="_blank"
