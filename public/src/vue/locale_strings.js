@@ -422,6 +422,10 @@ module.exports = (function () {
       fr: "Aucun aperçu disponible pour ce site",
       en: "No preview available for this website",
     },
+    failed_to_save_media: {
+      fr: "Les modifications n’ont pas pu être enregistrées",
+      en: "Failed to save changes",
+    },
   };
 
   return messages;

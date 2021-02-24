@@ -424,17 +424,17 @@ export default {
           setTimeout(() => {
             this.is_being_edited = false;
             this.is_saving_media = false;
-            this.$alertify
-              .closeLogOnClick(true)
-              .delay(4000)
-              .success(this.$t("notifications.saved_media"));
+            // this.$alertify
+            //   .closeLogOnClick(true)
+            //   .delay(4000)
+            //   .success(this.$t("saved_media"));
           }, 500);
         })
         .catch(() => {
           this.$alertify
             .closeLogOnClick(true)
             .delay(4000)
-            .error(this.$t("notifications.failed_to_save_media"));
+            .error(this.$t("failed_to_save_media"));
 
           this.is_saving_media = false;
         });
