@@ -150,7 +150,7 @@
             <a :href="media.content" target="_blank">{{ media.content }}</a>
           </div>
           <div class="margin-bottom-verysmall">
-            <button type="button" @click="load_this_embed = true">
+            <button type="button" class="_load" @click="load_this_embed = true">
               {{ $t("load") }}
             </button>
           </div>
@@ -181,8 +181,17 @@
           v-if="siteOG && (siteOG.image || siteOG.title || siteOG.description)"
         >
           <div v-if="siteOG_image" class="_siteCard--image">
-            <img v-if="should_load_embed" :src="siteOG_image" />
-            <button type="button" v-else @click="load_this_embed = true">
+            <template v-if="should_load_embed">
+              <a :href="media.content" target="_blank">
+                <img :src="siteOG_image" />
+              </a>
+            </template>
+            <button
+              type="button"
+              class="_load"
+              v-else
+              @click="load_this_embed = true"
+            >
               {{ $t("load") }}
             </button>
           </div>
@@ -203,10 +212,7 @@
       </div>
     </template>
     <template v-else-if="media.type === 'document'">
-      <div
-        v-if="context !== 'edit' && context !== 'full'"
-        class="padding-vert-small font-verysmall"
-      >
+      <div v-if="context !== 'full'" class="padding-vert-small font-verysmall">
         <a :href="mediaURL" :download="media.media_filename">
           <pre>{{ media.media_filename }}</pre>
         </a>

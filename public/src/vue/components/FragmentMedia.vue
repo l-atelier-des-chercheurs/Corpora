@@ -6,6 +6,8 @@
       'is--beingEdited': is_being_edited,
       'is--savingMedia': is_saving_media,
     }"
+    @mouseenter="is_touch ? '' : (is_hovered = true)"
+    @mouseleave="is_touch ? '' : (is_hovered = false)"
   >
     <div class="m_fragmentMedia--content">
       <CollaborativeEditor
@@ -132,6 +134,7 @@
           :class="{
             'is--active': show_advanced_menu_for_media,
           }"
+          v-if="is_touch || is_hovered"
         >
           <svg
             version="1.1"
@@ -184,6 +187,7 @@
           </button>
           <a
             class="button button-small"
+            v-if="!['link', 'embed'].includes(media.type)"
             :download="media.media_filename"
             :href="mediaURL"
             target="_blank"
@@ -258,15 +262,16 @@
     <small
       v-if="
         can_be_edited &&
-        media_was_created_x_minutes_ago !== false &&
+        media_was_created_x_hours_ago !== false &&
         !$root.can_admin_corpora
       "
       class="ta-ce tt-lc padding-small font-verysmall"
       style="width: 100%; display: block"
-      >{{ $t("editable_for") }}
-      {{ editable_delay_in_minutes - media_was_created_x_minutes_ago }}
-      {{ $t("minutes") }}</small
     >
+      {{ $t("editable_for") }}
+      {{ editable_delay_in_hours - media_was_created_x_hours_ago }}
+      {{ $t("hours") }}
+    </small>
     <ShowMedia
       v-if="show_in_modal"
       :media="media"
@@ -305,10 +310,12 @@ export default {
         content: this.media.content,
       },
 
+      is_hovered: false,
+
       show_in_modal: false,
       expected_embed_format: "Vimeo",
 
-      editable_delay_in_minutes: 30,
+      editable_delay_in_hours: 24,
 
       mediaURL: `/${this.slugFolderName}/${this.media.media_filename}`,
       is_being_edited: false,
@@ -345,22 +352,26 @@ export default {
     // },
   },
   computed: {
-    media_was_created_x_minutes_ago() {
+    media_was_created_x_hours_ago() {
       if (this.media.hasOwnProperty("date_uploaded")) {
         const media_uploaded_on = this.$moment(this.media.date_uploaded);
         if (media_uploaded_on.isValid()) {
           const ellapsed = this.$moment
             .duration(media_uploaded_on.diff(this.$moment()))
-            .asMinutes();
+            .asHours();
           return Math.floor(Math.abs(ellapsed));
         }
       }
       return false;
     },
+    is_touch() {
+      return Modernizr.touchevents;
+    },
     should_be_embed() {
       if (
         this.mediadata.content.includes("vimeo.com") ||
         this.mediadata.content.includes("youtube.com") ||
+        this.mediadata.content.includes("youtu.be") ||
         this.mediadata.content.includes("twitter.com")
       )
         return true;
@@ -386,8 +397,8 @@ export default {
     can_be_edited() {
       if (this.$root.can_admin_corpora) return true;
       if (
-        this.media_was_created_x_minutes_ago !== false &&
-        this.media_was_created_x_minutes_ago < this.editable_delay_in_minutes
+        this.media_was_created_x_hours_ago !== false &&
+        this.media_was_created_x_hours_ago < this.editable_delay_in_hours
       ) {
         return true;
       }
@@ -422,17 +433,17 @@ export default {
           setTimeout(() => {
             this.is_being_edited = false;
             this.is_saving_media = false;
-            this.$alertify
-              .closeLogOnClick(true)
-              .delay(4000)
-              .success(this.$t("notifications.saved_media"));
-          }, 500);
+            // this.$alertify
+            //   .closeLogOnClick(true)
+            //   .delay(4000)
+            //   .success(this.$t("saved_media"));
+          }, 250);
         })
         .catch(() => {
           this.$alertify
             .closeLogOnClick(true)
             .delay(4000)
-            .error(this.$t("notifications.failed_to_save_media"));
+            .error(this.$t("failed_to_save_media"));
 
           this.is_saving_media = false;
         });
@@ -480,7 +491,7 @@ export default {
 }
 .m_advancedMenu {
   position: absolute;
-  top: 0;
+  top: -0.1em;
   right: 0;
   // background: transparent;
   font-size: 1.5em;

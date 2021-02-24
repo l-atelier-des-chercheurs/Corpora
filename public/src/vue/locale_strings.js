@@ -68,8 +68,8 @@ module.exports = (function () {
       en: "Sort fragments by",
     },
     personal_data_and_legal_notices: {
-      fr: "données personnelles et mentions légales",
-      en: "Personal data and legal notices",
+      fr: "cookies, données personnelles et mentions légales",
+      en: "Cookies, personal data and legal notices",
     },
     created_on: {
       fr: "Créé le",
@@ -163,8 +163,8 @@ module.exports = (function () {
       en: "Description",
     },
     source: {
-      fr: "Lien externe",
-      en: "External link",
+      fr: "Lien",
+      en: "link",
     },
     open: {
       fr: "Ouvrir",
@@ -227,12 +227,12 @@ module.exports = (function () {
       en: "No",
     },
     moveup: {
-      fr: "Déplacer ▲",
-      en: "Move up ▲",
+      fr: "Déplacer ↑",
+      en: "Move up ↑",
     },
     movedown: {
-      fr: "Déplacer ▼",
-      en: "Move down ▼",
+      fr: "Déplacer ↓",
+      en: "Move down ↓",
     },
     import_medias: {
       fr: "Importer des fichiers",
@@ -279,8 +279,8 @@ module.exports = (function () {
       en: "Second title",
     },
     description: {
-      fr: "Description",
-      en: "Description",
+      fr: "Description, source…",
+      en: "Description, source…",
     },
     create_a_fragment: {
       fr: "Créer un fragment",
@@ -421,6 +421,10 @@ module.exports = (function () {
     no_preview_available: {
       fr: "Aucun aperçu disponible pour ce site",
       en: "No preview available for this website",
+    },
+    failed_to_save_media: {
+      fr: "Les modifications n’ont pas pu être enregistrées",
+      en: "Failed to save changes",
     },
   };
 

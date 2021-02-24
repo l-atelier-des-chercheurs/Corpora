@@ -76,16 +76,17 @@ let lang_settings = {
       }
     }
 
-    if (this.current === "") {
-      // set current lang from window.navigator.language
-      // window.navigator.language can be 'fr', 'en', or 'fr-FR'
-      let browser_lang_available = this.available.find((l) => {
-        return window.navigator.language.includes(l.key);
-      });
-      this.current = browser_lang_available
-        ? browser_lang_available.key
-        : this.default;
-    }
+    // if (this.current === "") {
+    //   // set current lang from window.navigator.language
+    //   // window.navigator.language can be 'fr', 'en', or 'fr-FR'
+    //   let browser_lang_available = this.available.find((l) => {
+    //     return window.navigator.language.includes(l.key);
+    //   });
+    //   this.current = browser_lang_available
+    //     ? browser_lang_available.key
+    //     : this.default;
+    // }
+    this.current = this.default;
   },
 };
 lang_settings.init();

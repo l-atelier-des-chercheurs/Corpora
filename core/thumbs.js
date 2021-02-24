@@ -958,8 +958,16 @@ module.exports = (function () {
             });
           }
 
+          function addhttp(url) {
+            if (!/^(?:f|ht)tps?\:\/\//.test(url)) {
+              url = "http://" + url;
+            }
+            return url;
+          }
+          const _url = addhttp(url);
+
           page
-            .goto(url, {
+            .goto(_url, {
               waitUntil: "domcontentloaded",
             })
             .then(async () => {
@@ -979,9 +987,9 @@ module.exports = (function () {
             .catch((err) => {
               browser.close();
               dev.error(
-                `THUMBS — _getPageMetadata : failed to get OG tags = ${err}`
+                `THUMBS — _getPageMetadata / Failed to load link page with error ${err.message}`
               );
-              return reject();
+              return reject(err.message);
             });
         });
     });
