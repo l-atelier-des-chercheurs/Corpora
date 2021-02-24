@@ -150,7 +150,7 @@
             <a :href="media.content" target="_blank">{{ media.content }}</a>
           </div>
           <div class="margin-bottom-verysmall">
-            <button type="button" @click="load_this_embed = true">
+            <button type="button" class="_load" @click="load_this_embed = true">
               {{ $t("load") }}
             </button>
           </div>
@@ -182,7 +182,12 @@
         >
           <div v-if="siteOG_image" class="_siteCard--image">
             <img v-if="should_load_embed" :src="siteOG_image" />
-            <button type="button" v-else @click="load_this_embed = true">
+            <button
+              type="button"
+              class="_load"
+              v-else
+              @click="load_this_embed = true"
+            >
               {{ $t("load") }}
             </button>
           </div>

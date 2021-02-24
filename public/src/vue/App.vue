@@ -121,6 +121,12 @@ label:not(.no-style) {
   height: 1em;
 }
 
+._load {
+  border-radius: 4px;
+  // font-size: 100%;
+  // padding: 0.1em 0.2em;
+}
+
 .svg-icon path,
 .svg-icon polygon,
 .svg-icon rect {
@@ -747,6 +753,9 @@ audio {
 
   ._siteCard--image {
     flex: 0 0 33%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 
     img {
       width: 100%;
