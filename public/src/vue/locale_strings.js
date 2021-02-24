@@ -279,8 +279,8 @@ module.exports = (function () {
       en: "Second title",
     },
     description: {
-      fr: "Description",
-      en: "Description",
+      fr: "Description, source…",
+      en: "Description, source…",
     },
     create_a_fragment: {
       fr: "Créer un fragment",
