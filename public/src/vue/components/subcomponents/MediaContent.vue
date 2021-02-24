@@ -181,7 +181,11 @@
           v-if="siteOG && (siteOG.image || siteOG.title || siteOG.description)"
         >
           <div v-if="siteOG_image" class="_siteCard--image">
-            <img v-if="should_load_embed" :src="siteOG_image" />
+            <template v-if="should_load_embed">
+              <a :href="media.content" target="_blank">
+                <img :src="siteOG_image" />
+              </a>
+            </template>
             <button
               type="button"
               class="_load"
