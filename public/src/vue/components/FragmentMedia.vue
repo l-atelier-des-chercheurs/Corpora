@@ -44,19 +44,19 @@
           (media.type === 'link' || media.type === 'embed') && is_being_edited
         "
       >
-        <div v-if="!!media.content && media.content.length > 0">
+        <!-- <div v-if="!!media.content && media.content.length > 0">
           {{ mediadata.content }}
         </div>
-        <template v-else>
-          <input
-            type="url"
-            class="border-none bg-transparent"
-            placeholder="URL"
-            v-model="mediadata.content"
-            ref="textField"
-          />
-          <small v-html="$t('link_instructions')" />
-        </template>
+        <template v-else> -->
+        <input
+          type="url"
+          class="border-none bg-transparent"
+          placeholder="URL"
+          v-model="mediadata.content"
+          ref="textField"
+        />
+        <small v-html="$t('link_instructions')" />
+        <!-- </template> -->
         <template v-if="should_be_embed">
           <div>
             <small>
@@ -421,6 +421,8 @@ export default {
 
       if (this.media.type === "link" && this.should_be_embed)
         this.mediadata.type = "embed";
+      if (this.media.type === "embed" && !this.should_be_embed)
+        this.mediadata.type = "link";
 
       this.$root
         .editMedia({

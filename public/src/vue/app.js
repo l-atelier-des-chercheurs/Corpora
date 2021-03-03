@@ -217,7 +217,9 @@ let vm = new Vue({
       enable_system_bar: window.state.is_electron && window.state.is_darwin,
       text_media_being_edited: false,
       is_loading_corpus: false,
-      load_all_embeds: false,
+      load_all_embeds: localstore.get("load_all_embeds_option")
+        ? localstore.get("load_all_embeds_option") === true
+        : false,
       unfold_legal_pane: false,
       show_welcome_modal: localstore.get("remember_embeds_option_choice")
         ? localstore.get("remember_embeds_option_choice") !== true

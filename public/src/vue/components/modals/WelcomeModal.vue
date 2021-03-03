@@ -305,13 +305,20 @@ export default {
       this.$root.settings.load_all_embeds = this.load_all_embeds_option;
       this.$root.settings.show_welcome_modal = false;
 
-      if (this.load_all_embeds_option) {
+      debugger;
+      // refuse cookies : unset all
+      if (this.load_all_embeds_option === false) {
+        if (localstore.hasOwnProperty("load_all_embeds_option")) {
+          localstore.set("load_all_embeds_option", undefined);
+        }
+        localstore.set("remember_embeds_option_choice", undefined);
+      } else {
+        //accepter cookies : ce qu’on enregistre
+        localstore.set("load_all_embeds_option", true);
         localstore.set(
           "remember_embeds_option_choice",
           this.remember_embeds_option_choice
         );
-      } else if (localstore.hasOwnProperty("remember_embeds_option_choice")) {
-        localstore.set("remember_embeds_option_choice", undefined);
       }
     },
   },
