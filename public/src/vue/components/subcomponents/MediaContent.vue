@@ -172,8 +172,8 @@
     </template>
     <template v-else-if="media.type === 'link'">
       <div class="_linkCaption">
-        <a :href="media.content" target="_blank">
-          {{ media.content }}
+        <a :href="link_url" target="_blank">
+          {{ link_url }}
         </a>
       </div>
       <div class="_siteCard">
@@ -182,7 +182,7 @@
         >
           <div v-if="siteOG_image" class="_siteCard--image">
             <template v-if="should_load_embed">
-              <a :href="media.content" target="_blank">
+              <a :href="link_url" target="_blank">
                 <img :src="siteOG_image" />
               </a>
             </template>
@@ -371,6 +371,15 @@ export default {
           src: this.getVimeoEmbedURLFromURL(this.media.content),
         };
       return this.media.content;
+    },
+    link_url() {
+      function addhttp(url) {
+        if (!/^(?:f|ht)tps?\:\/\//.test(url)) {
+          url = "http://" + url;
+        }
+        return url;
+      }
+      return addhttp(this.media.content);
     },
     should_load_embed() {
       if (this.$root.settings.load_all_embeds) return true;
