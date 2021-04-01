@@ -45,7 +45,7 @@ module.exports = (function () {
     },
     feedbacks: {
       fr: "Retours/aide",
-      en: "Feedbacks",
+      en: "Feedback",
     },
     link: {
       fr: "Lien",
