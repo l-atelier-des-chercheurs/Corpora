@@ -343,8 +343,9 @@ module.exports = (function () {
       en: "Download",
     },
     embed_instructions: {
-      fr: "Placez ici l’URL vers une vidéo Vimeo, Youtube ou Twitter",
-      en: "Add a URL to Vimeo, Youtube or Twitter",
+      fr:
+        "Placez ici l’URL vers une vidéo Vimeo, Youtube, Twitter ou SoundCloud",
+      en: "Add a URL to Vimeo, Youtube, Twitter or SoundCloud",
     },
     link_instructions: {
       fr:
@@ -359,6 +360,12 @@ module.exports = (function () {
     embed_instructions_youtube: {
       fr: "Format attendu : https://www.youtube.com/watch?v=8yj9X2YHTP4",
       en: "Expected format: https://www.youtube.com/watch?v=8yj9X2YHTP4",
+    },
+    embed_instructions_souncloud: {
+      fr:
+        "Format attendu : https://soundcloud.com/the-bugle/bugle-179-playas-gon-play",
+      en:
+        "Expected format: https://soundcloud.com/the-bugle/bugle-179-playas-gon-play",
     },
     embed_instructions_twitter: {
       fr:

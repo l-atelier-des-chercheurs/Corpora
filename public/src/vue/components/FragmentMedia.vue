@@ -368,6 +368,7 @@ export default {
         this.mediadata.content.includes("vimeo.com") ||
         this.mediadata.content.includes("youtube.com") ||
         this.mediadata.content.includes("youtu.be") ||
+        this.mediadata.content.includes("soundcloud.com") ||
         this.mediadata.content.includes("twitter.com")
       )
         return true;

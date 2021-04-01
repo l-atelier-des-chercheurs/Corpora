@@ -370,6 +370,11 @@ export default {
           type: "vimeo",
           src: this.getVimeoEmbedURLFromURL(this.media.content),
         };
+      else if (this.media.content.includes("soundcloud.com"))
+        return {
+          type: "soundcloud",
+          src: this.getSoundcloudEmbedURLFromURL(this.media.content),
+        };
       return this.media.content;
     },
     link_url() {
@@ -560,6 +565,9 @@ export default {
 
       const videoId = getId(url);
       return `https://player.vimeo.com/video/${videoId}`;
+    },
+    getSoundcloudEmbedURLFromURL(url) {
+      return `https://w.soundcloud.com/player/?url=${url}&color=0066cc`;
     },
     linkToComplexMediaThumb: function ({ type, option }) {
       if (
