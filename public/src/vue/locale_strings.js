@@ -353,6 +353,10 @@ module.exports = (function () {
       en:
         "Paste a link to a URL such as <u>https://www.plurality-university.org/</u>",
     },
+    full_url: {
+      fr: "URL complète",
+      en: "Full URL",
+    },
     embed_instructions_vimeo: {
       fr: "Format attendu : https://vimeo.com/399094491",
       en: "Expected format: https://vimeo.com/399094491",

@@ -403,6 +403,10 @@ export default {
 
     this.setSpellCheck();
 
+    this.$el
+      .querySelector(".ql-tooltip-editor input")
+      .setAttribute("data-link", this.$t("full_url"));
+
     if (this.$root.preview_mode) {
       this.editor.disable();
     }
