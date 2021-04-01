@@ -305,7 +305,6 @@ export default {
       this.$root.settings.load_all_embeds = this.load_all_embeds_option;
       this.$root.settings.show_welcome_modal = false;
 
-      debugger;
       // refuse cookies : unset all
       if (this.load_all_embeds_option === false) {
         if (localstore.hasOwnProperty("load_all_embeds_option")) {
