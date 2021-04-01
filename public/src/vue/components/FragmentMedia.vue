@@ -245,11 +245,7 @@
               target="_blank"
               rel="noopener noreferrer"
               :href="media.source"
-              :content="$t('source')"
-              v-tippy="{
-                placement: 'bottom',
-                delay: [600, 0],
-              }"
+              :title="media.source"
               >{{ media.source }}</a
             >
           </template>
@@ -372,6 +368,7 @@ export default {
         this.mediadata.content.includes("vimeo.com") ||
         this.mediadata.content.includes("youtube.com") ||
         this.mediadata.content.includes("youtu.be") ||
+        this.mediadata.content.includes("soundcloud.com") ||
         this.mediadata.content.includes("twitter.com")
       )
         return true;
@@ -542,6 +539,12 @@ export default {
   -moz-hyphens: auto;
   -webkit-hyphens: auto;
   hyphens: auto;
+
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
 
   input {
     background-color: var(--body-bg);

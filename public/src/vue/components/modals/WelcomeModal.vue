@@ -39,10 +39,10 @@
           connaissances.
         </p>
         <p>
-          Il peut inclure des contenus issus de services tiers (Twitter, YouTube
-          et Vimeo) dont l'affichage provoque le dépôt de cookies sur votre
-          ordinateur. Pour cette raison, nous vous proposons deux modes de
-          navigation :
+          Il peut inclure des contenus issus de services tiers (Twitter,
+          YouTube, Vimeo ou SoundCloud) dont l'affichage provoque le dépôt de
+          cookies sur votre ordinateur. Pour cette raison, nous vous proposons
+          deux modes de navigation :
         </p>
         <p>
           <label for="CreateQRCode">
@@ -186,8 +186,8 @@
             personnelle et nous engageons à n’en faire aucun usage autre que
             celui qui consiste à faciliter la navigation dans le site. En
             revanche, cet affichage peut inclure des contenus issus de services
-            tiers (Twitter, YouTube ou Vimeo) dont l&#39;affichage provoque le
-            dépôt de cookies sur votre ordinateur.
+            tiers (Twitter, YouTube, Vimeo ou SoundCloud) dont l&#39;affichage
+            provoque le dépôt de cookies sur votre ordinateur.
           </p>
 
           <p>
@@ -239,7 +239,7 @@
             We strive to minimize the collection of personal data and will not
             use them to any other purpose than that of facilitating access to
             the content. However, this content may include third-party cookies
-            (from Twitter, YouTube and Vimeo).
+            (from Twitter, YouTube, Vimeo and SoundCloud).
           </p>
 
           <p>
@@ -305,7 +305,6 @@ export default {
       this.$root.settings.load_all_embeds = this.load_all_embeds_option;
       this.$root.settings.show_welcome_modal = false;
 
-      debugger;
       // refuse cookies : unset all
       if (this.load_all_embeds_option === false) {
         if (localstore.hasOwnProperty("load_all_embeds_option")) {
