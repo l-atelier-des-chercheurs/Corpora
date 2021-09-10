@@ -588,7 +588,6 @@ select {
 html,
 body,
 .app {
-  height: 100%;
 }
 
 button,
@@ -1890,22 +1889,9 @@ twitter-widget.twitter-tweet {
   :root {
     --body-bg: white !important;
   }
-
-  .m_corpus {
-    // height: auto !important;
-  }
-  .m_corpus--presentation {
-    margin: 0 auto !important;
-  }
   .m_tags,
   .m_tags--allfragments {
     /* display: block !important; */
-    flex: 1 1 auto;
-    flex-flow: row wrap !important;
-    min-width: auto !important;
-    height: auto !important;
-    justify-content: center;
-    flex-flow: row wrap;
   }
 
   .m_tags--options {

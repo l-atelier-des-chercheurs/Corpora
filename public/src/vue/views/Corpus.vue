@@ -1,10 +1,24 @@
 <template>
-  <div style="width: 100%; height: 100%">
+  <div style="" v-if="corpus">
     <CorpusPwd v-if="!can_access_corpus" :corpus="corpus" />
     <template v-else>
       <WelcomeModal v-if="$root.settings.show_welcome_modal" />
-      <div class="m_corpus" ref="corpus" @scroll="onScroll">
-        <div class="m_corpus--presentation custom_scrollbar">
+
+      <div class="m_topBar">
+        <div class="m_topBar--content">
+          <hgroup>
+            <h1 v-if="!!corpus.name">{{ corpus.name }}</h1>
+            <h2 v-if="!!corpus.subtitle">{{ corpus.subtitle }}</h2>
+          </hgroup>
+
+          <button type="button">guide d’utilisation</button>
+          <button type="button">à propos</button>
+          <button type="button">mon compte</button>
+        </div>
+      </div>
+
+      <div class="m_corpus" ref="corpus">
+        <div class="m_corpus--presentation">
           <Infos />
 
           <div class="m_feedbacks">
@@ -129,21 +143,16 @@
             </div>
           </div>
 
-          <div class="m_corpus--presentation--vignette">
-            <img v-if="previewURL" :src="previewURL" class draggable="false" />
+          <div v-if="previewURL" class="m_corpus--presentation--vignette">
+            <img :src="previewURL" class draggable="false" />
           </div>
         </div>
 
-        <div
-          class="m_tags"
-          ref="corpus_content"
-          @wheel="/* onMousewheel */"
-          @scroll="/* onTimelineScroll */"
-        >
-          <div class="m_tags--options">
+        <transition-group class="m_corpuses" name="list-complete" tag="div">
+          <div class="m_corpuses--createFragment" key="createFragment">
             <button
               type="button"
-              class="m_tags--options--addFragmentButton"
+              class="m_corpuses--createFragment--addFragmentButton"
               @click="show_create_fragment = !show_create_fragment"
             >
               <svg
@@ -174,24 +183,19 @@
             />
           </div>
 
-          <transition-group
-            name="list-complete"
-            tag="div"
-            class="m_tags--allfragments"
-          >
-            <Fragment
-              v-for="fragment in filtered_fragments"
-              :key="fragment.metaFileName"
-              :corpus="corpus"
-              :all_keywords="all_keywords"
-              :all_tags="all_tags"
-              :medias="medias"
-              :fragment="fragment"
-              :fragment_width="fragment_width"
-              :slugFolderName="corpus.slugFolderName"
-            />
-          </transition-group>
-        </div>
+          <Fragment
+            v-for="fragment in filtered_fragments"
+            :key="fragment.metaFileName"
+            :context="'preview'"
+            :corpus="corpus"
+            :all_keywords="all_keywords"
+            :all_tags="all_tags"
+            :medias="medias"
+            :fragment="fragment"
+            :fragment_width="fragment_width"
+            :slugFolderName="corpus.slugFolderName"
+          />
+        </transition-group>
       </div>
     </template>
   </div>
@@ -420,12 +424,6 @@ export default {
         slugFolderName: this.$route.params.slugFolderName,
       });
     },
-    onScroll() {
-      this.corpus_scroll_left = this.$refs.corpus.scrollLeft;
-    },
-    scrollCorpus(px) {
-      this.$refs.corpus.scrollLeft = px - window.innerWidth / 3;
-    },
     createNewMoment() {
       let contribution_moments =
         this.corpus.hasOwnProperty("contribution_moments") &&
@@ -460,12 +458,6 @@ export default {
 </script>
 <style lang="scss" scoped>
 .m_corpus {
-  width: 100%;
-  height: 100%;
-  display: flex;
-  flex-flow: row nowrap;
-  align-items: stretch;
-  overflow-x: auto;
   scroll-behavior: smooth;
 
   > * {
@@ -483,11 +475,11 @@ export default {
 .m_corpus--presentation {
   // position: absolute;
   padding: calc(var(--spacing) * 2) calc(var(--spacing) * 2);
-  margin-right: calc(var(--spacing) * 2);
+  // margin-right: calc(var(--spacing) * 2);
   z-index: 1;
   // in case of very small height of viewport
-  max-height: 100vh;
-  max-width: 52ch;
+  // max-height: 100vh;
+  // max-width: 52ch;
   overflow-y: auto;
 
   display: flex;
@@ -548,29 +540,20 @@ export default {
   }
 }
 
-.m_tags {
-  display: flex;
-  flex-flow: row nowrap;
-  align-content: stretch;
-  min-width: max-content;
-
-  height: 100%;
-
-  &::after {
-    display: block;
-    content: "";
-    // background-color: red;
-    width: calc(var(--spacing) * 2);
-    height: 100%;
-  }
+.m_corpuses {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  /* grid-auto-rows: max-content; */
+  grid-gap: calc(var(--spacing) * 2.5) calc(var(--spacing) * 2);
+  padding: 0 calc(var(--spacing) * 2) calc(var(--spacing) * 2);
 }
 
-.m_tags--options {
+.m_corpuses--createFragment {
   display: flex;
   flex-flow: column wrap;
   margin: calc(var(--spacing) * 1.9) 0;
 
-  .m_tags--options--addFragmentButton {
+  .m_corpuses--createFragment--addFragmentButton {
     background-color: white;
     color: black;
     display: flex;
@@ -585,31 +568,6 @@ export default {
   }
 }
 
-.m_tags--alltags {
-  position: fixed;
-  // position: relative;
-  width: 100%;
-
-  h2 {
-    display: inline-block;
-    background-color: #fff;
-    padding: var(--spacing);
-    border: 2px solid currentColor;
-    margin-right: var(--spacing);
-  }
-}
-
-.m_tags--allfragments {
-  height: 100%;
-  display: flex;
-  flex-flow: row nowrap;
-  align-content: stretch;
-  min-width: max-content;
-  overflow-y: auto;
-
-  padding-left: var(--spacing);
-}
-
 .m_feedbacks {
   position: fixed;
   bottom: var(--spacing);
@@ -619,9 +577,42 @@ export default {
   margin: 0;
   padding: calc(var(--spacing) / 2) var(--spacing);
   border-radius: 24px;
+  z-index: 10000;
 
   a {
     color: inherit;
+  }
+}
+
+.m_topBar {
+  width: 100%;
+  padding: 0 calc(var(--spacing) * 2);
+}
+.m_topBar--content {
+  padding: calc(var(--spacing) * 2) 0;
+  border-bottom: 2px solid var(--color-bluegreen);
+
+  display: flex;
+  align-items: center;
+  gap: calc(var(--spacing) * 4);
+
+  h1,
+  h2 {
+    margin-top: 0;
+    margin-bottom: 0;
+  }
+
+  button {
+    background: inherit;
+    font-family: inherit;
+    font-size: 1.5rem;
+    line-height: 1.09;
+  }
+
+  > *:last-child {
+    margin-right: 0;
+    flex: 1;
+    text-align: right;
   }
 }
 </style>

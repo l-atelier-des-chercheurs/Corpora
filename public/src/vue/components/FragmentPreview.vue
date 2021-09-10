@@ -2,10 +2,7 @@
   <div
     class="m_fragment custom_scrollbar"
     :style="`--fragment-width: ${fragment_width}px`"
-    :class="{
-      'is--highlighted': highlight_corpus,
-      'is--preview': context === 'preview',
-    }"
+    :class="{ 'is--highlighted': highlight_corpus }"
   >
     <div class="m_fragment--content">
       <div class="m_fragment--content--top">
@@ -19,10 +16,7 @@
         </label>
       </div>
 
-      <div
-        class="m_advancedMenu"
-        v-if="context === 'edit' && $root.can_admin_corpora"
-      >
+      <div class="m_advancedMenu" v-if="$root.can_admin_corpora">
         <button
           type="button"
           @click="show_advanced_menu = !show_advanced_menu"
@@ -86,7 +80,6 @@
 
       <div class="m_fragment--medias">
         <AddMedias
-          v-if="context === 'edit'"
           :slugFolderName="slugFolderName"
           :key="'addmedia_start'"
           :collapsed="linked_medias.length > 0"
@@ -109,7 +102,6 @@
               @moveMedia="(d) => moveMedia(d)"
             />
             <AddMedias
-              v-if="context === 'edit'"
               :slugFolderName="slugFolderName"
               :key="'addmedia_' + media.metaFileName"
               :collapsed="index < linked_medias.length - 1"
@@ -140,10 +132,6 @@ export default {
   props: {
     corpus: Object,
     fragment: Object,
-    context: {
-      type: String,
-      default: "edit",
-    },
     all_tags: Array,
     all_keywords: Array,
     medias: Array,
@@ -178,16 +166,13 @@ export default {
       )
         return [];
 
-      const fragment_medias = this.fragment.medias_slugs.reduce((acc, item) => {
+      return this.fragment.medias_slugs.reduce((acc, item) => {
         const linked_media = this.medias.find(
           (m) => m.metaFileName === item.metaFileName
         );
         if (linked_media) acc.push(linked_media);
         return acc;
       }, []);
-
-      if (this.context === "preview") return fragment_medias.slice(0, 1);
-      return fragment_medias;
     },
   },
   methods: {
@@ -336,49 +321,25 @@ export default {
   // height: 90vh;
   // padding-top: 100px;
 
-  &.is--preview .m_fragment--content {
-    height: 300px;
-    overflow: hidden;
-
-    &::after {
-      content: "";
-      display: block;
-
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      width: 100%;
-      height: 25px;
-      z-index: 1000;
-
-      background: linear-gradient(
-        180deg,
-        hsla(48, 71%, 92%, 0) 0%,
-        hsla(48, 71%, 92%, 0.4) calc(100%)
-      );
-    }
-  }
-
   .m_fragment--content {
     position: relative;
-    // margin-top: calc(var(--spacing) * 2);
-    // margin-bottom: 33vh;
-    // margin-right: 4px;
-    // margin-left: 4px;
+    margin-top: calc(var(--spacing) * 2);
+    margin-bottom: 33vh;
+    margin-right: 4px;
+    margin-left: 4px;
 
-    padding: calc(var(--spacing));
+    padding: calc(var(--spacing) / 2);
 
     // background-color: #fff;
     // background-color: #f9f3db;
-    // background: linear-gradient(
-    //   180deg,
-    //   #fff 0%,
-    //   #f9f3db calc(100% - 1px),
-    //   var(--color-black) 100%
-    // );
-    background: hsl(48, 71%, 97%);
+    background: linear-gradient(
+      180deg,
+      #fff 0%,
+      #f9f3db calc(100% - 1px),
+      var(--color-black) 100%
+    );
 
-    // border-radius: 4px;
+    border-radius: 4px;
 
     transition: opacity 4s cubic-bezier(0.19, 1, 0.22, 1);
 
@@ -401,7 +362,6 @@ export default {
     padding-right: var(--spacing);
     h2 {
       margin: 0;
-      text-align: center;
     }
   }
 
