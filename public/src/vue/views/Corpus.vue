@@ -224,9 +224,7 @@ import CollectMode from "../components/subcomponents/CollectMode.vue";
 import EditCorpus from "../components/modals/EditCorpus.vue";
 
 export default {
-  props: {
-    corpus: Object,
-  },
+  props: {},
   components: {
     Infos,
     CorpusPwd,
@@ -259,21 +257,47 @@ export default {
   },
   created() {},
   mounted() {
+    this.loadCorpus();
+    this.$eventHub.$on("socketio.reconnect", this.loadCorpus);
     this.$eventHub.$on("scrollCorpus", this.scrollCorpus);
   },
   beforeDestroy() {
+    this.$eventHub.$off("socketio.reconnect", this.loadCorpus);
     this.$eventHub.$off("scrollCorpus", this.scrollCorpus);
   },
   destroyed() {},
   watch: {},
   computed: {
+    corpus() {
+      debugger;
+      if (
+        !this.$root.store.hasOwnProperty("corpus") ||
+        Object.keys(this.$root.store.corpus).length === 0
+      ) {
+        this.$router.push("/");
+        return {};
+      }
+
+      if (
+        this.$root.store.corpus.hasOwnProperty(
+          this.$route.params.slugFolderName
+        )
+      ) {
+        return this.store.corpus[this.$route.params.slugFolderName];
+      } else {
+        this.$router.push("/");
+        return {};
+      }
+
+      return this.$root.corpus;
+    },
     fragment_width() {
       return Math.min(325, this.$root.settings.windowWidth * 0.9);
     },
     can_access_corpus() {
       return this.$root.canAccessFolder({
         type: "corpus",
-        slugFolderName: this.corpus.slugFolderName,
+        slugFolderName: this.$route.params.slugFolderName,
       });
     },
     previewURL() {
@@ -296,6 +320,7 @@ export default {
         Object.values(this.corpus.medias).length === 0
       )
         return false;
+      // return Object.values(this.corpus.medias);
       return Object.values(this.corpus.medias);
     },
     sorted_fragments() {
@@ -409,6 +434,12 @@ export default {
     },
   },
   methods: {
+    loadCorpus() {
+      this.$socketio.listMedias({
+        type: "corpus",
+        slugFolderName: this.$route.params.slugFolderName,
+      });
+    },
     onScroll() {
       this.corpus_scroll_left = this.$refs.corpus.scrollLeft;
     },

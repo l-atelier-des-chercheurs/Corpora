@@ -22,6 +22,10 @@ import locale_strings from "./locale_strings.js";
 
 Vue.prototype.$eventHub = new Vue(); // Global event bus
 
+import VueRouter from "vue-router";
+import router from "./router";
+Vue.use(VueRouter);
+
 import PortalVue from "portal-vue";
 Vue.use(PortalVue);
 
@@ -191,6 +195,7 @@ import App from "./App.vue";
 let vm = new Vue({
   // eslint-disable-line no-new
   i18n,
+  router,
   el: "#app",
   components: { App },
   template: `
@@ -207,17 +212,11 @@ let vm = new Vue({
     app_is_fullscreen: false,
     admin_pwd: "",
 
-    do_navigation: {
-      view: "ListView",
-      slug: false,
-    },
-
     settings: {
       windowWidth: window.innerWidth,
       windowHeight: window.innerHeight,
       enable_system_bar: window.state.is_electron && window.state.is_darwin,
       text_media_being_edited: false,
-      is_loading_corpus: false,
       load_all_embeds: localstore.get("load_all_embeds_option")
         ? localstore.get("load_all_embeds_option") === true
         : false,
@@ -259,36 +258,15 @@ let vm = new Vue({
         : false;
     if (pathname) {
       const slugFolderName = pathname.substring(0, pathname.indexOf("/"));
-      this.settings.is_loading_corpus = true;
       this.$eventHub.$once("socketio.corpus.folders_listed", () => {
         // this.openCorpus(slugFolderName);
         // bypass history
-
-        this.do_navigation.view = "CorpusView";
-        this.do_navigation.slug = slugFolderName;
-
         this.$socketio.listMedias({
           type: "corpus",
           slugFolderName,
         });
-
-        this.settings.is_loading_corpus = false;
       });
     }
-
-    this.$eventHub.$on("socketio.reconnect", () => {
-      this.$socketio.listFolders({ type: "corpus" });
-      if (this.do_navigation.view === "CorpusView") {
-        this.$socketio.listFolder({
-          type: "corpus",
-          slugFolderName: this.do_navigation.slug,
-        });
-        this.$socketio.listMedias({
-          type: "corpus",
-          slugFolderName: this.do_navigation.slug,
-        });
-      }
-    });
 
     window.onpopstate = (event) => {
       console.log(`ROOT EVENT: popstate`);
@@ -318,7 +296,8 @@ let vm = new Vue({
       }
 
       if (this.$root.state.session_password === "has_pass") {
-        var session_storage_pwd = this.$auth.getSessionPasswordFromLocalStorage();
+        var session_storage_pwd =
+          this.$auth.getSessionPasswordFromLocalStorage();
         if (session_storage_pwd) {
           this.$socketio.connect(session_storage_pwd);
 
@@ -371,25 +350,9 @@ let vm = new Vue({
   computed: {
     can_admin_corpora() {
       // todo actual admin checks
-      return this.hashCode(this.$root.admin_pwd) === 2678;
+      return this.hashCode(this.$root.admin_pwd.toLowerCase()) === 3670;
     },
 
-    current_corpus: function () {
-      if (
-        !this.store.hasOwnProperty("corpus") ||
-        Object.keys(this.store.corpus).length === 0
-      ) {
-        this.closeCorpus();
-        return {};
-      }
-
-      if (this.store.corpus.hasOwnProperty(this.do_navigation.slug)) {
-        return this.store.corpus[this.do_navigation.slug];
-      } else {
-        this.closeCorpus();
-        return {};
-      }
-    },
     current_publication() {
       if (this.settings.current_publication.slug) {
         if (
@@ -657,29 +620,11 @@ let vm = new Vue({
       //   return false;
       // }
 
-      this.do_navigation.view = "CorpusView";
-      this.do_navigation.slug = slugFolderName;
-
-      this.$socketio.listMedias({
-        type: "corpus",
-        slugFolderName,
-      });
-
-      history.pushState(
-        { slugFolderName },
-        this.store.corpus[slugFolderName].name,
-        "/" + slugFolderName
-      );
-    },
-    closeCorpus: function () {
-      if (window.state.dev_mode === "debug") {
-        console.log("ROOT EVENT: closeCorpus");
-      }
-
-      this.do_navigation.view = "ListView";
-      this.do_navigation.slug = "";
-
-      history.pushState({ slugFolderName: "" }, "", "/");
+      // history.pushState(
+      //   { slugFolderName },
+      //   this.store.corpus[slugFolderName].name,
+      //   "/" + slugFolderName
+      // );
     },
     updateLocalLang: function (newLangCode) {
       if (window.state.dev_mode === "debug") {

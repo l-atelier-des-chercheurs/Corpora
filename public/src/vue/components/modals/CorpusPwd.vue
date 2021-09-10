@@ -71,11 +71,12 @@ export default {
 
       // check if password matches or not
       this.$eventHub.$once("socketio.authentificated", () => {
-        const has_passworded_folder = window.state.list_authorized_folders.filter(
-          (f) =>
-            f.type === "corpus" &&
-            f.allowed_slugFolderNames.includes(this.corpus.slugFolderName)
-        );
+        const has_passworded_folder =
+          window.state.list_authorized_folders.filter(
+            (f) =>
+              f.type === "corpus" &&
+              f.allowed_slugFolderNames.includes(this.corpus.slugFolderName)
+          );
         if (has_passworded_folder.length === 0) {
           this.$alertify
             .closeLogOnClick(true)
@@ -95,7 +96,7 @@ export default {
               this.$t("notifications.correct_password") + " " + this.corpus.name
             );
 
-          this.$root.openCorpus(this.corpus.slugFolderName);
+          this.$router.push({ path: `/${this.corpus.slugFolderName}` });
         }
       });
     },

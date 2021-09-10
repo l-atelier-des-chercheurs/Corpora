@@ -169,7 +169,7 @@ export default {
           } else {
             this.$nextTick(() => {
               this.$emit("close", "");
-              this.$root.openCorpus(fdata.slugFolderName);
+              this.$router.push({ path: `/${fdata.slugFolderName}` });
 
               this.is_sending_content_to_server = false;
             });

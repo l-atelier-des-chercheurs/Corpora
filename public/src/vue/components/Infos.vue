@@ -1,7 +1,7 @@
 <template>
   <div class="m_infos">
     <div class v-if="$root.can_admin_corpora">
-      <button type="button" @click="$root.closeCorpus()">back</button>
+      <router-link to="/">back</router-link>
     </div>
 
     <div class="margin-sides-medium">
@@ -15,8 +15,9 @@
               v-for="lang in this.$root.lang.available"
               :key="lang.key"
               :value="lang.key"
-              >{{ lang.name }}</option
             >
+              {{ lang.name }}
+            </option>
           </select>
         </div>
       </div>

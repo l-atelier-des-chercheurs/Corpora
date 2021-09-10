@@ -1,29 +1,20 @@
 <template>
   <div class="app">
-    <List
-      v-if="
-        $root.do_navigation.view === 'ListView' &&
-        !$root.settings.is_loading_corpus
-      "
-      :corpuses="Object.values($root.store.corpus)"
-    />
-    <Corpus
-      v-else-if="$root.do_navigation.view === 'CorpusView'"
-      :corpus="$root.current_corpus"
-    />
+    <transition-page>
+      <router-view />
+    </transition-page>
+
     <portal-target name="modal_container" />
   </div>
 </template>
 
 <script>
-import List from "./views/List.vue";
-import Corpus from "./views/Corpus.vue";
+import TransitionPage from "./transitions/TransitionPage.vue";
 
 export default {
   name: "app",
   components: {
-    List,
-    Corpus,
+    TransitionPage,
   },
   props: {},
   data() {
@@ -1901,7 +1892,7 @@ twitter-widget.twitter-tweet {
   }
 
   .m_corpus {
-    height: auto !important;
+    // height: auto !important;
   }
   .m_corpus--presentation {
     margin: 0 auto !important;

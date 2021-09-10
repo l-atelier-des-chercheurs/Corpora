@@ -111,13 +111,9 @@
         </div>
       </div>
 
-      <button
-        type="button"
-        class
-        @click="$root.openCorpus(corpus.slugFolderName)"
-      >
-        <span class>{{ $t("open") }}</span>
-      </button>
+      <router-link :to="`/${corpus.slugFolderName}`">{{
+        $t("open")
+      }}</router-link>
     </div>
   </div>
 </template>
@@ -189,11 +185,12 @@ export default {
 
       // check if password matches or not
       this.$eventHub.$once("socketio.authentificated", () => {
-        const has_passworded_folder = window.state.list_authorized_folders.filter(
-          (f) =>
-            f.type === "corpus" &&
-            f.allowed_slugFolderNames.includes(this.corpus.slugFolderName)
-        );
+        const has_passworded_folder =
+          window.state.list_authorized_folders.filter(
+            (f) =>
+              f.type === "corpus" &&
+              f.allowed_slugFolderNames.includes(this.corpus.slugFolderName)
+          );
 
         if (has_passworded_folder.length === 0) {
           this.$alertify

@@ -171,7 +171,7 @@ module.exports = (function () {
       en: "Open",
     },
     go_to_website: {
-      fr: "Afficher le site",
+      fr: "Accéder au site",
       en: "Go to website",
     },
     sure_to_remove_corpus: {
