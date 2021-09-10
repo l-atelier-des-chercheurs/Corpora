@@ -7,12 +7,13 @@
       <option value="online">
         {{ $t("online") }}
       </option>
-      <option
+      <!-- TODO : should we keep this component/feature ? -->
+      <!-- <option
         v-for="{ name } in $root.current_corpus.contribution_moments"
         :key="name"
       >
         {{ name }}
-      </option>
+      </option> -->
     </select>
   </div>
 </template>

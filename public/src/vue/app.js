@@ -252,29 +252,6 @@ let vm = new Vue({
         "ROOT EVENT: created / no errors, checking for content to load"
       );
 
-    const pathname =
-      window.location.pathname && window.location.pathname !== "/"
-        ? window.location.pathname.substring(1)
-        : false;
-    if (pathname) {
-      const slugFolderName = pathname.substring(0, pathname.indexOf("/"));
-      this.$eventHub.$once("socketio.corpus.folders_listed", () => {
-        // this.openCorpus(slugFolderName);
-        // bypass history
-        this.$socketio.listMedias({
-          type: "corpus",
-          slugFolderName,
-        });
-      });
-    }
-
-    window.onpopstate = (event) => {
-      console.log(`ROOT EVENT: popstate`);
-      if (event.state && event.state.slugFolderName)
-        this.openCorpus(event.state.slugFolderName);
-      else this.closeCorpus();
-    };
-
     window.addEventListener("tag.newTagDetected", this.newTagDetected);
 
     if (this.state.mode === "live") {
@@ -603,28 +580,6 @@ let vm = new Vue({
         return true;
       }
       return false;
-    },
-    openCorpus: function (slugFolderName) {
-      if (window.state.dev_mode === "debug") {
-        console.log(`ROOT EVENT: openCorpus: ${slugFolderName}`);
-      }
-      // if (
-      //   !this.store.corpus.hasOwnProperty(slugFolderName) ||
-      //   !this.canAccessFolder({
-      //     type: "corpus",
-      //     slugFolderName: slugFolderName
-      //   })
-      // ) {
-      //   console.log("Missing folder key on the page, aborting.");
-      //   this.closeCorpus();
-      //   return false;
-      // }
-
-      // history.pushState(
-      //   { slugFolderName },
-      //   this.store.corpus[slugFolderName].name,
-      //   "/" + slugFolderName
-      // );
     },
     updateLocalLang: function (newLangCode) {
       if (window.state.dev_mode === "debug") {

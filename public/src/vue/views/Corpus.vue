@@ -179,34 +179,17 @@
             tag="div"
             class="m_tags--allfragments"
           >
-            <template v-if="display_in_tabs">
-              <Tag
-                v-for="{ tag, fragments } in tags_with_fragments"
-                :key="tag"
-                :tag="tag"
-                :medias="medias"
-                :all_keywords="all_keywords"
-                :all_tags="all_tags"
-                :corpus="corpus"
-                :slugFolderName="corpus.slugFolderName"
-                :fragments="fragments"
-                :fragment_width="fragment_width"
-                :corpus_scroll_left="corpus_scroll_left"
-              />
-            </template>
-            <template v-else>
-              <Fragment
-                v-for="fragment in filtered_fragments"
-                :key="fragment.metaFileName"
-                :corpus="corpus"
-                :all_keywords="all_keywords"
-                :all_tags="all_tags"
-                :medias="medias"
-                :fragment="fragment"
-                :fragment_width="fragment_width"
-                :slugFolderName="corpus.slugFolderName"
-              />
-            </template>
+            <Fragment
+              v-for="fragment in filtered_fragments"
+              :key="fragment.metaFileName"
+              :corpus="corpus"
+              :all_keywords="all_keywords"
+              :all_tags="all_tags"
+              :medias="medias"
+              :fragment="fragment"
+              :fragment_width="fragment_width"
+              :slugFolderName="corpus.slugFolderName"
+            />
           </transition-group>
         </div>
       </div>
@@ -237,7 +220,6 @@ export default {
   },
   data() {
     return {
-      display_in_tabs: this.corpus.sort_in_tabs,
       sort_fragments_by: "date_created",
 
       show_create_fragment: false,
@@ -269,27 +251,25 @@ export default {
   watch: {},
   computed: {
     corpus() {
-      debugger;
-      if (
-        !this.$root.store.hasOwnProperty("corpus") ||
-        Object.keys(this.$root.store.corpus).length === 0
-      ) {
-        this.$router.push("/");
-        return {};
-      }
+      // not convenient : loading corpus can be after listfolders has executed
+      // if (
+      //   !this.$root.store.hasOwnProperty("corpus") ||
+      //   Object.keys(this.$root.store.corpus).length === 0
+      // ) {
+      //   this.$router.push("/");
+      //   return {};
+      // }
 
-      if (
-        this.$root.store.corpus.hasOwnProperty(
-          this.$route.params.slugFolderName
-        )
-      ) {
-        return this.store.corpus[this.$route.params.slugFolderName];
-      } else {
-        this.$router.push("/");
-        return {};
-      }
-
-      return this.$root.corpus;
+      // if (
+      //   this.$root.store.corpus.hasOwnProperty(
+      //     this.$route.params.slugFolderName
+      //   )
+      // ) {
+      return this.$root.store.corpus[this.$route.params.slugFolderName];
+      // } else {
+      //   this.$router.push("/");
+      //   return {};
+      // }
     },
     fragment_width() {
       return Math.min(325, this.$root.settings.windowWidth * 0.9);
