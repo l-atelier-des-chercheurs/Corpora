@@ -32,15 +32,13 @@
   </Modal>
 </template>
 <script>
-import Modal from "./BaseModal.vue";
-
 export default {
   props: {
     old_tag: String,
     slugFolderName: String,
     fragments: Array,
   },
-  components: { Modal },
+  components: {},
   data() {
     return {
       new_tag: this.old_tag,

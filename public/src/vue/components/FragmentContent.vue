@@ -1,22 +1,20 @@
 <template>
   <div
-    class="m_fragment custom_scrollbar"
+    class="m_fragmentContent custom_scrollbar"
     :style="`--fragment-width: ${fragment_width}px`"
     :class="{
       'is--highlighted': highlight_corpus,
       'is--preview': context === 'preview',
     }"
   >
-    <div class="m_fragment--content">
-      <div class="m_fragment--content--top">
+    <div class="m_fragmentContent--content">
+      <div class="m_fragmentContent--content--top">
         <h2>{{ fragment.title }}</h2>
-      </div>
-      <div class="m_fragment--content--top">
-        <label>
+        <!-- <label>
           {{ $t("created") }}&nbsp;{{
             $root.formatDateToHuman(fragment.date_created)
           }}
-        </label>
+        </label> -->
       </div>
 
       <div
@@ -84,7 +82,7 @@
         @close="show_edit_fragment = false"
       />
 
-      <div class="m_fragment--medias">
+      <div class="m_fragmentContent--medias">
         <AddMedias
           v-if="context === 'edit'"
           :slugFolderName="slugFolderName"
@@ -124,6 +122,19 @@
           </template>
         </transition-group>
       </div>
+
+      <router-link :to="`./${fragment.media_filename}`">{{
+        $t("open")
+      }}</router-link>
+
+      <!-- <button
+        type="button"
+        v-if="context === 'preview'"
+        class="m_fragmentContent--openButton"
+        @click="openFragment"
+      >      
+        open
+      </button> -->
     </div>
   </div>
 </template>
@@ -191,6 +202,7 @@ export default {
     },
   },
   methods: {
+    openFragment() {},
     scrollToFragment(metaFileName) {
       if (this.fragment.metaFileName === metaFileName) {
         this.$eventHub.$emit(
@@ -322,7 +334,7 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
-.m_fragment {
+.m_fragmentContent {
   // margin: 0 var(--spacing);
   // width: 100%;
   // max-width: 400px;
@@ -336,8 +348,8 @@ export default {
   // height: 90vh;
   // padding-top: 100px;
 
-  &.is--preview .m_fragment--content {
-    height: 300px;
+  &.is--preview .m_fragmentContent--content {
+    height: 320px;
     overflow: hidden;
 
     &::after {
@@ -350,6 +362,7 @@ export default {
       width: 100%;
       height: 25px;
       z-index: 1000;
+      pointer-events: none;
 
       background: linear-gradient(
         180deg,
@@ -359,7 +372,7 @@ export default {
     }
   }
 
-  .m_fragment--content {
+  .m_fragmentContent--content {
     position: relative;
     // margin-top: calc(var(--spacing) * 2);
     // margin-bottom: 33vh;
@@ -388,16 +401,14 @@ export default {
   }
 
   &.is--highlighted {
-    .m_fragment--content {
+    .m_fragmentContent--content {
       opacity: 0;
       transition: all 0s cubic-bezier(0.19, 1, 0.22, 1);
     }
   }
 
-  .m_fragment--content--top {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: calc(var(--spacing) / 2);
+  .m_fragmentContent--content--top {
+    margin: calc(var(--spacing)) 0;
     padding-right: var(--spacing);
     h2 {
       margin: 0;
@@ -405,7 +416,7 @@ export default {
     }
   }
 
-  .m_fragment--medias {
+  .m_fragmentContent--medias {
     // display: grid;
     // grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
     // grid-gap: var(--spacing);

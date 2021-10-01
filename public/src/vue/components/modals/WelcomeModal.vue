@@ -271,16 +271,13 @@
   </Modal>
 </template>
 <script>
-import Modal from "./BaseModal.vue";
 import localstore from "store";
 
 export default {
   props: {
     corpus: Object,
   },
-  components: {
-    Modal,
-  },
+  components: {},
   data() {
     return {
       new_lang: this.$root.lang.current,

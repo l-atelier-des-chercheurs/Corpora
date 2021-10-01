@@ -282,9 +282,9 @@ module.exports = (function () {
       fr: "Description, source…",
       en: "Description, source…",
     },
-    create_a_fragment: {
-      fr: "Créer un fragment",
-      en: "Create a fragment",
+    create_a_story: {
+      fr: "Ajouter un récit",
+      en: "Add a story",
     },
     create_a_source: {
       fr: "Créer une source de contribution",
@@ -343,15 +343,12 @@ module.exports = (function () {
       en: "Download",
     },
     embed_instructions: {
-      fr:
-        "Placez ici l’URL vers une vidéo Vimeo, Youtube, Twitter ou SoundCloud",
+      fr: "Placez ici l’URL vers une vidéo Vimeo, Youtube, Twitter ou SoundCloud",
       en: "Add a URL to Vimeo, Youtube, Twitter or SoundCloud",
     },
     link_instructions: {
-      fr:
-        "Renseignez une URL type <u>https://www.plurality-university.org/</u>",
-      en:
-        "Paste a link to a URL such as <u>https://www.plurality-university.org/</u>",
+      fr: "Renseignez une URL type <u>https://www.plurality-university.org/</u>",
+      en: "Paste a link to a URL such as <u>https://www.plurality-university.org/</u>",
     },
     full_url: {
       fr: "URL complète",
@@ -366,16 +363,12 @@ module.exports = (function () {
       en: "Expected format: https://www.youtube.com/watch?v=8yj9X2YHTP4",
     },
     embed_instructions_souncloud: {
-      fr:
-        "Format attendu : https://soundcloud.com/the-bugle/bugle-179-playas-gon-play",
-      en:
-        "Expected format: https://soundcloud.com/the-bugle/bugle-179-playas-gon-play",
+      fr: "Format attendu : https://soundcloud.com/the-bugle/bugle-179-playas-gon-play",
+      en: "Expected format: https://soundcloud.com/the-bugle/bugle-179-playas-gon-play",
     },
     embed_instructions_twitter: {
-      fr:
-        "Format attendu : https://twitter.com/PluralityU/status/1349280309116891138",
-      en:
-        "Expected format: https://twitter.com/PluralityU/status/1349280309116891138",
+      fr: "Format attendu : https://twitter.com/PluralityU/status/1349280309116891138",
+      en: "Expected format: https://twitter.com/PluralityU/status/1349280309116891138",
     },
 
     drop_files_here: {
@@ -400,8 +393,7 @@ module.exports = (function () {
     },
     changes_not_saved_sureToCloseModal: {
       fr: "Des modifications ont eu lieu, souhaitez-vous les enregistrer ?",
-      en:
-        "All changes were not saved. Do you really want to close this window?",
+      en: "All changes were not saved. Do you really want to close this window?",
       nl: "Er zijn wijzigingen gebeurd , wilt u deze opslaan?",
       oc: "De modificacions se faguèron, desiratz de las enregistrar ?",
       de: "Änderungen wurden vorgenommen, wollen Sie sie speichern?",

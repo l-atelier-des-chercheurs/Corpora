@@ -56,7 +56,6 @@
   </Modal>
 </template>
 <script>
-import Modal from "./BaseModal.vue";
 import TagsInput from "../subcomponents/TagsInput.vue";
 import CollectMode from "../subcomponents/CollectMode.vue";
 export default {
@@ -66,7 +65,7 @@ export default {
     all_tags: Array,
     all_keywords: Array,
   },
-  components: { Modal, TagsInput, CollectMode },
+  components: { TagsInput, CollectMode },
   data() {
     return {
       fragmentdata: {

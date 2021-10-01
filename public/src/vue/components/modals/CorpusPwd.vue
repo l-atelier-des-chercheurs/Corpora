@@ -35,15 +35,11 @@
   </Modal>
 </template>
 <script>
-import Modal from "./BaseModal.vue";
-
 export default {
   props: {
     corpus: Object,
   },
-  components: {
-    Modal,
-  },
+  components: {},
   data() {
     return {
       pwd: "",

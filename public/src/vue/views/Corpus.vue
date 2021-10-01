@@ -17,6 +17,8 @@
         </div>
       </div>
 
+      <router-view></router-view>
+
       <div class="m_corpus" ref="corpus">
         <div class="m_corpus--presentation">
           <Infos />
@@ -172,6 +174,7 @@
                   d="M0,10.5h10.5V0h2.9v10.5H24v2.9H13.5V24h-2.9V13.5H0V10.5z"
                 />
               </svg>
+              <label>{{ $t("create_a_story") }}</label>
             </button>
             <CreateFragment
               v-if="show_create_fragment"
@@ -183,7 +186,7 @@
             />
           </div>
 
-          <Fragment
+          <FragmentContent
             v-for="fragment in filtered_fragments"
             :key="fragment.metaFileName"
             :context="'preview'"
@@ -204,8 +207,7 @@
 import Infos from "../components/Infos.vue";
 import CorpusPwd from "../components/modals/CorpusPwd.vue";
 import WelcomeModal from "../components/modals/WelcomeModal.vue";
-import Tag from "../components/Tag.vue";
-import Fragment from "../components/Fragment.vue";
+import FragmentContent from "../components/FragmentContent.vue";
 import CreateFragment from "../components/modals/CreateFragment.vue";
 import CollectMode from "../components/subcomponents/CollectMode.vue";
 import EditCorpus from "../components/modals/EditCorpus.vue";
@@ -216,8 +218,7 @@ export default {
     Infos,
     CorpusPwd,
     WelcomeModal,
-    Tag,
-    Fragment,
+    FragmentContent,
     CreateFragment,
     CollectMode,
     EditCorpus,
@@ -243,11 +244,13 @@ export default {
   },
   created() {},
   mounted() {
-    this.loadCorpus();
+    if (this.$root.state.connected) this.loadCorpus();
+    this.$eventHub.$on("socketio.authentificated", this.loadCorpus);
     this.$eventHub.$on("socketio.reconnect", this.loadCorpus);
     this.$eventHub.$on("scrollCorpus", this.scrollCorpus);
   },
   beforeDestroy() {
+    this.$eventHub.$off("socketio.authentificated", this.loadCorpus);
     this.$eventHub.$off("socketio.reconnect", this.loadCorpus);
     this.$eventHub.$off("scrollCorpus", this.scrollCorpus);
   },
@@ -419,9 +422,12 @@ export default {
   },
   methods: {
     loadCorpus() {
-      this.$socketio.listMedias({
-        type: "corpus",
-        slugFolderName: this.$route.params.slugFolderName,
+      debugger;
+      this.$nextTick(() => {
+        this.$socketio.listMedias({
+          type: "corpus",
+          slugFolderName: this.$route.params.slugFolderName,
+        });
       });
     },
     createNewMoment() {
@@ -550,21 +556,36 @@ export default {
 
 .m_corpuses--createFragment {
   display: flex;
-  flex-flow: column wrap;
+  flex-flow: row wrap;
+  align-items: center;
+  justify-content: center;
   margin: calc(var(--spacing) * 1.9) 0;
 
   .m_corpuses--createFragment--addFragmentButton {
-    background-color: white;
     color: black;
+    background: transparent;
+    text-align: center;
     display: flex;
+    flex-flow: column wrap;
     align-items: center;
     justify-content: center;
-    line-height: 0;
-    padding: 0;
-    font-size: 4em;
-    width: 1em;
-    height: 1em;
-    border-radius: 50%;
+
+    svg {
+      background-color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      line-height: 0;
+      padding: 0.5em;
+      font-size: 2em;
+      width: 2em;
+      height: 2em;
+      border-radius: 50%;
+    }
+
+    label {
+      padding: 1em;
+    }
   }
 }
 

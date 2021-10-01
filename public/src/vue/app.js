@@ -44,6 +44,9 @@ Vue.component("Loader", {
   `,
 });
 
+import Modal from "./components/modals/BaseModal.vue";
+Vue.component("Modal", Modal);
+
 Vue.directive("visible", function (el, binding) {
   el.style.visibility = !!binding.value ? "visible" : "hidden";
 });

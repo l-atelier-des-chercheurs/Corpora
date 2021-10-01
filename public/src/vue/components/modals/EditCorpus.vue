@@ -105,7 +105,6 @@
   </Modal>
 </template>
 <script>
-import Modal from "./BaseModal.vue";
 import ImageSelect from "../subcomponents/ImageSelect.vue";
 import CollaborativeEditor from "../subcomponents/CollaborativeEditor.vue";
 
@@ -116,7 +115,6 @@ export default {
     corpus: Object,
   },
   components: {
-    Modal,
     CollaborativeEditor,
     ImageSelect,
   },

@@ -5,7 +5,7 @@
     :read_only="false"
     :typeOfModal="'LargeAndNoScroll'"
   >
-    <template slot="header">{{ media.media_filename}}</template>
+    <template slot="header">{{ media.media_filename }}</template>
     <template slot="preview">
       <MediaContent
         :context="'edit'"
@@ -17,15 +17,14 @@
   </Modal>
 </template>
 <script>
-import Modal from "./BaseModal.vue";
 import MediaContent from "../subcomponents/MediaContent.vue";
 
 export default {
   props: {
     media: Object,
-    slugFolderName: String
+    slugFolderName: String,
   },
-  components: { Modal, MediaContent },
+  components: { MediaContent },
   data() {
     return {};
   },
@@ -35,8 +34,8 @@ export default {
   watch: {},
   computed: {},
   methods: {
-    editFragment() {}
-  }
+    editFragment() {},
+  },
 };
 </script>
 <style lang="scss"></style>
