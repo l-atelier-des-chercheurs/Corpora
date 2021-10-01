@@ -37,6 +37,7 @@ export default {
   --body-bg: #e2edef;
   --active-color: #ccd0da;
   --color-bluegreen: #c0d8dd;
+  --color-beige: #fdfbf2;
   --panel-width: 320px;
 }
 

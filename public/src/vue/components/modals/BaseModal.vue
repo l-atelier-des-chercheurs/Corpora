@@ -120,7 +120,23 @@
         @click="closeModal"
         v-if="showModal && !is_minimized && !prevent_close"
       >
-        <img src="/images/i_close_sansfond.svg" draggable="false" />
+        <svg
+          version="1.1"
+          xmlns="http://www.w3.org/2000/svg"
+          xmlns:xlink="http://www.w3.org/1999/xlink"
+          x="0px"
+          y="0px"
+          width="24px"
+          height="24px"
+          viewBox="0 0 24 24"
+          style="enable-background: new 0 0 24 24; transform: rotate(-45deg)"
+          xml:space="preserve"
+        >
+          <path
+            style="fill: currentColor"
+            d="M0,10.5h10.5V0h2.9v10.5H24v2.9H13.5V24h-2.9V13.5H0V10.5z"
+          />
+        </svg>
       </button>
     </transition>
 
@@ -399,10 +415,11 @@ export default {
   right: 0;
   z-index: 1500;
   background-color: transparent;
+  color: var(--color-beige);
 
-  img {
-    width: 4em;
-    height: 4em;
+  svg {
+    width: 3em;
+    height: 3em;
   }
 }
 </style>

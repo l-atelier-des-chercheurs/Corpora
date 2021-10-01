@@ -22,18 +22,21 @@
         </div>
 
         <aside class="_linkedFragments">
-          <FragmentContent
-            v-for="fragment in linked_fragments"
-            :key="fragment.metaFileName"
-            :context="'preview'"
-            :corpus="corpus"
-            :all_keywords="all_keywords"
-            :all_tags="all_tags"
-            :medias="medias"
-            :fragment="fragment"
-            :fragment_width="300"
-            :slugFolderName="corpus.slugFolderName"
-          />
+          <h2>{{ $t("with_same_keywords") }}</h2>
+          <div class="_linkedFragments--list">
+            <FragmentContent
+              v-for="fragment in linked_fragments"
+              :key="fragment.metaFileName"
+              :context="'preview'"
+              :corpus="corpus"
+              :all_keywords="all_keywords"
+              :all_tags="all_tags"
+              :medias="medias"
+              :fragment="fragment"
+              :fragment_width="300"
+              :slugFolderName="corpus.slugFolderName"
+            />
+          </div>
         </aside>
       </div>
     </template>
@@ -84,22 +87,27 @@ export default {
 ._sideBySide {
   display: flex;
   flex-flow: row wrap;
-  gap: var(--spacing);
+  grid-gap: calc(var(--spacing) * 2);
 
   ._singleFragment {
     flex: 1 0 500px;
   }
   ._linkedFragments {
-    flex: 0 0 260px;
+    flex: 0 0 440px;
   }
 }
 ._singleFragment {
 }
 ._linkedFragments {
+  h2 {
+    color: var(--color-beige);
+  }
+}
+._linkedFragments--list {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
   /* grid-auto-rows: max-content; */
-  grid-gap: calc(var(--spacing) * 2.5) calc(var(--spacing) * 2);
-  padding: 0 calc(var(--spacing) * 2) calc(var(--spacing) * 2);
+  grid-gap: calc(var(--spacing) * 1) calc(var(--spacing) * 1);
+  // padding: 0 calc(var(--spacing) * 2) calc(var(--spacing) * 2);
 }
 </style>

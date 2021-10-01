@@ -310,6 +310,10 @@ module.exports = (function () {
       fr: "Mot(s)-clé(s)",
       en: "Keyword(s)",
     },
+    with_same_keywords: {
+      fr: "Avec les mêmes mots-clés",
+      en: "With the same keywords",
+    },
     remove_image: {
       fr: "Retirer l’image",
       en: "Remove image",

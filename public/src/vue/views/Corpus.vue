@@ -43,16 +43,6 @@
           </div>
 
           <div class="m_corpus--presentation--content">
-            <div class="m_corpus--presentation--name">
-              <h1 v-if="!!corpus.name">{{ corpus.name }}</h1>
-              <h3 v-if="!!corpus.subtitle">{{ corpus.subtitle }}</h3>
-            </div>
-
-            <div
-              class="m_corpus--presentation--description mediaTextContent"
-              v-html="corpus.description"
-            />
-
             <div class="margin-bottom-small" v-if="$root.can_admin_corpora">
               <button
                 type="button"
@@ -567,7 +557,7 @@ export default {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
   /* grid-auto-rows: max-content; */
-  grid-gap: calc(var(--spacing) * 2.5) calc(var(--spacing) * 2);
+  grid-gap: calc(var(--spacing) * 1);
   padding: 0 calc(var(--spacing) * 2) calc(var(--spacing) * 2);
 }
 

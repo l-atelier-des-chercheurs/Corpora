@@ -124,6 +124,7 @@
       </div>
 
       <router-link
+        v-if="context === 'preview'"
         :to="{
           name: 'Fragment',
           params: { fragmentId: fragment.media_filename },
@@ -393,10 +394,7 @@ export default {
     //   #f9f3db calc(100% - 1px),
     //   var(--color-black) 100%
     // );
-    background: hsl(48, 71%, 97%);
-
-    // border-radius: 4px;
-
+    background: var(--color-beige);
     transition: opacity 4s cubic-bezier(0.19, 1, 0.22, 1);
 
     > *:first-child {
