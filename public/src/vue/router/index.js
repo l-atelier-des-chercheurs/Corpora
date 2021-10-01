@@ -9,7 +9,7 @@ Vue.use(VueRouter);
 const routes = [
   {
     path: "/",
-    name: "Accueil",
+    name: "Corpora",
     title: "Corpora",
     component: List,
   },

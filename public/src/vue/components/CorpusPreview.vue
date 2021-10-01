@@ -110,10 +110,13 @@
           {{ corpus_password }}
         </div>
       </div>
-
-      <router-link :to="`/${corpus.slugFolderName}`">{{
-        $t("open")
-      }}</router-link>
+      <router-link
+        :to="{
+          name: 'Corpus',
+          params: { slugFolderName: corpus.slugFolderName },
+        }"
+        v-html="$t('open')"
+      />
     </div>
   </div>
 </template>

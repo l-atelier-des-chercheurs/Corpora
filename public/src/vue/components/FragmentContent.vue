@@ -123,9 +123,13 @@
         </transition-group>
       </div>
 
-      <router-link :to="`./${fragment.media_filename}`">{{
-        $t("open")
-      }}</router-link>
+      <router-link
+        :to="{
+          name: 'Fragment',
+          params: { fragmentId: fragment.media_filename },
+        }"
+        v-html="$t('open')"
+      />
 
       <!-- <button
         type="button"

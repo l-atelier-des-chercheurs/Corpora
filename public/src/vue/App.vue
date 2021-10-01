@@ -47,7 +47,12 @@ body {
   font-family: "base12", sans-serif;
   font-size: 90%;
   line-height: 1.25;
+
+  &.has_modal_opened {
+    overflow-y: hidden;
+  }
 }
+
 ::selection {
   background-color: var(--active-color);
 }
@@ -1076,6 +1081,7 @@ audio {
   z-index: 10000;
   min-height: 100%;
   top: 0;
+  left: 0;
   width: 100%;
 
   overflow-y: auto;

@@ -1,7 +1,12 @@
 <template>
   <div class="m_infos">
     <div class v-if="$root.can_admin_corpora">
-      <router-link to="/">back</router-link>
+      <router-link
+        :to="{
+          name: 'Corpora',
+        }"
+        v-html="$t('back')"
+      />
     </div>
 
     <div class="margin-sides-medium">
