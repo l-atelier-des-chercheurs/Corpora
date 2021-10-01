@@ -43,8 +43,6 @@ const router = new VueRouter({
     if (from.name === "Fragment" && to.name === "Corpus") return false;
     if (from.name === "Corpus" && to.name === "Fragment") return false;
 
-    debugger;
-
     // Workaround for transitions scrolling to the top of the page
     // However, there are still some problems being fixed by the vue team
     return new Promise((resolve) => {

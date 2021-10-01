@@ -103,6 +103,11 @@
             </span>
           </button>
         </form>
+
+        <div v-if="!!this.$slots['body']">
+          <slot name="body">default body</slot>
+        </div>
+
         <div class="m_modal--loader" v-if="is_loading">
           <span class="loader" />
         </div>

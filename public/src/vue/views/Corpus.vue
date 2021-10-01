@@ -17,7 +17,17 @@
         </div>
       </div>
 
-      <router-view></router-view>
+      <router-view
+        :fragments="sorted_fragments"
+        :context="'edit'"
+        :corpus="corpus"
+        :all_keywords="all_keywords"
+        :all_tags="all_tags"
+        :medias="medias"
+        :opened_fragment="opened_fragment"
+        :fragment_width="fragment_width"
+        :slugFolderName="corpus.slugFolderName"
+      />
 
       <div class="m_corpus" ref="corpus">
         <div class="m_corpus--presentation">
@@ -150,11 +160,11 @@
           </div>
         </div>
 
-        <transition-group class="m_corpuses" name="list-complete" tag="div">
-          <div class="m_corpuses--createFragment" key="createFragment">
+        <transition-group class="m_fragments" name="list-complete" tag="div">
+          <div class="m_fragments--createFragment" key="createFragment">
             <button
               type="button"
-              class="m_corpuses--createFragment--addFragmentButton"
+              class="m_fragments--createFragment--addFragmentButton"
               @click="show_create_fragment = !show_create_fragment"
             >
               <svg
@@ -277,6 +287,14 @@ export default {
       //   this.$router.push("/");
       //   return {};
       // }
+    },
+    opened_fragment() {
+      if (!this.$route.params.fragmentId || !this.sorted_fragments)
+        return false;
+
+      return this.sorted_fragments.find(
+        (f) => f.media_filename === this.$route.params.fragmentId
+      );
     },
     fragment_width() {
       return Math.min(325, this.$root.settings.windowWidth * 0.9);
@@ -422,7 +440,6 @@ export default {
   },
   methods: {
     loadCorpus() {
-      debugger;
       this.$nextTick(() => {
         this.$socketio.listMedias({
           type: "corpus",
@@ -546,7 +563,7 @@ export default {
   }
 }
 
-.m_corpuses {
+.m_fragments {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
   /* grid-auto-rows: max-content; */
@@ -554,14 +571,14 @@ export default {
   padding: 0 calc(var(--spacing) * 2) calc(var(--spacing) * 2);
 }
 
-.m_corpuses--createFragment {
+.m_fragments--createFragment {
   display: flex;
   flex-flow: row wrap;
   align-items: center;
   justify-content: center;
   margin: calc(var(--spacing) * 1.9) 0;
 
-  .m_corpuses--createFragment--addFragmentButton {
+  .m_fragments--createFragment--addFragmentButton {
     color: black;
     background: transparent;
     text-align: center;
