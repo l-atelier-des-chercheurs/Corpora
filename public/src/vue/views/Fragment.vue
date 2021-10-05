@@ -81,7 +81,7 @@ export default {
 <style lang="scss" scoped>
 .m_fragmentModal {
   z-index: 9999;
-  background: rgba(60, 53, 65, 0.95);
+  background: rgba(60, 53, 65, 0.75);
   padding: var(--spacing);
 }
 ._sideBySide {

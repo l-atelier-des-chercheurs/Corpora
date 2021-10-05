@@ -14,7 +14,7 @@
     </div>
     <div class="margin-sides-medium">
       <div class="margin-vert-small">
-        <div class="custom-select custom-select_tiny">
+        <div class="custom-select">
           <select v-model="new_lang">
             <option
               v-for="lang in this.$root.lang.available"
@@ -84,4 +84,17 @@ export default {
   methods: {},
 };
 </script>
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.m_infos {
+}
+
+.custom-select {
+  margin-right: 0;
+  margin-left: auto;
+  width: 90px;
+  select {
+    margin-left: auto;
+    margin-right: 0;
+  }
+}
+</style>

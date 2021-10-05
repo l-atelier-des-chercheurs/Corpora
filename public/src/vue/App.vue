@@ -487,7 +487,7 @@ select::-ms-expand {
 }
 
 .custom-select {
-  max-width: 220px;
+  max-width: 120px;
   margin: 4px 0;
   position: relative;
   color: var(--color-black);
@@ -1034,6 +1034,7 @@ audio {
 .list-complete-leave-active {
   position: absolute !important;
   z-index: -1;
+  transition: none;
 }
 
 .width_collapse-enter-active,

@@ -51,6 +51,10 @@ module.exports = (function () {
       fr: "Lien",
       en: "Link",
     },
+    search_in_fragments: {
+      fr: "Chercher dans les fragments",
+      en: "Search in fragments",
+    },
     embed: {
       fr: "Intégration",
       en: "Embed",

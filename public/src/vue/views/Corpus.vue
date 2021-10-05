@@ -28,10 +28,11 @@
         :slugFolderName="corpus.slugFolderName"
       />
 
+      {{ all_tags }}
+      {{ all_keywords }}
+
       <div class="m_corpus" ref="corpus">
         <div class="m_corpus--presentation">
-          <Infos />
-
           <div class="m_feedbacks">
             <a
               class="js--openInBrowser"
@@ -51,6 +52,35 @@
                 {{ $t("edit") }}
               </button>
             </div>
+
+            <Infos />
+
+            <div class="m_corpus--search">
+              <label for="fragments-search">{{
+                $t("search_in_fragments")
+              }}</label>
+              <div class="flex-nowrap">
+                <input
+                  type="search"
+                  id="fragments-search"
+                  v-model="debounce_search_filter"
+                  :aria-label="$t('search_in_fragments')"
+                />
+                <span
+                  class="input-addon"
+                  v-if="debounce_search_filter.length > 0"
+                >
+                  <button
+                    type="button"
+                    :disabled="debounce_search_filter.length === 0"
+                    @click="debounce_search_filter = ''"
+                  >
+                    ×
+                  </button>
+                </span>
+              </div>
+            </div>
+
             <EditCorpus
               v-if="show_edit_corpus_for"
               :corpus="corpus"
@@ -58,90 +88,6 @@
               :slugCorpusName="corpus.slugFolderName"
               @close="show_edit_corpus_for = false"
             />
-
-            <!-- <div class="m_corpus--presentation--tags">
-          <label>{{ $t('keywords') }}</label>
-          <button type="button" v-for="(tag, index) in all_tags" :key="index">{{ tag }}</button>
-          </div>-->
-
-            <!-- <div class="m_corpus--presentation--contributionModes">
-              <label>{{ $t("filter_by_source_of_contribution") }}</label>
-
-              <div class="margin-bottom-verysmall">
-                <CollectMode
-                  v-model="current_contribution_mode"
-                  :is_filter="true"
-                />
-              </div>
-
-              <div class>
-                <button
-                  type="button"
-                  class="button-small margin-bottom-verysmall"
-                  @click="show_create_time_modal = !show_create_time_modal"
-                >
-                  <template v-if="!show_create_time_modal">{{
-                    $t("create_a_source")
-                  }}</template>
-                  <template v-else>{{ $t("close") }}</template>
-                </button>
-
-                <form
-                  class
-                  v-if="show_create_time_modal"
-                  @submit.prevent="createNewMoment"
-                >
-                  <div class>
-                    <label>{{ $t("new_source_name") }}</label>
-                    <div class="flex-nowrap align-items-stretch">
-                      <input
-                        type="text"
-                        class
-                        v-model.trim="new_source_name"
-                        required
-                        autofocus
-                      />
-                      <input
-                        type="submit"
-                        style="flex: 0 1 0"
-                        :disabled="!new_source_name"
-                        :value="$t('add')"
-                      />
-                    </div>
-                  </div>
-                </form>
-              </div>
-            </div>
-            <div class="m_corpus--presentation--displayOptions">
-              <label>{{ $t("display_options") }}</label>
-              <div>
-                <div class="input-checkbox">
-                  <input
-                    type="checkbox"
-                    class="switch"
-                    id="display_in_tabs"
-                    v-model="display_in_tabs"
-                  />
-                  <label class="no-style" for="display_in_tabs">
-                    {{ $t("display_in_tabs") }}
-                  </label>
-                </div>
-                <div class="flex-nowrap">
-                  <span>{{ $t("sort_fragments_by") }}&nbsp;</span>
-                  <div class="custom-select custom-select_tiny">
-                    <select v-model="sort_fragments_by">
-                      <option
-                        v-for="mode in ['date_created', 'title']"
-                        :key="mode"
-                        :value="mode"
-                      >
-                        {{ $t(mode) }}
-                      </option>
-                    </select>
-                  </div>
-                </div>
-              </div>
-            </div> -->
           </div>
 
           <div v-if="previewURL" class="m_corpus--presentation--vignette">
@@ -150,12 +96,13 @@
         </div>
 
         <FragmentsList
-          v-if="fragments"
+          class="m_corpus--fragments"
+          v-if="sorted_fragments"
           :corpus="corpus"
           :all_keywords="all_keywords"
           :all_tags="all_tags"
           :medias="medias"
-          :fragments="fragments"
+          :fragments="filtered_fragments"
         />
       </div>
     </template>
@@ -188,6 +135,12 @@ export default {
 
       show_edit_corpus_for: false,
 
+      search_filter: "",
+      debounce_search_filter: "",
+      debounce_search_filter_function: undefined,
+
+      search_type: "title",
+
       // show_fragments_for: {},
     };
   },
@@ -202,7 +155,15 @@ export default {
     this.$eventHub.$off("socketio.reconnect", this.loadCorpus);
   },
   destroyed() {},
-  watch: {},
+  watch: {
+    debounce_search_filter: function () {
+      if (this.debounce_search_filter_function)
+        clearTimeout(this.debounce_search_filter_function);
+      this.debounce_search_filter_function = setTimeout(() => {
+        this.search_filter = this.debounce_search_filter;
+      }, 340);
+    },
+  },
   computed: {
     corpus() {
       // not convenient : loading corpus can be after listfolders has executed
@@ -226,9 +187,10 @@ export default {
       // }
     },
     opened_fragment() {
-      if (!this.$route.params.fragmentId || !this.fragments) return false;
+      if (!this.$route.params.fragmentId || !this.sorted_fragments)
+        return false;
 
-      return this.fragments.find(
+      return this.sorted_fragments.find(
         (f) => f.media_filename === this.$route.params.fragmentId
       );
     },
@@ -261,7 +223,7 @@ export default {
       // return Object.values(this.corpus.medias);
       return Object.values(this.corpus.medias);
     },
-    fragments() {
+    sorted_fragments() {
       if (
         typeof this.corpus.medias !== "object" ||
         Object.values(this.corpus.medias).length === 0
@@ -280,6 +242,19 @@ export default {
       }
 
       return fragments;
+    },
+    filtered_fragments() {
+      if (!this.sorted_fragments) return false;
+
+      return this.sorted_fragments.filter((f) => {
+        const sf = this.search_filter.toLowerCase();
+
+        if (sf === "") return true;
+        else if (this.search_type === "title")
+          return f.title.toLowerCase().includes(sf);
+
+        return false;
+      });
     },
     all_tags() {
       if (!this.sorted_fragments) return [];
@@ -359,37 +334,45 @@ export default {
 .m_corpus {
   scroll-behavior: smooth;
 
+  display: flex;
+  flex-flow: row wrap;
+
   > * {
     flex: 0 0 auto;
-  }
 
-  &::after {
-    content: "";
-    display: block;
-    flex: 0 0 100px;
-    height: 100%;
+    &.m_corpus--presentation {
+      flex: 0 1 320px;
+      order: 2;
+    }
+
+    &.m_corpus--fragments {
+      flex: 1 1 600px;
+    }
   }
 }
 
 .m_corpus--presentation {
   // position: absolute;
-  padding: calc(var(--spacing) * 2) calc(var(--spacing) * 2);
   // margin-right: calc(var(--spacing) * 2);
   z-index: 1;
   // in case of very small height of viewport
   // max-height: 100vh;
   // max-width: 52ch;
   overflow-y: auto;
+  padding: 0 calc(var(--spacing) * 2);
+  // padding: 0;
+  margin: calc(var(--spacing) * 2) 0;
+  border-left: 2px solid var(--color-bluegreen);
+  text-align: right;
 
-  display: flex;
-  flex-flow: column nowrap;
-  justify-content: space-between;
-
-  > * {
-    margin-bottom: calc(var(--spacing));
-  }
-
+  // display: flex;
+  // flex-flow: column nowrap;
+  // justify-content: space-between;
   .m_corpus--presentation--content {
+    text-align: right;
+    > * {
+      margin-bottom: calc(var(--spacing) * 2);
+    }
   }
 }
 

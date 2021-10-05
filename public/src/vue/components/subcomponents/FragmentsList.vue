@@ -37,7 +37,8 @@
       </div>
 
       <FragmentContent
-        v-for="fragment in filtered_fragments"
+        v-if="fragments"
+        v-for="fragment in fragments"
         class="m_fragments--fragment"
         :key="fragment.metaFileName"
         :context="'preview'"
@@ -62,7 +63,7 @@ export default {
     all_tags: Array,
     all_keywords: Array,
     medias: [Boolean, Array],
-    fragments: Array,
+    fragments: [Boolean, Array],
   },
   components: {
     CreateFragment,
@@ -82,65 +83,6 @@ export default {
     fragment_width() {
       return Math.min(325, this.$root.settings.windowWidth * 0.9);
     },
-
-    filtered_fragments() {
-      let fragments = this.fragments;
-
-      // if current_contribution_mode is set
-      // if current_contribution_mode === online, then we retrieve only fragments that don’t have contribution_moment
-      if (this.current_contribution_mode !== "") {
-        fragments = fragments.filter((f) => {
-          if (
-            this.current_contribution_mode === "online" ||
-            this.current_contribution_mode === ""
-          )
-            return (
-              !f.hasOwnProperty("contribution_moment") ||
-              f.contribution_moment === "online" ||
-              f.contribution_moment === ""
-            );
-          return f.contribution_moment === this.current_contribution_mode;
-        });
-      }
-
-      return fragments;
-    },
-    tags_with_fragments() {
-      // get all tags from fragments
-      if (!this.sorted_fragments) return [];
-
-      // get all tags
-      let fragments_by_tag = this.all_tags.map((tag) => {
-        const fragments_for_tag = this.filtered_fragments.filter(
-          (f) =>
-            !!f.tags &&
-            Array.isArray(f.tags) &&
-            f.tags.some((t) => t.title === tag)
-        );
-
-        return {
-          tag,
-          fragments: fragments_for_tag,
-        };
-      });
-
-      // append all fragments
-      const fragments_with_no_tags = this.filtered_fragments.filter(
-        (f) => !f.tags || !Array.isArray(f.tags) || f.tags.length === 0
-      );
-
-      if (fragments_with_no_tags.length > 0) {
-        fragments_by_tag.push({
-          tag: "",
-          fragments: fragments_with_no_tags,
-        });
-      }
-
-      // fragments_by_tag.sort((a, b) => a.tag.localeCompare(b.tag));
-      // fragments_by_tag = this.$_.sortBy(fragments_by_tag, "tag");
-
-      return fragments_by_tag;
-    },
   },
   methods: {},
 };
@@ -151,7 +93,7 @@ export default {
   grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
   /* grid-auto-rows: max-content; */
   grid-gap: calc(var(--spacing) * 1);
-  padding: 0 calc(var(--spacing) * 2) calc(var(--spacing) * 2);
+  padding: calc(var(--spacing) * 2);
 }
 
 .m_fragments--createFragment {
