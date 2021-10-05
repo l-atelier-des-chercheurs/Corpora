@@ -1095,7 +1095,7 @@ audio {
   align-items: center;
   justify-content: center;
 
-  transition: all 0.2s ease-out;
+  transition: all 0.12s cubic-bezier(0.19, 1, 0.22, 1);
 
   #app:not(.is--wide) & {
     align-items: flex-start;
@@ -1124,7 +1124,6 @@ audio {
 
 .m_modal--container {
   position: relative;
-  transition: all 0.3s ease;
 
   width: 100%;
   cursor: auto;
@@ -1134,11 +1133,11 @@ audio {
   pointer-events: all;
   z-index: 1000;
 
-  transition: all 0.15s ease-out;
+  // transition: all 0.1s cubic-bezier(0.19, 1, 0.22, 1);
 
   &.is_invisible {
     opacity: 0;
-    transform: translate3d(0, 15px, 0) scale(0.98);
+    // transform: translate3d(0, 5px, 0);
   }
 
   &.is_minimized {

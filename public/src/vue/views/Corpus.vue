@@ -11,9 +11,9 @@
             <h2 v-if="!!corpus.subtitle">{{ corpus.subtitle }}</h2>
           </hgroup>
 
-          <button type="button">guide d’utilisation</button>
-          <button type="button">à propos</button>
-          <button type="button">mon compte</button>
+          <button type="button">{{ $t("guide") }}</button>
+          <button type="button">{{ $t("about_corpus") }}</button>
+          <button type="button"></button>
         </div>
       </div>
 
@@ -25,7 +25,6 @@
         :all_tags="all_tags"
         :medias="medias"
         :opened_fragment="opened_fragment"
-        :fragment_width="fragment_width"
         :slugFolderName="corpus.slugFolderName"
       />
 
@@ -65,7 +64,7 @@
           <button type="button" v-for="(tag, index) in all_tags" :key="index">{{ tag }}</button>
           </div>-->
 
-            <div class="m_corpus--presentation--contributionModes">
+            <!-- <div class="m_corpus--presentation--contributionModes">
               <label>{{ $t("filter_by_source_of_contribution") }}</label>
 
               <div class="margin-bottom-verysmall">
@@ -142,7 +141,7 @@
                   </div>
                 </div>
               </div>
-            </div>
+            </div> -->
           </div>
 
           <div v-if="previewURL" class="m_corpus--presentation--vignette">
@@ -150,55 +149,14 @@
           </div>
         </div>
 
-        <transition-group class="m_fragments" name="list-complete" tag="div">
-          <div class="m_fragments--createFragment" key="createFragment">
-            <button
-              type="button"
-              class="m_fragments--createFragment--addFragmentButton"
-              @click="show_create_fragment = !show_create_fragment"
-            >
-              <svg
-                version="1.1"
-                xmlns="http://www.w3.org/2000/svg"
-                xmlns:xlink="http://www.w3.org/1999/xlink"
-                x="0px"
-                y="0px"
-                width="24px"
-                height="24px"
-                viewBox="0 0 24 24"
-                style="enable-background: new 0 0 24 24"
-                xml:space="preserve"
-              >
-                <path
-                  style="fill: currentColor"
-                  d="M0,10.5h10.5V0h2.9v10.5H24v2.9H13.5V24h-2.9V13.5H0V10.5z"
-                />
-              </svg>
-              <label>{{ $t("create_a_story") }}</label>
-            </button>
-            <CreateFragment
-              v-if="show_create_fragment"
-              :corpus="corpus"
-              :all_keywords="all_keywords"
-              :all_tags="all_tags"
-              :current_contribution_mode="current_contribution_mode"
-              @close="show_create_fragment = false"
-            />
-          </div>
-
-          <FragmentContent
-            v-for="fragment in filtered_fragments"
-            :key="fragment.metaFileName"
-            :context="'preview'"
-            :corpus="corpus"
-            :all_keywords="all_keywords"
-            :all_tags="all_tags"
-            :medias="medias"
-            :fragment="fragment"
-            :fragment_width="fragment_width"
-            :slugFolderName="corpus.slugFolderName"
-          />
-        </transition-group>
+        <FragmentsList
+          v-if="fragments"
+          :corpus="corpus"
+          :all_keywords="all_keywords"
+          :all_tags="all_tags"
+          :medias="medias"
+          :fragments="fragments"
+        />
       </div>
     </template>
   </div>
@@ -207,10 +165,9 @@
 import Infos from "../components/Infos.vue";
 import CorpusPwd from "../components/modals/CorpusPwd.vue";
 import WelcomeModal from "../components/modals/WelcomeModal.vue";
-import FragmentContent from "../components/FragmentContent.vue";
-import CreateFragment from "../components/modals/CreateFragment.vue";
 import CollectMode from "../components/subcomponents/CollectMode.vue";
 import EditCorpus from "../components/modals/EditCorpus.vue";
+import FragmentsList from "../components/subcomponents/FragmentsList.vue";
 
 export default {
   props: {},
@@ -218,24 +175,16 @@ export default {
     Infos,
     CorpusPwd,
     WelcomeModal,
-    FragmentContent,
-    CreateFragment,
     CollectMode,
     EditCorpus,
+    FragmentsList,
   },
   data() {
     return {
       sort_fragments_by: "date_created",
 
-      show_create_fragment: false,
-      new_fragment_name: "",
-      new_fragment_tag: "",
-      new_fragment_tag_custom: "",
-      corpus_scroll_left: 0,
-
       show_create_time_modal: false,
       new_source_name: "",
-      current_contribution_mode: "",
 
       show_edit_corpus_for: false,
 
@@ -247,12 +196,10 @@ export default {
     if (this.$root.state.connected) this.loadCorpus();
     this.$eventHub.$on("socketio.authentificated", this.loadCorpus);
     this.$eventHub.$on("socketio.reconnect", this.loadCorpus);
-    this.$eventHub.$on("scrollCorpus", this.scrollCorpus);
   },
   beforeDestroy() {
     this.$eventHub.$off("socketio.authentificated", this.loadCorpus);
     this.$eventHub.$off("socketio.reconnect", this.loadCorpus);
-    this.$eventHub.$off("scrollCorpus", this.scrollCorpus);
   },
   destroyed() {},
   watch: {},
@@ -279,15 +226,11 @@ export default {
       // }
     },
     opened_fragment() {
-      if (!this.$route.params.fragmentId || !this.sorted_fragments)
-        return false;
+      if (!this.$route.params.fragmentId || !this.fragments) return false;
 
-      return this.sorted_fragments.find(
+      return this.fragments.find(
         (f) => f.media_filename === this.$route.params.fragmentId
       );
-    },
-    fragment_width() {
-      return Math.min(325, this.$root.settings.windowWidth * 0.9);
     },
     can_access_corpus() {
       return this.$root.canAccessFolder({
@@ -318,12 +261,13 @@ export default {
       // return Object.values(this.corpus.medias);
       return Object.values(this.corpus.medias);
     },
-    sorted_fragments() {
+    fragments() {
       if (
         typeof this.corpus.medias !== "object" ||
         Object.values(this.corpus.medias).length === 0
       )
         return false;
+
       let fragments = Object.values(this.corpus.medias).filter(
         (m) => m.type === "fragment"
       );
@@ -336,64 +280,6 @@ export default {
       }
 
       return fragments;
-    },
-    filtered_fragments() {
-      let fragments = this.sorted_fragments;
-
-      // if current_contribution_mode is set
-      // if current_contribution_mode === online, then we retrieve only fragments that don’t have contribution_moment
-      if (this.current_contribution_mode !== "") {
-        fragments = fragments.filter((f) => {
-          if (
-            this.current_contribution_mode === "online" ||
-            this.current_contribution_mode === ""
-          )
-            return (
-              !f.hasOwnProperty("contribution_moment") ||
-              f.contribution_moment === "online" ||
-              f.contribution_moment === ""
-            );
-          return f.contribution_moment === this.current_contribution_mode;
-        });
-      }
-
-      return fragments;
-    },
-    tags_with_fragments() {
-      // get all tags from fragments
-      if (!this.sorted_fragments) return [];
-
-      // get all tags
-      let fragments_by_tag = this.all_tags.map((tag) => {
-        const fragments_for_tag = this.filtered_fragments.filter(
-          (f) =>
-            !!f.tags &&
-            Array.isArray(f.tags) &&
-            f.tags.some((t) => t.title === tag)
-        );
-
-        return {
-          tag,
-          fragments: fragments_for_tag,
-        };
-      });
-
-      // append all fragments
-      const fragments_with_no_tags = this.filtered_fragments.filter(
-        (f) => !f.tags || !Array.isArray(f.tags) || f.tags.length === 0
-      );
-
-      if (fragments_with_no_tags.length > 0) {
-        fragments_by_tag.push({
-          tag: "",
-          fragments: fragments_with_no_tags,
-        });
-      }
-
-      // fragments_by_tag.sort((a, b) => a.tag.localeCompare(b.tag));
-      // fragments_by_tag = this.$_.sortBy(fragments_by_tag, "tag");
-
-      return fragments_by_tag;
     },
     all_tags() {
       if (!this.sorted_fragments) return [];
@@ -622,12 +508,16 @@ export default {
 
   display: flex;
   align-items: center;
-  gap: calc(var(--spacing) * 4);
+  gap: calc(var(--spacing) * 3);
 
   h1,
   h2 {
     margin-top: 0;
     margin-bottom: 0;
+  }
+
+  hgroup {
+    // padding-right: calc(var(--spacing) * 2);
   }
 
   button {

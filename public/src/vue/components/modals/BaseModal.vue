@@ -416,10 +416,11 @@ export default {
   z-index: 1500;
   background-color: transparent;
   color: var(--color-beige);
+  padding: 1em;
 
   svg {
-    width: 3em;
-    height: 3em;
+    width: 2em;
+    height: 2em;
   }
 }
 </style>

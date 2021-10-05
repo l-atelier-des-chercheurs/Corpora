@@ -82,7 +82,7 @@
         @close="show_edit_fragment = false"
       />
 
-      <div class="m_fragmentContent--medias">
+      <div class="m_fragmentContent--medias" tabindex="-1">
         <AddMedias
           v-if="context === 'edit'"
           :slugFolderName="slugFolderName"
@@ -125,12 +125,16 @@
 
       <router-link
         v-if="context === 'preview'"
+        class="m_fragmentContent--open"
         :to="{
           name: 'Fragment',
           params: { fragmentId: fragment.media_filename },
         }"
-        v-html="$t('open')"
-      />
+      >
+        <span>
+          {{ $t("open") }}
+        </span>
+      </router-link>
 
       <!-- <button
         type="button"
@@ -202,7 +206,7 @@ export default {
         return acc;
       }, []);
 
-      if (this.context === "preview") return fragment_medias.slice(0, 1);
+      if (this.context === "preview") return fragment_medias.slice(0, 2);
       return fragment_medias;
     },
   },
@@ -435,5 +439,42 @@ export default {
   position: absolute;
   top: 0;
   right: 0;
+}
+
+.m_fragmentContent--open {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  text-decoration: none;
+  // background-color: rgba(255, 255, 255, 0.1);
+
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  padding: var(--spacing);
+
+  transition: all 0.4s cubic-bezier(0.19, 1, 0.22, 1);
+
+  span {
+    background-color: black;
+    color: white;
+    padding: 0px 8px;
+    border-radius: 0.5em;
+    transform: translateY(50px);
+    transition: all 0.4s 0.2s cubic-bezier(0.19, 1, 0.22, 1);
+    text-transform: lowercase;
+  }
+
+  &:hover,
+  &:focus {
+    background-color: rgba(255, 255, 255, 0.45);
+    color: black;
+
+    span {
+      transform: translateY(0px);
+    }
+  }
 }
 </style>

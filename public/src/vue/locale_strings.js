@@ -103,6 +103,14 @@ module.exports = (function () {
       fr: "Ranger dans des onglets par défaut",
       en: "Sort in tabs by default",
     },
+    guide: {
+      fr: "Guide d’utilisation",
+      en: "How to use",
+    },
+    about_corpus: {
+      fr: "À propos de ce corpus",
+      en: "About this corpus",
+    },
     title: {
       fr: "Titre",
       en: "Title",
