@@ -421,6 +421,7 @@ export default {
   svg {
     width: 2em;
     height: 2em;
+    filter: drop-shadow(0px 0px 4px rgba(41, 41, 41, 0.8));
   }
 }
 </style>

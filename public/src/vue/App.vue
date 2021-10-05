@@ -1198,8 +1198,14 @@ audio {
 
 .m_modal--mask {
   &.typeOfModal-LargeAndScroll {
-    padding: var(--spacing) 0;
+    padding: calc(var(--spacing) * 2);
     overflow-y: auto;
+
+    @media (max-width: 480px) {
+      padding-left: 0;
+      padding-right: 0;
+    }
+
     .m_modal--container {
       max-width: calc(var(--panel-width) * 4);
       align-self: flex-start;

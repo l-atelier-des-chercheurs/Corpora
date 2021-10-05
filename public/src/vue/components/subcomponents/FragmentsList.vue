@@ -38,6 +38,7 @@
 
       <FragmentContent
         v-for="fragment in filtered_fragments"
+        class="m_fragments--fragment"
         :key="fragment.metaFileName"
         :context="'preview'"
         :corpus="corpus"
@@ -186,5 +187,8 @@ export default {
       padding: 1em;
     }
   }
+}
+
+.m_fragments--fragment {
 }
 </style>

@@ -82,7 +82,10 @@
         @close="show_edit_fragment = false"
       />
 
-      <div class="m_fragmentContent--medias" tabindex="-1">
+      <div
+        class="m_fragmentContent--medias"
+        :tabindex="context === 'preview' ? '-1' : ''"
+      >
         <AddMedias
           v-if="context === 'edit'"
           :slugFolderName="slugFolderName"
@@ -399,11 +402,18 @@ export default {
     //   var(--color-black) 100%
     // );
     background: var(--color-beige);
+    border-radius: 4px;
+    box-shadow: 0px 0px 4px 0px rgba(41, 41, 41, 0.8);
+
     transition: opacity 4s cubic-bezier(0.19, 1, 0.22, 1);
 
     > *:first-child {
       margin-top: 0;
     }
+  }
+
+  &.is--preview .m_fragmentContent--content {
+    box-shadow: 0px 0px 4px 0px rgba(204, 208, 218, 0.8);
   }
 
   &.is--highlighted {

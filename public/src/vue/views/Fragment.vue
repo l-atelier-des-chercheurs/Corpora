@@ -90,10 +90,10 @@ export default {
   grid-gap: calc(var(--spacing) * 2);
 
   ._singleFragment {
-    flex: 1 0 500px;
+    flex: 1 1 500px;
   }
   ._linkedFragments {
-    flex: 0 0 440px;
+    flex: 0 1 440px;
   }
 }
 ._singleFragment {

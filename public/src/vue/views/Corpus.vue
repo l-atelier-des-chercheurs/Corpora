@@ -439,49 +439,6 @@ export default {
   }
 }
 
-.m_fragments {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-  /* grid-auto-rows: max-content; */
-  grid-gap: calc(var(--spacing) * 1);
-  padding: 0 calc(var(--spacing) * 2) calc(var(--spacing) * 2);
-}
-
-.m_fragments--createFragment {
-  display: flex;
-  flex-flow: row wrap;
-  align-items: center;
-  justify-content: center;
-  margin: calc(var(--spacing) * 1.9) 0;
-
-  .m_fragments--createFragment--addFragmentButton {
-    color: black;
-    background: transparent;
-    text-align: center;
-    display: flex;
-    flex-flow: column wrap;
-    align-items: center;
-    justify-content: center;
-
-    svg {
-      background-color: white;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      line-height: 0;
-      padding: 0.5em;
-      font-size: 2em;
-      width: 2em;
-      height: 2em;
-      border-radius: 50%;
-    }
-
-    label {
-      padding: 1em;
-    }
-  }
-}
-
 .m_feedbacks {
   position: fixed;
   bottom: var(--spacing);
