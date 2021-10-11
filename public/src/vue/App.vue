@@ -268,8 +268,8 @@ ol ul {
 /* Let's make sure all's aligned */
 hr,
 .hr {
-  border: 1px solid;
-  margin: -1px 0;
+  border: 0.5px solid var(--color-bluegreen);
+  margin: var(--spacing) 0;
 }
 a,
 b,

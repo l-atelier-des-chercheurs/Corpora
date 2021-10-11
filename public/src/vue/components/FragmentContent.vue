@@ -142,6 +142,7 @@
           :to="{
             name: 'Fragment',
             params: { fragmentId: fragment.media_filename },
+            query: this.$route.query ? this.$route.query : {},
           }"
         >
           <span
@@ -515,8 +516,7 @@ export default {
   //   }
   // }
 
-  &:hover,
-  &:focus {
+  &:hover {
     background-color: rgba(255, 255, 255, 0.25);
 
     .m_fragmentContent--open--open {

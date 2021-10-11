@@ -72,6 +72,16 @@
               @close="show_edit_corpus_for = false"
             />
 
+            <div class="m_corpus--description margin-bottom-small">
+              <label>{{ $t("description") }}</label>
+
+              <p v-html="corpus.description" />
+            </div>
+
+            <div class="m_corpus--collections">
+              <label for="fragments-search">{{ $t("collections") }}</label>
+            </div>
+
             <div class="m_corpus--search">
               <label for="fragments-search">{{
                 $t("search_in_fragments")
@@ -132,15 +142,11 @@
             </div>
           </div>
 
-          <div class="m_corpus--description margin-bottom-small">
-            <label>{{ $t("description") }}</label>
-
-            <p v-html="corpus.description" />
-          </div>
-
           <div v-if="previewURL" class="m_corpus--presentation--vignette">
             <img :src="previewURL" class draggable="false" />
           </div>
+
+          <hr />
           <Infos />
         </div>
 
@@ -208,16 +214,6 @@ export default {
     if (this.$root.state.connected) this.loadCorpus();
     this.$eventHub.$on("socketio.authentificated", this.loadCorpus);
     this.$eventHub.$on("socketio.reconnect", this.loadCorpus);
-
-    if (
-      this.$route.query &&
-      this.$route.query.search_for &&
-      this.$route.query.search_in
-    ) {
-      this.debounce_search_filter = this.search_filter =
-        this.$route.query.search_for;
-      this.search_type = this.$route.query.search_in;
-    }
   },
   beforeDestroy() {
     this.$eventHub.$off("socketio.authentificated", this.loadCorpus);
@@ -240,6 +236,17 @@ export default {
     },
     search_type() {
       this.setQueryURLFromSearch();
+    },
+    $route: {
+      handler(to) {
+        if (this.$route.query) {
+          this.debounce_search_filter = this.search_filter =
+            this.$route.query.search_for || "";
+          if (this.$route.query.search_in)
+            this.search_type = this.$route.query.search_in;
+        }
+      },
+      immediate: true,
     },
   },
   computed: {

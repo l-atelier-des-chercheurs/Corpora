@@ -25,26 +25,54 @@
           </transition>
         </div>
 
-        <aside class="_linkedFragments">
-          <h2>{{ $t("with_same_keywords") }}</h2>
-          <transition-group
-            class="_linkedFragments--list"
-            name="list-complete"
-            tag="div"
-          >
-            <FragmentContent
-              v-for="fragment in linked_fragments"
-              :key="fragment.metaFileName"
-              :context="'preview'"
-              :corpus="corpus"
-              :all_keywords="all_keywords"
-              :all_tags="all_tags"
-              :medias="medias"
-              :fragment="fragment"
-              :fragment_width="300"
-              :slugFolderName="corpus.slugFolderName"
-            />
-          </transition-group>
+        <aside class="_fragmentList">
+          <div class="_fragmentList--content" v-if="linked_fragments">
+            <h2>
+              {{ linked_fragments.length + " " + $t("with_similar_keywords") }}
+            </h2>
+            <transition-group
+              class="_fragmentList--content--list"
+              name="list-complete"
+              tag="div"
+            >
+              <FragmentContent
+                v-for="fragment in linked_fragments"
+                :key="fragment.metaFileName"
+                :context="'preview'"
+                :corpus="corpus"
+                :all_keywords="all_keywords"
+                :all_tags="all_tags"
+                :medias="medias"
+                :fragment="fragment"
+                :fragment_width="300"
+                :slugFolderName="corpus.slugFolderName"
+              />
+            </transition-group>
+          </div>
+          <div class="_fragmentList--content" v-if="not_linked_fragments">
+            <h2>
+              {{ not_linked_fragments.length + " " + $t("other_fragments") }}
+            </h2>
+
+            <transition-group
+              class="_fragmentList--content--list"
+              name="list-complete"
+              tag="div"
+            >
+              <FragmentContent
+                v-for="fragment in not_linked_fragments"
+                :key="fragment.metaFileName"
+                :context="'preview'"
+                :corpus="corpus"
+                :all_keywords="all_keywords"
+                :all_tags="all_tags"
+                :medias="medias"
+                :fragment="fragment"
+                :fragment_width="300"
+                :slugFolderName="corpus.slugFolderName"
+              />
+            </transition-group>
+          </div>
         </aside>
       </div>
     </template>
@@ -80,7 +108,7 @@ export default {
     },
   },
   computed: {
-    linked_fragments() {
+    all_fragments_except_current() {
       return (
         this.fragments &&
         this.fragments.filter(
@@ -88,10 +116,36 @@ export default {
         )
       );
     },
+    linked_fragments() {
+      return this.all_fragments_except_current.filter(
+        (f) => f.keywords && this.hasCommonKeywordWithOpened(f)
+      );
+    },
+    not_linked_fragments() {
+      const linked_fragments_meta = this.linked_fragments.map(
+        (lf) => lf.metaFileName
+      );
+      return this.all_fragments_except_current.filter(
+        (f) => !linked_fragments_meta.includes(f.metaFileName)
+      );
+    },
   },
   methods: {
     closeModal() {
-      this.$router.push({ path: `./` });
+      this.$router.push({
+        name: "Corpus",
+        query: this.$route.query ? this.$route.query : {},
+      });
+    },
+    hasCommonKeywordWithOpened(f) {
+      if (
+        !this.opened_fragment.keywords ||
+        !Array.isArray(this.opened_fragment.keywords) ||
+        !Array.isArray(f.keywords)
+      )
+        return false;
+      const kws = this.opened_fragment.keywords.map((kw) => kw.title);
+      return kws.find((kw) => f.keywords.map((k) => k.title).includes(kw));
     },
   },
 };
@@ -100,7 +154,7 @@ export default {
 .m_fragmentModal {
   z-index: 9999;
   background: rgba(60, 53, 65, 0.75);
-  padding: var(--spacing);
+  padding: clamp(2vmin, 4vw, calc(var(--spacing) * 4));
 }
 ._sideBySide {
   display: flex;
@@ -110,18 +164,17 @@ export default {
   ._singleFragment {
     flex: 1 1 500px;
   }
-  ._linkedFragments {
+  ._fragmentList {
     flex: 0 1 440px;
   }
 }
-._singleFragment {
-}
-._linkedFragments {
+
+._fragmentList {
   h2 {
     color: var(--color-beige);
   }
 }
-._linkedFragments--list {
+._fragmentList--content--list {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
   /* grid-auto-rows: max-content; */

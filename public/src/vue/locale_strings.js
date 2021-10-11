@@ -178,6 +178,10 @@ module.exports = (function () {
       fr: "Description",
       en: "Description",
     },
+    collections: {
+      fr: "Collections",
+      en: "Collections",
+    },
     source: {
       fr: "Lien",
       en: "link",
@@ -326,9 +330,13 @@ module.exports = (function () {
       fr: "Mot(s)-clé(s)",
       en: "Keyword(s)",
     },
-    with_same_keywords: {
-      fr: "Avec les mêmes mots-clés",
-      en: "With the same keywords",
+    with_similar_keywords: {
+      fr: "récits avec des mots-clés similaires",
+      en: "stories with similar keywords",
+    },
+    other_fragments: {
+      fr: "autres récits",
+      en: "other stories",
     },
     remove_image: {
       fr: "Retirer l’image",
