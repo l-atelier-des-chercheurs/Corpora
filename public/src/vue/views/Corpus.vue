@@ -4,8 +4,6 @@
     <template v-else>
       <WelcomeModal v-if="$root.settings.show_welcome_modal" />
 
-      {{ $root.fragments_read }}
-
       <div class="m_topBar">
         <div class="m_topBar--content">
           <hgroup>

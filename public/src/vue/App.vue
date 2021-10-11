@@ -721,8 +721,9 @@ audio {
     width: 100%;
     background-color: var(--color-black);
 
-    max-height: var(--fragment-width);
+    // max-height: var(--fragment-width);
     object-fit: scale-down;
+    object-fit: cover;
   }
 
   iframe {
@@ -1089,6 +1090,7 @@ audio {
 
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
+  scroll-behavior: smooth;
 
   background-color: rgba(255, 255, 255, 0.9);
   // cursor: pointer;

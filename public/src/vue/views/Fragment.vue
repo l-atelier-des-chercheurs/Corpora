@@ -9,16 +9,20 @@
     <template slot="body">
       <div class="_sideBySide">
         <div class="_singleFragment">
-          <FragmentContent
-            :context="'edit'"
-            :fragment="opened_fragment"
-            :corpus="corpus"
-            :all_keywords="all_keywords"
-            :all_tags="all_tags"
-            :medias="medias"
-            :fragment_width="800"
-            :slugFolderName="slugFolderName"
-          />
+          <transition name="fade" :duration="200" mode="out-in">
+            <FragmentContent
+              v-if="opened_fragment"
+              :key="opened_fragment.metaFileName"
+              :context="'edit'"
+              :fragment="opened_fragment"
+              :corpus="corpus"
+              :all_keywords="all_keywords"
+              :all_tags="all_tags"
+              :medias="medias"
+              :fragment_width="800"
+              :slugFolderName="slugFolderName"
+            />
+          </transition>
         </div>
 
         <aside class="_linkedFragments">
@@ -52,11 +56,11 @@ import FragmentContent from "../components/FragmentContent.vue";
 export default {
   props: {
     corpus: Object,
-    fragments: Array,
-    opened_fragment: Object,
+    fragments: [Boolean, Array],
+    opened_fragment: [Boolean, Object],
     all_tags: Array,
     all_keywords: Array,
-    medias: Array,
+    medias: [Boolean, Array],
     slugFolderName: String,
     fragment_width: Number,
   },
@@ -69,11 +73,19 @@ export default {
   created() {},
   mounted() {},
   beforeDestroy() {},
-  watch: {},
+  watch: {
+    "opened_fragment.metaFileName"() {
+      // scroll to top
+      this.$el.scrollTop = 0;
+    },
+  },
   computed: {
     linked_fragments() {
-      return this.fragments.filter(
-        (f) => f.metaFileName !== this.opened_fragment.metaFileName
+      return (
+        this.fragments &&
+        this.fragments.filter(
+          (f) => f.metaFileName !== this.opened_fragment.metaFileName
+        )
       );
     },
   },

@@ -106,6 +106,7 @@
               :slugFolderName="slugFolderName"
               :index="index"
               :linked_medias="linked_medias"
+              :context="context"
               @removeMedia="(d) => removeMedia(d)"
               @moveMedia="(d) => moveMedia(d)"
             />
@@ -195,7 +196,6 @@ export default {
   computed: {
     already_visited() {
       const fullPath = `/${this.slugFolderName}/${this.fragment.media_filename}`;
-      debugger;
       return this.$root.fragments_read.includes(fullPath);
     },
     linked_medias() {
@@ -375,14 +375,14 @@ export default {
       bottom: 0;
       left: 0;
       width: 100%;
-      height: 105px;
+      height: 15px;
       z-index: 1000;
       pointer-events: none;
 
       background: linear-gradient(
         180deg,
         hsla(48, 71%, 92%, 0) 0%,
-        hsla(48, 71%, 92%, 0.45) calc(100%)
+        hsla(48, 71%, 92%, 15) calc(100%)
       );
     }
   }
@@ -394,7 +394,7 @@ export default {
     // margin-right: 4px;
     // margin-left: 4px;
 
-    padding: calc(var(--spacing));
+    padding: calc(var(--spacing)) 0;
 
     // background-color: #fff;
     // background-color: #f9f3db;
@@ -498,7 +498,7 @@ export default {
 
   &:hover,
   &:focus {
-    background-color: rgba(255, 255, 255, 0.45);
+    background-color: rgba(255, 255, 255, 0.25);
 
     .m_fragmentContent--open--open {
       transform: translateY(0px);

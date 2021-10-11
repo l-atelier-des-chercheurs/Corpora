@@ -82,7 +82,10 @@
         type="button"
         class="plyr__controls__item plyr__control _open_fullscreen"
         @click="openMedia"
-        v-if="media.type === 'image' || media.type === 'document'"
+        v-if="
+          media_context !== 'preview' &&
+          (media.type === 'image' || media.type === 'document')
+        "
       >
         <svg class="icon--pressed" role="presentation" focusable="false">
           <use
@@ -291,6 +294,7 @@ export default {
     media: Object,
     index: Number,
     linked_medias: Array,
+    context: String,
   },
   components: {
     MediaContent,
@@ -402,6 +406,7 @@ export default {
       return false;
     },
     media_context() {
+      if (this.context === "preview") return "preview";
       if (this.media.type === "image") return "preview";
       if (this.is_being_edited) return "edit";
       return "";
@@ -457,7 +462,17 @@ export default {
 <style lang="scss" scoped>
 .m_fragmentMedia {
   position: relative;
-  border-radius: 8px;
+  // border-radius: 8px;
+
+  &[data-type="text"] {
+    padding: calc(var(--spacing) / 2) calc(var(--spacing));
+  }
+  &:not([data-type="text"]) {
+    .m_fragmentMedia--infos--caption,
+    .m_fragmentMedia--infos--source {
+      padding: 0 calc(var(--spacing));
+    }
+  }
 
   .m_fragmentMedia--content {
     min-height: 3em;
@@ -470,7 +485,7 @@ export default {
 
   &:not([data-type="text"]):not([data-type="embed"]):not([data-type="link"]) {
     .m_fragmentMedia--content {
-      border-radius: 8px;
+      // border-radius: 8px;
       overflow: hidden;
     }
   }
