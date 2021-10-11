@@ -83,6 +83,10 @@ module.exports = (function () {
       fr: "Fermer",
       en: "Close",
     },
+    no_results: {
+      fr: "Aucun récit ne correspond à votre recherche",
+      en: "No results match your criteria(s)",
+    },
     created: {
       fr: "Créé",
       en: "Created",

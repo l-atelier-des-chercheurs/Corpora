@@ -144,14 +144,22 @@
           <Infos />
         </div>
 
-        <FragmentsList
-          class="m_corpus--fragments"
-          :corpus="corpus"
-          :all_keywords="all_keywords"
-          :all_tags="all_tags"
-          :medias="medias"
-          :fragments="filtered_fragments"
-        />
+        <div class="m_corpus--fragments">
+          <div
+            v-if="search_filter !== '' && filtered_fragments.length === 0"
+            class="notice"
+          >
+            {{ $t("no_results") }}
+          </div>
+          <FragmentsList
+            v-else
+            :corpus="corpus"
+            :all_keywords="all_keywords"
+            :all_tags="all_tags"
+            :medias="medias"
+            :fragments="filtered_fragments"
+          />
+        </div>
       </div>
     </template>
   </div>
@@ -200,6 +208,16 @@ export default {
     if (this.$root.state.connected) this.loadCorpus();
     this.$eventHub.$on("socketio.authentificated", this.loadCorpus);
     this.$eventHub.$on("socketio.reconnect", this.loadCorpus);
+
+    if (
+      this.$route.query &&
+      this.$route.query.search_for &&
+      this.$route.query.search_in
+    ) {
+      this.debounce_search_filter = this.search_filter =
+        this.$route.query.search_for;
+      this.search_type = this.$route.query.search_in;
+    }
   },
   beforeDestroy() {
     this.$eventHub.$off("socketio.authentificated", this.loadCorpus);
@@ -216,6 +234,12 @@ export default {
     },
     new_lang() {
       this.$root.updateLocalLang(this.new_lang);
+    },
+    search_filter() {
+      this.setQueryURLFromSearch();
+    },
+    search_type() {
+      this.setQueryURLFromSearch();
     },
   },
   computed: {
@@ -362,6 +386,18 @@ export default {
       this.search_type = "keywords";
       this.debounce_search_filter = this.search_filter = kw;
     },
+    setQueryURLFromSearch() {
+      let query = {};
+      if (this.search_filter !== "")
+        query = {
+          search_for: this.search_filter,
+          search_in: this.search_type,
+        };
+
+      this.$router.push({
+        query,
+      });
+    },
     createNewMoment() {
       let contribution_moments =
         this.corpus.hasOwnProperty("contribution_moments") &&
@@ -413,6 +449,12 @@ export default {
       flex: 1 1 600px;
     }
   }
+}
+
+.m_corpus--fragments .notice {
+  padding: calc(var(--spacing) * 2);
+  text-align: center;
+  color: var(--color-gray);
 }
 
 .m_corpus--presentation {
