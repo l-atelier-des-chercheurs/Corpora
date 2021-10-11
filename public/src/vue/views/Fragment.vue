@@ -23,7 +23,11 @@
 
         <aside class="_linkedFragments">
           <h2>{{ $t("with_same_keywords") }}</h2>
-          <div class="_linkedFragments--list">
+          <transition-group
+            class="_linkedFragments--list"
+            name="list-complete"
+            tag="div"
+          >
             <FragmentContent
               v-for="fragment in linked_fragments"
               :key="fragment.metaFileName"
@@ -36,7 +40,7 @@
               :fragment_width="300"
               :slugFolderName="corpus.slugFolderName"
             />
-          </div>
+          </transition-group>
         </aside>
       </div>
     </template>
@@ -68,7 +72,9 @@ export default {
   watch: {},
   computed: {
     linked_fragments() {
-      return this.fragments;
+      return this.fragments.filter(
+        (f) => f.metaFileName !== this.opened_fragment.metaFileName
+      );
     },
   },
   methods: {

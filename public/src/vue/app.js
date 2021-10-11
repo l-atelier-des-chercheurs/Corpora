@@ -215,6 +215,8 @@ let vm = new Vue({
     app_is_fullscreen: false,
     admin_pwd: "",
 
+    fragments_read: [],
+
     settings: {
       windowWidth: window.innerWidth,
       windowHeight: window.innerHeight,
@@ -325,6 +327,14 @@ let vm = new Vue({
       } else {
         document.body.style.overflow = "";
       }
+    },
+    $route: {
+      handler(to) {
+        if (to.name === "Fragment")
+          if (!this.fragments_read.includes(to.fullPath))
+            this.fragments_read.push(to.fullPath);
+      },
+      immediate: true,
     },
   },
   computed: {

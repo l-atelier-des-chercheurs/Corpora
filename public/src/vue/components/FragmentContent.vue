@@ -126,27 +126,26 @@
         </transition-group>
       </div>
 
-      <router-link
-        v-if="context === 'preview'"
-        class="m_fragmentContent--open"
-        :to="{
-          name: 'Fragment',
-          params: { fragmentId: fragment.media_filename },
-        }"
-      >
-        <span>
-          {{ $t("open") }}
-        </span>
-      </router-link>
+      <template v-if="context === 'preview'">
+        <router-link
+          class="m_fragmentContent--open"
+          :to="{
+            name: 'Fragment',
+            params: { fragmentId: fragment.media_filename },
+          }"
+        >
+          <span
+            v-if="already_visited"
+            class="m_fragmentContent--open--alreadyVisited"
+          >
+            {{ $t("alreay_read") }}
+          </span>
 
-      <!-- <button
-        type="button"
-        v-if="context === 'preview'"
-        class="m_fragmentContent--openButton"
-        @click="openFragment"
-      >      
-        open
-      </button> -->
+          <span class="m_fragmentContent--open--open">
+            {{ $t("open") }}
+          </span>
+        </router-link>
+      </template>
     </div>
   </div>
 </template>
@@ -194,6 +193,11 @@ export default {
   },
   watch: {},
   computed: {
+    already_visited() {
+      const fullPath = `/${this.slugFolderName}/${this.fragment.media_filename}`;
+      debugger;
+      return this.$root.fragments_read.includes(fullPath);
+    },
     linked_medias() {
       if (
         typeof this.fragment.medias_slugs !== "object" ||
@@ -214,7 +218,6 @@ export default {
     },
   },
   methods: {
-    openFragment() {},
     scrollToFragment(metaFileName) {
       if (this.fragment.metaFileName === metaFileName) {
         this.$eventHub.$emit(
@@ -372,14 +375,14 @@ export default {
       bottom: 0;
       left: 0;
       width: 100%;
-      height: 25px;
+      height: 105px;
       z-index: 1000;
       pointer-events: none;
 
       background: linear-gradient(
         180deg,
         hsla(48, 71%, 92%, 0) 0%,
-        hsla(48, 71%, 92%, 0.4) calc(100%)
+        hsla(48, 71%, 92%, 0.45) calc(100%)
       );
     }
   }
@@ -457,6 +460,7 @@ export default {
   left: 0;
   right: 0;
   bottom: 0;
+  z-index: 1001;
   text-decoration: none;
   // background-color: rgba(255, 255, 255, 0.1);
 
@@ -468,23 +472,42 @@ export default {
   transition: all 0.4s cubic-bezier(0.19, 1, 0.22, 1);
 
   span {
-    background-color: black;
+    position: absolute;
+    background-color: var(--color-black);
     color: white;
     padding: 0px 8px;
     border-radius: 0.5em;
-    transform: translateY(50px);
-    transition: all 0.4s 0.2s cubic-bezier(0.19, 1, 0.22, 1);
+    transition: all 0.4s cubic-bezier(0.19, 1, 0.22, 1);
     text-transform: lowercase;
   }
+
+  .m_fragmentContent--open--open {
+    transform: translateY(50px);
+  }
+  .m_fragmentContent--open--alreadyVisited {
+    color: var(--color-gray);
+    background-color: var(--color-bluegreen);
+  }
+
+  // &:visited {
+  //   color: blue;
+  //   span {
+  //     color: red;
+  //   }
+  // }
 
   &:hover,
   &:focus {
     background-color: rgba(255, 255, 255, 0.45);
-    color: black;
 
-    span {
+    .m_fragmentContent--open--open {
       transform: translateY(0px);
     }
+    .m_fragmentContent--open--alreadyVisited {
+      opacity: 0;
+    }
+  }
+  .m_fragmentContent--open--alreadyVisited {
   }
 }
 </style>

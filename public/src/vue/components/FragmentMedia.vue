@@ -626,7 +626,7 @@ export default {
 
     a {
       // display: inline-block;
-      color: black;
+      color: var(--color-black);
       font-size: 0.8em;
       // padding: 0 calc(var(--spacing) / 2);
 

@@ -4,6 +4,8 @@
     <template v-else>
       <WelcomeModal v-if="$root.settings.show_welcome_modal" />
 
+      {{ $root.fragments_read }}
+
       <div class="m_topBar">
         <div class="m_topBar--content">
           <hgroup>
@@ -28,8 +30,8 @@
         :slugFolderName="corpus.slugFolderName"
       />
 
-      {{ all_tags }}
-      {{ all_keywords }}
+      <!-- {{ all_tags }}
+      {{ all_keywords }} -->
 
       <div class="m_corpus" ref="corpus">
         <div class="m_corpus--presentation">
@@ -52,6 +54,13 @@
                 {{ $t("edit") }}
               </button>
             </div>
+            <EditCorpus
+              v-if="show_edit_corpus_for"
+              :corpus="corpus"
+              :corpus_password="corpus_password"
+              :slugCorpusName="corpus.slugFolderName"
+              @close="show_edit_corpus_for = false"
+            />
 
             <Infos />
 
@@ -81,13 +90,9 @@
               </div>
             </div>
 
-            <EditCorpus
-              v-if="show_edit_corpus_for"
-              :corpus="corpus"
-              :corpus_password="corpus_password"
-              :slugCorpusName="corpus.slugFolderName"
-              @close="show_edit_corpus_for = false"
-            />
+            <div class="m_corpus--keywords">
+              {{ all_keywords }}
+            </div>
           </div>
 
           <div v-if="previewURL" class="m_corpus--presentation--vignette">
@@ -97,7 +102,6 @@
 
         <FragmentsList
           class="m_corpus--fragments"
-          v-if="sorted_fragments"
           :corpus="corpus"
           :all_keywords="all_keywords"
           :all_tags="all_tags"

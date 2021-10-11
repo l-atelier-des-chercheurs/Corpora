@@ -32,6 +32,7 @@ export default {
 :root {
   --spacing: 1rem;
   --color-black: #3c3541;
+  --color-gray: hsl(275, 10%, 43%);
   --color-orange: #ffd675;
   --color-white: #fff;
   --body-bg: #e2edef;
@@ -202,7 +203,7 @@ label:not(.no-style) {
 
     // background-color: rgba(0, 0, 0, 0.3);
     // border: 1px solid currentColor;
-    color: black;
+    color: var(--color-black);
     background-color: rgba(226, 237, 239, 0.4);
 
     svg {
@@ -922,7 +923,7 @@ audio {
     &.is--active {
       font-weight: 700;
       &::before {
-        color: black;
+        color: var(--color-black);
         // background-color: black !important;
       }
     }
@@ -1096,7 +1097,7 @@ audio {
   align-items: center;
   justify-content: center;
 
-  transition: all 0.12s cubic-bezier(0.19, 1, 0.22, 1);
+  transition: all 0.1s cubic-bezier(0.19, 1, 0.22, 1);
 
   #app:not(.is--wide) & {
     align-items: flex-start;
@@ -1138,6 +1139,7 @@ audio {
 
   &.is_invisible {
     opacity: 0;
+    pointer-events: none;
     // transform: translate3d(0, 5px, 0);
   }
 
@@ -1462,7 +1464,7 @@ audio {
       }
     }
     &.type-other {
-      color: --color-black;
+      color: var(--color-black);
 
       pre {
         display: inline-block;

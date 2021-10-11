@@ -52,8 +52,8 @@ module.exports = (function () {
       en: "Link",
     },
     search_in_fragments: {
-      fr: "Chercher dans les fragments",
-      en: "Search in fragments",
+      fr: "Chercher dans les récits",
+      en: "Search in stories",
     },
     embed: {
       fr: "Intégration",
@@ -68,8 +68,8 @@ module.exports = (function () {
       en: "Max file size",
     },
     sort_fragments_by: {
-      fr: "Classer les fragments par",
-      en: "Sort fragments by",
+      fr: "Classer les récits par",
+      en: "Sort stories by",
     },
     personal_data_and_legal_notices: {
       fr: "cookies, données personnelles et mentions légales",
@@ -191,8 +191,8 @@ module.exports = (function () {
       en: "Do you really want to remove this corpus?",
     },
     sure_to_remove_fragment: {
-      fr: "Voulez-vous vraiment supprimer ce fragment ?",
-      en: "Do you really want to remove this fragment?",
+      fr: "Voulez-vous vraiment supprimer ce récit ?",
+      en: "Do you really want to remove this story?",
     },
     rename_tag: {
       fr: "Renommer l’onglet",
@@ -215,8 +215,8 @@ module.exports = (function () {
       en: "Do you really want to remove this media?",
     },
     all: {
-      fr: "Afficher tous les fragments",
-      en: "Show all fragments",
+      fr: "Afficher tous les récits",
+      en: "Show all stories",
     },
     online: {
       fr: "En ligne",
@@ -303,11 +303,11 @@ module.exports = (function () {
       en: "Create a source of contribution",
     },
     edit_a_fragment: {
-      fr: "Éditer un fragment",
-      en: "Edit a fragment",
+      fr: "Éditer un récit",
+      en: "Edit a story",
     },
     fragment_title: {
-      fr: "Titre du fragment",
+      fr: "Titre",
       en: "Title",
     },
     tags: {
@@ -345,6 +345,10 @@ module.exports = (function () {
     existing: {
       fr: "Déjà créés",
       en: "Already created",
+    },
+    alreay_read: {
+      fr: "Déjà ouvert",
+      en: "Already opened",
     },
     tag_already_exists: {
       fr: "Ce mot-clé existe déjà",

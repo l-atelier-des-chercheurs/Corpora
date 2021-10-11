@@ -36,20 +36,21 @@
         <!-- :current_contribution_mode="current_contribution_mode" -->
       </div>
 
-      <FragmentContent
-        v-if="fragments"
-        v-for="fragment in fragments"
-        class="m_fragments--fragment"
-        :key="fragment.metaFileName"
-        :context="'preview'"
-        :corpus="corpus"
-        :all_keywords="all_keywords"
-        :all_tags="all_tags"
-        :medias="medias"
-        :fragment="fragment"
-        :fragment_width="fragment_width"
-        :slugFolderName="corpus.slugFolderName"
-      />
+      <template v-if="fragments">
+        <FragmentContent
+          v-for="fragment in fragments"
+          class="m_fragments--fragment"
+          :key="fragment.metaFileName"
+          :context="'preview'"
+          :corpus="corpus"
+          :all_keywords="all_keywords"
+          :all_tags="all_tags"
+          :medias="medias"
+          :fragment="fragment"
+          :fragment_width="fragment_width"
+          :slugFolderName="corpus.slugFolderName"
+        />
+      </template>
     </transition-group>
   </div>
 </template>
@@ -104,7 +105,7 @@ export default {
   margin: calc(var(--spacing) * 1.9) 0;
 
   .m_fragments--createFragment--addFragmentButton {
-    color: black;
+    color: var(--color-black);
     background: transparent;
     text-align: center;
     display: flex;

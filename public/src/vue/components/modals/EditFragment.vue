@@ -24,10 +24,10 @@
         />
       </div>
 
-      <div>
+      <!-- <div>
         <label>{{ $t("source_of_contribution") }}</label>
         <CollectMode v-model="fragmentdata.contribution_moment" />
-      </div>
+      </div> -->
 
       <div class="margin-bottom-small">
         <label>{{ $t("keywords") }}</label>
