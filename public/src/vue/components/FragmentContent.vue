@@ -10,6 +10,15 @@
     <div class="m_fragmentContent--content">
       <div class="m_fragmentContent--content--top">
         <h2>{{ fragment.title }}</h2>
+
+        <div
+          class="motscles"
+          v-if="fragment.keywords && fragment.keywords.length > 0"
+        >
+          <div v-for="kw in fragment.keywords" :key="kw.title">
+            #{{ kw.title }}
+          </div>
+        </div>
         <!-- <label>
           {{ $t("created") }}&nbsp;{{
             $root.formatDateToHuman(fragment.date_created)
@@ -154,6 +163,7 @@
 import AddMedias from "./AddMedias.vue";
 import FragmentMedia from "./FragmentMedia.vue";
 import EditFragment from "./modals/EditFragment.vue";
+import TagsInput from "./subcomponents/TagsInput.vue";
 
 Array.prototype.move = function (from, to) {
   this.splice(to, 0, this.splice(from, 1)[0]);
@@ -177,6 +187,7 @@ export default {
     AddMedias,
     FragmentMedia,
     EditFragment,
+    TagsInput,
   },
   data() {
     return {
@@ -428,10 +439,18 @@ export default {
 
   .m_fragmentContent--content--top {
     margin: calc(var(--spacing)) 0;
-    padding-right: var(--spacing);
+    padding: 0 var(--spacing);
     h2 {
       margin: 0;
       text-align: center;
+    }
+  }
+  &.is--preview .m_fragmentContent--content--top {
+    h2 {
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
     }
   }
 
@@ -475,7 +494,7 @@ export default {
     position: absolute;
     background-color: var(--color-black);
     color: white;
-    padding: 0px 8px;
+    padding: calc(var(--spacing) / 4) calc(var(--spacing) / 2);
     border-radius: 0.5em;
     transition: all 0.4s cubic-bezier(0.19, 1, 0.22, 1);
     text-transform: lowercase;
@@ -485,8 +504,8 @@ export default {
     transform: translateY(50px);
   }
   .m_fragmentContent--open--alreadyVisited {
-    color: var(--color-gray);
-    background-color: var(--color-bluegreen);
+    background-color: var(--color-gray);
+    // background-color: var(--color-bluegreen);
   }
 
   // &:visited {

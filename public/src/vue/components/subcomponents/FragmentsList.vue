@@ -91,10 +91,12 @@ export default {
 <style lang="scss" scoped>
 .m_fragments {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
   /* grid-auto-rows: max-content; */
   grid-gap: calc(var(--spacing) * 1);
   padding: calc(var(--spacing) * 2);
+
+  // overflow: hidden;
 }
 
 .m_fragments--createFragment {
@@ -133,5 +135,6 @@ export default {
 }
 
 .m_fragments--fragment {
+  max-width: 320px;
 }
 </style>

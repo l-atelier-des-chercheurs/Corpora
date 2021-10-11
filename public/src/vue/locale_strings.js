@@ -290,7 +290,7 @@ module.exports = (function () {
       fr: "Sous-titre",
       en: "Second title",
     },
-    description: {
+    description_source: {
       fr: "Description, source…",
       en: "Description, source…",
     },

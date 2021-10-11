@@ -32,7 +32,7 @@ export default {
 :root {
   --spacing: 1rem;
   --color-black: #3c3541;
-  --color-gray: hsl(275, 10%, 43%);
+  --color-gray: hsl(275, 10%, 63%);
   --color-orange: #ffd675;
   --color-white: #fff;
   --body-bg: #e2edef;
@@ -92,9 +92,9 @@ h3 {
 
 label:not(.no-style) {
   display: block;
-  margin-bottom: calc(var(--spacing) / 4);
-  font-size: 0.7rem;
-  text-transform: lowercase;
+  margin-bottom: calc(var(--spacing) / 8);
+  // font-size: 1rem;
+  // text-transform: lowercase;
   color: inherit;
   // padding: calc(var(--spacing) / 4) calc(var(--spacing) / 2)
   //   calc(var(--spacing) / 4) 0;
@@ -404,6 +404,10 @@ button,
   color: var(--color-black);
 }
 
+label {
+  cursor: inherit;
+}
+
 input {
   &[type="text"],
   &[type="url"] {
@@ -471,6 +475,15 @@ textarea {
   &:focus {
     outline: 0px;
     border-left: 2px solid var(--color-orange);
+  }
+}
+
+.input-addon {
+  font-size: 1.2em;
+
+  > * {
+    padding: 0.4em 0.8em;
+    border: none;
   }
 }
 
@@ -727,7 +740,7 @@ audio {
   }
 
   iframe {
-    min-height: 202px;
+    min-height: 480px;
     background-color: transparent;
   }
 
@@ -922,10 +935,10 @@ audio {
     margin-bottom: calc(var(--spacing) / 4);
 
     &.is--active {
-      font-weight: 700;
+      color: white;
+      background-color: var(--color-black);
+
       &::before {
-        color: var(--color-black);
-        // background-color: black !important;
       }
     }
 
@@ -999,9 +1012,34 @@ audio {
     }
   }
 
+  &.m_keywordField_keywords {
+    .tag,
+    > button {
+      &::before {
+        content: "#";
+        font-weight: 400;
+        transform: none;
+        margin-right: 2px;
+        padding: 0;
+        padding-top: 0.2em;
+      }
+    }
+  }
+
   .item > div {
     margin: 0;
   }
+}
+
+.motscles {
+  display: flex;
+  flex-flow: row wrap;
+  color: var(--color-gray);
+  gap: calc(var(--spacing) / 2);
+  max-height: 100px;
+  justify-content: center;
+
+  margin-top: calc(var(--spacing) / 2);
 }
 
 .slide-fade-enter-active {
@@ -1036,7 +1074,7 @@ audio {
 .list-complete-leave-active {
   position: absolute !important;
   z-index: -1;
-  transition: none;
+  transition: none !important;
 }
 
 .width_collapse-enter-active,

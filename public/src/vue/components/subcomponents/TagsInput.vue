@@ -11,11 +11,21 @@
         v-for="tag in tags"
         :key="tag.text"
         @click="removeTag(tag.text)"
-        class="can_be_removed"
-        :class="['tagcolorid_' + (parseInt(tag.text, 36) % 2)]"
-      >{{ tag.text }}</button>
+        :class="[
+          {
+            can_be_removed: allow_new_terms,
+          },
+          `tagcolorid_${parseInt(tag.text, 36) % 2}`,
+        ]"
+      >
+        {{ tag.text }}
+      </button>
 
-      <div class="new-tag-input-wrapper" :key="'new-tag-input'" v-if="allow_new_terms">
+      <div
+        class="new-tag-input-wrapper"
+        :key="'new-tag-input'"
+        v-if="allow_new_terms"
+      >
         <input
           type="text"
           class="new-tag-input"
@@ -28,10 +38,16 @@
           @click="createTag"
           :disabled="disableAddButton"
           v-if="tag.length > 0"
-        >+</button>
+        >
+          +
+        </button>
       </div>
 
-      <div v-if="matchingKeywords.length > 0" class="autocomplete" :key="'autocomplete'">
+      <div
+        v-if="matchingKeywords.length > 0"
+        class="autocomplete"
+        :key="'autocomplete'"
+      >
         <label>{{ $t("suggestion") }}</label>
         <div>
           <button
@@ -40,12 +56,17 @@
             :key="keyword.text"
             class="tag"
             @click="createTagFromAutocomplete(keyword.text)"
-          >{{ keyword.text }}</button>
+          >
+            {{ keyword.text }}
+          </button>
         </div>
       </div>
     </transition-group>
 
-    <div class="m_keywordField" :class="[!!type ? 'm_keywordField_' + type : '']">
+    <div
+      class="m_keywordField"
+      :class="[!!type ? 'm_keywordField_' + type : '']"
+    >
       <div
         v-if="
           allKeywordsExceptCurrent.length > 0 && matchingKeywords.length === 0
@@ -57,7 +78,9 @@
           class="button-small _existing_button"
           :class="{ 'is--active': show_existing }"
           @click="show_existing = !show_existing"
-        >{{ $t("existing") }}</button>
+        >
+          {{ $t("existing") }}
+        </button>
 
         <div v-if="show_existing">
           <button
@@ -66,7 +89,9 @@
             :key="keyword.text"
             class="tag"
             @click="createTagFromAutocomplete(keyword.text)"
-          >{{ keyword.text }}</button>
+          >
+            {{ keyword.text }}
+          </button>
         </div>
       </div>
     </div>
@@ -83,24 +108,24 @@ export default {
     allKeywords: Array,
     allow_new_terms: {
       type: Boolean,
-      default: true
+      default: true,
     },
     show_existing_by_default: {
       type: Boolean,
-      default: false
-    }
+      default: false,
+    },
   },
   components: {},
   data() {
     return {
       tags:
         !!this.keywords && this.keywords.length > 0
-          ? createTags(this.keywords.map(k => k.title))
+          ? createTags(this.keywords.map((k) => k.title))
           : [],
       tag: "",
       new_tag: "",
 
-      show_existing: this.show_existing_by_default
+      show_existing: this.show_existing_by_default,
     };
   },
 
@@ -118,9 +143,9 @@ export default {
         return [];
       }
       const fitting_keywords = this.allKeywords.filter(
-        i =>
+        (i) =>
           new RegExp(this.tag, "i").test(i.text) &&
-          !this.tags.find(t => t.text === i.text)
+          !this.tags.find((t) => t.text === i.text)
       );
       return fitting_keywords.slice(0, 2);
       // return fitting_keywords;
@@ -136,21 +161,21 @@ export default {
     },
     allKeywordsExceptCurrent() {
       return this.allKeywords.filter(
-        i => !this.tags.find(t => t.text === i.text)
+        (i) => !this.tags.find((t) => t.text === i.text)
       );
-    }
+    },
   },
   methods: {
-    createTagFromAutocomplete: function(tag) {
+    createTagFromAutocomplete: function (tag) {
       this.tag = tag;
       this.createTag();
     },
-    createTag: function() {
+    createTag: function () {
       if (this.tag.trim().length === 0) {
         return;
       }
       if (
-        this.tags.some(t => t.text.toLowerCase() === this.tag.toLowerCase())
+        this.tags.some((t) => t.text.toLowerCase() === this.tag.toLowerCase())
       ) {
         this.$alertify
           .closeLogOnClick(true)
@@ -162,11 +187,11 @@ export default {
       // if tag already exists with some other case, we take it
       if (
         this.allKeywords.some(
-          t => t.text.toLowerCase() === this.tag.toLowerCase()
+          (t) => t.text.toLowerCase() === this.tag.toLowerCase()
         )
       ) {
         this.tag = this.allKeywords.find(
-          t => t.text.toLowerCase() === this.tag.toLowerCase()
+          (t) => t.text.toLowerCase() === this.tag.toLowerCase()
         ).text;
       }
 
@@ -174,26 +199,26 @@ export default {
       this.sendTags(this.tags);
       this.tag = "";
     },
-    removeTag: function(tag_text) {
-      this.tags = this.tags.filter(t => t.text !== tag_text);
+    removeTag: function (tag_text) {
+      this.tags = this.tags.filter((t) => t.text !== tag_text);
       this.sendTags(this.tags);
     },
-    updateTags: function(newTags) {
-      this.tags = newTags.map(val => {
+    updateTags: function (newTags) {
+      this.tags = newTags.map((val) => {
         val.classes = "tagcolorid_" + (parseInt(val.text, 36) % 2);
         return val;
       });
     },
-    sendTags: function(newTags) {
+    sendTags: function (newTags) {
       this.updateTags(newTags);
-      const tag_array = this.tags.map(val => {
+      const tag_array = this.tags.map((val) => {
         return { title: val.text };
       });
       if (!!this.new_tag) tag_array.push({ title: this.new_tag });
 
       this.$emit("tagsChanged", tag_array);
-    }
-  }
+    },
+  },
 };
 </script>
 <style></style>

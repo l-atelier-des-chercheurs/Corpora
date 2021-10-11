@@ -216,7 +216,7 @@
         class="m_fragmentMedia--infos--caption"
         v-if="is_being_edited || media.caption"
       >
-        <label v-if="is_being_edited">{{ $t("description") }}</label>
+        <label v-if="is_being_edited">{{ $t("description_source") }}</label>
         <div>
           <template v-if="!is_being_edited">
             <span
@@ -537,7 +537,7 @@ export default {
   // background-color: var(--active-color);
   border-radius: 4px;
   padding: 2px;
-  color: #999;
+  color: var(--color-gray);
   input {
     background-color: var(--body-bg);
     font-size: inherit;

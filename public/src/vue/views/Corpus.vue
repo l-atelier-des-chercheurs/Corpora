@@ -14,6 +14,21 @@
           <button type="button">{{ $t("guide") }}</button>
           <button type="button">{{ $t("about_corpus") }}</button>
           <button type="button"></button>
+          <div class="margin-sides-medium">
+            <div class="margin-vert-small">
+              <div class="custom-select">
+                <select v-model="new_lang">
+                  <option
+                    v-for="lang in this.$root.lang.available"
+                    :key="lang.key"
+                    :value="lang.key"
+                  >
+                    {{ lang.name }}
+                  </option>
+                </select>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -27,9 +42,6 @@
         :opened_fragment="opened_fragment"
         :slugFolderName="corpus.slugFolderName"
       />
-
-      <!-- {{ all_tags }}
-      {{ all_keywords }} -->
 
       <div class="m_corpus" ref="corpus">
         <div class="m_corpus--presentation">
@@ -60,8 +72,6 @@
               @close="show_edit_corpus_for = false"
             />
 
-            <Infos />
-
             <div class="m_corpus--search">
               <label for="fragments-search">{{
                 $t("search_in_fragments")
@@ -73,6 +83,7 @@
                   v-model="debounce_search_filter"
                   :aria-label="$t('search_in_fragments')"
                 />
+
                 <span
                   class="input-addon"
                   v-if="debounce_search_filter.length > 0"
@@ -86,16 +97,51 @@
                   </button>
                 </span>
               </div>
+
+              <div class="custom-select custom-select_tiny">
+                <select v-model="search_type">
+                  <option
+                    v-for="st in search_type_available"
+                    :key="st"
+                    :value="st"
+                  >
+                    {{ $t(st) }}
+                  </option>
+                </select>
+              </div>
             </div>
 
             <div class="m_corpus--keywords">
-              {{ all_keywords }}
+              <label for="fragments-search">{{ $t("keywords") }}</label>
+
+              <div class="m_keywordField m_keywordField_keywords">
+                <button
+                  type="button"
+                  class="tag"
+                  v-for="keyword in all_keywords"
+                  :key="keyword"
+                  @click="setKeywordFilter(keyword)"
+                  :class="{
+                    'is--active':
+                      search_type === 'keywords' && keyword === search_filter,
+                  }"
+                >
+                  {{ keyword }}
+                </button>
+              </div>
             </div>
+          </div>
+
+          <div class="m_corpus--description margin-bottom-small">
+            <label>{{ $t("description") }}</label>
+
+            <p v-html="corpus.description" />
           </div>
 
           <div v-if="previewURL" class="m_corpus--presentation--vignette">
             <img :src="previewURL" class draggable="false" />
           </div>
+          <Infos />
         </div>
 
         <FragmentsList
@@ -137,11 +183,14 @@ export default {
 
       show_edit_corpus_for: false,
 
+      new_lang: this.$root.lang.current,
+
       search_filter: "",
       debounce_search_filter: "",
       debounce_search_filter_function: undefined,
 
       search_type: "title",
+      search_type_available: ["title", "keywords"],
 
       // show_fragments_for: {},
     };
@@ -163,7 +212,10 @@ export default {
         clearTimeout(this.debounce_search_filter_function);
       this.debounce_search_filter_function = setTimeout(() => {
         this.search_filter = this.debounce_search_filter;
-      }, 340);
+      }, 500);
+    },
+    new_lang() {
+      this.$root.updateLocalLang(this.new_lang);
     },
   },
   computed: {
@@ -254,6 +306,10 @@ export default {
         if (sf === "") return true;
         else if (this.search_type === "title")
           return f.title.toLowerCase().includes(sf);
+        else if (this.search_type === "keywords")
+          return (
+            f.keywords && f.keywords.find((k) => k.title.toLowerCase() === sf)
+          );
 
         return false;
       });
@@ -299,6 +355,12 @@ export default {
           slugFolderName: this.$route.params.slugFolderName,
         });
       });
+    },
+    setKeywordFilter(kw) {
+      if (this.search_filter === kw && this.search_type === "keywords")
+        return (this.debounce_search_filter = this.search_filter = "");
+      this.search_type = "keywords";
+      this.debounce_search_filter = this.search_filter = kw;
     },
     createNewMoment() {
       let contribution_moments =
@@ -365,15 +427,15 @@ export default {
   // padding: 0;
   margin: calc(var(--spacing) * 2) 0;
   border-left: 2px solid var(--color-bluegreen);
-  text-align: right;
+  // text-align: right;
 
   // display: flex;
   // flex-flow: column nowrap;
   // justify-content: space-between;
   .m_corpus--presentation--content {
-    text-align: right;
+    // text-align: right;
     > * {
-      margin-bottom: calc(var(--spacing) * 2);
+      margin-bottom: calc(var(--spacing));
     }
   }
 }
@@ -473,6 +535,22 @@ export default {
     margin-right: 0;
     flex: 1;
     text-align: right;
+  }
+
+  .custom-select {
+    margin-right: 0;
+    margin-left: auto;
+    width: 90px;
+    select {
+      margin-left: auto;
+      margin-right: 0;
+    }
+  }
+}
+
+.m_corpus--search {
+  select {
+    margin: calc(var(--spacing) / 4) 0;
   }
 }
 </style>
