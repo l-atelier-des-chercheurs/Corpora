@@ -147,6 +147,10 @@ module.exports = (function () {
       fr: "Ranger dans des onglets",
       en: "By tabs",
     },
+    position: {
+      fr: "Position",
+      en: "Position",
+    },
     editable_for: {
       fr: "Modifiable pendant encore",
       en: "Editable for",
@@ -186,6 +190,22 @@ module.exports = (function () {
       fr: "Collection",
       en: "Collection",
     },
+    fragments_in_collection: {
+      fr: "Récits dans la collection",
+      en: "Stories in fragment",
+    },
+    add_remove_fragments: {
+      fr: "Modifier cette liste",
+      en: "Edit this list",
+    },
+    create_add_remove_fragments: {
+      fr: "Créer de nouveaux récits, et ajouter ou retirer des récits existants à la collection.",
+      fr: "Create new stories, and add or remove existing stories from the collection.",
+    },
+    fragments_not_in_collection: {
+      fr: "Tous les récits",
+      en: "All stories",
+    },
     source: {
       fr: "Lien",
       en: "link",
@@ -205,6 +225,10 @@ module.exports = (function () {
     sure_to_remove_fragment: {
       fr: "Voulez-vous vraiment supprimer ce récit ?",
       en: "Do you really want to remove this story?",
+    },
+    fragments_in_collection: {
+      fr: "Récits appartenants à cette collection",
+      en: "Stories in this collection",
     },
     rename_tag: {
       fr: "Renommer l’onglet",
@@ -337,6 +361,10 @@ module.exports = (function () {
     tabs: {
       fr: "Onglet(s)",
       en: "Tab(s)",
+    },
+    categories: {
+      fr: "Catégories",
+      en: "Categories",
     },
     keywords: {
       fr: "Mot(s)-clé(s)",

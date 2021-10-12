@@ -253,6 +253,11 @@ export default {
             slugFolderName: this.slugFolderName,
             slugMediaName: this.fragment.metaFileName,
           });
+
+          this.$router.push({
+            name: "Corpus",
+            query: this.$route.query ? this.$route.query : {},
+          });
         });
     },
     moveMedia({ metaFileName, dir }) {
@@ -377,6 +382,7 @@ export default {
 
   &.is--preview .m_fragmentContent--content {
     height: 320px;
+    width: 100%;
     overflow: hidden;
 
     &::after {

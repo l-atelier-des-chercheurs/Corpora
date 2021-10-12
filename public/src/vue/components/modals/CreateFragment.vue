@@ -40,7 +40,7 @@
       </div>
 
       <div class="margin-bottom-small">
-        <label>{{ $t("tabs") }}</label>
+        <label>{{ $t("categories") }}</label>
         <TagsInput
           :allKeywords="all_tags_rightly_formatted"
           :allow_new_terms="$root.can_admin_corpora"
@@ -83,6 +83,10 @@ export default {
     all_tags: Array,
     all_keywords: Array,
     current_contribution_mode: String,
+    collection_to_add_to: {
+      type: String,
+      default: "",
+    },
   },
   components: { TagsInput, CollectMode },
   data() {
@@ -118,6 +122,11 @@ export default {
   },
   methods: {
     newFragment() {
+      let additionalMeta = {
+        type: "fragment",
+        medias_slugs: [],
+      };
+
       const title = this.fragmentdata.title;
 
       if (this.corpus.medias && Object.values(this.corpus.medias).length > 0) {
@@ -134,27 +143,32 @@ export default {
         }
       }
 
-      const tags = this.fragmentdata.tags;
-      const keywords = this.fragmentdata.keywords;
-      const contribution_moment = this.fragmentdata.contribution_moment;
+      additionalMeta.title = title;
+
+      if (this.fragmentdata.tags) additionalMeta.tags = this.fragmentdata.tags;
+      if (this.fragmentdata.keywords)
+        additionalMeta.keywords = this.fragmentdata.keywords;
+      if (this.fragmentdata.contribution_moment)
+        additionalMeta.contribution_moment =
+          this.fragmentdata.contribution_moment;
+      if (this.fragmentdata.collection_to_add_to)
+        additionalMeta.collection_to_add_to =
+          this.fragmentdata.collection_to_add_to;
 
       this.$root
         .createMedia({
           slugFolderName: this.corpus.slugFolderName,
           type: "corpus",
-          additionalMeta: {
-            type: "fragment",
-            title,
-            contribution_moment,
-            keywords,
-            tags,
-            medias_slugs: [],
-          },
+          additionalMeta,
         })
         .then((mdata) => {
+          this.$emit("createdFragment", mdata.metaFileName);
           this.$emit("close");
-          this.$nextTick(() => {
-            this.$eventHub.$emit("scrollToFragment", mdata.metaFileName);
+
+          this.$router.push({
+            name: "Fragment",
+            params: { fragmentId: mdata.media_filename },
+            query: this.$route.query ? this.$route.query : {},
           });
         });
     },

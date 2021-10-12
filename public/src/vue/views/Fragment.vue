@@ -8,7 +8,7 @@
   >
     <template slot="body">
       <div class="_sideBySide">
-        <div class="_singleFragment">
+        <div class="_singleFragment custom_scrollbar custom_scrollbar_dark">
           <transition name="fade" :duration="200" mode="out-in">
             <FragmentContent
               v-if="opened_fragment"
@@ -25,7 +25,7 @@
           </transition>
         </div>
 
-        <aside class="_fragmentList">
+        <aside class="_fragmentList custom_scrollbar custom_scrollbar_dark">
           <Loader v-if="!show_fragmentlist" class="_fragmentList--loader" />
 
           <div
@@ -124,11 +124,7 @@ export default {
   },
   beforeDestroy() {},
   watch: {
-    "opened_fragment.metaFileName"() {
-      // scroll to top
-      debugger;
-      this.$refs.body.$refs.modalContent = 0;
-    },
+    "opened_fragment.metaFileName"() {},
   },
   computed: {
     all_fragments_except_current() {
@@ -140,11 +136,13 @@ export default {
       );
     },
     linked_fragments() {
+      if (!this.all_fragments_except_current) return false;
       return this.all_fragments_except_current.filter(
         (f) => f.keywords && this.hasCommonKeywordWithOpened(f)
       );
     },
     not_linked_fragments() {
+      if (!this.linked_fragments) return false;
       const linked_fragments_meta = this.linked_fragments.map(
         (lf) => lf.metaFileName
       );
@@ -175,20 +173,34 @@ export default {
 </script>
 <style lang="scss" scoped>
 ._sideBySide {
-  display: flex;
-  flex-flow: row wrap;
-  grid-gap: calc(var(--spacing) * 2);
+  // grid-gap: calc(var(--spacing) * 2);
 
-  ._singleFragment {
-    flex: 1 1 500px;
-  }
   ._fragmentList {
-    flex: 0 1 440px;
+    padding: calc(var(--spacing) / 2);
+  }
+
+  .app:not(.mobile_view) & {
+    display: flex;
+    flex-flow: row nowrap;
+    > * {
+      max-height: 100vh;
+      overflow: auto;
+      // padding: clamp(2vmin, 4vw, calc(var(--spacing) * 4));
+      padding: calc(var(--spacing) * 2);
+    }
+
+    ._singleFragment {
+      flex: 1 1 600px;
+    }
+    ._fragmentList {
+      flex: 1 1 300px;
+    }
   }
 }
 
 ._fragmentList {
   position: relative;
+
   h2 {
     color: var(--color-beige);
   }

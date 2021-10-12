@@ -203,6 +203,9 @@ let vm = new Vue({
   components: { App },
   template: `
     <App
+      :class="{
+        'mobile_view' : mobile_view
+      }"
     />
   `,
   data: {
@@ -338,6 +341,9 @@ let vm = new Vue({
     },
   },
   computed: {
+    mobile_view() {
+      return this.settings.windowWidth < 768;
+    },
     can_admin_corpora() {
       // todo actual admin checks
       return this.hashCode(this.$root.admin_pwd.toLowerCase()) === 3670;

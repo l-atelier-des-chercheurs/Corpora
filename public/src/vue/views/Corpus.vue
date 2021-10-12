@@ -90,13 +90,13 @@
               <button
                 type="button"
                 v-for="collection in sorted_collections"
-                :key="collection.metaFileName"
+                :key="collection.media_filename"
                 class="m_corpus--collections--coll"
                 :class="{
                   'is--active':
-                    show_collection_meta === collection.metaFileName,
+                    show_collection_meta === collection.media_filename,
                 }"
-                @click="openCollection(collection.metaFileName)"
+                @click="openCollection(collection.media_filename)"
               >
                 {{ collection.title }}
               </button>
@@ -171,41 +171,33 @@
         </div>
 
         <transition name="fade" :duration="200" mode="out-in">
-          <div
-            class="m_corpus--fragments"
-            :key="shown_collection ? shown_collection.metaFileName : 'none'"
-          >
-            <div
+          <div class="m_corpus--fragments" :key="show_collection_meta">
+            <Collection
               v-if="shown_collection"
-              class="m_corpus--fragments--collectionPresentation"
-            >
-              <label>{{ $t("collection") }}</label>
-              <h2>
-                {{ shown_collection.title }}
-              </h2>
-              <label>
-                {{ $t("created") }}&nbsp;{{
-                  $root
-                    .formatDateToHuman(shown_collection.date_created)
-                    .toLowerCase()
-                }}
-              </label>
-            </div>
-
-            <div
-              v-if="search_filter !== '' && filtered_fragments.length === 0"
-              class="m_corpus--fragments--notice"
-            >
-              {{ $t("no_results") }}
-            </div>
-            <FragmentsList
-              v-else
               :corpus="corpus"
+              :collection="shown_collection"
+              :fragments="sorted_fragments"
               :all_keywords="all_keywords"
               :all_tags="all_tags"
               :medias="medias"
-              :fragments="filtered_fragments"
             />
+
+            <template v-else>
+              <div
+                v-if="search_filter !== '' && filtered_fragments.length === 0"
+                class="m_corpus--fragments--notice"
+              >
+                {{ $t("no_results") }}
+              </div>
+              <FragmentsList
+                v-else
+                :corpus="corpus"
+                :all_keywords="all_keywords"
+                :all_tags="all_tags"
+                :medias="medias"
+                :fragments="filtered_fragments"
+              />
+            </template>
           </div>
         </transition>
       </div>
@@ -228,6 +220,7 @@ import CollectMode from "../components/subcomponents/CollectMode.vue";
 import EditCorpus from "../components/modals/EditCorpus.vue";
 import FragmentsList from "../components/subcomponents/FragmentsList.vue";
 import CreateCollection from "../components/modals/CreateCollection.vue";
+import Collection from "../components/subcomponents/Collection.vue";
 
 export default {
   props: {},
@@ -239,6 +232,7 @@ export default {
     EditCorpus,
     FragmentsList,
     CreateCollection,
+    Collection,
   },
   data() {
     return {
@@ -292,6 +286,10 @@ export default {
     search_type() {
       this.setQueryURLFromSearch();
     },
+    show_collection_meta() {
+      this.setQueryURLFromCollection();
+    },
+
     $route: {
       handler(to) {
         if (this.$route.query) {
@@ -299,6 +297,8 @@ export default {
             this.$route.query.search_for || "";
           if (this.$route.query.search_in)
             this.search_type = this.$route.query.search_in;
+          if (this.$route.query.collection)
+            this.show_collection_meta = this.$route.query.collection;
         }
       },
       immediate: true,
@@ -334,14 +334,16 @@ export default {
         (f) => f.media_filename === this.$route.params.fragmentId
       );
     },
+
     shown_collection() {
       return (
         this.sorted_collections &&
         this.sorted_collections.find(
-          (c) => c.metaFileName === this.show_collection_meta
+          (c) => c.media_filename === this.show_collection_meta
         )
       );
     },
+
     can_access_corpus() {
       return this.$root.canAccessFolder({
         type: "corpus",
@@ -409,24 +411,19 @@ export default {
     filtered_fragments() {
       if (!this.sorted_fragments) return false;
 
-      return this.sorted_fragments
-        .filter((f) => {
-          const sf = this.search_filter.toLowerCase();
+      return this.sorted_fragments.filter((f) => {
+        const sf = this.search_filter.toLowerCase();
 
-          if (sf === "") return true;
-          else if (this.search_type === "title")
-            return f.title.toLowerCase().includes(sf);
-          else if (this.search_type === "keywords")
-            return (
-              f.keywords && f.keywords.find((k) => k.title.toLowerCase() === sf)
-            );
+        if (sf === "") return true;
+        else if (this.search_type === "title")
+          return f.title.toLowerCase().includes(sf);
+        else if (this.search_type === "keywords")
+          return (
+            f.keywords && f.keywords.find((k) => k.title.toLowerCase() === sf)
+          );
 
-          return false;
-        })
-        .filter((f) => {
-          if (!this.shown_collection) return true;
-          return false;
-        });
+        return false;
+      });
     },
     all_tags() {
       if (!this.sorted_fragments) return [];
@@ -470,9 +467,9 @@ export default {
         });
       });
     },
-    openCollection(metaFileName) {
+    openCollection(media_filename) {
       this.show_collection_meta =
-        this.show_collection_meta === metaFileName ? false : metaFileName;
+        this.show_collection_meta === media_filename ? false : media_filename;
     },
     setKeywordFilter(kw) {
       if (this.search_filter === kw && this.search_type === "keywords")
@@ -492,6 +489,19 @@ export default {
         query = {
           search_for: this.search_filter,
           search_in: this.search_type,
+        };
+
+      this.$router.push({
+        query,
+      });
+    },
+    setQueryURLFromCollection() {
+      if (this.$route.query.collection === this.show_collection_meta) return;
+
+      let query = {};
+      if (this.show_collection_meta)
+        query = {
+          collection: this.show_collection_meta,
         };
 
       this.$router.push({
@@ -535,8 +545,7 @@ export default {
   scroll-behavior: smooth;
 
   display: flex;
-  flex-flow: row wrap;
-
+  flex-flow: row nowrap;
   > * {
     flex: 0 0 auto;
 
@@ -557,7 +566,7 @@ export default {
   color: var(--color-gray);
 }
 
-.m_corpus--fragments--collectionPresentation {
+.m_corpus--fragments--collection {
   padding: calc(var(--spacing) * 2);
 }
 

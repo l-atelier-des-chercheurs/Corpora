@@ -40,6 +40,7 @@ export default {
         title: "",
       },
       askBeforeClosingModal: false,
+      is_sending_content_to_server: false,
     };
   },
   created() {},
@@ -64,11 +65,12 @@ export default {
           additionalMeta: {
             type: "collection",
             title,
+            desired_filename: title,
           },
         })
         .then((mdata) => {
           this.is_sending_content_to_server = false;
-          this.$emit("openCollection", mdata.metaFileName);
+          this.$emit("openCollection", mdata.media_filename);
           this.$emit("close", "");
         });
     },

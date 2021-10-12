@@ -136,6 +136,57 @@ label:not(.no-style) {
   stroke-width: 1;
 }
 
+.m_fragments {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  grid-gap: calc(var(--spacing) * 1);
+  padding: calc(var(--spacing) * 2);
+
+  > * {
+    display: flex;
+    flex-flow: column nowrap;
+    align-items: center;
+    justify-content: center;
+    gap: calc(var(--spacing) / 2);
+    // padding: calc(var(--spacing) / 2);
+  }
+}
+
+.m_fragments--createFragment {
+  display: flex;
+  flex-flow: row wrap;
+  align-items: center;
+  justify-content: center;
+  margin: calc(var(--spacing) * 1.9) 0;
+
+  .m_fragments--createFragment--addFragmentButton {
+    color: var(--color-black);
+    background: transparent;
+    text-align: center;
+    display: flex;
+    flex-flow: column wrap;
+    align-items: center;
+    justify-content: center;
+
+    svg {
+      background-color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      line-height: 0;
+      padding: 0.5em;
+      font-size: 2em;
+      width: 2em;
+      height: 2em;
+      border-radius: 50%;
+    }
+
+    label {
+      padding: 1em;
+    }
+  }
+}
+
 .custom_scrollbar {
   --scrollbarBG: #e2edef;
   --thumbBG: #90a4ae;
@@ -161,6 +212,11 @@ label:not(.no-style) {
       background-color: #ccd0da;
     }
   }
+}
+
+.custom_scrollbar_dark {
+  --scrollbarBG: transparent;
+  --thumbBG: #90a4ae;
 }
 
 .m_advancedMenu {
@@ -1973,8 +2029,9 @@ twitter-widget.twitter-tweet {
   bottom: 0;
   z-index: 10000;
 
-  backdrop-filter: blur(4px);
-  -webkit-backdrop-filter: blur(4px);
+  // backdrop-filter: blur(4px);
+  // -webkit-backdrop-filter: blur(4px);
+  // background-color: hsla(275, 10%, 63%, 0.5);
 
   display: flex;
   justify-content: center;

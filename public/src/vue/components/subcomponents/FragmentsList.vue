@@ -51,6 +51,7 @@
           :slugFolderName="corpus.slugFolderName"
         />
       </template>
+      <div v-for="index in 3" :key="index" />
     </transition-group>
   </div>
 </template>
@@ -88,53 +89,4 @@ export default {
   methods: {},
 };
 </script>
-<style lang="scss" scoped>
-.m_fragments {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-  /* grid-auto-rows: max-content; */
-  grid-gap: calc(var(--spacing) * 1);
-  padding: calc(var(--spacing) * 2);
-
-  // overflow: hidden;
-}
-
-.m_fragments--createFragment {
-  display: flex;
-  flex-flow: row wrap;
-  align-items: center;
-  justify-content: center;
-  margin: calc(var(--spacing) * 1.9) 0;
-
-  .m_fragments--createFragment--addFragmentButton {
-    color: var(--color-black);
-    background: transparent;
-    text-align: center;
-    display: flex;
-    flex-flow: column wrap;
-    align-items: center;
-    justify-content: center;
-
-    svg {
-      background-color: white;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      line-height: 0;
-      padding: 0.5em;
-      font-size: 2em;
-      width: 2em;
-      height: 2em;
-      border-radius: 50%;
-    }
-
-    label {
-      padding: 1em;
-    }
-  }
-}
-
-.m_fragments--fragment {
-  max-width: 320px;
-}
-</style>
+<style lang="scss" scoped></style>

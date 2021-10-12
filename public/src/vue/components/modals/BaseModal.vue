@@ -291,10 +291,12 @@ export default {
       }
 
       if (event.key === "Escape") {
+        debugger;
+        event.stopPropagation();
         if (!this.has_confirm_close_modal_open) {
           this.closeModal();
         }
-        return;
+        return false;
       }
 
       if (
@@ -406,12 +408,13 @@ export default {
     },
   },
   created: function () {
-    document.addEventListener("keyup", this.modalKeyListener);
+    // TODO : buggy with multiple modals
+    // document.addEventListener("keyup", this.modalKeyListener);
     document.body.classList.add("has_modal_opened");
     this.$root.settings.has_modal_opened = true;
   },
   destroyed: function () {
-    document.removeEventListener("keyup", this.modalKeyListener);
+    // document.removeEventListener("keyup", this.modalKeyListener);
     document.body.classList.remove("has_modal_opened");
     this.$root.settings.has_modal_opened = false;
   },
@@ -419,8 +422,8 @@ export default {
 </script>
 <style scoped lang="scss">
 .m_modal--mask.typeOfModal-LargeAndScroll {
-  background: rgba(60, 53, 65, 0.75);
-  padding: clamp(2vmin, 4vw, calc(var(--spacing) * 4));
+  background: rgba(60, 53, 65, 0.95);
+  padding: 0;
 
   .m_modal--close_button {
     color: var(--color-beige);

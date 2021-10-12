@@ -42,7 +42,7 @@
       </div>
 
       <div class="margin-bottom-small">
-        <label>{{ $t("tabs") }}</label>
+        <label>{{ $t("categories") }}</label>
         <TagsInput
           :allKeywords="all_tags_rightly_formatted"
           :keywords="fragmentdata.tags"
