@@ -4,7 +4,7 @@
       <router-view />
     </transition-page>
 
-    <portal-target name="modal_container" />
+    <portal-target name="modal_container" multiple />
   </div>
 </template>
 
@@ -637,7 +637,7 @@ input[type="submit"] {
   }
 
   &.is--active {
-    background: #fff4db;
+    background: var(--color-beige);
   }
 
   &.button-bg_rounded {

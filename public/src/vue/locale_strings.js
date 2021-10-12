@@ -182,6 +182,10 @@ module.exports = (function () {
       fr: "Collections",
       en: "Collections",
     },
+    collection: {
+      fr: "Collection",
+      en: "Collection",
+    },
     source: {
       fr: "Lien",
       en: "link",
@@ -281,6 +285,10 @@ module.exports = (function () {
     create_a_corpus: {
       fr: "Créer un corpus",
       en: "Create a corpus",
+    },
+    create_a_collection: {
+      fr: "Créer une collection",
+      en: "Create a collection",
     },
     edit_corpus: {
       fr: "Éditer un corpus",

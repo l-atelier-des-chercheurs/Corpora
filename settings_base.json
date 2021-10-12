@@ -123,6 +123,7 @@
               "link",
               "document",
               "fragment",
+              "collection",
               "other"
             ],
             "default": "other"

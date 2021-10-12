@@ -26,7 +26,12 @@
         </div>
 
         <aside class="_fragmentList">
-          <div class="_fragmentList--content" v-if="linked_fragments">
+          <Loader v-if="!show_fragmentlist" />
+
+          <div
+            class="_fragmentList--content"
+            v-if="show_fragmentlist && linked_fragments"
+          >
             <h2>
               {{ linked_fragments.length + " " + $t("with_similar_keywords") }}
             </h2>
@@ -49,7 +54,10 @@
               />
             </transition-group>
           </div>
-          <div class="_fragmentList--content" v-if="not_linked_fragments">
+          <div
+            class="_fragmentList--content"
+            v-if="show_fragmentlist && not_linked_fragments"
+          >
             <h2>
               {{ not_linked_fragments.length + " " + $t("other_fragments") }}
             </h2>
@@ -96,7 +104,9 @@ export default {
     FragmentContent,
   },
   data() {
-    return {};
+    return {
+      show_fragmentlist: false,
+    };
   },
   created() {},
   mounted() {},
@@ -170,6 +180,7 @@ export default {
 }
 
 ._fragmentList {
+  position: relative;
   h2 {
     color: var(--color-beige);
   }

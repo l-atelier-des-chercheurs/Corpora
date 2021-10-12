@@ -1,192 +1,200 @@
 <template>
-  <!-- <portal to="modal_container"> -->
-  <div
-    class="m_modal--mask"
-    :class="[
-      'typeOfModal-' + typeOfModal,
-      { is_invisible: !showModal },
-      { is_minimized: is_minimized },
-    ]"
-    @mousedown.self="closeModal"
-    :style="`height: ${$root.settings.windowHeight}px`"
-  >
+  <portal to="modal_container">
     <div
-      class="m_modal--container"
+      class="m_modal--mask"
       :class="[
-        'color-' + backgroundColor,
+        'typeOfModal-' + typeOfModal,
         { is_invisible: !showModal },
         { is_minimized: is_minimized },
       ]"
-      @keyup.ctrl.enter="$emit('submit')"
+      @mousedown.self="closeModal"
+      :style="`height: ${$root.settings.windowHeight}px`"
     >
-      <div class="m_modal--container--content" ref="modalContent">
-        <div v-if="!!this.$slots['preview']" class="m_modal--preview">
-          <!-- if there is no sidebar, output header here -->
-          <template v-if="!this.$slots['sidebar']">
-            <div class="m_modal--header">
-              <h3 class="margin-none">
-                <slot name="header">default header</slot>
-              </h3>
-            </div>
-          </template>
+      <div
+        class="m_modal--container"
+        :class="[
+          'color-' + backgroundColor,
+          { is_invisible: !showModal },
+          { is_minimized: is_minimized },
+        ]"
+        @keyup.ctrl.enter="$emit('submit')"
+      >
+        <div class="m_modal--container--content" ref="modalContent">
+          <div v-if="!!this.$slots['preview']" class="m_modal--preview">
+            <!-- if there is no sidebar, output header here -->
+            <template v-if="!this.$slots['sidebar']">
+              <div class="m_modal--header">
+                <h3 class="margin-none">
+                  <slot name="header">default header</slot>
+                </h3>
+              </div>
+            </template>
 
-          <slot name="preview">default preview</slot>
-        </div>
+            <slot name="preview">default preview</slot>
+          </div>
 
-        <form
-          class="m_modal--sidebar"
-          :class="{ is_collapsed: !show_sidebar }"
-          @submit.prevent="$emit('submit')"
-          v-if="!!this.$slots['sidebar'] && !is_minimized"
-          ref="form"
-        >
-          <button
-            type="button"
-            class="m_modal--sidebar--toggle"
-            @click="toggleSidebar"
-            v-if="can_minimize"
+          <form
+            class="m_modal--sidebar"
+            :class="{ is_collapsed: !show_sidebar }"
+            @submit.prevent="$emit('submit')"
+            v-if="!!this.$slots['sidebar'] && !is_minimized"
+            ref="form"
           >
-            &#x2630;
-          </button>
+            <button
+              type="button"
+              class="m_modal--sidebar--toggle"
+              @click="toggleSidebar"
+              v-if="can_minimize"
+            >
+              &#x2630;
+            </button>
 
-          <template
-            v-if="!!this.$slots['sidebar'] && show_sidebar && !is_minimized"
-          >
-            <div class="m_modal--header">
-              <h3 class="margin-none">
-                <slot name="header">default header</slot>
-              </h3>
-            </div>
+            <template
+              v-if="!!this.$slots['sidebar'] && show_sidebar && !is_minimized"
+            >
+              <div class="m_modal--header">
+                <h3 class="margin-none">
+                  <slot name="header">default header</slot>
+                </h3>
+              </div>
 
-            <div class="m_modal--metaOptions">
-              <slot name="sidebar">default sidebar</slot>
-            </div>
+              <div class="m_modal--metaOptions">
+                <slot name="sidebar">default sidebar</slot>
+              </div>
 
-            <div v-if="!!this.$slots['submit_button']" class="m_modal--buttons">
-              <button
-                type="submit"
-                :disabled="read_only || is_loading"
-                class="button button-bg_rounded"
+              <div
+                v-if="!!this.$slots['submit_button']"
+                class="m_modal--buttons"
               >
-                <span class="text-cap font-verysmall">
-                  <slot name="submit_button">{{ $t("save") }}</slot>
-                </span>
-              </button>
-            </div>
-          </template>
-        </form>
+                <button
+                  type="submit"
+                  :disabled="read_only || is_loading"
+                  class="button button-bg_rounded"
+                >
+                  <span class="text-cap font-verysmall">
+                    <slot name="submit_button">{{ $t("save") }}</slot>
+                  </span>
+                </button>
+              </div>
+            </template>
+          </form>
 
-        <form
-          v-if="!!this.$slots['buttons']"
-          class="m_modal--buttons"
-          v-on:submit.prevent="$emit('submit')"
-          ref="form"
-        >
-          <button
-            type="button"
-            @click="closeModal"
-            class="button button-bg_rounded bg-orange"
+          <form
+            v-if="!!this.$slots['buttons']"
+            class="m_modal--buttons"
+            v-on:submit.prevent="$emit('submit')"
+            ref="form"
           >
-            <img src="/images/i_clear.svg" draggable="false" />
-            <span class="text-cap font-verysmall">
-              <slot name="cancel_button">{{ $t("cancel") }}</slot>
-            </span>
-          </button>
+            <button
+              type="button"
+              @click="closeModal"
+              class="button button-bg_rounded bg-orange"
+            >
+              <img src="/images/i_clear.svg" draggable="false" />
+              <span class="text-cap font-verysmall">
+                <slot name="cancel_button">{{ $t("cancel") }}</slot>
+              </span>
+            </button>
 
-          <button
-            type="submit"
-            :disabled="read_only"
-            class="button button-bg_rounded bg-bleuvert"
-          >
-            <span class="text-cap font-verysmall">
-              <slot name="submit_button">{{ $t("save") }}</slot>
-            </span>
-          </button>
-        </form>
+            <button
+              type="submit"
+              :disabled="read_only"
+              class="button button-bg_rounded bg-bleuvert"
+            >
+              <span class="text-cap font-verysmall">
+                <slot name="submit_button">{{ $t("save") }}</slot>
+              </span>
+            </button>
+          </form>
 
-        <div v-if="!!this.$slots['body']">
-          <slot name="body">default body</slot>
-        </div>
+          <div v-if="!!this.$slots['body']">
+            <slot name="body">default body</slot>
+          </div>
 
-        <div class="m_modal--loader" v-if="is_loading">
-          <span class="loader" />
+          <div class="m_modal--loader" v-if="is_loading">
+            <span class="loader" />
+          </div>
         </div>
       </div>
-    </div>
 
-    <transition name="fade" :duration="600">
-      <button
-        class="button-round m_modal--close_button padding-verysmall"
-        @click="closeModal"
-        v-if="showModal && !is_minimized && !prevent_close"
-      >
-        <svg
-          version="1.1"
-          xmlns="http://www.w3.org/2000/svg"
-          xmlns:xlink="http://www.w3.org/1999/xlink"
-          x="0px"
-          y="0px"
-          width="24px"
-          height="24px"
-          viewBox="0 0 24 24"
-          style="enable-background: new 0 0 24 24; transform: rotate(-45deg)"
-          xml:space="preserve"
+      <transition name="fade" :duration="600">
+        <button
+          class="button-round m_modal--close_button padding-verysmall"
+          @click="closeModal"
+          v-if="showModal && !is_minimized && !prevent_close"
         >
-          <path
-            style="fill: currentColor"
-            d="M0,10.5h10.5V0h2.9v10.5H24v2.9H13.5V24h-2.9V13.5H0V10.5z"
-          />
-        </svg>
-      </button>
-    </transition>
+          <svg
+            version="1.1"
+            xmlns="http://www.w3.org/2000/svg"
+            xmlns:xlink="http://www.w3.org/1999/xlink"
+            x="0px"
+            y="0px"
+            width="24px"
+            height="24px"
+            viewBox="0 0 24 24"
+            style="enable-background: new 0 0 24 24; transform: rotate(-45deg)"
+            xml:space="preserve"
+          >
+            <path
+              style="fill: currentColor"
+              d="M0,10.5h10.5V0h2.9v10.5H24v2.9H13.5V24h-2.9V13.5H0V10.5z"
+            />
+          </svg>
+        </button>
+      </transition>
 
-    <transition name="fade" :duration="600">
-      <button
-        class="button-round bg-blanc m_modal--minimize_button padding-verysmall"
-        @click="toggleMinimize"
-        v-if="showModal && can_minimize"
-        :class="{ is_minimized: is_minimized }"
-        :content="$t('minimize_media')"
-        v-tippy="{
-          placement: 'right',
-          delay: [600, 0],
-        }"
-      >
-        <img src="/images/i_minimize.svg" draggable="false" />
-      </button>
-    </transition>
+      <transition name="fade" :duration="600">
+        <button
+          class="
+            button-round
+            bg-blanc
+            m_modal--minimize_button
+            padding-verysmall
+          "
+          @click="toggleMinimize"
+          v-if="showModal && can_minimize"
+          :class="{ is_minimized: is_minimized }"
+          :content="$t('minimize_media')"
+          v-tippy="{
+            placement: 'right',
+            delay: [600, 0],
+          }"
+        >
+          <img src="/images/i_minimize.svg" draggable="false" />
+        </button>
+      </transition>
 
-    <transition name="fade" :duration="600">
-      <button
-        class="button-round bg-blanc m_modal--nav_left padding-verysmall"
-        @click="prevMedia()"
-        v-if="showModal && media_navigation && !is_minimized"
-        :content="$t('previous_media')"
-        v-tippy="{
-          placement: 'left',
-          delay: [600, 0],
-        }"
-      >
-        <img src="/images/i_arrow_left.svg" draggable="false" />
-      </button>
-    </transition>
+      <transition name="fade" :duration="600">
+        <button
+          class="button-round bg-blanc m_modal--nav_left padding-verysmall"
+          @click="prevMedia()"
+          v-if="showModal && media_navigation && !is_minimized"
+          :content="$t('previous_media')"
+          v-tippy="{
+            placement: 'left',
+            delay: [600, 0],
+          }"
+        >
+          <img src="/images/i_arrow_left.svg" draggable="false" />
+        </button>
+      </transition>
 
-    <transition name="fade" :duration="600">
-      <button
-        class="button-round bg-blanc m_modal--nav_right padding-verysmall"
-        @click="nextMedia()"
-        v-if="showModal && media_navigation && !is_minimized"
-        :content="$t('next_media')"
-        v-tippy="{
-          placement: 'right',
-          delay: [600, 0],
-        }"
-      >
-        <img src="/images/i_arrow_right.svg" draggable="false" />
-      </button>
-    </transition>
-  </div>
-  <!-- </portal> -->
+      <transition name="fade" :duration="600">
+        <button
+          class="button-round bg-blanc m_modal--nav_right padding-verysmall"
+          @click="nextMedia()"
+          v-if="showModal && media_navigation && !is_minimized"
+          :content="$t('next_media')"
+          v-tippy="{
+            placement: 'right',
+            delay: [600, 0],
+          }"
+        >
+          <img src="/images/i_arrow_right.svg" draggable="false" />
+        </button>
+      </transition>
+    </div>
+  </portal>
 </template>
 
 <script>

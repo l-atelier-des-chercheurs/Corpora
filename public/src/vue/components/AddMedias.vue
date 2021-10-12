@@ -13,7 +13,13 @@
             <button
               key="add_text"
               type="button"
-              class="button button-round button-round-small margin-bottom-small padding-none bg-noir c-blanc"
+              class="
+                button button-round button-round-small
+                margin-bottom-small
+                padding-none
+                bg-noir
+                c-blanc
+              "
               @click="createMedia({ type: 'text' })"
               :disabled="read_only"
             >
@@ -73,7 +79,13 @@
             <button
               key="add_link"
               type="button"
-              class="button button-round button-round-small margin-bottom-small padding-none bg-noir c-blanc"
+              class="
+                button button-round button-round-small
+                margin-bottom-small
+                padding-none
+                bg-noir
+                c-blanc
+              "
               @click="createMedia({ type: 'link' })"
               :disabled="read_only"
             >
@@ -100,7 +112,13 @@
 
             <label
               :key="`add_${field.key}`"
-              class="button button-round button-round-small margin-bottom-small bg-noir c-blanc padding-none"
+              class="
+                button button-round button-round-small
+                margin-bottom-small
+                bg-noir
+                c-blanc
+                padding-none
+              "
               v-for="field in input_file_fields"
               :disabled="read_only"
               :for="`add_${field.key + unique_id}`"
@@ -151,7 +169,16 @@
 
       <button
         type="button"
-        class="menu_encart--button button button-round margin-bottom-small padding-none bg-noir c-blanc button_addMedia m_addMedias--buttons--openHideButton"
+        class="
+          menu_encart--button
+          button button-round
+          margin-bottom-small
+          padding-none
+          bg-noir
+          c-blanc
+          button_addMedia
+          m_addMedias--buttons--openHideButton
+        "
         :class="{
           'is--active': show_addmedia_options,
           'is--shown': show_addmedia_options,
@@ -408,7 +435,6 @@ export default {
       padding: calc(var(--spacing) / 4) calc(var(--spacing) / 2);
 
       flex: 0 1 auto;
-      // background-color: #fff4db;
 
       .menu_encart--options--buttonRow {
         display: flex;
@@ -561,7 +587,7 @@ export default {
   .menu_encart--button:not(.is--shown) {
     background-color: var(--color-black);
     > * {
-      color: #fff4db;
+      color: var(--color-beige);
       svg {
       }
     }

@@ -1,5 +1,6 @@
 <template>
   <div style="" v-if="corpus">
+    {{ show_collection_meta }}
     <CorpusPwd v-if="!can_access_corpus" :corpus="corpus" />
     <template v-else>
       <WelcomeModal v-if="$root.settings.show_welcome_modal" />
@@ -80,6 +81,26 @@
 
             <div class="m_corpus--collections">
               <label for="fragments-search">{{ $t("collections") }}</label>
+
+              <button
+                type="button"
+                @click="show_create_collection_modal = true"
+              >
+                {{ $t("create_a_collection") }}
+              </button>
+              <button
+                type="button"
+                v-for="collection in sorted_collections"
+                :key="collection.metaFileName"
+                class="m_corpus--collections--coll"
+                :class="{
+                  'is--active':
+                    show_collection_meta === collection.metaFileName,
+                }"
+                @click="openCollection(collection.metaFileName)"
+              >
+                {{ collection.title }}
+              </button>
             </div>
 
             <div class="m_corpus--search">
@@ -150,23 +171,53 @@
           <Infos />
         </div>
 
-        <div class="m_corpus--fragments">
+        <transition name="fade" :duration="200" mode="out-in">
           <div
-            v-if="search_filter !== '' && filtered_fragments.length === 0"
-            class="notice"
+            class="m_corpus--fragments"
+            :key="shown_collection ? shown_collection.metaFileName : 'none'"
           >
-            {{ $t("no_results") }}
+            <div
+              v-if="shown_collection"
+              class="m_corpus--fragments--collectionPresentation"
+            >
+              <label>{{ $t("collection") }}</label>
+              <h2>
+                {{ shown_collection.title }}
+              </h2>
+              <label>
+                {{ $t("created") }}&nbsp;{{
+                  $root
+                    .formatDateToHuman(shown_collection.date_created)
+                    .toLowerCase()
+                }}
+              </label>
+            </div>
+
+            <div
+              v-if="search_filter !== '' && filtered_fragments.length === 0"
+              class="m_corpus--fragments--notice"
+            >
+              {{ $t("no_results") }}
+            </div>
+            <FragmentsList
+              v-else
+              :corpus="corpus"
+              :all_keywords="all_keywords"
+              :all_tags="all_tags"
+              :medias="medias"
+              :fragments="filtered_fragments"
+            />
           </div>
-          <FragmentsList
-            v-else
-            :corpus="corpus"
-            :all_keywords="all_keywords"
-            :all_tags="all_tags"
-            :medias="medias"
-            :fragments="filtered_fragments"
-          />
-        </div>
+        </transition>
       </div>
+
+      <CreateCollection
+        v-if="show_create_collection_modal"
+        :collections="collections"
+        :slugFolderName="corpus.slugFolderName"
+        @close="show_create_collection_modal = false"
+        @openCollection="openCollection"
+      />
     </template>
   </div>
 </template>
@@ -177,6 +228,7 @@ import WelcomeModal from "../components/modals/WelcomeModal.vue";
 import CollectMode from "../components/subcomponents/CollectMode.vue";
 import EditCorpus from "../components/modals/EditCorpus.vue";
 import FragmentsList from "../components/subcomponents/FragmentsList.vue";
+import CreateCollection from "../components/modals/CreateCollection.vue";
 
 export default {
   props: {},
@@ -187,6 +239,7 @@ export default {
     CollectMode,
     EditCorpus,
     FragmentsList,
+    CreateCollection,
   },
   data() {
     return {
@@ -205,6 +258,9 @@ export default {
 
       search_type: "title",
       search_type_available: ["title", "keywords"],
+
+      show_create_collection_modal: false,
+      show_collection_meta: false,
 
       // show_fragments_for: {},
     };
@@ -279,6 +335,14 @@ export default {
         (f) => f.media_filename === this.$route.params.fragmentId
       );
     },
+    shown_collection() {
+      return (
+        this.sorted_collections &&
+        this.sorted_collections.find(
+          (c) => c.metaFileName === this.show_collection_meta
+        )
+      );
+    },
     can_access_corpus() {
       return this.$root.canAccessFolder({
         type: "corpus",
@@ -308,6 +372,21 @@ export default {
       // return Object.values(this.corpus.medias);
       return Object.values(this.corpus.medias);
     },
+    sorted_collections() {
+      if (
+        typeof this.corpus.medias !== "object" ||
+        Object.values(this.corpus.medias).length === 0
+      )
+        return false;
+
+      let collections = Object.values(this.corpus.medias).filter(
+        (m) => m.type === "collection"
+      );
+      collections = this.$_.sortBy(collections, "date_created");
+      collections.reverse();
+
+      return collections;
+    },
     sorted_fragments() {
       if (
         typeof this.corpus.medias !== "object" ||
@@ -331,19 +410,24 @@ export default {
     filtered_fragments() {
       if (!this.sorted_fragments) return false;
 
-      return this.sorted_fragments.filter((f) => {
-        const sf = this.search_filter.toLowerCase();
+      return this.sorted_fragments
+        .filter((f) => {
+          const sf = this.search_filter.toLowerCase();
 
-        if (sf === "") return true;
-        else if (this.search_type === "title")
-          return f.title.toLowerCase().includes(sf);
-        else if (this.search_type === "keywords")
-          return (
-            f.keywords && f.keywords.find((k) => k.title.toLowerCase() === sf)
-          );
+          if (sf === "") return true;
+          else if (this.search_type === "title")
+            return f.title.toLowerCase().includes(sf);
+          else if (this.search_type === "keywords")
+            return (
+              f.keywords && f.keywords.find((k) => k.title.toLowerCase() === sf)
+            );
 
-        return false;
-      });
+          return false;
+        })
+        .filter((f) => {
+          if (!this.shown_collection) return true;
+          return false;
+        });
     },
     all_tags() {
       if (!this.sorted_fragments) return [];
@@ -386,6 +470,10 @@ export default {
           slugFolderName: this.$route.params.slugFolderName,
         });
       });
+    },
+    openCollection(metaFileName) {
+      this.show_collection_meta =
+        this.show_collection_meta === metaFileName ? false : metaFileName;
     },
     setKeywordFilter(kw) {
       if (this.search_filter === kw && this.search_type === "keywords")
@@ -448,7 +536,7 @@ export default {
     flex: 0 0 auto;
 
     &.m_corpus--presentation {
-      flex: 0 1 320px;
+      flex: 0 1 380px;
       order: 2;
     }
 
@@ -458,10 +546,14 @@ export default {
   }
 }
 
-.m_corpus--fragments .notice {
+.m_corpus--fragments--notice {
   padding: calc(var(--spacing) * 2);
   text-align: center;
   color: var(--color-gray);
+}
+
+.m_corpus--fragments--collectionPresentation {
+  padding: calc(var(--spacing) * 2);
 }
 
 .m_corpus--presentation {
@@ -600,6 +692,20 @@ export default {
 .m_corpus--search {
   select {
     margin: calc(var(--spacing) / 4) 0;
+  }
+}
+
+.m_corpus--collections--coll {
+  // background-color: transparent;
+  // background-color: var(--color-beige);
+
+  border-radius: 8px;
+  display: block;
+  padding: calc(var(--spacing) / 2) calc(var(--spacing));
+  margin: calc(var(--spacing) / 2) 0;
+
+  &::before {
+    content: ">";
   }
 }
 </style>
