@@ -31,7 +31,7 @@ const routes = [
 
 const router = new VueRouter({
   mode: "history",
-  base: process.env.NODE_ENV === "production" ? "/2021-sdtr/front/" : "/",
+  base: process.env.NODE_ENV === "production" ? "/" : "/",
   routes,
   scrollBehavior(to, from, savedPosition) {
     let position = { x: 0, y: 0 };
