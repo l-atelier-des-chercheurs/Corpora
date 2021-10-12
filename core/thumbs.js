@@ -1,7 +1,6 @@
 const path = require("path"),
   fs = require("fs-extra"),
-  pathToFfmpeg = require("ffmpeg-static"),
-  ffprobestatic = require("ffprobe-static"),
+  { ffmpegPath, ffprobePath } = require("ffmpeg-ffprobe-static"),
   ffmpeg = require("fluent-ffmpeg"),
   exifReader = require("exif-reader"),
   sharp = require("sharp"),
@@ -15,8 +14,8 @@ const puppeteer = require("puppeteer");
 const dev = require("./dev-log"),
   api = require("./api");
 
-ffmpeg.setFfmpegPath(pathToFfmpeg);
-ffmpeg.setFfprobePath(ffprobestatic.path);
+ffmpeg.setFfmpegPath(ffmpegPath);
+ffmpeg.setFfprobePath(ffprobePath);
 
 module.exports = (function () {
   const API = {
@@ -60,7 +59,11 @@ module.exports = (function () {
       dev.logfunction(
         `THUMBS — makeMediaThumbs — Making thumbs for media with slugFolderName = ${slugFolderName}, filename = ${filename}, mediaType: ${mediaType}, type: ${type}, subtype: ${subtype}`
       );
-      if (!["image", "video", "audio", "stl", "link"].includes(mediaType)) {
+      if (
+        !["image", "video", "audio", "stl", "document", "link"].includes(
+          mediaType
+        )
+      ) {
         dev.logverbose(
           `THUMBS — makeMediaThumbs — media is not of type image or video`
         );
@@ -107,7 +110,16 @@ module.exports = (function () {
             });
           } else if (mediaType === "video") {
             // make screenshot
-            let screenshotsTimemarks = [0];
+            let screenshotsTimemarks = [
+              {
+                key: "00:00:00",
+                filename_suffix: "0",
+              },
+              {
+                key: "50%",
+                filename_suffix: "50pc",
+              },
+            ];
             screenshotsTimemarks.forEach((timeMark) => {
               let makeScreenshot = new Promise((resolve, reject) => {
                 _makeVideoScreenshot(
@@ -151,7 +163,7 @@ module.exports = (function () {
                       makeThumbsFromScreenshot.push(makeThumbFromScreenshot);
                     });
                     Promise.all(makeThumbsFromScreenshot).then((thumbsData) => {
-                      resolve({ timeMark, thumbsData });
+                      resolve({ timeMark: timeMark.key, thumbsData });
                     });
                   })
                   .catch((err) => {
@@ -263,6 +275,61 @@ module.exports = (function () {
                   });
               });
               makeThumbs.push(makeSTLScreenshot);
+            });
+          } else if (mediaType === "document") {
+            let screenshotsPages = [0];
+            screenshotsPages.forEach((page) => {
+              let makePDFScreenshot = new Promise((resolve, reject) => {
+                _makePDFScreenshot({
+                  slugFolderName,
+                  thumbFolderPath,
+                  filename,
+                  page,
+                })
+                  .then(({ screenshotPath, screenshotName }) => {
+                    // make screenshot, then make thumbs out of each screenshot and push this to thumbs
+                    // naming :
+                    // - mediaName.0.200.jpeg, mediaName.0.400.jpeg, etc.
+                    // - mediaName.5.200.jpeg, mediaName.10.400.jpeg, etc.
+
+                    let makeThumbsFromScreenshot = [];
+
+                    thumbResolutions.forEach((thumbRes) => {
+                      let makeThumbFromScreenshot = new Promise(
+                        (resolve, reject) => {
+                          _makeImageThumb(
+                            api.getFolderPath(screenshotPath),
+                            thumbFolderPath,
+                            screenshotName,
+                            thumbRes
+                          )
+                            .then((thumbPath) => {
+                              let thumbMeta = {
+                                path: thumbPath,
+                                size: thumbRes,
+                              };
+                              resolve(thumbMeta);
+                            })
+                            .catch((err) => {
+                              dev.error(
+                                `makeMediaThumbs / Failed to make pdf thumbs with error ${err}`
+                              );
+                              resolve();
+                            });
+                        }
+                      );
+                      makeThumbsFromScreenshot.push(makeThumbFromScreenshot);
+                    });
+                    Promise.all(makeThumbsFromScreenshot).then((thumbsData) => {
+                      resolve({ page, thumbsData });
+                    });
+                  })
+                  .catch((err) => {
+                    dev.error(`Couldn’t make pdf screenshots.`);
+                    resolve();
+                  });
+              });
+              makeThumbs.push(makePDFScreenshot);
             });
           } else if (mediaType === "link") {
             // if link, we’ll get og: title, og: image and og: description from source page
@@ -729,10 +796,10 @@ module.exports = (function () {
   ) {
     return new Promise(function (resolve, reject) {
       dev.logfunction(
-        `THUMBS — _makeVideoScreenshot — Looking to make a video screenshot for ${mediaPath} and timeMark = ${timeMark}`
+        `THUMBS — _makeVideoScreenshot — Looking to make a video screenshot for ${mediaPath} and timeMark = ${timeMark.key}`
       );
 
-      let screenshotName = `${filename}.${timeMark}.jpeg`;
+      let screenshotName = `${filename}.${timeMark.filename_suffix}.jpeg`;
       let screenshotPath = path.join(thumbFolderPath, screenshotName);
       let fullScreenshotPath = api.getFolderPath(screenshotPath);
 
@@ -753,8 +820,7 @@ module.exports = (function () {
               reject(err.message);
             })
             .screenshots({
-              count: 1,
-              timemarks: ["00:00:00"],
+              timemarks: [timeMark.key],
               filename: screenshotName,
               folder: api.getFolderPath(thumbFolderPath),
             });
@@ -842,22 +908,75 @@ module.exports = (function () {
                 height: 1800,
               },
             ],
-          }).then(function (thumbnails) {
-            // thumbnails is an array (in matching order to your requests) of Canvas objects
-            // you can write them to disk, return them to web users, etc
-            // see node-canvas documentation at https://github.com/Automattic/node-canvas
-            thumbnails[0].toBuffer(function (err, buf) {
-              if (err) return reject();
+          })
+            .then(function (thumbnails) {
+              // thumbnails is an array (in matching order to your requests) of Canvas objects
+              // you can write them to disk, return them to web users, etc
+              // see node-canvas documentation at https://github.com/Automattic/node-canvas
+              thumbnails[0].toBuffer(function (err, buf) {
+                if (err) return reject();
 
-              fs.writeFileSync(fullScreenshotPath, buf);
-              return resolve({ screenshotPath, screenshotName });
+                fs.writeFileSync(fullScreenshotPath, buf);
+                return resolve({ screenshotPath, screenshotName });
+              });
+            })
+            .catch(function (err) {
+              return reject(err);
             });
-          });
         } else {
           dev.logverbose(
             `Screenshots already exist at path ${fullScreenshotPath}`
           );
           resolve({ screenshotPath, screenshotName });
+        }
+      });
+    });
+  }
+
+  function _makePDFScreenshot({
+    slugFolderName,
+    thumbFolderPath,
+    filename,
+    page,
+  }) {
+    return new Promise(function (resolve, reject) {
+      dev.logfunction(
+        `THUMBS — _makePDFScreenshot: ${slugFolderName}/${filename}`
+      );
+
+      // todo : use page to get screenshots of each page
+      let screenshotName = `${filename}.${page}.png`;
+      let screenshotPath = path.join(thumbFolderPath, screenshotName);
+      let fullScreenshotPath = api.getFolderPath(screenshotPath);
+
+      // check first if it exists, resolve if it does
+      fs.pathExists(fullScreenshotPath).then((exists) => {
+        if (!exists) {
+          const url = `${global.appInfos.homeURL}/${slugFolderName}/${filename}`;
+
+          screenshotWebsite({
+            url,
+          })
+            .then((image) => {
+              fs.writeFile(fullScreenshotPath, image.toPNG(1.0), (error) => {
+                if (error) throw error;
+                dev.logverbose(
+                  `THUMBS — _makePDFScreenshot : created image at ${fullScreenshotPath}`
+                );
+                return resolve({ screenshotPath, screenshotName });
+              });
+            })
+            .catch((err) => {
+              dev.error(
+                `THUMBS — _makePDFScreenshot / Failed to make stl thumbs with error ${err}`
+              );
+              return reject();
+            });
+        } else {
+          dev.logverbose(
+            `Screenshots already exist at path ${fullScreenshotPath}`
+          );
+          return resolve({ screenshotPath, screenshotName });
         }
       });
     });
