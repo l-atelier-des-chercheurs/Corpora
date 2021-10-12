@@ -8,16 +8,20 @@
       <div>
         <h1>Les corpus</h1>
       </div>
-
       <div>
         <button
           type="button"
           class="buttonLink"
           :class="{ 'is--active': show_create_corpus }"
           @click="show_create_corpus = !show_create_corpus"
-        >{{ $t("create") }}</button>
+        >
+          {{ $t("create") }}
+        </button>
 
-        <CreateCorpus v-if="show_create_corpus" @close="show_create_corpus = false" />
+        <CreateCorpus
+          v-if="show_create_corpus"
+          @close="show_create_corpus = false"
+        />
       </div>
 
       <div class="m_list--corpuses">
@@ -37,24 +41,26 @@ import CreateCorpus from "../components/modals/CreateCorpus.vue";
 import CorpusPreview from "../components/CorpusPreview.vue";
 
 export default {
-  props: {
-    corpuses: Array
-  },
+  props: {},
   components: {
     CreateCorpus,
-    CorpusPreview
+    CorpusPreview,
   },
   data() {
     return {
-      show_create_corpus: false
+      show_create_corpus: false,
     };
   },
   created() {},
   mounted() {},
   beforeDestroy() {},
   watch: {},
-  computed: {},
-  methods: {}
+  computed: {
+    corpuses() {
+      return Object.values(this.$root.store.corpus);
+    },
+  },
+  methods: {},
 };
 </script>
 <style lang="scss" scoped>

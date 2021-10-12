@@ -24,10 +24,10 @@
         />
       </div>
 
-      <div>
+      <!-- <div>
         <label>{{ $t("source_of_contribution") }}</label>
         <CollectMode v-model="fragmentdata.contribution_moment" />
-      </div>
+      </div> -->
 
       <div class="margin-bottom-small">
         <label>{{ $t("keywords") }}</label>
@@ -42,7 +42,7 @@
       </div>
 
       <div class="margin-bottom-small">
-        <label>{{ $t("tabs") }}</label>
+        <label>{{ $t("categories") }}</label>
         <TagsInput
           :allKeywords="all_tags_rightly_formatted"
           :keywords="fragmentdata.tags"
@@ -56,7 +56,6 @@
   </Modal>
 </template>
 <script>
-import Modal from "./BaseModal.vue";
 import TagsInput from "../subcomponents/TagsInput.vue";
 import CollectMode from "../subcomponents/CollectMode.vue";
 export default {
@@ -66,7 +65,7 @@ export default {
     all_tags: Array,
     all_keywords: Array,
   },
-  components: { Modal, TagsInput, CollectMode },
+  components: { TagsInput, CollectMode },
   data() {
     return {
       fragmentdata: {

@@ -62,7 +62,7 @@
       </div>
 
       <!-- Sort in tabs -->
-      <div class="margin-bottom-small">
+      <!-- <div class="margin-bottom-small">
         <label for="sortInTabs">
           <input
             type="checkbox"
@@ -71,7 +71,7 @@
           />
           {{ $t("sort_in_tabs_by_default") }}
         </label>
-      </div>
+      </div> -->
 
       <!-- Password -->
       <div class="margin-bottom-small">
@@ -105,7 +105,6 @@
   </Modal>
 </template>
 <script>
-import Modal from "./BaseModal.vue";
 import ImageSelect from "../subcomponents/ImageSelect.vue";
 import CollaborativeEditor from "../subcomponents/CollaborativeEditor.vue";
 
@@ -116,7 +115,6 @@ export default {
     corpus: Object,
   },
   components: {
-    Modal,
     CollaborativeEditor,
     ImageSelect,
   },
@@ -132,7 +130,7 @@ export default {
         name: this.corpus.name,
         subtitle: this.corpus.subtitle,
         description: this.corpus.description,
-        sort_in_tabs: this.corpus.sort_in_tabs,
+        // sort_in_tabs: this.corpus.sort_in_tabs,
         password: this.corpus_password ? this.corpus_password : "",
       },
       tag: "",

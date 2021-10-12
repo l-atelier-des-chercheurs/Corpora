@@ -49,7 +49,7 @@
       </div>
 
       <!-- Sort in tabs -->
-      <div class="margin-bottom-small">
+      <!-- <div class="margin-bottom-small">
         <label for="sortInTabs">
           <input
             type="checkbox"
@@ -58,7 +58,7 @@
           />
           {{ $t("sort_in_tabs_by_default") }}
         </label>
-      </div>
+      </div> -->
 
       <!-- Password -->
       <div class="margin-bottom-small">
@@ -77,14 +77,12 @@
   </Modal>
 </template>
 <script>
-import Modal from "./BaseModal.vue";
 import ImageSelect from "../subcomponents/ImageSelect.vue";
 import CollaborativeEditor from "../subcomponents/CollaborativeEditor.vue";
 
 export default {
   props: {},
   components: {
-    Modal,
     ImageSelect,
     CollaborativeEditor,
   },
@@ -109,7 +107,7 @@ export default {
         description: "",
         password: "",
         keywords: [],
-        sort_in_tabs: false,
+        // sort_in_tabs: false,
       },
       preview: undefined,
       askBeforeClosingModal: false,
@@ -162,14 +160,14 @@ export default {
 
             this.$eventHub.$once("socketio.authentificated", () => {
               this.$emit("close", "");
-              this.$root.openCorpus(fdata.slugFolderName);
+              this.$router.push({ path: `/${fdata.slugFolderName}` });
 
               this.is_sending_content_to_server = false;
             });
           } else {
             this.$nextTick(() => {
               this.$emit("close", "");
-              this.$root.openCorpus(fdata.slugFolderName);
+              this.$router.push({ path: `/${fdata.slugFolderName}` });
 
               this.is_sending_content_to_server = false;
             });

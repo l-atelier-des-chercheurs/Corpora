@@ -1,12 +1,50 @@
 <template>
-  <div style="width: 100%; height: 100%">
+  <div style="" v-if="corpus">
     <CorpusPwd v-if="!can_access_corpus" :corpus="corpus" />
     <template v-else>
       <WelcomeModal v-if="$root.settings.show_welcome_modal" />
-      <div class="m_corpus" ref="corpus" @scroll="onScroll">
-        <div class="m_corpus--presentation custom_scrollbar">
-          <Infos />
 
+      <div class="m_topBar">
+        <div class="m_topBar--content">
+          <hgroup>
+            <h1 v-if="!!corpus.name">{{ corpus.name }}</h1>
+            <h2 v-if="!!corpus.subtitle">{{ corpus.subtitle }}</h2>
+          </hgroup>
+
+          <button type="button">{{ $t("guide") }}</button>
+          <button type="button">{{ $t("about_corpus") }}</button>
+          <button type="button"></button>
+          <div class="margin-sides-medium">
+            <div class="margin-vert-small">
+              <div class="custom-select">
+                <select v-model="new_lang">
+                  <option
+                    v-for="lang in this.$root.lang.available"
+                    :key="lang.key"
+                    :value="lang.key"
+                  >
+                    {{ lang.name }}
+                  </option>
+                </select>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <router-view
+        :fragments="sorted_fragments"
+        :context="'edit'"
+        :corpus="corpus"
+        :all_keywords="all_keywords"
+        :all_tags="all_tags"
+        :medias="medias"
+        :opened_fragment="opened_fragment"
+        :slugFolderName="corpus.slugFolderName"
+      />
+
+      <div class="m_corpus" ref="corpus">
+        <div class="m_corpus--presentation">
           <div class="m_feedbacks">
             <a
               class="js--openInBrowser"
@@ -17,16 +55,6 @@
           </div>
 
           <div class="m_corpus--presentation--content">
-            <div class="m_corpus--presentation--name">
-              <h1 v-if="!!corpus.name">{{ corpus.name }}</h1>
-              <h3 v-if="!!corpus.subtitle">{{ corpus.subtitle }}</h3>
-            </div>
-
-            <div
-              class="m_corpus--presentation--description mediaTextContent"
-              v-html="corpus.description"
-            />
-
             <div class="margin-bottom-small" v-if="$root.can_admin_corpora">
               <button
                 type="button"
@@ -44,172 +72,143 @@
               @close="show_edit_corpus_for = false"
             />
 
-            <!-- <div class="m_corpus--presentation--tags">
-          <label>{{ $t('keywords') }}</label>
-          <button type="button" v-for="(tag, index) in all_tags" :key="index">{{ tag }}</button>
-          </div>-->
+            <div class="m_corpus--description margin-bottom-small">
+              <label>{{ $t("description") }}</label>
 
-            <div class="m_corpus--presentation--contributionModes">
-              <label>{{ $t("filter_by_source_of_contribution") }}</label>
+              <p v-html="corpus.description" />
+            </div>
 
-              <div class="margin-bottom-verysmall">
-                <CollectMode
-                  v-model="current_contribution_mode"
-                  :is_filter="true"
+            <div class="m_corpus--collections">
+              <label for="fragments-search">{{ $t("collections") }}</label>
+
+              <button
+                type="button"
+                @click="show_create_collection_modal = true"
+              >
+                {{ $t("create_a_collection") }}
+              </button>
+              <button
+                type="button"
+                v-for="collection in sorted_collections"
+                :key="collection.media_filename"
+                class="m_corpus--collections--coll"
+                :class="{
+                  'is--active':
+                    show_collection_meta === collection.media_filename,
+                }"
+                @click="openCollection(collection.media_filename)"
+              >
+                {{ collection.title }}
+              </button>
+            </div>
+
+            <div class="m_corpus--search">
+              <label for="fragments-search">{{
+                $t("search_in_fragments")
+              }}</label>
+              <div class="flex-nowrap">
+                <input
+                  type="search"
+                  id="fragments-search"
+                  v-model="debounce_search_filter"
+                  :aria-label="$t('search_in_fragments')"
                 />
+
+                <span
+                  class="input-addon"
+                  v-if="debounce_search_filter.length > 0"
+                >
+                  <button
+                    type="button"
+                    :disabled="debounce_search_filter.length === 0"
+                    @click="debounce_search_filter = ''"
+                  >
+                    ×
+                  </button>
+                </span>
               </div>
 
-              <div class>
+              <div class="custom-select custom-select_tiny">
+                <select v-model="search_type">
+                  <option
+                    v-for="st in search_type_available"
+                    :key="st"
+                    :value="st"
+                  >
+                    {{ $t(st) }}
+                  </option>
+                </select>
+              </div>
+            </div>
+
+            <div class="m_corpus--keywords">
+              <label for="fragments-search">{{ $t("keywords") }}</label>
+
+              <div class="m_keywordField m_keywordField_keywords">
                 <button
                   type="button"
-                  class="button-small margin-bottom-verysmall"
-                  @click="show_create_time_modal = !show_create_time_modal"
+                  class="tag"
+                  v-for="keyword in all_keywords"
+                  :key="keyword"
+                  @click="setKeywordFilter(keyword)"
+                  :class="{
+                    'is--active':
+                      search_type === 'keywords' && keyword === search_filter,
+                  }"
                 >
-                  <template v-if="!show_create_time_modal">{{
-                    $t("create_a_source")
-                  }}</template>
-                  <template v-else>{{ $t("close") }}</template>
+                  {{ keyword }}
                 </button>
-
-                <form
-                  class
-                  v-if="show_create_time_modal"
-                  @submit.prevent="createNewMoment"
-                >
-                  <div class>
-                    <label>{{ $t("new_source_name") }}</label>
-                    <div class="flex-nowrap align-items-stretch">
-                      <input
-                        type="text"
-                        class
-                        v-model.trim="new_source_name"
-                        required
-                        autofocus
-                      />
-                      <input
-                        type="submit"
-                        style="flex: 0 1 0"
-                        :disabled="!new_source_name"
-                        :value="$t('add')"
-                      />
-                    </div>
-                  </div>
-                </form>
-              </div>
-            </div>
-            <div class="m_corpus--presentation--displayOptions">
-              <label>{{ $t("display_options") }}</label>
-              <div>
-                <div class="input-checkbox">
-                  <input
-                    type="checkbox"
-                    class="switch"
-                    id="display_in_tabs"
-                    v-model="display_in_tabs"
-                  />
-                  <label class="no-style" for="display_in_tabs">
-                    {{ $t("display_in_tabs") }}
-                  </label>
-                </div>
-                <div class="flex-nowrap">
-                  <span>{{ $t("sort_fragments_by") }}&nbsp;</span>
-                  <div class="custom-select custom-select_tiny">
-                    <select v-model="sort_fragments_by">
-                      <option
-                        v-for="mode in ['date_created', 'title']"
-                        :key="mode"
-                        :value="mode"
-                      >
-                        {{ $t(mode) }}
-                      </option>
-                    </select>
-                  </div>
-                </div>
               </div>
             </div>
           </div>
 
-          <div class="m_corpus--presentation--vignette">
-            <img v-if="previewURL" :src="previewURL" class draggable="false" />
+          <div v-if="previewURL" class="m_corpus--presentation--vignette">
+            <img :src="previewURL" class draggable="false" />
           </div>
+
+          <hr />
+          <Infos />
         </div>
 
-        <div
-          class="m_tags"
-          ref="corpus_content"
-          @wheel="/* onMousewheel */"
-          @scroll="/* onTimelineScroll */"
-        >
-          <div class="m_tags--options">
-            <button
-              type="button"
-              class="m_tags--options--addFragmentButton"
-              @click="show_create_fragment = !show_create_fragment"
-            >
-              <svg
-                version="1.1"
-                xmlns="http://www.w3.org/2000/svg"
-                xmlns:xlink="http://www.w3.org/1999/xlink"
-                x="0px"
-                y="0px"
-                width="24px"
-                height="24px"
-                viewBox="0 0 24 24"
-                style="enable-background: new 0 0 24 24"
-                xml:space="preserve"
-              >
-                <path
-                  style="fill: currentColor"
-                  d="M0,10.5h10.5V0h2.9v10.5H24v2.9H13.5V24h-2.9V13.5H0V10.5z"
-                />
-              </svg>
-            </button>
-            <CreateFragment
-              v-if="show_create_fragment"
+        <transition name="fade" :duration="200" mode="out-in">
+          <div class="m_corpus--fragments" :key="show_collection_meta">
+            <Collection
+              v-if="shown_collection"
               :corpus="corpus"
+              :collection="shown_collection"
+              :fragments="sorted_fragments"
               :all_keywords="all_keywords"
               :all_tags="all_tags"
-              :current_contribution_mode="current_contribution_mode"
-              @close="show_create_fragment = false"
+              :medias="medias"
             />
-          </div>
 
-          <transition-group
-            name="list-complete"
-            tag="div"
-            class="m_tags--allfragments"
-          >
-            <template v-if="display_in_tabs">
-              <Tag
-                v-for="{ tag, fragments } in tags_with_fragments"
-                :key="tag"
-                :tag="tag"
-                :medias="medias"
-                :all_keywords="all_keywords"
-                :all_tags="all_tags"
-                :corpus="corpus"
-                :slugFolderName="corpus.slugFolderName"
-                :fragments="fragments"
-                :fragment_width="fragment_width"
-                :corpus_scroll_left="corpus_scroll_left"
-              />
-            </template>
             <template v-else>
-              <Fragment
-                v-for="fragment in filtered_fragments"
-                :key="fragment.metaFileName"
+              <div
+                v-if="search_filter !== '' && filtered_fragments.length === 0"
+                class="m_corpus--fragments--notice"
+              >
+                {{ $t("no_results") }}
+              </div>
+              <FragmentsList
+                v-else
                 :corpus="corpus"
                 :all_keywords="all_keywords"
                 :all_tags="all_tags"
                 :medias="medias"
-                :fragment="fragment"
-                :fragment_width="fragment_width"
-                :slugFolderName="corpus.slugFolderName"
+                :fragments="filtered_fragments"
               />
             </template>
-          </transition-group>
-        </div>
+          </div>
+        </transition>
       </div>
+
+      <CreateCollection
+        v-if="show_create_collection_modal"
+        :collections="collections"
+        :slugFolderName="corpus.slugFolderName"
+        @close="show_create_collection_modal = false"
+        @openCollection="openCollection"
+      />
     </template>
   </div>
 </template>
@@ -217,63 +216,138 @@
 import Infos from "../components/Infos.vue";
 import CorpusPwd from "../components/modals/CorpusPwd.vue";
 import WelcomeModal from "../components/modals/WelcomeModal.vue";
-import Tag from "../components/Tag.vue";
-import Fragment from "../components/Fragment.vue";
-import CreateFragment from "../components/modals/CreateFragment.vue";
 import CollectMode from "../components/subcomponents/CollectMode.vue";
 import EditCorpus from "../components/modals/EditCorpus.vue";
+import FragmentsList from "../components/subcomponents/FragmentsList.vue";
+import CreateCollection from "../components/modals/CreateCollection.vue";
+import Collection from "../components/subcomponents/Collection.vue";
 
 export default {
-  props: {
-    corpus: Object,
-  },
+  props: {},
   components: {
     Infos,
     CorpusPwd,
     WelcomeModal,
-    Tag,
-    Fragment,
-    CreateFragment,
     CollectMode,
     EditCorpus,
+    FragmentsList,
+    CreateCollection,
+    Collection,
   },
   data() {
     return {
-      display_in_tabs: this.corpus.sort_in_tabs,
       sort_fragments_by: "date_created",
-
-      show_create_fragment: false,
-      new_fragment_name: "",
-      new_fragment_tag: "",
-      new_fragment_tag_custom: "",
-      corpus_scroll_left: 0,
 
       show_create_time_modal: false,
       new_source_name: "",
-      current_contribution_mode: "",
 
       show_edit_corpus_for: false,
+
+      new_lang: this.$root.lang.current,
+
+      search_filter: "",
+      debounce_search_filter: "",
+      debounce_search_filter_function: undefined,
+
+      search_type: "title",
+      search_type_available: ["title", "keywords"],
+
+      show_create_collection_modal: false,
+      show_collection_meta: false,
 
       // show_fragments_for: {},
     };
   },
   created() {},
   mounted() {
-    this.$eventHub.$on("scrollCorpus", this.scrollCorpus);
+    if (this.$root.state.connected) this.loadCorpus();
+    this.$eventHub.$on("socketio.authentificated", this.loadCorpus);
+    this.$eventHub.$on("socketio.reconnect", this.loadCorpus);
   },
   beforeDestroy() {
-    this.$eventHub.$off("scrollCorpus", this.scrollCorpus);
+    this.$eventHub.$off("socketio.authentificated", this.loadCorpus);
+    this.$eventHub.$off("socketio.reconnect", this.loadCorpus);
   },
   destroyed() {},
-  watch: {},
-  computed: {
-    fragment_width() {
-      return Math.min(325, this.$root.settings.windowWidth * 0.9);
+  watch: {
+    debounce_search_filter: function () {
+      if (this.debounce_search_filter_function)
+        clearTimeout(this.debounce_search_filter_function);
+      this.debounce_search_filter_function = setTimeout(() => {
+        this.search_filter = this.debounce_search_filter;
+      }, 500);
     },
+    new_lang() {
+      this.$root.updateLocalLang(this.new_lang);
+    },
+    search_filter() {
+      this.setQueryURLFromSearch();
+    },
+    search_type() {
+      this.setQueryURLFromSearch();
+    },
+    show_collection_meta() {
+      this.setQueryURLFromCollection();
+    },
+
+    $route: {
+      handler(to) {
+        if (this.$route.query) {
+          this.debounce_search_filter = this.search_filter =
+            this.$route.query.search_for || "";
+          if (this.$route.query.search_in)
+            this.search_type = this.$route.query.search_in;
+          if (this.$route.query.collection)
+            this.show_collection_meta = this.$route.query.collection;
+        }
+      },
+      immediate: true,
+    },
+  },
+  computed: {
+    corpus() {
+      // not convenient : loading corpus can be after listfolders has executed
+      // if (
+      //   !this.$root.store.hasOwnProperty("corpus") ||
+      //   Object.keys(this.$root.store.corpus).length === 0
+      // ) {
+      //   this.$router.push("/");
+      //   return {};
+      // }
+
+      // if (
+      //   this.$root.store.corpus.hasOwnProperty(
+      //     this.$route.params.slugFolderName
+      //   )
+      // ) {
+      return this.$root.store.corpus[this.$route.params.slugFolderName];
+      // } else {
+      //   this.$router.push("/");
+      //   return {};
+      // }
+    },
+    opened_fragment() {
+      if (!this.$route.params.fragmentId || !this.sorted_fragments)
+        return false;
+
+      return this.sorted_fragments.find(
+        (f) => f.media_filename === this.$route.params.fragmentId
+      );
+    },
+
+    shown_collection() {
+      return (
+        this.sorted_collections &&
+        this.sorted_collections.find(
+          (c) => c.media_filename === this.show_collection_meta
+        )
+      );
+    },
+
     can_access_corpus() {
       return this.$root.canAccessFolder({
         type: "corpus",
-        slugFolderName: this.corpus.slugFolderName,
+        slugFolderName: this.$route.params.slugFolderName,
       });
     },
     previewURL() {
@@ -296,7 +370,23 @@ export default {
         Object.values(this.corpus.medias).length === 0
       )
         return false;
+      // return Object.values(this.corpus.medias);
       return Object.values(this.corpus.medias);
+    },
+    sorted_collections() {
+      if (
+        typeof this.corpus.medias !== "object" ||
+        Object.values(this.corpus.medias).length === 0
+      )
+        return false;
+
+      let collections = Object.values(this.corpus.medias).filter(
+        (m) => m.type === "collection"
+      );
+      collections = this.$_.sortBy(collections, "date_created");
+      collections.reverse();
+
+      return collections;
     },
     sorted_fragments() {
       if (
@@ -304,6 +394,7 @@ export default {
         Object.values(this.corpus.medias).length === 0
       )
         return false;
+
       let fragments = Object.values(this.corpus.medias).filter(
         (m) => m.type === "fragment"
       );
@@ -318,62 +409,21 @@ export default {
       return fragments;
     },
     filtered_fragments() {
-      let fragments = this.sorted_fragments;
+      if (!this.sorted_fragments) return false;
 
-      // if current_contribution_mode is set
-      // if current_contribution_mode === online, then we retrieve only fragments that don’t have contribution_moment
-      if (this.current_contribution_mode !== "") {
-        fragments = fragments.filter((f) => {
-          if (
-            this.current_contribution_mode === "online" ||
-            this.current_contribution_mode === ""
-          )
-            return (
-              !f.hasOwnProperty("contribution_moment") ||
-              f.contribution_moment === "online" ||
-              f.contribution_moment === ""
-            );
-          return f.contribution_moment === this.current_contribution_mode;
-        });
-      }
+      return this.sorted_fragments.filter((f) => {
+        const sf = this.search_filter.toLowerCase();
 
-      return fragments;
-    },
-    tags_with_fragments() {
-      // get all tags from fragments
-      if (!this.sorted_fragments) return [];
+        if (sf === "") return true;
+        else if (this.search_type === "title")
+          return f.title.toLowerCase().includes(sf);
+        else if (this.search_type === "keywords")
+          return (
+            f.keywords && f.keywords.find((k) => k.title.toLowerCase() === sf)
+          );
 
-      // get all tags
-      let fragments_by_tag = this.all_tags.map((tag) => {
-        const fragments_for_tag = this.filtered_fragments.filter(
-          (f) =>
-            !!f.tags &&
-            Array.isArray(f.tags) &&
-            f.tags.some((t) => t.title === tag)
-        );
-
-        return {
-          tag,
-          fragments: fragments_for_tag,
-        };
+        return false;
       });
-
-      // append all fragments
-      const fragments_with_no_tags = this.filtered_fragments.filter(
-        (f) => !f.tags || !Array.isArray(f.tags) || f.tags.length === 0
-      );
-
-      if (fragments_with_no_tags.length > 0) {
-        fragments_by_tag.push({
-          tag: "",
-          fragments: fragments_with_no_tags,
-        });
-      }
-
-      // fragments_by_tag.sort((a, b) => a.tag.localeCompare(b.tag));
-      // fragments_by_tag = this.$_.sortBy(fragments_by_tag, "tag");
-
-      return fragments_by_tag;
     },
     all_tags() {
       if (!this.sorted_fragments) return [];
@@ -409,11 +459,54 @@ export default {
     },
   },
   methods: {
-    onScroll() {
-      this.corpus_scroll_left = this.$refs.corpus.scrollLeft;
+    loadCorpus() {
+      this.$nextTick(() => {
+        this.$socketio.listMedias({
+          type: "corpus",
+          slugFolderName: this.$route.params.slugFolderName,
+        });
+      });
     },
-    scrollCorpus(px) {
-      this.$refs.corpus.scrollLeft = px - window.innerWidth / 3;
+    openCollection(media_filename) {
+      this.show_collection_meta =
+        this.show_collection_meta === media_filename ? false : media_filename;
+    },
+    setKeywordFilter(kw) {
+      if (this.search_filter === kw && this.search_type === "keywords")
+        return (this.debounce_search_filter = this.search_filter = "");
+      this.search_type = "keywords";
+      this.debounce_search_filter = this.search_filter = kw;
+    },
+    setQueryURLFromSearch() {
+      if (
+        this.$route.query.search_for === this.search_filter &&
+        this.$route.query.search_in === this.search_type
+      )
+        return;
+
+      let query = {};
+      if (this.search_filter !== "")
+        query = {
+          search_for: this.search_filter,
+          search_in: this.search_type,
+        };
+
+      this.$router.push({
+        query,
+      });
+    },
+    setQueryURLFromCollection() {
+      if (this.$route.query.collection === this.show_collection_meta) return;
+
+      let query = {};
+      if (this.show_collection_meta)
+        query = {
+          collection: this.show_collection_meta,
+        };
+
+      this.$router.push({
+        query,
+      });
     },
     createNewMoment() {
       let contribution_moments =
@@ -449,45 +542,56 @@ export default {
 </script>
 <style lang="scss" scoped>
 .m_corpus {
-  width: 100%;
-  height: 100%;
-  display: flex;
-  flex-flow: row nowrap;
-  align-items: stretch;
-  overflow-x: auto;
   scroll-behavior: smooth;
 
+  display: flex;
+  flex-flow: row nowrap;
   > * {
     flex: 0 0 auto;
-  }
 
-  &::after {
-    content: "";
-    display: block;
-    flex: 0 0 100px;
-    height: 100%;
+    &.m_corpus--presentation {
+      flex: 0 1 380px;
+      order: 2;
+    }
+
+    &.m_corpus--fragments {
+      flex: 1 1 600px;
+    }
   }
+}
+
+.m_corpus--fragments--notice {
+  padding: calc(var(--spacing) * 2);
+  text-align: center;
+  color: var(--color-gray);
+}
+
+.m_corpus--fragments--collection {
+  padding: calc(var(--spacing) * 2);
 }
 
 .m_corpus--presentation {
   // position: absolute;
-  padding: calc(var(--spacing) * 2) calc(var(--spacing) * 2);
-  margin-right: calc(var(--spacing) * 2);
+  // margin-right: calc(var(--spacing) * 2);
   z-index: 1;
   // in case of very small height of viewport
-  max-height: 100vh;
-  max-width: 52ch;
+  // max-height: 100vh;
+  // max-width: 52ch;
   overflow-y: auto;
+  padding: 0 calc(var(--spacing) * 2);
+  // padding: 0;
+  margin: calc(var(--spacing) * 2) 0;
+  border-left: 2px solid var(--color-bluegreen);
+  // text-align: right;
 
-  display: flex;
-  flex-flow: column nowrap;
-  justify-content: space-between;
-
-  > * {
-    margin-bottom: calc(var(--spacing));
-  }
-
+  // display: flex;
+  // flex-flow: column nowrap;
+  // justify-content: space-between;
   .m_corpus--presentation--content {
+    // text-align: right;
+    > * {
+      margin-bottom: calc(var(--spacing));
+    }
   }
 }
 
@@ -537,68 +641,6 @@ export default {
   }
 }
 
-.m_tags {
-  display: flex;
-  flex-flow: row nowrap;
-  align-content: stretch;
-  min-width: max-content;
-
-  height: 100%;
-
-  &::after {
-    display: block;
-    content: "";
-    // background-color: red;
-    width: calc(var(--spacing) * 2);
-    height: 100%;
-  }
-}
-
-.m_tags--options {
-  display: flex;
-  flex-flow: column wrap;
-  margin: calc(var(--spacing) * 1.9) 0;
-
-  .m_tags--options--addFragmentButton {
-    background-color: white;
-    color: black;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    line-height: 0;
-    padding: 0;
-    font-size: 4em;
-    width: 1em;
-    height: 1em;
-    border-radius: 50%;
-  }
-}
-
-.m_tags--alltags {
-  position: fixed;
-  // position: relative;
-  width: 100%;
-
-  h2 {
-    display: inline-block;
-    background-color: #fff;
-    padding: var(--spacing);
-    border: 2px solid currentColor;
-    margin-right: var(--spacing);
-  }
-}
-
-.m_tags--allfragments {
-  height: 100%;
-  display: flex;
-  flex-flow: row nowrap;
-  align-content: stretch;
-  min-width: max-content;
-  overflow-y: auto;
-
-  padding-left: var(--spacing);
-}
-
 .m_feedbacks {
   position: fixed;
   bottom: var(--spacing);
@@ -608,9 +650,76 @@ export default {
   margin: 0;
   padding: calc(var(--spacing) / 2) var(--spacing);
   border-radius: 24px;
+  z-index: 10000;
 
   a {
     color: inherit;
+  }
+}
+
+.m_topBar {
+  width: 100%;
+  padding: 0 calc(var(--spacing) * 2);
+}
+.m_topBar--content {
+  padding: calc(var(--spacing) * 2) 0;
+  border-bottom: 2px solid var(--color-bluegreen);
+
+  display: flex;
+  align-items: center;
+  gap: calc(var(--spacing) * 3);
+
+  h1,
+  h2 {
+    margin-top: 0;
+    margin-bottom: 0;
+  }
+
+  hgroup {
+    // padding-right: calc(var(--spacing) * 2);
+  }
+
+  button {
+    background: inherit;
+    font-family: inherit;
+    font-size: 1.5rem;
+    line-height: 1.09;
+  }
+
+  > *:last-child {
+    margin-right: 0;
+    flex: 1;
+    text-align: right;
+  }
+
+  .custom-select {
+    margin-right: 0;
+    margin-left: auto;
+    width: 90px;
+    select {
+      margin-left: auto;
+      margin-right: 0;
+    }
+  }
+}
+
+.m_corpus--search {
+  select {
+    margin: calc(var(--spacing) / 4) 0;
+  }
+}
+
+.m_corpus--collections--coll {
+  // background-color: transparent;
+  // background-color: var(--color-beige);
+
+  border-radius: 8px;
+  display: block;
+  padding: calc(var(--spacing) / 2) calc(var(--spacing));
+  margin: calc(var(--spacing) / 2) 0;
+
+  &::before {
+    content: ">";
   }
 }
 </style>

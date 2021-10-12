@@ -1,22 +1,35 @@
 <template>
   <div
-    class="m_fragment custom_scrollbar"
+    class="m_fragmentContent custom_scrollbar"
     :style="`--fragment-width: ${fragment_width}px`"
-    :class="{ 'is--highlighted': highlight_corpus }"
+    :class="{
+      'is--highlighted': highlight_corpus,
+      'is--preview': context === 'preview',
+    }"
   >
-    <div class="m_fragment--content">
-      <div class="m_fragment--content--top">
+    <div class="m_fragmentContent--content">
+      <div class="m_fragmentContent--content--top">
         <h2>{{ fragment.title }}</h2>
-      </div>
-      <div class="m_fragment--content--top">
-        <label>
+
+        <div
+          class="motscles"
+          v-if="fragment.keywords && fragment.keywords.length > 0"
+        >
+          <div v-for="kw in fragment.keywords" :key="kw.title">
+            #{{ kw.title }}
+          </div>
+        </div>
+        <!-- <label>
           {{ $t("created") }}&nbsp;{{
             $root.formatDateToHuman(fragment.date_created)
           }}
-        </label>
+        </label> -->
       </div>
 
-      <div class="m_advancedMenu" v-if="$root.can_admin_corpora">
+      <div
+        class="m_advancedMenu"
+        v-if="context === 'edit' && $root.can_admin_corpora"
+      >
         <button
           type="button"
           @click="show_advanced_menu = !show_advanced_menu"
@@ -78,8 +91,12 @@
         @close="show_edit_fragment = false"
       />
 
-      <div class="m_fragment--medias">
+      <div
+        class="m_fragmentContent--medias"
+        :tabindex="context === 'preview' ? '-1' : ''"
+      >
         <AddMedias
+          v-if="context === 'edit'"
           :slugFolderName="slugFolderName"
           :key="'addmedia_start'"
           :collapsed="linked_medias.length > 0"
@@ -98,10 +115,12 @@
               :slugFolderName="slugFolderName"
               :index="index"
               :linked_medias="linked_medias"
+              :context="context"
               @removeMedia="(d) => removeMedia(d)"
               @moveMedia="(d) => moveMedia(d)"
             />
             <AddMedias
+              v-if="context === 'edit'"
               :slugFolderName="slugFolderName"
               :key="'addmedia_' + media.metaFileName"
               :collapsed="index < linked_medias.length - 1"
@@ -116,6 +135,28 @@
           </template>
         </transition-group>
       </div>
+
+      <template v-if="context === 'preview'">
+        <router-link
+          class="m_fragmentContent--open"
+          :to="{
+            name: 'Fragment',
+            params: { fragmentId: fragment.media_filename },
+            query: this.$route.query ? this.$route.query : {},
+          }"
+        >
+          <span
+            v-if="already_visited"
+            class="m_fragmentContent--open--alreadyVisited"
+          >
+            {{ $t("alreay_read") }}
+          </span>
+
+          <span class="m_fragmentContent--open--open">
+            {{ $t("open") }}
+          </span>
+        </router-link>
+      </template>
     </div>
   </div>
 </template>
@@ -123,6 +164,7 @@
 import AddMedias from "./AddMedias.vue";
 import FragmentMedia from "./FragmentMedia.vue";
 import EditFragment from "./modals/EditFragment.vue";
+import TagsInput from "./subcomponents/TagsInput.vue";
 
 Array.prototype.move = function (from, to) {
   this.splice(to, 0, this.splice(from, 1)[0]);
@@ -132,6 +174,10 @@ export default {
   props: {
     corpus: Object,
     fragment: Object,
+    context: {
+      type: String,
+      default: "edit",
+    },
     all_tags: Array,
     all_keywords: Array,
     medias: Array,
@@ -142,6 +188,7 @@ export default {
     AddMedias,
     FragmentMedia,
     EditFragment,
+    TagsInput,
   },
   data() {
     return {
@@ -159,6 +206,10 @@ export default {
   },
   watch: {},
   computed: {
+    already_visited() {
+      const fullPath = `/${this.slugFolderName}/${this.fragment.media_filename}`;
+      return this.$root.fragments_read.includes(fullPath);
+    },
     linked_medias() {
       if (
         typeof this.fragment.medias_slugs !== "object" ||
@@ -166,13 +217,16 @@ export default {
       )
         return [];
 
-      return this.fragment.medias_slugs.reduce((acc, item) => {
+      const fragment_medias = this.fragment.medias_slugs.reduce((acc, item) => {
         const linked_media = this.medias.find(
           (m) => m.metaFileName === item.metaFileName
         );
         if (linked_media) acc.push(linked_media);
         return acc;
       }, []);
+
+      if (this.context === "preview") return fragment_medias.slice(0, 2);
+      return fragment_medias;
     },
   },
   methods: {
@@ -198,6 +252,11 @@ export default {
             type: "corpus",
             slugFolderName: this.slugFolderName,
             slugMediaName: this.fragment.metaFileName,
+          });
+
+          this.$router.push({
+            name: "Corpus",
+            query: this.$route.query ? this.$route.query : {},
           });
         });
     },
@@ -307,16 +366,13 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
-.m_fragment {
+.m_fragmentContent {
   // margin: 0 var(--spacing);
   // width: 100%;
   // max-width: 400px;
   // flex: 1 0 100vw;
   // width: 95vw;
 
-  width: var(--fragment-width);
-  flex: 0 0 var(--fragment-width);
-  overflow-y: auto;
   // padding-right: calc(var(--spacing) / 4);
   // columns: 50ch;
   // column-gap: 1em;
@@ -324,25 +380,51 @@ export default {
   // height: 90vh;
   // padding-top: 100px;
 
-  .m_fragment--content {
-    position: relative;
-    margin-top: calc(var(--spacing) * 2);
-    margin-bottom: 33vh;
-    margin-right: 4px;
-    margin-left: 4px;
+  &.is--preview .m_fragmentContent--content {
+    height: 320px;
+    width: 100%;
+    overflow: hidden;
 
-    padding: calc(var(--spacing) / 2);
+    &::after {
+      content: "";
+      display: block;
+
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 15px;
+      z-index: 10;
+      pointer-events: none;
+
+      background: linear-gradient(
+        180deg,
+        hsla(48, 71%, 92%, 0) 0%,
+        hsla(48, 71%, 92%, 15) calc(100%)
+      );
+    }
+  }
+
+  .m_fragmentContent--content {
+    position: relative;
+    // margin-top: calc(var(--spacing) * 2);
+    // margin-bottom: 33vh;
+    // margin-right: 4px;
+    // margin-left: 4px;
+
+    padding: calc(var(--spacing)) 0;
 
     // background-color: #fff;
     // background-color: #f9f3db;
-    background: linear-gradient(
-      180deg,
-      #fff 0%,
-      #f9f3db calc(100% - 1px),
-      var(--color-black) 100%
-    );
-
+    // background: linear-gradient(
+    //   180deg,
+    //   #fff 0%,
+    //   #f9f3db calc(100% - 1px),
+    //   var(--color-black) 100%
+    // );
+    background: var(--color-beige);
     border-radius: 4px;
+    box-shadow: 0px 0px 4px 0px rgba(41, 41, 41, 0.8);
 
     transition: opacity 4s cubic-bezier(0.19, 1, 0.22, 1);
 
@@ -351,24 +433,35 @@ export default {
     }
   }
 
+  &.is--preview .m_fragmentContent--content {
+    box-shadow: 0px 0px 4px 0px rgba(204, 208, 218, 0.8);
+  }
+
   &.is--highlighted {
-    .m_fragment--content {
+    .m_fragmentContent--content {
       opacity: 0;
       transition: all 0s cubic-bezier(0.19, 1, 0.22, 1);
     }
   }
 
-  .m_fragment--content--top {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: calc(var(--spacing) / 2);
-    padding-right: var(--spacing);
+  .m_fragmentContent--content--top {
+    margin: calc(var(--spacing)) 0;
+    padding: 0 var(--spacing);
     h2 {
       margin: 0;
+      text-align: center;
+    }
+  }
+  &.is--preview .m_fragmentContent--content--top {
+    h2 {
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
     }
   }
 
-  .m_fragment--medias {
+  .m_fragmentContent--medias {
     // display: grid;
     // grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
     // grid-gap: var(--spacing);
@@ -385,5 +478,61 @@ export default {
   position: absolute;
   top: 0;
   right: 0;
+}
+
+.m_fragmentContent--open {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 11;
+  text-decoration: none;
+  // background-color: rgba(255, 255, 255, 0.1);
+
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  padding: var(--spacing);
+
+  transition: all 0.4s cubic-bezier(0.19, 1, 0.22, 1);
+
+  span {
+    position: absolute;
+    background-color: var(--color-black);
+    color: white;
+    padding: calc(var(--spacing) / 4) calc(var(--spacing) / 2);
+    border-radius: 0.5em;
+    transition: all 0.4s cubic-bezier(0.19, 1, 0.22, 1);
+    text-transform: lowercase;
+  }
+
+  .m_fragmentContent--open--open {
+    transform: translateY(50px);
+  }
+  .m_fragmentContent--open--alreadyVisited {
+    background-color: var(--color-gray);
+    // background-color: var(--color-bluegreen);
+  }
+
+  // &:visited {
+  //   color: blue;
+  //   span {
+  //     color: red;
+  //   }
+  // }
+
+  &:hover {
+    background-color: rgba(255, 255, 255, 0.25);
+
+    .m_fragmentContent--open--open {
+      transform: translateY(0px);
+    }
+    .m_fragmentContent--open--alreadyVisited {
+      opacity: 0;
+    }
+  }
+  .m_fragmentContent--open--alreadyVisited {
+  }
 }
 </style>

@@ -6,6 +6,7 @@
         'typeOfModal-' + typeOfModal,
         { is_invisible: !showModal },
         { is_minimized: is_minimized },
+        ,
       ]"
       @mousedown.self="closeModal"
       :style="`height: ${$root.settings.windowHeight}px`"
@@ -45,9 +46,13 @@
               class="m_modal--sidebar--toggle"
               @click="toggleSidebar"
               v-if="can_minimize"
-            >&#x2630;</button>
+            >
+              &#x2630;
+            </button>
 
-            <template v-if="!!this.$slots['sidebar'] && show_sidebar && !is_minimized">
+            <template
+              v-if="!!this.$slots['sidebar'] && show_sidebar && !is_minimized"
+            >
               <div class="m_modal--header">
                 <h3 class="margin-none">
                   <slot name="header">default header</slot>
@@ -58,7 +63,10 @@
                 <slot name="sidebar">default sidebar</slot>
               </div>
 
-              <div v-if="!!this.$slots['submit_button']" class="m_modal--buttons">
+              <div
+                v-if="!!this.$slots['submit_button']"
+                class="m_modal--buttons"
+              >
                 <button
                   type="submit"
                   :disabled="read_only || is_loading"
@@ -78,7 +86,11 @@
             v-on:submit.prevent="$emit('submit')"
             ref="form"
           >
-            <button type="button" @click="closeModal" class="button button-bg_rounded bg-orange">
+            <button
+              type="button"
+              @click="closeModal"
+              class="button button-bg_rounded bg-orange"
+            >
               <img src="/images/i_clear.svg" draggable="false" />
               <span class="text-cap font-verysmall">
                 <slot name="cancel_button">{{ $t("cancel") }}</slot>
@@ -95,6 +107,11 @@
               </span>
             </button>
           </form>
+
+          <div v-if="!!this.$slots['body']">
+            <slot name="body">default body</slot>
+          </div>
+
           <div class="m_modal--loader" v-if="is_loading">
             <span class="loader" />
           </div>
@@ -107,13 +124,34 @@
           @click="closeModal"
           v-if="showModal && !is_minimized && !prevent_close"
         >
-          <img src="/images/i_close_sansfond.svg" draggable="false" />
+          <svg
+            version="1.1"
+            xmlns="http://www.w3.org/2000/svg"
+            xmlns:xlink="http://www.w3.org/1999/xlink"
+            x="0px"
+            y="0px"
+            width="24px"
+            height="24px"
+            viewBox="0 0 24 24"
+            style="enable-background: new 0 0 24 24; transform: rotate(-45deg)"
+            xml:space="preserve"
+          >
+            <path
+              style="fill: currentColor"
+              d="M0,10.5h10.5V0h2.9v10.5H24v2.9H13.5V24h-2.9V13.5H0V10.5z"
+            />
+          </svg>
         </button>
       </transition>
 
       <transition name="fade" :duration="600">
         <button
-          class="button-round bg-blanc m_modal--minimize_button padding-verysmall"
+          class="
+            button-round
+            bg-blanc
+            m_modal--minimize_button
+            padding-verysmall
+          "
           @click="toggleMinimize"
           v-if="showModal && can_minimize"
           :class="{ is_minimized: is_minimized }"
@@ -166,57 +204,57 @@ export default {
   props: {
     backgroundColor: {
       type: String,
-      default: "white"
+      default: "white",
     },
     read_only: {
       type: Boolean,
-      default: true
+      default: true,
     },
     typeOfModal: {
       type: String,
-      default: "EditMeta"
+      default: "EditMeta",
     },
     askBeforeClosingModal: {
       type: Boolean,
-      default: false
+      default: false,
     },
     isFile: {
       type: Boolean,
-      default: false
+      default: false,
     },
     show_sidebar: {
       type: Boolean,
-      default: true
+      default: true,
     },
     can_minimize: {
       type: Boolean,
-      default: false
+      default: false,
     },
     media_navigation: {
       type: Boolean,
-      default: false
+      default: false,
     },
     is_minimized: {
       type: Boolean,
-      default: false
+      default: false,
     },
     prevent_close: {
       type: Boolean,
-      default: false
+      default: false,
     },
     is_loading: {
       type: Boolean,
-      default: false
-    }
+      default: false,
+    },
   },
   data() {
     return {
       showModal: false,
       windowHeight: window.innerHeight,
-      has_confirm_close_modal_open: false
+      has_confirm_close_modal_open: false,
     };
   },
-  mounted: function() {
+  mounted: function () {
     console.log(`MOUNTED • BaseModal`);
 
     setTimeout(() => {
@@ -247,16 +285,18 @@ export default {
   },
   computed: {},
   methods: {
-    modalKeyListener: function(event) {
+    modalKeyListener: function (event) {
       if (window.state.dev_mode === "debug") {
         console.log("METHODS • BaseModal: modalKeyListener");
       }
 
       if (event.key === "Escape") {
+        debugger;
+        event.stopPropagation();
         if (!this.has_confirm_close_modal_open) {
           this.closeModal();
         }
-        return;
+        return false;
       }
 
       if (
@@ -276,7 +316,7 @@ export default {
         return;
       }
     },
-    closeModal: function() {
+    closeModal: function () {
       console.log(
         `METHODS • BaseModal: closeModal with askBeforeClosingModal = ${this.askBeforeClosingModal}`
       );
@@ -311,7 +351,7 @@ export default {
         }, 400);
       }
     },
-    prevMedia: function() {
+    prevMedia: function () {
       console.log(
         `METHODS • BaseModal: prevMedia with askBeforeClosingModal = ${this.askBeforeClosingModal}`
       );
@@ -338,7 +378,7 @@ export default {
         this.$eventHub.$emit("modal.prev_media");
       }
     },
-    nextMedia: function() {
+    nextMedia: function () {
       console.log(
         `METHODS • BaseModal: nextMedia with askBeforeClosingModal = ${this.askBeforeClosingModal}`
       );
@@ -365,31 +405,46 @@ export default {
       } else {
         this.$eventHub.$emit("modal.next_media");
       }
-    }
+    },
   },
-  created: function() {
-    document.addEventListener("keyup", this.modalKeyListener);
+  created: function () {
+    // TODO : buggy with multiple modals
+    // document.addEventListener("keyup", this.modalKeyListener);
     document.body.classList.add("has_modal_opened");
     this.$root.settings.has_modal_opened = true;
   },
-  destroyed: function() {
-    document.removeEventListener("keyup", this.modalKeyListener);
+  destroyed: function () {
+    // document.removeEventListener("keyup", this.modalKeyListener);
     document.body.classList.remove("has_modal_opened");
     this.$root.settings.has_modal_opened = false;
-  }
+  },
 };
 </script>
 <style scoped lang="scss">
+.m_modal--mask.typeOfModal-LargeAndScroll {
+  background: rgba(60, 53, 65, 0.95);
+  padding: 0;
+
+  .m_modal--close_button {
+    color: var(--color-beige);
+
+    svg {
+      filter: drop-shadow(0px 0px 4px rgba(41, 41, 41, 0.8));
+    }
+  }
+}
+
 .m_modal--close_button {
   position: fixed;
   top: 0;
   right: 0;
   z-index: 1500;
   background-color: transparent;
+  padding: 1em;
 
-  img {
-    width: 4em;
-    height: 4em;
+  svg {
+    width: 2em;
+    height: 2em;
   }
 }
 </style>

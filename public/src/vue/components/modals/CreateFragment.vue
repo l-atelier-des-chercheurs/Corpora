@@ -8,20 +8,26 @@
     :is_loading="is_sending_content_to_server"
   >
     <template slot="header">
-      <span class>{{ $t("create_a_fragment") }}</span>
+      <span class>{{ $t("create_a_story") }}</span>
     </template>
 
     <template slot="sidebar">
       <!-- Human name -->
       <div class="margin-bottom-small">
         <label>{{ $t("fragment_title") }}</label>
-        <input type="text" class="bold" v-model.trim="fragmentdata.title" required autofocus />
+        <input
+          type="text"
+          class="bold"
+          v-model.trim="fragmentdata.title"
+          required
+          autofocus
+        />
       </div>
 
-      <div>
+      <!-- <div>
         <label>{{ $t("source_of_contribution") }}</label>
         <CollectMode v-model="fragmentdata.contribution_moment" />
-      </div>
+      </div> -->
 
       <div class="margin-bottom-small">
         <label>{{ $t("keywords") }}</label>
@@ -34,7 +40,7 @@
       </div>
 
       <div class="margin-bottom-small">
-        <label>{{ $t("tabs") }}</label>
+        <label>{{ $t("categories") }}</label>
         <TagsInput
           :allKeywords="all_tags_rightly_formatted"
           :allow_new_terms="$root.can_admin_corpora"
@@ -55,11 +61,11 @@
         width="24px"
         height="24px"
         viewBox="0 0 24 24"
-        style="enable-background: new 0 0 24 24;"
+        style="enable-background: new 0 0 24 24"
         xml:space="preserve"
       >
         <path
-          style="fill: currentColor;"
+          style="fill: currentColor"
           d="M0,10.5h10.5V0h2.9v10.5H24v2.9H13.5V24h-2.9V13.5H0V10.5z"
         />
       </svg>
@@ -68,7 +74,6 @@
   </Modal>
 </template>
 <script>
-import Modal from "./BaseModal.vue";
 import TagsInput from "../subcomponents/TagsInput.vue";
 import CollectMode from "../subcomponents/CollectMode.vue";
 
@@ -77,16 +82,20 @@ export default {
     corpus: Object,
     all_tags: Array,
     all_keywords: Array,
-    current_contribution_mode: String
+    current_contribution_mode: String,
+    collection_to_add_to: {
+      type: String,
+      default: "",
+    },
   },
-  components: { Modal, TagsInput, CollectMode },
+  components: { TagsInput, CollectMode },
   data() {
     return {
       fragmentdata: {
         title: "",
         tags: [],
-        contribution_moment: this.current_contribution_mode
-      }
+        contribution_moment: this.current_contribution_mode,
+      },
     };
   },
   created() {},
@@ -95,30 +104,35 @@ export default {
   watch: {},
   computed: {
     all_tags_rightly_formatted() {
-      return this.all_tags.map(kw => {
+      return this.all_tags.map((kw) => {
         return {
           text: kw,
-          classes: "tagcolorid_" + (parseInt(kw, 36) % 2)
+          classes: "tagcolorid_" + (parseInt(kw, 36) % 2),
         };
       });
     },
     all_keywords_rightly_formatted() {
-      return this.all_keywords.map(kw => {
+      return this.all_keywords.map((kw) => {
         return {
           text: kw,
-          classes: "tagcolorid_" + (parseInt(kw, 36) % 2)
+          classes: "tagcolorid_" + (parseInt(kw, 36) % 2),
         };
       });
-    }
+    },
   },
   methods: {
     newFragment() {
+      let additionalMeta = {
+        type: "fragment",
+        medias_slugs: [],
+      };
+
       const title = this.fragmentdata.title;
 
       if (this.corpus.medias && Object.values(this.corpus.medias).length > 0) {
         if (
           Object.values(this.corpus.medias).find(
-            m => m.type === "fragment" && m.title === title
+            (m) => m.type === "fragment" && m.title === title
           )
         ) {
           this.$alertify
@@ -129,31 +143,36 @@ export default {
         }
       }
 
-      const tags = this.fragmentdata.tags;
-      const keywords = this.fragmentdata.keywords;
-      const contribution_moment = this.fragmentdata.contribution_moment;
+      additionalMeta.title = title;
+
+      if (this.fragmentdata.tags) additionalMeta.tags = this.fragmentdata.tags;
+      if (this.fragmentdata.keywords)
+        additionalMeta.keywords = this.fragmentdata.keywords;
+      if (this.fragmentdata.contribution_moment)
+        additionalMeta.contribution_moment =
+          this.fragmentdata.contribution_moment;
+      if (this.fragmentdata.collection_to_add_to)
+        additionalMeta.collection_to_add_to =
+          this.fragmentdata.collection_to_add_to;
 
       this.$root
         .createMedia({
           slugFolderName: this.corpus.slugFolderName,
           type: "corpus",
-          additionalMeta: {
-            type: "fragment",
-            title,
-            contribution_moment,
-            keywords,
-            tags,
-            medias_slugs: []
-          }
+          additionalMeta,
         })
-        .then(mdata => {
+        .then((mdata) => {
+          this.$emit("createdFragment", mdata.metaFileName);
           this.$emit("close");
-          this.$nextTick(() => {
-            this.$eventHub.$emit("scrollToFragment", mdata.metaFileName);
+
+          this.$router.push({
+            name: "Fragment",
+            params: { fragmentId: mdata.media_filename },
+            query: this.$route.query ? this.$route.query : {},
           });
         });
-    }
-  }
+    },
+  },
 };
 </script>
 <style lang="scss"></style>

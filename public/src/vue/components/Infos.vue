@@ -1,25 +1,16 @@
 <template>
   <div class="m_infos">
     <div class v-if="$root.can_admin_corpora">
-      <button type="button" @click="$root.closeCorpus()">back</button>
+      <router-link
+        :to="{
+          name: 'Corpora',
+        }"
+        v-html="$t('back')"
+      />
     </div>
 
     <div class="margin-sides-medium">
       <div class="margin-vert-small">Corpora v{{ $root.state.appVersion }}</div>
-    </div>
-    <div class="margin-sides-medium">
-      <div class="margin-vert-small">
-        <div class="custom-select custom-select_tiny">
-          <select v-model="new_lang">
-            <option
-              v-for="lang in this.$root.lang.available"
-              :key="lang.key"
-              :value="lang.key"
-              >{{ lang.name }}</option
-            >
-          </select>
-        </div>
-      </div>
     </div>
     <div class="margin-sides-medium">
       <div class="margin-vert-small">
@@ -62,20 +53,16 @@ export default {
   components: {},
   data() {
     return {
-      new_lang: this.$root.lang.current,
-      current_role: "contributor",
-
       show_admin_login: false,
     };
   },
-  watch: {
-    new_lang() {
-      this.$root.updateLocalLang(this.new_lang);
-    },
-  },
+  watch: {},
   mounted() {},
   computed: {},
   methods: {},
 };
 </script>
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.m_infos {
+}
+</style>

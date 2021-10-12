@@ -1,29 +1,20 @@
 <template>
   <div class="app">
-    <List
-      v-if="
-        $root.do_navigation.view === 'ListView' &&
-        !$root.settings.is_loading_corpus
-      "
-      :corpuses="Object.values($root.store.corpus)"
-    />
-    <Corpus
-      v-else-if="$root.do_navigation.view === 'CorpusView'"
-      :corpus="$root.current_corpus"
-    />
-    <portal-target name="modal_container" />
+    <transition-page>
+      <router-view />
+    </transition-page>
+
+    <portal-target name="modal_container" multiple />
   </div>
 </template>
 
 <script>
-import List from "./views/List.vue";
-import Corpus from "./views/Corpus.vue";
+import TransitionPage from "./transitions/TransitionPage.vue";
 
 export default {
   name: "app",
   components: {
-    List,
-    Corpus,
+    TransitionPage,
   },
   props: {},
   data() {
@@ -41,11 +32,13 @@ export default {
 :root {
   --spacing: 1rem;
   --color-black: #3c3541;
+  --color-gray: hsl(275, 10%, 63%);
   --color-orange: #ffd675;
   --color-white: #fff;
   --body-bg: #e2edef;
   --active-color: #ccd0da;
   --color-bluegreen: #c0d8dd;
+  --color-beige: #fdfbf2;
   --panel-width: 320px;
 }
 
@@ -56,7 +49,12 @@ body {
   font-family: "base12", sans-serif;
   font-size: 90%;
   line-height: 1.25;
+
+  &.has_modal_opened {
+    overflow-y: hidden;
+  }
 }
+
 ::selection {
   background-color: var(--active-color);
 }
@@ -94,9 +92,9 @@ h3 {
 
 label:not(.no-style) {
   display: block;
-  margin-bottom: calc(var(--spacing) / 4);
-  font-size: 0.7rem;
-  text-transform: lowercase;
+  margin-bottom: calc(var(--spacing) / 8);
+  // font-size: 1rem;
+  // text-transform: lowercase;
   color: inherit;
   // padding: calc(var(--spacing) / 4) calc(var(--spacing) / 2)
   //   calc(var(--spacing) / 4) 0;
@@ -138,6 +136,57 @@ label:not(.no-style) {
   stroke-width: 1;
 }
 
+.m_fragments {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  grid-gap: calc(var(--spacing) * 1);
+  padding: calc(var(--spacing) * 2);
+
+  > * {
+    display: flex;
+    flex-flow: column nowrap;
+    align-items: center;
+    justify-content: center;
+    gap: calc(var(--spacing) / 2);
+    // padding: calc(var(--spacing) / 2);
+  }
+}
+
+.m_fragments--createFragment {
+  display: flex;
+  flex-flow: row wrap;
+  align-items: center;
+  justify-content: center;
+  margin: calc(var(--spacing) * 1.9) 0;
+
+  .m_fragments--createFragment--addFragmentButton {
+    color: var(--color-black);
+    background: transparent;
+    text-align: center;
+    display: flex;
+    flex-flow: column wrap;
+    align-items: center;
+    justify-content: center;
+
+    svg {
+      background-color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      line-height: 0;
+      padding: 0.5em;
+      font-size: 2em;
+      width: 2em;
+      height: 2em;
+      border-radius: 50%;
+    }
+
+    label {
+      padding: 1em;
+    }
+  }
+}
+
 .custom_scrollbar {
   --scrollbarBG: #e2edef;
   --thumbBG: #90a4ae;
@@ -163,6 +212,11 @@ label:not(.no-style) {
       background-color: #ccd0da;
     }
   }
+}
+
+.custom_scrollbar_dark {
+  --scrollbarBG: transparent;
+  --thumbBG: #90a4ae;
 }
 
 .m_advancedMenu {
@@ -205,7 +259,7 @@ label:not(.no-style) {
 
     // background-color: rgba(0, 0, 0, 0.3);
     // border: 1px solid currentColor;
-    color: black;
+    color: var(--color-black);
     background-color: rgba(226, 237, 239, 0.4);
 
     svg {
@@ -270,8 +324,8 @@ ol ul {
 /* Let's make sure all's aligned */
 hr,
 .hr {
-  border: 1px solid;
-  margin: -1px 0;
+  border: 0.5px solid var(--color-bluegreen);
+  margin: var(--spacing) 0;
 }
 a,
 b,
@@ -406,6 +460,10 @@ button,
   color: var(--color-black);
 }
 
+label {
+  cursor: inherit;
+}
+
 input {
   &[type="text"],
   &[type="url"] {
@@ -476,6 +534,15 @@ textarea {
   }
 }
 
+.input-addon {
+  font-size: 1.2em;
+
+  > * {
+    padding: 0.4em 0.8em;
+    border: none;
+  }
+}
+
 input[type="radio"] {
   width: auto;
 }
@@ -490,7 +557,7 @@ select::-ms-expand {
 }
 
 .custom-select {
-  max-width: 220px;
+  max-width: 120px;
   margin: 4px 0;
   position: relative;
   color: var(--color-black);
@@ -597,7 +664,6 @@ select {
 html,
 body,
 .app {
-  height: 100%;
 }
 
 button,
@@ -627,7 +693,7 @@ input[type="submit"] {
   }
 
   &.is--active {
-    background: #fff4db;
+    background: var(--color-beige);
   }
 
   &.button-bg_rounded {
@@ -724,12 +790,13 @@ audio {
     width: 100%;
     background-color: var(--color-black);
 
-    max-height: var(--fragment-width);
+    // max-height: var(--fragment-width);
     object-fit: scale-down;
+    object-fit: cover;
   }
 
   iframe {
-    min-height: 202px;
+    min-height: 480px;
     background-color: transparent;
   }
 
@@ -924,10 +991,10 @@ audio {
     margin-bottom: calc(var(--spacing) / 4);
 
     &.is--active {
-      font-weight: 700;
+      color: white;
+      background-color: var(--color-black);
+
       &::before {
-        color: black;
-        // background-color: black !important;
       }
     }
 
@@ -1001,9 +1068,34 @@ audio {
     }
   }
 
+  &.m_keywordField_keywords {
+    .tag,
+    > button {
+      &::before {
+        content: "#";
+        font-weight: 400;
+        transform: none;
+        margin-right: 2px;
+        padding: 0;
+        padding-top: 0.2em;
+      }
+    }
+  }
+
   .item > div {
     margin: 0;
   }
+}
+
+.motscles {
+  display: flex;
+  flex-flow: row wrap;
+  color: var(--color-gray);
+  gap: calc(var(--spacing) / 2);
+  max-height: 100px;
+  justify-content: center;
+
+  margin-top: calc(var(--spacing) / 2);
 }
 
 .slide-fade-enter-active {
@@ -1038,6 +1130,7 @@ audio {
 .list-complete-leave-active {
   position: absolute !important;
   z-index: -1;
+  transition: none !important;
 }
 
 .width_collapse-enter-active,
@@ -1086,10 +1179,12 @@ audio {
   z-index: 10000;
   min-height: 100%;
   top: 0;
+  left: 0;
   width: 100%;
 
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
+  scroll-behavior: smooth;
 
   background-color: rgba(255, 255, 255, 0.9);
   // cursor: pointer;
@@ -1098,7 +1193,7 @@ audio {
   align-items: center;
   justify-content: center;
 
-  transition: all 0.2s ease-out;
+  transition: all 0.1s cubic-bezier(0.19, 1, 0.22, 1);
 
   #app:not(.is--wide) & {
     align-items: flex-start;
@@ -1127,7 +1222,6 @@ audio {
 
 .m_modal--container {
   position: relative;
-  transition: all 0.3s ease;
 
   width: 100%;
   cursor: auto;
@@ -1137,11 +1231,12 @@ audio {
   pointer-events: all;
   z-index: 1000;
 
-  transition: all 0.15s ease-out;
+  // transition: all 0.1s cubic-bezier(0.19, 1, 0.22, 1);
 
   &.is_invisible {
     opacity: 0;
-    transform: translate3d(0, 15px, 0) scale(0.98);
+    pointer-events: none;
+    // transform: translate3d(0, 5px, 0);
   }
 
   &.is_minimized {
@@ -1202,8 +1297,14 @@ audio {
 
 .m_modal--mask {
   &.typeOfModal-LargeAndScroll {
-    padding: var(--spacing) 0;
+    padding: calc(var(--spacing) * 2);
     overflow-y: auto;
+
+    @media (max-width: 480px) {
+      padding-left: 0;
+      padding-right: 0;
+    }
+
     .m_modal--container {
       max-width: calc(var(--panel-width) * 4);
       align-self: flex-start;
@@ -1459,7 +1560,7 @@ audio {
       }
     }
     &.type-other {
-      color: --color-black;
+      color: var(--color-black);
 
       pre {
         display: inline-block;
@@ -1899,22 +2000,9 @@ twitter-widget.twitter-tweet {
   :root {
     --body-bg: white !important;
   }
-
-  .m_corpus {
-    height: auto !important;
-  }
-  .m_corpus--presentation {
-    margin: 0 auto !important;
-  }
   .m_tags,
   .m_tags--allfragments {
     /* display: block !important; */
-    flex: 1 1 auto;
-    flex-flow: row wrap !important;
-    min-width: auto !important;
-    height: auto !important;
-    justify-content: center;
-    flex-flow: row wrap;
   }
 
   .m_tags--options {
@@ -1941,8 +2029,9 @@ twitter-widget.twitter-tweet {
   bottom: 0;
   z-index: 10000;
 
-  backdrop-filter: blur(4px);
-  -webkit-backdrop-filter: blur(4px);
+  // backdrop-filter: blur(4px);
+  // -webkit-backdrop-filter: blur(4px);
+  // background-color: hsla(275, 10%, 63%, 0.5);
 
   display: flex;
   justify-content: center;

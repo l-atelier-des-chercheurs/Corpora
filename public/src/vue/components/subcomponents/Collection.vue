@@ -1,0 +1,127 @@
+<template>
+  <div>
+    <div class="m_collection">
+      <div class="m_collection--presentation">
+        <h2>
+          {{ collection.title }}
+        </h2>
+        <div>
+          {{ $t("created") }}&nbsp;{{
+            $root.formatDateToHuman(collection.date_created).toLowerCase()
+          }}
+        </div>
+
+        <br />
+
+        <label>{{ $t("description") }}</label>
+        // TODO
+
+        <hr />
+
+        <div class="_editFragmentsLabel">
+          <label>
+            {{ $t("fragments_in_collection") }}
+          </label>
+
+          <button type="button" @click="show_selectfragments_modal = true">
+            {{ $t("add_remove_fragments") }}
+          </button>
+        </div>
+      </div>
+
+      <transition-group class="m_fragments" name="list-complete" tag="div">
+        <div
+          v-for="fragment in collection_fragments"
+          :key="fragment.metaFileName"
+        >
+          <FragmentContent
+            :context="'preview'"
+            :corpus="corpus"
+            :all_keywords="all_keywords"
+            :all_tags="all_tags"
+            :medias="medias"
+            :fragment="fragment"
+            :fragment_width="fragment_width"
+            :slugFolderName="corpus.slugFolderName"
+          />
+        </div>
+      </transition-group>
+
+      <SelectFragments
+        v-if="show_selectfragments_modal"
+        :collection="collection"
+        :corpus="corpus"
+        :all_keywords="all_keywords"
+        :all_tags="all_tags"
+        :medias="medias"
+        :collection_fragments="collection_fragments"
+        :fragments="fragments"
+        @close="show_selectfragments_modal = false"
+      />
+    </div>
+  </div>
+</template>
+<script>
+import SelectFragments from "../modals/SelectFragments.vue";
+import FragmentContent from "../FragmentContent.vue";
+import FragmentsList from "./FragmentsList.vue";
+
+export default {
+  props: {
+    collection: Object,
+    fragments: Array,
+    corpus: Object,
+    all_tags: Array,
+    all_keywords: Array,
+    medias: [Boolean, Array],
+  },
+  components: {
+    FragmentContent,
+    SelectFragments,
+    FragmentsList,
+  },
+  data() {
+    return {
+      show_selectfragments_modal: false,
+    };
+  },
+  created() {},
+  mounted() {},
+  beforeDestroy() {},
+  watch: {},
+  computed: {
+    collection_fragments() {
+      if (
+        !this.collection.fragments_slugs ||
+        !Array.isArray(this.collection.fragments_slugs)
+      )
+        return false;
+      return this.collection.fragments_slugs.reduce((acc, fs) => {
+        const metaFileName = fs.metaFileName;
+        const fragment = this.fragments.find(
+          (f) => f.metaFileName === metaFileName
+        );
+        if (fragment) acc.push(fragment);
+        return acc;
+      }, []);
+    },
+  },
+  methods: {},
+};
+</script>
+<style lang="scss" scoped>
+.m_collection--presentation {
+  padding: 0 calc(var(--spacing) * 2);
+}
+
+._editFragmentsLabel {
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.m_fragments {
+  padding-top: calc(var(--spacing) / 2);
+}
+</style>
