@@ -4,7 +4,7 @@
     :read_only="false"
     :typeOfModal="'LargeAndScroll'"
     :is_loading="is_sending_content_to_server"
-    class="m_fragmentModal"
+    ref="body"
   >
     <template slot="body">
       <div class="_sideBySide">
@@ -26,11 +26,15 @@
         </div>
 
         <aside class="_fragmentList">
-          <Loader v-if="!show_fragmentlist" />
+          <Loader v-if="!show_fragmentlist" class="_fragmentList--loader" />
 
           <div
             class="_fragmentList--content"
-            v-if="show_fragmentlist && linked_fragments"
+            v-if="
+              show_fragmentlist &&
+              linked_fragments &&
+              linked_fragments.length > 0
+            "
           >
             <h2>
               {{ linked_fragments.length + " " + $t("with_similar_keywords") }}
@@ -56,7 +60,11 @@
           </div>
           <div
             class="_fragmentList--content"
-            v-if="show_fragmentlist && not_linked_fragments"
+            v-if="
+              show_fragmentlist &&
+              not_linked_fragments &&
+              not_linked_fragments.length > 0
+            "
           >
             <h2>
               {{ not_linked_fragments.length + " " + $t("other_fragments") }}
@@ -109,12 +117,17 @@ export default {
     };
   },
   created() {},
-  mounted() {},
+  mounted() {
+    setTimeout(() => {
+      this.show_fragmentlist = true;
+    }, 800);
+  },
   beforeDestroy() {},
   watch: {
     "opened_fragment.metaFileName"() {
       // scroll to top
-      this.$el.scrollTop = 0;
+      debugger;
+      this.$refs.body.$refs.modalContent = 0;
     },
   },
   computed: {
@@ -161,11 +174,6 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
-.m_fragmentModal {
-  z-index: 9999;
-  background: rgba(60, 53, 65, 0.75);
-  padding: clamp(2vmin, 4vw, calc(var(--spacing) * 4));
-}
 ._sideBySide {
   display: flex;
   flex-flow: row wrap;
@@ -191,5 +199,9 @@ export default {
   /* grid-auto-rows: max-content; */
   grid-gap: calc(var(--spacing) * 1) calc(var(--spacing) * 1);
   // padding: 0 calc(var(--spacing) * 2) calc(var(--spacing) * 2);
+}
+
+._fragmentList--loader {
+  max-height: 500px;
 }
 </style>

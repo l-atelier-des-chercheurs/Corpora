@@ -67,8 +67,8 @@ export default {
           },
         })
         .then((mdata) => {
-          this.is_sending_content_to_server = true;
-          this.$emit("openCollection", this.mdata.metaFileName);
+          this.is_sending_content_to_server = false;
+          this.$emit("openCollection", mdata.metaFileName);
           this.$emit("close", "");
         });
     },

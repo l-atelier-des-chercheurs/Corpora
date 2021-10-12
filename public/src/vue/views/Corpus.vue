@@ -1,6 +1,5 @@
 <template>
   <div style="" v-if="corpus">
-    {{ show_collection_meta }}
     <CorpusPwd v-if="!can_access_corpus" :corpus="corpus" />
     <template v-else>
       <WelcomeModal v-if="$root.settings.show_welcome_modal" />
@@ -482,6 +481,12 @@ export default {
       this.debounce_search_filter = this.search_filter = kw;
     },
     setQueryURLFromSearch() {
+      if (
+        this.$route.query.search_for === this.search_filter &&
+        this.$route.query.search_in === this.search_type
+      )
+        return;
+
       let query = {};
       if (this.search_filter !== "")
         query = {

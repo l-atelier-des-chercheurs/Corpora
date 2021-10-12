@@ -311,8 +311,12 @@ module.exports = (function () {
       en: "Description, source…",
     },
     create_a_story: {
-      fr: "Ajouter un récit",
-      en: "Add a story",
+      fr: "Créer un récit",
+      en: "Create a story",
+    },
+    add_a_story_to_coll: {
+      fr: "Ajouter un récit à cette collection",
+      en: "Add a story to this collection",
     },
     create_a_source: {
       fr: "Créer une source de contribution",

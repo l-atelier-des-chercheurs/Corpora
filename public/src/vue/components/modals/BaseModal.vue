@@ -6,6 +6,7 @@
         'typeOfModal-' + typeOfModal,
         { is_invisible: !showModal },
         { is_minimized: is_minimized },
+        ,
       ]"
       @mousedown.self="closeModal"
       :style="`height: ${$root.settings.windowHeight}px`"
@@ -417,19 +418,30 @@ export default {
 };
 </script>
 <style scoped lang="scss">
+.m_modal--mask.typeOfModal-LargeAndScroll {
+  background: rgba(60, 53, 65, 0.75);
+  padding: clamp(2vmin, 4vw, calc(var(--spacing) * 4));
+
+  .m_modal--close_button {
+    color: var(--color-beige);
+
+    svg {
+      filter: drop-shadow(0px 0px 4px rgba(41, 41, 41, 0.8));
+    }
+  }
+}
+
 .m_modal--close_button {
   position: fixed;
   top: 0;
   right: 0;
   z-index: 1500;
   background-color: transparent;
-  color: var(--color-beige);
   padding: 1em;
 
   svg {
     width: 2em;
     height: 2em;
-    filter: drop-shadow(0px 0px 4px rgba(41, 41, 41, 0.8));
   }
 }
 </style>
