@@ -291,7 +291,6 @@ export default {
       }
 
       if (event.key === "Escape") {
-        debugger;
         event.stopPropagation();
         if (!this.has_confirm_close_modal_open) {
           this.closeModal();

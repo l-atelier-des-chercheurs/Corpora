@@ -484,13 +484,11 @@ export default {
       )
         return;
 
-      let query = {};
-      if (this.search_filter !== "")
-        query = {
-          search_for: this.search_filter,
-          search_in: this.search_type,
-        };
-
+      let query = this.$route.query || {};
+      if (this.search_filter !== "") {
+        query.search_for = this.search_filter;
+        query.search_in = this.search_type;
+      }
       this.$router.push({
         query,
       });
@@ -498,15 +496,13 @@ export default {
     setQueryURLFromCollection() {
       if (this.$route.query.collection === this.show_collection_meta) return;
 
-      let query = {};
-      if (this.show_collection_meta)
-        query = {
-          collection: this.show_collection_meta,
-        };
+      let query = this.$route.query || {};
 
-      this.$router.push({
-        query,
-      });
+      if (this.show_collection_meta)
+        (query.collection = this.show_collection_meta),
+          this.$router.push({
+            query,
+          });
     },
     createNewMoment() {
       let contribution_moments =
