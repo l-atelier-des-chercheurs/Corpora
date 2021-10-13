@@ -31,6 +31,10 @@
           :corpus="corpus"
           :all_keywords="all_keywords"
           :all_tags="all_tags"
+          :collection_to_add_to="part_of_collection"
+          @createdFragment="
+            (metaFileName) => $emit('addToCollection', { metaFileName })
+          "
           @close="show_create_fragment = false"
         />
         <!-- :current_contribution_mode="current_contribution_mode" -->
@@ -66,6 +70,10 @@ export default {
     all_keywords: Array,
     medias: [Boolean, Array],
     fragments: [Boolean, Array],
+    part_of_collection: {
+      type: String,
+      default: "",
+    },
   },
   components: {
     CreateFragment,

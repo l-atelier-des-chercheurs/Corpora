@@ -11,19 +11,23 @@
       <div class="m_fragmentContent--content--top">
         <h2>{{ fragment.title }}</h2>
 
-        <div
-          class="motscles"
-          v-if="fragment.keywords && fragment.keywords.length > 0"
-        >
-          <div v-for="kw in fragment.keywords" :key="kw.title">
-            #{{ kw.title }}
-          </div>
-        </div>
-        <!-- <label>
+        <div class="motsclestags">
+          <template v-if="fragment.keywords && fragment.keywords.length > 0">
+            <span v-for="kw in fragment.keywords" :key="kw.title">
+              # {{ kw.title }}
+            </span>
+          </template>
+          <template v-if="fragment.tags && fragment.tags.length > 0">
+            <span v-for="tag in fragment.tags" :key="tag.title">
+              • {{ tag.title }}
+            </span>
+          </template>
+          <!-- <label>
           {{ $t("created") }}&nbsp;{{
             $root.formatDateToHuman(fragment.date_created)
           }}
         </label> -->
+        </div>
       </div>
 
       <div
@@ -367,6 +371,7 @@ export default {
 </script>
 <style lang="scss" scoped>
 .m_fragmentContent {
+  width: 100%;
   // margin: 0 var(--spacing);
   // width: 100%;
   // max-width: 400px;

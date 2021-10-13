@@ -195,8 +195,8 @@ module.exports = (function () {
       en: "Stories in fragment",
     },
     add_remove_fragments: {
-      fr: "Modifier cette liste",
-      en: "Edit this list",
+      fr: "Ajouter ou retirer des récits existants",
+      en: "Add or remove stories from this list",
     },
     create_add_remove_fragments: {
       fr: "Créer de nouveaux récits, et ajouter ou retirer des récits existants à la collection.",
@@ -354,17 +354,13 @@ module.exports = (function () {
       fr: "Titre",
       en: "Title",
     },
-    tags: {
-      fr: "Mots-clés",
-      en: "Tags",
-    },
     tabs: {
       fr: "Onglet(s)",
       en: "Tab(s)",
     },
-    categories: {
-      fr: "Catégories",
-      en: "Categories",
+    tags: {
+      fr: "Catégorie(s)",
+      en: "Categorie(s)",
     },
     keywords: {
       fr: "Mot(s)-clé(s)",

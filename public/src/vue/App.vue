@@ -1037,7 +1037,7 @@ audio {
     }
   }
 
-  &.m_keywordField_tabs {
+  &.m_keywordField_tags {
     .tag,
     > button {
       background-color: var(--body-bg) !important;
@@ -1047,6 +1047,12 @@ audio {
       padding: 0.2em 1em;
       padding-left: 0em;
       border: 2px solid var(--color-bluegreen);
+
+      &.is--active {
+        color: white;
+        border-color: var(--color-black);
+        background-color: var(--color-black) !important;
+      }
 
       &::before {
         // display: none !important;
@@ -1087,15 +1093,16 @@ audio {
   }
 }
 
-.motscles {
+.motsclestags {
   display: flex;
   flex-flow: row wrap;
   color: var(--color-gray);
-  gap: calc(var(--spacing) / 2);
+  gap: calc(var(--spacing) / 4);
   max-height: 100px;
   justify-content: center;
+  line-height: 1;
 
-  margin-top: calc(var(--spacing) / 2);
+  margin-top: calc(var(--spacing) / 4);
 }
 
 .slide-fade-enter-active {
