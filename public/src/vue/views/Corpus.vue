@@ -141,8 +141,11 @@
               </div>
             </div>
 
-            <div class="m_corpus--keywords">
-              <label for="fragments-search">{{ $t("keywords") }}</label>
+            <div
+              class="m_corpus--keywords"
+              v-if="all_keywords && all_keywords.length > 0"
+            >
+              <label>{{ $t("keywords") }}</label>
 
               <div class="m_keywordField m_keywordField_keywords">
                 <button
@@ -157,6 +160,25 @@
                   }"
                 >
                   {{ keyword }}
+                </button>
+              </div>
+            </div>
+
+            <div class="m_corpus--tags" v-if="all_tags && all_tags.length > 0">
+              <label>{{ $t("tags") }}</label>
+              <div class="m_keywordField m_keywordField_tags">
+                <button
+                  type="button"
+                  class="tag"
+                  v-for="tag in all_tags"
+                  :key="tag"
+                  @click="setTagFilter(tag)"
+                  :class="{
+                    'is--active':
+                      search_type === 'tags' && tag === search_filter,
+                  }"
+                >
+                  {{ tag }}
                 </button>
               </div>
             </div>
@@ -250,7 +272,7 @@ export default {
       debounce_search_filter_function: undefined,
 
       search_type: "title",
-      search_type_available: ["title", "keywords"],
+      search_type_available: ["title", "keywords", "tags"],
 
       show_create_collection_modal: false,
       show_collection_meta: false,
@@ -421,6 +443,8 @@ export default {
           return (
             f.keywords && f.keywords.find((k) => k.title.toLowerCase() === sf)
           );
+        else if (this.search_type === "tags")
+          return f.tags && f.tags.find((k) => k.title.toLowerCase() === sf);
 
         return false;
       });
@@ -476,6 +500,12 @@ export default {
         return (this.debounce_search_filter = this.search_filter = "");
       this.search_type = "keywords";
       this.debounce_search_filter = this.search_filter = kw;
+    },
+    setTagFilter(tag) {
+      if (this.search_filter === tag && this.search_type === "tags")
+        return (this.debounce_search_filter = this.search_filter = "");
+      this.search_type = "tags";
+      this.debounce_search_filter = this.search_filter = tag;
     },
     setQueryURLFromSearch() {
       if (

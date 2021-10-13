@@ -354,17 +354,13 @@ module.exports = (function () {
       fr: "Titre",
       en: "Title",
     },
-    tags: {
-      fr: "Mots-clés",
-      en: "Tags",
-    },
     tabs: {
       fr: "Onglet(s)",
       en: "Tab(s)",
     },
-    categories: {
-      fr: "Catégories",
-      en: "Categories",
+    tags: {
+      fr: "Catégorie(s)",
+      en: "Categorie(s)",
     },
     keywords: {
       fr: "Mot(s)-clé(s)",
