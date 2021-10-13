@@ -29,23 +29,15 @@
         </div>
       </div>
 
-      <transition-group class="m_fragments" name="list-complete" tag="div">
-        <div
-          v-for="fragment in collection_fragments"
-          :key="fragment.metaFileName"
-        >
-          <FragmentContent
-            :context="'preview'"
-            :corpus="corpus"
-            :all_keywords="all_keywords"
-            :all_tags="all_tags"
-            :medias="medias"
-            :fragment="fragment"
-            :fragment_width="fragment_width"
-            :slugFolderName="corpus.slugFolderName"
-          />
-        </div>
-      </transition-group>
+      <FragmentsList
+        :corpus="corpus"
+        :all_keywords="all_keywords"
+        :all_tags="all_tags"
+        :medias="medias"
+        :fragments="collection_fragments"
+        :part_of_collection="collection.metaFileName"
+        @addToCollection="addToCollection"
+      />
 
       <SelectFragments
         v-if="show_selectfragments_modal"
@@ -56,6 +48,9 @@
         :medias="medias"
         :collection_fragments="collection_fragments"
         :fragments="fragments"
+        @addToCollection="addToCollection"
+        @changePos="changePos"
+        @removeFromCollection="removeFromCollection"
         @close="show_selectfragments_modal = false"
       />
     </div>
@@ -106,7 +101,56 @@ export default {
       }, []);
     },
   },
-  methods: {},
+  methods: {
+    addToCollection({ metaFileName, index }) {
+      let fragments_slugs = this.collection.fragments_slugs
+        ? this.collection.fragments_slugs.slice()
+        : [];
+
+      // check if existing and remove if thats the case
+      fragments_slugs = fragments_slugs.filter(
+        (fs) => fs.metaFileName !== metaFileName
+      );
+
+      if (index >= 0)
+        fragments_slugs.splice(index, 0, {
+          metaFileName,
+        });
+      else fragments_slugs.unshift({ metaFileName });
+      this.updateMedia({ data: { fragments_slugs } });
+    },
+
+    changePos({ metaFileName, $event }) {
+      const new_pos = Number.parseFloat($event.currentTarget.value) - 1;
+      this.addToCollection({ metaFileName, index: new_pos });
+    },
+    removeFromCollection(metaFileName) {
+      let fragments_slugs = this.collection.fragments_slugs
+        ? this.collection.fragments_slugs.slice()
+        : [];
+      fragments_slugs = fragments_slugs.filter(
+        (fs) => fs.metaFileName !== metaFileName
+      );
+
+      this.updateMedia({ data: { fragments_slugs } });
+    },
+    updateMedia({ data }) {
+      this.is_sending_content_to_server = true;
+
+      this.$root
+        .editMedia({
+          type: "corpus",
+          slugFolderName: this.corpus.slugFolderName,
+          slugMediaName: this.collection.metaFileName,
+          data,
+        })
+        .then((mdata) => {
+          // setTimeout(() => {
+          this.is_sending_content_to_server = false;
+          // }, 300);
+        });
+    },
+  },
 };
 </script>
 <style lang="scss" scoped>

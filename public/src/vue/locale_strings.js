@@ -195,8 +195,8 @@ module.exports = (function () {
       en: "Stories in fragment",
     },
     add_remove_fragments: {
-      fr: "Modifier cette liste",
-      en: "Edit this list",
+      fr: "Ajouter ou retirer des récits existants",
+      en: "Add or remove stories from this list",
     },
     create_add_remove_fragments: {
       fr: "Créer de nouveaux récits, et ajouter ou retirer des récits existants à la collection.",

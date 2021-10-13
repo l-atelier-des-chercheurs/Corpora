@@ -83,10 +83,6 @@ export default {
     all_tags: Array,
     all_keywords: Array,
     current_contribution_mode: String,
-    collection_to_add_to: {
-      type: String,
-      default: "",
-    },
   },
   components: { TagsInput, CollectMode },
   data() {
@@ -151,9 +147,6 @@ export default {
       if (this.fragmentdata.contribution_moment)
         additionalMeta.contribution_moment =
           this.fragmentdata.contribution_moment;
-      if (this.fragmentdata.collection_to_add_to)
-        additionalMeta.collection_to_add_to =
-          this.fragmentdata.collection_to_add_to;
 
       this.$root
         .createMedia({

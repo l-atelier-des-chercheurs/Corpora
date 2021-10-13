@@ -367,6 +367,7 @@ export default {
 </script>
 <style lang="scss" scoped>
 .m_fragmentContent {
+  width: 100%;
   // margin: 0 var(--spacing);
   // width: 100%;
   // max-width: 400px;

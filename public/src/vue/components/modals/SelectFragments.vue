@@ -65,9 +65,8 @@
               :corpus="corpus"
               :all_keywords="all_keywords"
               :all_tags="all_tags"
-              :collection_to_add_to="collection.metaFileName"
               @createdFragment="
-                (metaFileName) => addToCollection({ metaFileName })
+                (metaFileName) => $emit('addToCollection', { metaFileName })
               "
               @close="show_create_fragment = false"
             />
@@ -95,7 +94,10 @@
                 <select
                   :value="index + 1"
                   @change="
-                    changePos({ metaFileName: fragment.metaFileName, $event })
+                    $emit('changePos', {
+                      metaFileName: fragment.metaFileName,
+                      $event,
+                    })
                   "
                 >
                   <option
@@ -110,7 +112,7 @@
               <button
                 type="button"
                 class="_removeFromColl"
-                @click="removeFromCollection(fragment.metaFileName)"
+                @click="$emit('removeFromCollection', fragment.metaFileName)"
               >
                 {{ $t("remove") }}
               </button>
@@ -144,7 +146,11 @@
             <button
               type="button"
               class="_addToColl"
-              @click="addToCollection({ metaFileName: fragment.metaFileName })"
+              @click="
+                $emit('addToCollection', {
+                  metaFileName: fragment.metaFileName,
+                })
+              "
             >
               {{ $t("add") }}
             </button>
@@ -195,56 +201,7 @@ export default {
       return this.fragments.filter((f) => !fss.includes(f.metaFileName));
     },
   },
-  methods: {
-    addToCollection({ metaFileName, index }) {
-      let fragments_slugs = this.collection.fragments_slugs
-        ? this.collection.fragments_slugs.slice()
-        : [];
-
-      // check if existing and remove if thats the case
-      fragments_slugs = fragments_slugs.filter(
-        (fs) => fs.metaFileName !== metaFileName
-      );
-
-      if (index >= 0)
-        fragments_slugs.splice(index, 0, {
-          metaFileName,
-        });
-      else fragments_slugs.unshift({ metaFileName });
-      this.updateMedia({ data: { fragments_slugs } });
-    },
-
-    changePos({ metaFileName, $event }) {
-      const new_pos = Number.parseFloat($event.currentTarget.value) - 1;
-      this.addToCollection({ metaFileName, index: new_pos });
-    },
-    removeFromCollection(metaFileName) {
-      let fragments_slugs = this.collection.fragments_slugs
-        ? this.collection.fragments_slugs.slice()
-        : [];
-      fragments_slugs = fragments_slugs.filter(
-        (fs) => fs.metaFileName !== metaFileName
-      );
-
-      this.updateMedia({ data: { fragments_slugs } });
-    },
-    updateMedia({ data }) {
-      this.is_sending_content_to_server = true;
-
-      this.$root
-        .editMedia({
-          type: "corpus",
-          slugFolderName: this.corpus.slugFolderName,
-          slugMediaName: this.collection.metaFileName,
-          data,
-        })
-        .then((mdata) => {
-          // setTimeout(() => {
-          this.is_sending_content_to_server = false;
-          // }, 300);
-        });
-    },
-  },
+  methods: {},
 };
 </script>
 <style lang="scss" scoped>

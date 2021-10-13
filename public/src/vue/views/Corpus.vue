@@ -176,7 +176,7 @@
               v-if="shown_collection"
               :corpus="corpus"
               :collection="shown_collection"
-              :fragments="sorted_fragments"
+              :fragments="filtered_fragments"
               :all_keywords="all_keywords"
               :all_tags="all_tags"
               :medias="medias"
