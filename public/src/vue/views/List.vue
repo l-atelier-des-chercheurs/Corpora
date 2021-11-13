@@ -5,10 +5,8 @@
       <input type="password" autofocus v-model="$root.admin_pwd" />
     </template>
     <template v-else>
-      <div>
+      <div class="m_list--titles">
         <h1>Les corpus</h1>
-      </div>
-      <div>
         <button
           type="button"
           class="buttonLink"
@@ -68,19 +66,21 @@ export default {
 </script>
 <style lang="scss" scoped>
 .m_list {
-  display: flex;
-  flex-flow: row wrap;
-  align-items: center;
-  justify-content: center;
-
   > * {
     margin: var(--spacing);
   }
 }
 
+.m_list--titles {
+  display: flex;
+  flex-flow: row wrap;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing);
+}
 .m_list--corpuses {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-  gap: calc(var(--spacing) * 2);
+  gap: calc(var(--spacing) / 2);
 }
 </style>
