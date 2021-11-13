@@ -346,7 +346,10 @@ let vm = new Vue({
     },
     can_admin_corpora() {
       // todo actual admin checks
-      return this.hashCode(this.$root.admin_pwd.toLowerCase()) === 3670;
+      return (
+        this.$root.state.is_electron ||
+        this.hashCode(this.$root.admin_pwd.toLowerCase()) === 3670
+      );
     },
 
     current_publication() {
