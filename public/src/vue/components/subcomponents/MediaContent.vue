@@ -135,27 +135,71 @@
       />
     </template>
 
-    <template v-else-if="media.type === 'embed'">
-      <div v-if="context !== 'edit' && embedURL" class>
-        <template v-if="!should_load_embed">
-          <label class="margin-bottom-verysmall">{{ $t("embed") }}</label>
-          <div
-            class="margin-bottom-verysmall"
-            style="
-              text-overflow: ellipsis;
-              white-space: nowrap;
-              overflow: hidden;
-            "
-          >
-            <a :href="media.content" target="_blank">{{ media.content }}</a>
+    <template v-else-if="media.type === 'link' || media.type === 'embed'">
+      <template v-if="!should_load_embed">
+        <div class="_linkCaption">
+          <a :href="link_url" target="_blank">
+            {{ link_url }}
+          </a>
+        </div>
+        <div class="_siteCard">
+          <div>
+            <template
+              v-if="
+                siteOG &&
+                (siteOG.local_image || siteOG.title || siteOG.description)
+              "
+            >
+              <div v-if="siteOG_image" class="_siteCard--image">
+                <a :href="link_url" target="_blank">
+                  <img :src="siteOG_image" />
+                </a>
+              </div>
+              <div class="_siteCard--text">
+                <div v-if="siteOG.title" class="_siteCard--text--title">
+                  {{ siteOG.title }}
+                </div>
+                <div
+                  v-if="siteOG.description"
+                  class="_siteCard--text--description"
+                >
+                  {{ siteOG.description }}
+                </div>
+              </div>
+            </template>
+            <template v-else>
+              <div class="padding-verysmall">
+                {{ $t("no_preview_available") }}
+              </div>
+            </template>
           </div>
-          <div class="margin-bottom-verysmall">
-            <button type="button" class="_load" @click="load_this_embed = true">
-              {{ $t("load") }}
-            </button>
+
+          <div v-if="!should_load_embed && embedURL">
+            <label class="margin-bottom-verysmall">{{ $t("embed") }}</label>
+            <div
+              class="margin-bottom-verysmall"
+              style="
+                text-overflow: ellipsis;
+                white-space: nowrap;
+                overflow: hidden;
+              "
+            >
+              <a :href="media.content" target="_blank">{{ media.content }}</a>
+            </div>
+            <div class="margin-bottom-verysmall">
+              <button
+                type="button"
+                class="_load"
+                @click="load_this_embed = true"
+              >
+                {{ $t("load") }}
+              </button>
+            </div>
           </div>
-        </template>
-        <template v-else>
+        </div>
+      </template>
+      <template v-else>
+        <template>
           <iframe
             v-if="embedURL.type !== 'tweet'"
             :src="embedURL.src"
@@ -168,48 +212,7 @@
             :options="{ cards: 'hidden', theme: 'light' }"
           />
         </template>
-      </div>
-    </template>
-    <template v-else-if="media.type === 'link'">
-      <div class="_linkCaption">
-        <a :href="link_url" target="_blank">
-          {{ link_url }}
-        </a>
-      </div>
-      <div class="_siteCard">
-        <template
-          v-if="siteOG && (siteOG.image || siteOG.title || siteOG.description)"
-        >
-          <div v-if="siteOG_image" class="_siteCard--image">
-            <template v-if="should_load_embed">
-              <a :href="link_url" target="_blank">
-                <img :src="siteOG_image" />
-              </a>
-            </template>
-            <button
-              type="button"
-              class="_load"
-              v-else
-              @click="load_this_embed = true"
-            >
-              {{ $t("load") }}
-            </button>
-          </div>
-          <div class="_siteCard--text">
-            <div v-if="siteOG.title" class="_siteCard--text--title">
-              {{ siteOG.title }}
-            </div>
-            <div v-if="siteOG.description" class="_siteCard--text--description">
-              {{ siteOG.description }}
-            </div>
-          </div>
-        </template>
-        <template v-else>
-          <div class="padding-verysmall">
-            {{ $t("no_preview_available") }}
-          </div>
-        </template>
-      </div>
+      </template>
     </template>
     <template v-else-if="media.type === 'document'">
       <div v-if="context !== 'full'" class="padding-vert-small font-verysmall">
@@ -346,9 +349,10 @@ export default {
       // return this.media.thumbs.find(t => t.)
     },
     siteOG_image() {
-      if (!this.siteOG || !this.siteOG.image) return false;
-      if (this.siteOG.image.name) return this.siteOG.image.name;
-      return this.siteOG.image;
+      if (!this.siteOG || !this.siteOG.local_image) return false;
+      return this.$root.state.mode === "export_publication"
+        ? `./${this.siteOG.local_image}`
+        : `/${this.siteOG.local_image}`;
     },
     embedURL: function () {
       if (!this.media.content) return false;
@@ -375,7 +379,7 @@ export default {
           type: "soundcloud",
           src: this.getSoundcloudEmbedURLFromURL(this.media.content),
         };
-      return this.media.content;
+      return false;
     },
     link_url() {
       function addhttp(url) {
@@ -387,7 +391,7 @@ export default {
       return addhttp(this.media.content);
     },
     should_load_embed() {
-      if (this.$root.settings.load_all_embeds) return true;
+      // if (this.$root.settings.load_all_embeds) return true;
       return this.load_this_embed;
     },
     thumbRes: function () {
@@ -542,12 +546,14 @@ export default {
       }
     },
     getTweetIdFromURL(url) {
-      let tweetRegex = /^https?:\/\/twitter\.com\/(?:#!\/)?(\w+)\/status(es)?\/([0-9]{19})/;
+      let tweetRegex =
+        /^https?:\/\/twitter\.com\/(?:#!\/)?(\w+)\/status(es)?\/([0-9]{19})/;
       return url.match(tweetRegex)[3];
     },
     getYoutubeEmbedURLFromURL(url) {
       function getId(url) {
-        const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
+        const regExp =
+          /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
         const match = url.match(regExp);
 
         return match && match[2].length === 11 ? match[2] : null;
