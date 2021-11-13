@@ -102,6 +102,17 @@
         <span class="label--pressed plyr__sr-only">Exit fullscreen</span>
         <span class="label--not-pressed plyr__sr-only">Enter fullscreen</span>
       </button>
+      <!-- <button
+        type="button"
+        class="plyr__controls__item plyr__control _open_fullscreen"
+        @click="loadEmbed"
+        v-if="
+          media_context !== 'preview' &&
+          (media.type === 'link' || should_be_embed)
+        "
+      >
+        {{ $t("load") }}
+      </button> -->
     </div>
     <div
       class="m_advancedMenu"
@@ -407,7 +418,7 @@ export default {
     },
     media_context() {
       if (this.context === "preview") return "preview";
-      if (this.media.type === "image") return "preview";
+      // if (this.media.type === "image") return "preview";
       if (this.is_being_edited) return "edit";
       return "";
     },
@@ -421,10 +432,10 @@ export default {
     saveMedia() {
       this.is_saving_media = true;
 
-      if (this.media.type === "link" && this.should_be_embed)
-        this.mediadata.type = "embed";
-      if (this.media.type === "embed" && !this.should_be_embed)
-        this.mediadata.type = "link";
+      // if (this.media.type === "link" && this.should_be_embed)
+      //   this.mediadata.type = "embed";
+      // if (this.media.type === "embed" && !this.should_be_embed)
+      //   this.mediadata.type = "link";
 
       this.$root
         .editMedia({
@@ -628,6 +639,8 @@ export default {
     // position: absolute;
     // bottom: 0;
     width: 100%;
+    margin: 0 calc(var(--spacing) / 4);
+
     text-overflow: ellipsis;
     white-space: nowrap;
     overflow: hidden;

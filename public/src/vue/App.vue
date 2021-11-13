@@ -674,7 +674,8 @@ input[type="submit"] {
   background: #ccd0da;
   cursor: pointer;
   text-transform: lowercase;
-  font-size: 1rem;
+  font-size: 0.8rem;
+
   padding: 0.2em 0.4em;
   text-decoration: none;
   border-radius: 2px;
