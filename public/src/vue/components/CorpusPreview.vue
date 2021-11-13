@@ -6,6 +6,19 @@
     <div class="m_corpusPreview--subtitle">
       <h3>{{ corpus.subtitle }}</h3>
     </div>
+    <div class="m_corpusPreview--time">
+      <date>
+        {{ $t("created_on") }}&nbsp;{{
+          $root.formatDateToHuman(corpus.date_created)
+        }}
+      </date>
+      <br />
+      <date>
+        {{ $t("last_edited_on") }}&nbsp;{{
+          $root.formatDateToHuman(corpus.date_modified)
+        }}
+      </date>
+    </div>
     <div class="m_corpusPreview--description">
       <p v-html="corpus.description" />
     </div>

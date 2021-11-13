@@ -95,6 +95,10 @@ module.exports = (function () {
       fr: "Éditer",
       en: "Edit",
     },
+    last_edited_on: {
+      fr: "Dernière modification le",
+      en: "Last edit on",
+    },
     legal_notice: {
       fr: "Mentions légales et données personnelles",
       en: "Legal notices and personal data",
