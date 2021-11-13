@@ -1,10 +1,10 @@
 <template>
   <div class="m_list">
-    <div v-if="!$root.can_admin_corpora">
+    <template v-if="!$root.can_admin_corpora">
       <p>Enter password to admin</p>
       <input type="password" autofocus v-model="$root.admin_pwd" />
-    </div>
-    <div v-else>
+    </template>
+    <template v-else>
       <div>
         <h1>Les corpus</h1>
       </div>
@@ -27,13 +27,13 @@
       <div class="m_list--corpuses">
         <div
           class="m_list--corpuses--corpus"
-          v-for="corpus in corpuses"
+          v-for="corpus in sorted_corpuses"
           :key="corpus.slugFolderName"
         >
           <CorpusPreview :corpus="corpus" />
         </div>
       </div>
-    </div>
+    </template>
   </div>
 </template>
 <script>
@@ -59,6 +59,9 @@ export default {
     corpuses() {
       return Object.values(this.$root.store.corpus);
     },
+    sorted_corpuses() {
+      return this.$_.sortBy(this.corpuses, "date_created").reverse();
+    },
   },
   methods: {},
 };
@@ -78,5 +81,6 @@ export default {
 .m_list--corpuses {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: calc(var(--spacing) * 2);
 }
 </style>

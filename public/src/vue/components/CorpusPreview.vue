@@ -7,17 +7,17 @@
       <h3>{{ corpus.subtitle }}</h3>
     </div>
     <div class="m_corpusPreview--time">
-      <date>
+      <time>
         {{ $t("created_on") }}&nbsp;{{
           $root.formatDateToHuman(corpus.date_created)
         }}
-      </date>
+      </time>
       <br />
-      <date>
+      <time>
         {{ $t("last_edited_on") }}&nbsp;{{
           $root.formatDateToHuman(corpus.date_modified)
         }}
-      </date>
+      </time>
     </div>
     <div class="m_corpusPreview--description">
       <p v-html="corpus.description" />
@@ -27,32 +27,6 @@
     </div>
 
     <div class="m_corpusPreview--options">
-      <button
-        type="button"
-        v-if="can_access_corpus"
-        @click="show_edit_corpus_for = true"
-      >
-        {{ $t("edit") }}
-      </button>
-
-      <EditCorpus
-        v-if="show_edit_corpus_for"
-        :corpus="corpus"
-        :corpus_password="corpus_password"
-        :slugCorpusName="corpus.slugFolderName"
-        @close="show_edit_corpus_for = false"
-      />
-
-      <button
-        type="button"
-        v-if="can_access_corpus"
-        @click="removeThisCorpus()"
-      >
-        {{ $t("remove") }}
-      </button>
-    </div>
-
-    <div class="m_corpusPreview--open">
       <div
         class
         v-if="
@@ -128,8 +102,33 @@
           name: 'Corpus',
           params: { slugFolderName: corpus.slugFolderName },
         }"
+        class="button"
         v-html="$t('open')"
       />
+
+      <button
+        type="button"
+        v-if="can_access_corpus"
+        @click="show_edit_corpus_for = true"
+      >
+        {{ $t("edit") }}
+      </button>
+
+      <EditCorpus
+        v-if="show_edit_corpus_for"
+        :corpus="corpus"
+        :corpus_password="corpus_password"
+        :slugCorpusName="corpus.slugFolderName"
+        @close="show_edit_corpus_for = false"
+      />
+
+      <button
+        type="button"
+        v-if="can_access_corpus"
+        @click="removeThisCorpus()"
+      >
+        {{ $t("remove") }}
+      </button>
     </div>
   </div>
 </template>
@@ -244,12 +243,13 @@ export default {
 </script>
 <style lang="scss" scoped>
 .m_corpusPreview {
-  border-top: 1px solid currentColor;
-  margin: var(--spacing);
-  padding: var(--spacing);
-  // border-radius: 15px;
+  // border-top: 1px solid currentColor;
+  background: var(--active-color);
+  // margin: var(--spacing);
+  padding: calc(var(--spacing) / 2);
+  border-radius: 2px;
 
-  > * {
+  > *:not(:last-child) {
     margin-bottom: var(--spacing);
   }
 
@@ -266,12 +266,17 @@ export default {
     // white-space: nowrap;
     // overflow: hidden;
   }
+}
+.m_corpusPreview--preview {
+  max-width: 140px;
+}
 
-  .m_corpusPreview--preview {
-    max-width: 140px;
+.m_corpusPreview--options {
+  button {
+    vertical-align: middle;
   }
+}
 
-  .m_corpusPreview--options {
-  }
+.m_corpusPreview--open {
 }
 </style>
