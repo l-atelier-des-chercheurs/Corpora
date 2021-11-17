@@ -398,14 +398,16 @@ export default {
       bottom: 0;
       left: 0;
       width: 100%;
-      height: 15px;
+      height: 50px;
       z-index: 10;
       pointer-events: none;
 
       background: linear-gradient(
         180deg,
         hsla(48, 71%, 92%, 0) 0%,
-        hsla(48, 71%, 92%, 15) calc(100%)
+        hsla(48, 71%, 92%, 0.25) 35%,
+        hsla(48, 71%, 92%, 0.5) 65%,
+        hsla(48, 71%, 92%, 1) 100%
       );
     }
   }
