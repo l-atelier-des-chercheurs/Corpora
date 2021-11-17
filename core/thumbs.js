@@ -1107,9 +1107,11 @@ module.exports = (function () {
         let code = `var promise = Promise.resolve(document.documentElement.innerHTML); 
                   promise.then(data => data)`;
 
+        win.webContents.setAudioMuted(true);
         win.webContents.executeJavaScript(code, true).then((html) => {
           // console.log(html); // will be your innherhtml
           const parsed_meta = _parseHTMLMetaTags({ html });
+          win.close();
           return resolve(parsed_meta);
         });
       });
@@ -1120,6 +1122,7 @@ module.exports = (function () {
             `THUMBS — _getPageMetadata / Failed to load link page for ${url}`
           );
           dev.error("did-fail-load: ", event, code, desc, url, isMainFrame);
+          win.close();
           return reject();
         }
       );
