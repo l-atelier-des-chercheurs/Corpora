@@ -143,40 +143,38 @@
           </a>
         </div>
         <div class="_siteCard">
-          <div>
-            <template
-              v-if="
-                siteOG &&
-                (siteOG.local_image || siteOG.title || siteOG.description)
-              "
-            >
-              <div v-if="siteOG_image" class="_siteCard--image">
-                <a :href="link_url" target="_blank">
-                  <img :src="siteOG_image" />
-                </a>
+          <template
+            v-if="
+              siteOG &&
+              (siteOG.local_image || siteOG.title || siteOG.description)
+            "
+          >
+            <div v-if="siteOG_image" class="_siteCard--image">
+              <a :href="link_url" target="_blank">
+                <img :src="siteOG_image" />
+              </a>
+            </div>
+            <div class="_siteCard--text">
+              <div v-if="siteOG.title" class="_siteCard--text--title">
+                {{ siteOG.title }}
               </div>
-              <div class="_siteCard--text">
-                <div v-if="siteOG.title" class="_siteCard--text--title">
-                  {{ siteOG.title }}
-                </div>
-                <div
-                  v-if="siteOG.description"
-                  class="_siteCard--text--description"
-                >
-                  {{ siteOG.description }}
-                </div>
+              <div
+                v-if="siteOG.description"
+                class="_siteCard--text--description"
+              >
+                {{ siteOG.description }}
               </div>
-            </template>
-            <template v-else>
-              <div class="padding-verysmall">
-                {{ $t("no_preview_available") }}
-              </div>
-            </template>
-          </div>
+            </div>
+          </template>
+          <template v-else>
+            <div class="padding-verysmall">
+              {{ $t("no_preview_available") }}
+            </div>
+          </template>
 
-          <div v-if="!should_load_embed && embedURL">
+          <div v-if="!should_load_embed && embedURL" class="_siteCard--embed">
             <label class="margin-bottom-verysmall">{{ $t("embed") }}</label>
-            <div
+            <!-- <div
               class="margin-bottom-verysmall"
               style="
                 text-overflow: ellipsis;
@@ -185,14 +183,14 @@
               "
             >
               <a :href="media.content" target="_blank">{{ media.content }}</a>
-            </div>
+            </div> -->
             <div class="margin-bottom-verysmall">
               <button
                 type="button"
                 class="_load"
                 @click="load_this_embed = true"
               >
-                {{ $t("load") }}
+                {{ $t("load_player") }}
               </button>
             </div>
           </div>

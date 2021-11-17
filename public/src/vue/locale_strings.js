@@ -370,6 +370,10 @@ module.exports = (function () {
       fr: "Mot(s)-clé(s)",
       en: "Keyword(s)",
     },
+    no_with_similar_keywords: {
+      fr: "Aucuns récits avec des mots-clés similaires",
+      en: "No stories with similar keywords",
+    },
     with_similar_keywords: {
       fr: "récits avec des mots-clés similaires",
       en: "stories with similar keywords",

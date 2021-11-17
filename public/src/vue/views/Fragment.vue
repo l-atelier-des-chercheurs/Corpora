@@ -28,36 +28,43 @@
         <aside class="_fragmentList custom_scrollbar custom_scrollbar_dark">
           <Loader v-if="!show_fragmentlist" class="_fragmentList--loader" />
 
-          <div
-            class="_fragmentList--content"
-            v-if="
-              show_fragmentlist &&
-              linked_fragments &&
-              linked_fragments.length > 0
-            "
-          >
-            <h2>
-              {{ linked_fragments.length + " " + $t("with_similar_keywords") }}
-            </h2>
-            <transition-group
-              class="_fragmentList--content--list"
-              name="list-complete"
-              tag="div"
+          <transition name="fade" :duration="200" mode="out-in">
+            <div
+              class="_fragmentList--content"
+              v-if="show_fragmentlist && linked_fragments"
             >
-              <FragmentContent
-                v-for="fragment in linked_fragments"
-                :key="fragment.metaFileName"
-                :context="'preview'"
-                :corpus="corpus"
-                :all_keywords="all_keywords"
-                :all_tags="all_tags"
-                :medias="medias"
-                :fragment="fragment"
-                :fragment_width="300"
-                :slugFolderName="corpus.slugFolderName"
-              />
-            </transition-group>
-          </div>
+              <template v-if="linked_fragments.length === 0">
+                <h2>
+                  {{ $t("no_with_similar_keywords") }}
+                </h2>
+              </template>
+              <template v-else>
+                <h2>
+                  {{
+                    linked_fragments.length + " " + $t("with_similar_keywords")
+                  }}
+                </h2>
+                <transition-group
+                  class="_fragmentList--content--list"
+                  name="list-complete"
+                  tag="div"
+                >
+                  <FragmentContent
+                    v-for="fragment in linked_fragments"
+                    :key="fragment.metaFileName"
+                    :context="'preview'"
+                    :corpus="corpus"
+                    :all_keywords="all_keywords"
+                    :all_tags="all_tags"
+                    :medias="medias"
+                    :fragment="fragment"
+                    :fragment_width="300"
+                    :slugFolderName="corpus.slugFolderName"
+                  />
+                </transition-group>
+              </template>
+            </div>
+          </transition>
           <div
             class="_fragmentList--content"
             v-if="
@@ -120,7 +127,7 @@ export default {
   mounted() {
     setTimeout(() => {
       this.show_fragmentlist = true;
-    }, 800);
+    }, 600);
   },
   beforeDestroy() {},
   watch: {
@@ -202,6 +209,7 @@ export default {
   position: relative;
 
   h2 {
+    margin-top: 0;
     color: var(--color-beige);
   }
 }
@@ -214,6 +222,7 @@ export default {
 }
 
 ._fragmentList--loader {
-  max-height: 500px;
+  // max-height: 500px;
+  align-items: flex-start;
 }
 </style>
