@@ -266,6 +266,7 @@ module.exports = (function () {
       fr: "Afficher tous les récits",
       en: "Show all stories",
     },
+
     online: {
       fr: "En ligne",
       en: "Online",
@@ -301,6 +302,14 @@ module.exports = (function () {
     sent: {
       fr: "Envoyé",
       en: "Sent",
+    },
+    by_creation_date: {
+      fr: "Par date de création",
+      en: "By creation date",
+    },
+    by_title: {
+      fr: "Par titre",
+      en: "By title",
     },
     retry: {
       fr: "Réessayer",
@@ -349,6 +358,10 @@ module.exports = (function () {
     create_a_story: {
       fr: "Créer un récit",
       en: "Create a story",
+    },
+    stories: {
+      fr: "Récits",
+      en: "Stories",
     },
     add_a_story_to_coll: {
       fr: "Ajouter un récit à cette collection",

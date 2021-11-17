@@ -225,14 +225,34 @@
               >
                 {{ $t("no_results") }}
               </div>
-              <FragmentsList
-                v-else
-                :corpus="corpus"
-                :all_keywords="all_keywords"
-                :all_tags="all_tags"
-                :medias="medias"
-                :fragments="filtered_fragments"
-              />
+              <div v-else>
+                <div class="m_corpus--fragments--sort">
+                  <small>
+                    {{ $t("stories") }} • {{ filtered_fragments.length
+                    }}<template
+                      v-if="
+                        filtered_fragments.length !== sorted_fragments.length
+                      "
+                      >/{{ sorted_fragments.length }}</template
+                    >
+                  </small>
+                  <div class="custom-select custom-select_tiny">
+                    <select v-model="sort_fragments_by">
+                      <option value="date_created">
+                        {{ $t("by_creation_date") }}
+                      </option>
+                      <option value="title">{{ $t("by_title") }}</option>
+                    </select>
+                  </div>
+                </div>
+                <FragmentsList
+                  :corpus="corpus"
+                  :all_keywords="all_keywords"
+                  :all_tags="all_tags"
+                  :medias="medias"
+                  :fragments="filtered_fragments"
+                />
+              </div>
             </template>
           </div>
         </transition>
@@ -623,6 +643,17 @@ export default {
   padding: calc(var(--spacing) * 2);
   text-align: center;
   color: var(--color-gray);
+}
+
+.m_corpus--fragments--sort {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: calc(var(--spacing) * 2);
+
+  margin: 0 calc(var(--spacing) * 2);
+  padding: calc(var(--spacing) / 2) 0 0;
+  // border-bottom: 2px solid var(--color-bluegreen);
 }
 
 .m_corpus--fragments--collection {

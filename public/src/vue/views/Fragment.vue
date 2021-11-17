@@ -44,6 +44,7 @@
                     linked_fragments.length + " " + $t("with_similar_keywords")
                   }}
                 </h2>
+
                 <transition-group
                   class="_fragmentList--content--list"
                   name="list-complete"

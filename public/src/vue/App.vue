@@ -142,7 +142,7 @@ label:not(.no-style) {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
   grid-gap: calc(var(--spacing) * 1);
-  padding: calc(var(--spacing) * 2);
+  padding: calc(var(--spacing) * 1) calc(var(--spacing) * 2);
 
   > * {
     display: flex;
@@ -159,7 +159,7 @@ label:not(.no-style) {
   flex-flow: row wrap;
   align-items: center;
   justify-content: center;
-  margin: calc(var(--spacing) * 1.9) 0;
+  margin: calc(var(--spacing) / 2) 0;
 
   .m_fragments--createFragment--addFragmentButton {
     color: var(--color-black);
@@ -614,6 +614,7 @@ select::-ms-expand {
 }
 
 .custom-select_tiny {
+  max-width: 150px;
   &::after {
     top: 3px;
   }
@@ -1110,7 +1111,7 @@ audio {
   flex-flow: row wrap;
   color: var(--color-gray);
   gap: calc(var(--spacing) / 4);
-  max-height: 100px;
+  // max-height: 100px;
   justify-content: center;
   line-height: 1;
 
