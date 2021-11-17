@@ -126,37 +126,18 @@
         <div v-if="!other_fragments">
           <small>{{ $t("none") }}</small>
         </div>
-        <transition-group
+
+        <FragmentsList
           v-else
-          class="m_fragments"
-          name="list-complete"
-          tag="div"
-        >
-          <div v-for="fragment in other_fragments" :key="fragment.metaFileName">
-            <FragmentContent
-              :context="'preview'"
-              :corpus="corpus"
-              :all_keywords="all_keywords"
-              :all_tags="all_tags"
-              :medias="medias"
-              :fragment="fragment"
-              :fragment_width="fragment_width"
-              :slugFolderName="corpus.slugFolderName"
-            />
-            <button
-              type="button"
-              class="_addToColl"
-              @click="
-                $emit('addToCollection', {
-                  metaFileName: fragment.metaFileName,
-                })
-              "
-            >
-              {{ $t("add") }}
-            </button>
-          </div>
-          <div v-for="index in 3" :key="index" />
-        </transition-group>
+          :corpus="corpus"
+          :all_keywords="all_keywords"
+          :all_tags="all_tags"
+          :medias="medias"
+          :fragments="other_fragments"
+          :show_create_button="false"
+          :show_add_button="true"
+          @addToCollection="$emit('addToCollection', $event)"
+        />
       </div>
       <Loader v-if="is_sending_content_to_server" class="_fsLoader" />
     </template>
@@ -165,6 +146,7 @@
 <script>
 import CreateFragment from "../modals/CreateFragment.vue";
 import FragmentContent from "../FragmentContent.vue";
+import FragmentsList from "../subcomponents/FragmentsList.vue";
 
 export default {
   props: {
@@ -179,6 +161,7 @@ export default {
   components: {
     FragmentContent,
     CreateFragment,
+    FragmentsList,
   },
   data() {
     return {

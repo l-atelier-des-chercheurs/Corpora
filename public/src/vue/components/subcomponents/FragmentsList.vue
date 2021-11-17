@@ -1,7 +1,11 @@
 <template>
   <div>
     <transition-group class="m_fragments" name="list-complete" tag="div">
-      <div class="m_fragments--createFragment" key="createFragment">
+      <div
+        v-if="show_create_button"
+        class="m_fragments--createFragment"
+        key="createFragment"
+      >
         <button
           type="button"
           class="m_fragments--createFragment--addFragmentButton"
@@ -41,19 +45,34 @@
       </div>
 
       <template v-if="fragments">
-        <FragmentContent
+        <div
           v-for="fragment in fragments"
           class="m_fragments--fragment"
           :key="fragment.metaFileName"
-          :context="'preview'"
-          :corpus="corpus"
-          :all_keywords="all_keywords"
-          :all_tags="all_tags"
-          :medias="medias"
-          :fragment="fragment"
-          :fragment_width="fragment_width"
-          :slugFolderName="corpus.slugFolderName"
-        />
+        >
+          <FragmentContent
+            :context="'preview'"
+            :corpus="corpus"
+            :all_keywords="all_keywords"
+            :all_tags="all_tags"
+            :medias="medias"
+            :fragment="fragment"
+            :fragment_width="fragment_width"
+            :slugFolderName="corpus.slugFolderName"
+          />
+          <button
+            v-if="show_add_button"
+            type="button"
+            class="_addToColl"
+            @click="
+              $emit('addToCollection', {
+                metaFileName: fragment.metaFileName,
+              })
+            "
+          >
+            {{ $t("add") }}
+          </button>
+        </div>
       </template>
       <div v-for="index in 3" :key="index" />
     </transition-group>
@@ -73,6 +92,14 @@ export default {
     part_of_collection: {
       type: String,
       default: "",
+    },
+    show_create_button: {
+      type: Boolean,
+      default: true,
+    },
+    show_add_button: {
+      type: Boolean,
+      default: false,
     },
   },
   components: {
