@@ -50,8 +50,8 @@
                   tag="div"
                 >
                   <FragmentContent
-                    v-for="fragment in linked_fragments"
-                    :key="fragment.metaFileName"
+                    v-for="(fragment, index) in linked_fragments"
+                    :key="fragment.metaFileName + '.' + index"
                     :context="'preview'"
                     :corpus="corpus"
                     :all_keywords="all_keywords"
@@ -77,7 +77,16 @@
               {{ not_linked_fragments.length + " " + $t("other_fragments") }}
             </h2>
 
+            <button
+              type="button"
+              v-if="!show_not_linked_fragments"
+              @click="show_not_linked_fragments = true"
+            >
+              {{ $t("show") }}
+            </button>
+
             <transition-group
+              v-if="show_not_linked_fragments"
               class="_fragmentList--content--list"
               name="list-complete"
               tag="div"
@@ -121,6 +130,7 @@ export default {
   data() {
     return {
       show_fragmentlist: false,
+      show_not_linked_fragments: false,
     };
   },
   created() {},
@@ -209,9 +219,18 @@ export default {
   position: relative;
 
   h2 {
-    margin-top: 0;
     color: var(--color-beige);
+
+    &:first-child() {
+      margin-top: 0;
+    }
   }
+}
+
+._fragmentList {
+}
+._fragmentList--content:last-child {
+  padding-bottom: calc(var(--spacing) * 4) !important;
 }
 ._fragmentList--content--list {
   display: grid;

@@ -151,6 +151,10 @@ module.exports = (function () {
       fr: "Options d’affichage",
       en: "Display options",
     },
+    show: {
+      fr: "Afficher",
+      en: "Show",
+    },
     display_in_tabs: {
       fr: "Ranger dans des onglets",
       en: "By tabs",
