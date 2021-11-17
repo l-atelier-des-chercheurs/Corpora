@@ -824,14 +824,15 @@ audio {
   display: flex;
   flex-flow: row wrap;
   // background-color: rgba(141, 141, 141, 0.1);
-  border-radius: 2px;
   overflow: hidden;
+  padding: calc(var(--spacing) / 2);
 
   font-size: 0.7em;
 
   ._siteCard--image {
-    flex: 0 0 25%;
+    flex: 1 0 25%;
     min-width: 200px;
+    max-width: 260px;
     display: flex;
     justify-content: center;
     align-items: center;

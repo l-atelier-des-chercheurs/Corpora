@@ -639,7 +639,9 @@ export default {
     // position: absolute;
     // bottom: 0;
     width: 100%;
-    margin: 0 calc(var(--spacing) / 4);
+    padding: calc(var(--spacing) / 4);
+    text-align: center;
+    border-bottom: 2px solid rgba(141, 141, 141, 0.1);
 
     text-overflow: ellipsis;
     white-space: nowrap;
