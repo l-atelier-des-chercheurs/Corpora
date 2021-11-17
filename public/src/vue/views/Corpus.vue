@@ -6,10 +6,17 @@
 
       <div class="m_topBar">
         <div class="m_topBar--content">
-          <hgroup>
-            <h1 v-if="!!corpus.name">{{ corpus.name }}</h1>
-            <h2 v-if="!!corpus.subtitle">{{ corpus.subtitle }}</h2>
-          </hgroup>
+          <router-link
+            :to="{
+              name: 'Corpus',
+              params: { slugFolderName: corpus.slugFolderName },
+            }"
+          >
+            <hgroup>
+              <h1 v-if="!!corpus.name">{{ corpus.name }}</h1>
+              <h2 v-if="!!corpus.subtitle">{{ corpus.subtitle }}</h2>
+            </hgroup>
+          </router-link>
 
           <button type="button">{{ $t("guide") }}</button>
           <button type="button">{{ $t("about_corpus") }}</button>
@@ -311,16 +318,13 @@ export default {
     show_collection_meta() {
       this.setQueryURLFromCollection();
     },
-
     $route: {
       handler(to) {
         if (this.$route.query) {
           this.debounce_search_filter = this.search_filter =
             this.$route.query.search_for || "";
-          if (this.$route.query.search_in)
-            this.search_type = this.$route.query.search_in;
-          if (this.$route.query.collection)
-            this.show_collection_meta = this.$route.query.collection;
+          this.search_type = this.$route.query.search_in || false;
+          this.show_collection_meta = this.$route.query.collection || false;
         }
       },
       immediate: true,
@@ -698,6 +702,11 @@ export default {
   display: flex;
   align-items: center;
   gap: calc(var(--spacing) * 3);
+
+  a {
+    text-decoration: none;
+    color: inherit;
+  }
 
   h1,
   h2 {
