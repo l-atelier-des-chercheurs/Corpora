@@ -410,6 +410,11 @@ export default {
         hsla(48, 71%, 92%, 1) 100%
       );
     }
+
+    &:hover::after {
+      height: 250px;
+      transition: all 1.5s cubic-bezier(0.19, 1, 0.22, 1);
+    }
   }
 
   .m_fragmentContent--content {
@@ -530,7 +535,7 @@ export default {
   // }
 
   &:hover {
-    background-color: rgba(255, 255, 255, 0.25);
+    // background-color: rgba(255, 255, 255, 0.45);
 
     .m_fragmentContent--open--open {
       transform: translateY(0px);
