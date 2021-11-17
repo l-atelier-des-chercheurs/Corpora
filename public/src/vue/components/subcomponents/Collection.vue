@@ -116,7 +116,8 @@ export default {
         fragments_slugs.splice(index, 0, {
           metaFileName,
         });
-      else fragments_slugs.unshift({ metaFileName });
+      else fragments_slugs.push({ metaFileName });
+      // else fragments_slugs.unshift({ metaFileName });
       this.updateMedia({ data: { fragments_slugs } });
     },
 
