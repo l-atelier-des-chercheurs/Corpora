@@ -97,12 +97,6 @@
 
               <button
                 type="button"
-                @click="show_create_collection_modal = true"
-              >
-                {{ $t("create_a_collection") }}
-              </button>
-              <button
-                type="button"
                 v-for="collection in sorted_collections"
                 :key="collection.media_filename"
                 class="m_corpus--collections--coll"
@@ -113,6 +107,12 @@
                 @click="openCollection(collection.media_filename)"
               >
                 {{ collection.title }}
+              </button>
+              <button
+                type="button"
+                @click="show_create_collection_modal = true"
+              >
+                {{ $t("create_a_collection") }}
               </button>
             </div>
 
@@ -202,81 +202,80 @@
               :all_keywords="all_keywords"
               :all_tags="all_tags"
               :medias="medias"
+              :collection_fragments="current_collection_fragments"
             />
 
-            <template v-else>
-              <div>
-                <div class="m_corpus--fragments--sort">
-                  <div>
-                    <small>
-                      {{ $t("stories") }} • {{ filtered_fragments.length
-                      }}<template
-                        v-if="
-                          filtered_fragments.length !== sorted_fragments.length
-                        "
-                        >/{{ sorted_fragments.length }}</template
-                      >
-                    </small>
-                    <div class="custom-select custom-select_tiny">
-                      <select v-model="sort_fragments_by">
-                        <option value="date_created">
-                          {{ $t("by_creation_date") }}
-                        </option>
-                        <option value="title">{{ $t("by_title") }}</option>
-                      </select>
-                    </div>
-                  </div>
-                  <div
-                    v-if="text_search || keyword_search || tag_search"
-                    class="m_corpus--fragments--sort--filterList"
-                  >
-                    <div>
-                      <span>{{ $t("filters") }}</span>
-
-                      <button
-                        type="button"
-                        v-if="text_search"
-                        @click="debounce_text_search = text_search = ''"
-                      >
-                        {{ $t("text") }} = {{ text_search }}
-                        ×
-                      </button>
-                      <button
-                        type="button"
-                        v-if="keyword_search"
-                        @click="keyword_search = ''"
-                      >
-                        {{ $t("keywords") }} = {{ keyword_search }}
-                        ×
-                      </button>
-                      <button
-                        type="button"
-                        v-if="tag_search"
-                        @click="tag_search = ''"
-                      >
-                        {{ $t("tags") }} = {{ tag_search }}
-                        ×
-                      </button>
-                    </div>
+            <div>
+              <div class="m_corpus--fragments--sort">
+                <div>
+                  <small>
+                    {{ $t("stories") }} • {{ filtered_fragments.length
+                    }}<template
+                      v-if="
+                        filtered_fragments.length !== sorted_fragments.length
+                      "
+                      >/{{ sorted_fragments.length }}</template
+                    >
+                  </small>
+                  <div class="custom-select custom-select_tiny">
+                    <select v-model="sort_fragments_by">
+                      <option value="date_created">
+                        {{ $t("by_creation_date") }}
+                      </option>
+                      <option value="title">{{ $t("by_title") }}</option>
+                    </select>
                   </div>
                 </div>
                 <div
-                  v-if="text_search !== '' && filtered_fragments.length === 0"
-                  class="m_corpus--fragments--notice"
+                  v-if="text_search || keyword_search || tag_search"
+                  class="m_corpus--fragments--sort--filterList"
                 >
-                  {{ $t("no_results") }}
-                </div>
+                  <div>
+                    <small>{{ $t("filters") }}</small>
 
-                <FragmentsList
-                  v-else
-                  :corpus="corpus"
-                  :all_keywords="all_keywords"
-                  :all_tags="all_tags"
-                  :medias="medias"
-                  :fragments="filtered_fragments"
-                />
+                    <button
+                      type="button"
+                      v-if="text_search"
+                      @click="debounce_text_search = text_search = ''"
+                    >
+                      {{ $t("text") }} = {{ text_search }}
+                      ×
+                    </button>
+                    <button
+                      type="button"
+                      v-if="keyword_search"
+                      @click="keyword_search = ''"
+                    >
+                      {{ $t("keywords") }} = {{ keyword_search }}
+                      ×
+                    </button>
+                    <button
+                      type="button"
+                      v-if="tag_search"
+                      @click="tag_search = ''"
+                    >
+                      {{ $t("tags") }} = {{ tag_search }}
+                      ×
+                    </button>
+                  </div>
+                </div>
               </div>
-            </template>
+              <div
+                v-if="text_search !== '' && filtered_fragments.length === 0"
+                class="m_corpus--fragments--notice"
+              >
+                {{ $t("no_results") }}
+              </div>
+
+              <FragmentsList
+                v-else
+                :corpus="corpus"
+                :all_keywords="all_keywords"
+                :all_tags="all_tags"
+                :medias="medias"
+                :fragments="filtered_fragments"
+              />
+            </div>
           </div>
         </transition>
       </div>
@@ -378,16 +377,24 @@ export default {
       this.$root.updateLocalLang(this.new_lang);
     },
     text_search() {
-      this.setQueryURLFromSearch();
+      this.setQueryURLFromFilters();
+    },
+    keyword_search() {
+      this.setQueryURLFromFilters();
+    },
+    tag_search() {
+      this.setQueryURLFromFilters();
     },
     show_collection_meta() {
-      this.setQueryURLFromCollection();
+      this.setQueryURLFromFilters();
     },
     $route: {
       handler(to) {
         if (this.$route.query) {
           this.debounce_text_search = this.text_search =
             this.$route.query.text_search || "";
+          this.keyword_search = this.$route.query.keyword_search || false;
+          this.tag_search = this.$route.query.tag_search || false;
           this.show_collection_meta = this.$route.query.collection || false;
         }
       },
@@ -432,6 +439,23 @@ export default {
           (c) => c.media_filename === this.show_collection_meta
         )
       );
+    },
+    current_collection_fragments() {
+      if (!this.show_collection_meta) return [];
+      if (
+        !this.shown_collection.fragments_slugs ||
+        !Array.isArray(this.shown_collection.fragments_slugs)
+      )
+        return false;
+
+      return this.shown_collection.fragments_slugs.reduce((acc, fs) => {
+        const metaFileName = fs.metaFileName;
+        const fragment = this.sorted_fragments.find(
+          (f) => f.metaFileName === metaFileName
+        );
+        if (fragment) acc.push(fragment);
+        return acc;
+      }, []);
     },
 
     can_access_corpus() {
@@ -526,6 +550,14 @@ export default {
         )
           return false;
 
+        if (
+          this.show_collection_meta &&
+          !this.current_collection_fragments
+            .map((_f) => _f.metaFileName)
+            .includes(f.metaFileName)
+        )
+          return false;
+
         return true;
       });
     },
@@ -571,6 +603,7 @@ export default {
         });
       });
     },
+
     openCollection(media_filename) {
       this.show_collection_meta =
         this.show_collection_meta === media_filename ? false : media_filename;
@@ -626,28 +659,20 @@ export default {
 
       return all_text_content.includes(text);
     },
-    setQueryURLFromSearch() {
+    setQueryURLFromFilters() {
       let query = Object.assign({}, this.$route.query) || {};
 
-      // TODO
-      // if (this.text_search !== "") {
-      //   query.search_for = this.text_search;
-      //   query.search_in = this.search_type;
-      // } else {
-      //   delete query.search_for;
-      //   delete query.search_in;
-      // }
-      this.$router.push({
-        query,
-      });
-    },
-    setQueryURLFromCollection() {
-      if (this.$route.query.collection === this.show_collection_meta) return;
+      if (this.text_search === "") delete query.text_search;
+      else query.text_search = this.text_search;
 
-      let query = Object.assign({}, this.$route.query) || {};
-      if (this.show_collection_meta)
-        query.collection = this.show_collection_meta;
-      else delete query.collection;
+      if (!this.keyword_search) delete query.keyword_search;
+      else query.keyword_search = this.keyword_search;
+
+      if (!this.tag_search) delete query.tag_search;
+      else query.tag_search = this.tag_search;
+
+      if (!this.show_collection_meta) delete query.collection;
+      else query.collection = this.show_collection_meta;
 
       this.$router.push({
         query,
@@ -895,13 +920,19 @@ export default {
   // background-color: transparent;
   // background-color: var(--color-beige);
 
-  border-radius: 8px;
+  // border-radius: 8px;
+  width: 100%;
   display: block;
-  padding: calc(var(--spacing) / 2) calc(var(--spacing));
-  margin: calc(var(--spacing) / 2) 0;
+  padding: calc(var(--spacing) / 2);
+  margin: 0 0 calc(var(--spacing) / 2) 0;
+
+  text-align: left;
+  text-transform: inherit;
+  font-family: "base9";
+  font-weight: bold;
 
   &::before {
-    content: ">";
+    // content: ">";
   }
 }
 

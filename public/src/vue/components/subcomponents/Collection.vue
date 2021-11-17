@@ -29,16 +29,6 @@
         </div>
       </div>
 
-      <FragmentsList
-        :corpus="corpus"
-        :all_keywords="all_keywords"
-        :all_tags="all_tags"
-        :medias="medias"
-        :fragments="collection_fragments"
-        :part_of_collection="collection.metaFileName"
-        @addToCollection="addToCollection"
-      />
-
       <SelectFragments
         v-if="show_selectfragments_modal"
         :collection="collection"
@@ -69,6 +59,7 @@ export default {
     all_tags: Array,
     all_keywords: Array,
     medias: [Boolean, Array],
+    collection_fragments: Array,
   },
   components: {
     FragmentContent,
@@ -84,23 +75,7 @@ export default {
   mounted() {},
   beforeDestroy() {},
   watch: {},
-  computed: {
-    collection_fragments() {
-      if (
-        !this.collection.fragments_slugs ||
-        !Array.isArray(this.collection.fragments_slugs)
-      )
-        return false;
-      return this.collection.fragments_slugs.reduce((acc, fs) => {
-        const metaFileName = fs.metaFileName;
-        const fragment = this.fragments.find(
-          (f) => f.metaFileName === metaFileName
-        );
-        if (fragment) acc.push(fragment);
-        return acc;
-      }, []);
-    },
-  },
+  computed: {},
   methods: {
     addToCollection({ metaFileName, index }) {
       let fragments_slugs = this.collection.fragments_slugs

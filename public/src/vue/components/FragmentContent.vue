@@ -409,11 +409,12 @@ export default {
         hsla(48, 71%, 92%, 0.5) 65%,
         hsla(48, 71%, 92%, 1) 100%
       );
+
+      transition: all 1.5s cubic-bezier(0.19, 1, 0.22, 1);
     }
 
     &:hover::after {
-      height: 250px;
-      transition: all 1.5s cubic-bezier(0.19, 1, 0.22, 1);
+      height: 150px;
     }
   }
 
