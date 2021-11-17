@@ -805,6 +805,10 @@ audio {
   pre {
     margin: 0;
   }
+
+  &.type-link {
+    background-color: rgba(141, 141, 141, 0.1);
+  }
 }
 
 // .m_keywordField {
@@ -819,7 +823,7 @@ audio {
 ._siteCard {
   display: flex;
   flex-flow: row wrap;
-  background-color: rgba(141, 141, 141, 0.1);
+  // background-color: rgba(141, 141, 141, 0.1);
   border-radius: 2px;
   overflow: hidden;
 
