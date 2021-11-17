@@ -1275,8 +1275,8 @@ audio {
     border-radius: 2px;
     // border: 1px solid #f4f4f2;
 
-    // display: flex;
-    // flex-flow: row wrap;
+    display: flex;
+    flex-flow: row wrap;
 
     transition: background-color 0.2s ease-out;
 
@@ -1323,7 +1323,7 @@ audio {
     }
 
     .m_modal--container {
-      max-width: calc(var(--panel-width) * 4);
+      max-width: calc(var(--panel-width) * 3.5);
       align-self: flex-start;
       .m_modal--preview {
         height: auto;
