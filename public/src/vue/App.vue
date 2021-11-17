@@ -1807,6 +1807,7 @@ twitter-widget.twitter-tweet {
 
   > *:first-child {
     margin-top: 0;
+    padding: ~"calc(var(--spacing) / 4)";
 
     > *:first-child {
       margin-top: 0;
