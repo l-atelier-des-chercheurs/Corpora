@@ -20,9 +20,9 @@
         }}
       </time>
     </div>
-    <div class="m_corpusPreview--description">
+    <!-- <div class="m_corpusPreview--description">
       <p v-html="corpus.description" />
-    </div>
+    </div> -->
     <div v-if="previewURL" class="m_corpusPreview--preview">
       <img :src="previewURL" class draggable="false" />
     </div>
@@ -244,10 +244,10 @@ export default {
 </script>
 <style lang="scss" scoped>
 .m_corpusPreview {
-  // border-top: 1px solid currentColor;
-  background: var(--active-color);
+  border-top: 2px solid var(--color-bluegreen);
+  // background: var(--active-color);
   // margin: var(--spacing);
-  padding: calc(var(--spacing) / 2);
+  padding: calc(var(--spacing)) 0;
   border-radius: 2px;
 
   > *:not(:last-child) {
