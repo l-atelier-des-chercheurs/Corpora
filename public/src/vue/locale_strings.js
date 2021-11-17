@@ -76,7 +76,7 @@ module.exports = (function () {
       en: "Sort stories by",
     },
     personal_data_and_legal_notices: {
-      fr: "cookies, données personnelles et mentions légales",
+      fr: "Cookies, données personnelles et mentions légales",
       en: "Cookies, personal data and legal notices",
     },
     created_on: {

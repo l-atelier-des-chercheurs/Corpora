@@ -18,6 +18,13 @@
             </hgroup>
           </router-link>
 
+          <a href="https://plurality-university.org" target="_blank">
+            <img
+              class="_logo"
+              src="/images/U+_LogoLabels-1_Blue.png"
+              draggable="false"
+            />
+          </a>
           <button type="button">{{ $t("guide") }}</button>
           <button type="button">{{ $t("about_corpus") }}</button>
           <button type="button"></button>
@@ -230,6 +237,24 @@
           </div>
         </transition>
       </div>
+
+      <footer class="_bottomFooter">
+        <button
+          type="button"
+          class="button-nostyle a"
+          @click="
+            $root.settings.show_welcome_modal = true;
+            $root.settings.unfold_legal_pane = true;
+          "
+          :class="{ 'is--active': $root.settings.show_welcome_modal }"
+        >
+          {{ $t("personal_data_and_legal_notices") }}
+        </button>
+
+        <a href="plurality-university.org" target="_blank">
+          <img src="/images/U+_LogoLabels-1_Blue.png" draggable="false" />
+        </a>
+      </footer>
 
       <CreateCollection
         v-if="show_create_collection_modal"
@@ -759,6 +784,35 @@ export default {
 
   &::before {
     content: ">";
+  }
+}
+
+._logo {
+  position: absolute;
+  top: 5px;
+  right: 0px;
+  width: 217px;
+  transform: rotate(4deg);
+  image-rendering: crisp-edges;
+}
+
+._bottomFooter {
+  border-top: 2px solid var(--color-bluegreen);
+  padding: calc(var(--spacing) * 2) 0;
+  margin: 0 calc(var(--spacing) * 2);
+
+  display: flex;
+  flex-flow: row wrap;
+  gap: var(--spacing);
+  justify-content: center;
+
+  .a {
+    text-transform: inherit;
+  }
+
+  img {
+    width: 100%;
+    max-width: 340px;
   }
 }
 </style>

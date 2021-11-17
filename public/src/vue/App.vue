@@ -40,6 +40,8 @@ export default {
   --color-bluegreen: #c0d8dd;
   --color-beige: #fdfbf2;
   --panel-width: 320px;
+
+  // --body-bg: #ededed;
 }
 
 body {
