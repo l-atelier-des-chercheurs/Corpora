@@ -200,7 +200,7 @@ export default {
       flex: 1 1 600px;
     }
     ._fragmentList {
-      flex: 1 1 300px;
+      flex: 0 1 320px;
     }
   }
 }
