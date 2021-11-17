@@ -93,8 +93,8 @@
               tag="div"
             >
               <FragmentContent
-                v-for="fragment in not_linked_fragments"
-                :key="fragment.metaFileName"
+                v-for="(fragment, index) in not_linked_fragments"
+                :key="fragment.metaFileName + '_' + index"
                 :context="'preview'"
                 :corpus="corpus"
                 :all_keywords="all_keywords"

@@ -14,12 +14,12 @@
         <div class="motsclestags">
           <template v-if="fragment.keywords && fragment.keywords.length > 0">
             <span v-for="kw in fragment.keywords" :key="kw.title">
-              # {{ kw.title }}
+              #&hairsp;{{ kw.title }}
             </span>
           </template>
           <template v-if="fragment.tags && fragment.tags.length > 0">
             <span v-for="tag in fragment.tags" :key="tag.title">
-              • {{ tag.title }}
+              •&hairsp;{{ tag.title }}
             </span>
           </template>
           <!-- <label>

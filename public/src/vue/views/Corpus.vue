@@ -124,34 +124,22 @@
                 <input
                   type="search"
                   id="fragments-search"
-                  v-model="debounce_search_filter"
+                  v-model="debounce_text_search"
                   :aria-label="$t('search_in_fragments')"
                 />
 
                 <span
                   class="input-addon"
-                  v-if="debounce_search_filter.length > 0"
+                  v-if="debounce_text_search.length > 0"
                 >
                   <button
                     type="button"
-                    :disabled="debounce_search_filter.length === 0"
-                    @click="debounce_search_filter = ''"
+                    :disabled="debounce_text_search.length === 0"
+                    @click="debounce_text_search = ''"
                   >
                     ×
                   </button>
                 </span>
-              </div>
-
-              <div class="custom-select custom-select_tiny">
-                <select v-model="search_type">
-                  <option
-                    v-for="st in search_type_available"
-                    :key="st"
-                    :value="st"
-                  >
-                    {{ $t(st) }}
-                  </option>
-                </select>
               </div>
             </div>
 
@@ -169,8 +157,7 @@
                   :key="keyword"
                   @click="setKeywordFilter(keyword)"
                   :class="{
-                    'is--active':
-                      search_type === 'keywords' && keyword === search_filter,
+                    'is--active': keyword === keyword_search,
                   }"
                 >
                   {{ keyword }}
@@ -188,8 +175,7 @@
                   :key="tag"
                   @click="setTagFilter(tag)"
                   :class="{
-                    'is--active':
-                      search_type === 'tags' && tag === search_filter,
+                    'is--active': tag === tag_search,
                   }"
                 >
                   {{ tag }}
@@ -219,33 +205,70 @@
             />
 
             <template v-else>
-              <div
-                v-if="search_filter !== '' && filtered_fragments.length === 0"
-                class="m_corpus--fragments--notice"
-              >
-                {{ $t("no_results") }}
-              </div>
-              <div v-else>
+              <div>
                 <div class="m_corpus--fragments--sort">
-                  <small>
-                    {{ $t("stories") }} • {{ filtered_fragments.length
-                    }}<template
-                      v-if="
-                        filtered_fragments.length !== sorted_fragments.length
-                      "
-                      >/{{ sorted_fragments.length }}</template
-                    >
-                  </small>
-                  <div class="custom-select custom-select_tiny">
-                    <select v-model="sort_fragments_by">
-                      <option value="date_created">
-                        {{ $t("by_creation_date") }}
-                      </option>
-                      <option value="title">{{ $t("by_title") }}</option>
-                    </select>
+                  <div>
+                    <small>
+                      {{ $t("stories") }} • {{ filtered_fragments.length
+                      }}<template
+                        v-if="
+                          filtered_fragments.length !== sorted_fragments.length
+                        "
+                        >/{{ sorted_fragments.length }}</template
+                      >
+                    </small>
+                    <div class="custom-select custom-select_tiny">
+                      <select v-model="sort_fragments_by">
+                        <option value="date_created">
+                          {{ $t("by_creation_date") }}
+                        </option>
+                        <option value="title">{{ $t("by_title") }}</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div
+                    v-if="text_search || keyword_search || tag_search"
+                    class="m_corpus--fragments--sort--filterList"
+                  >
+                    <div>
+                      <span>{{ $t("filters") }}</span>
+
+                      <button
+                        type="button"
+                        v-if="text_search"
+                        @click="debounce_text_search = text_search = ''"
+                      >
+                        {{ $t("text") }} = {{ text_search }}
+                        ×
+                      </button>
+                      <button
+                        type="button"
+                        v-if="keyword_search"
+                        @click="keyword_search = ''"
+                      >
+                        {{ $t("keywords") }} = {{ keyword_search }}
+                        ×
+                      </button>
+                      <button
+                        type="button"
+                        v-if="tag_search"
+                        @click="tag_search = ''"
+                      >
+                        {{ $t("tags") }} = {{ tag_search }}
+                        ×
+                      </button>
+                    </div>
                   </div>
                 </div>
+                <div
+                  v-if="text_search !== '' && filtered_fragments.length === 0"
+                  class="m_corpus--fragments--notice"
+                >
+                  {{ $t("no_results") }}
+                </div>
+
                 <FragmentsList
+                  v-else
                   :corpus="corpus"
                   :all_keywords="all_keywords"
                   :all_tags="all_tags"
@@ -319,12 +342,12 @@ export default {
 
       new_lang: this.$root.lang.current,
 
-      search_filter: "",
-      debounce_search_filter: "",
-      debounce_search_filter_function: undefined,
+      text_search: "",
+      debounce_text_search: "",
+      debounce_text_search_function: undefined,
 
-      search_type: "title",
-      search_type_available: ["title", "keywords", "tags"],
+      keyword_search: false,
+      tag_search: false,
 
       show_create_collection_modal: false,
       show_collection_meta: false,
@@ -344,20 +367,17 @@ export default {
   },
   destroyed() {},
   watch: {
-    debounce_search_filter: function () {
-      if (this.debounce_search_filter_function)
-        clearTimeout(this.debounce_search_filter_function);
-      this.debounce_search_filter_function = setTimeout(() => {
-        this.search_filter = this.debounce_search_filter;
+    debounce_text_search: function () {
+      if (this.debounce_text_search_function)
+        clearTimeout(this.debounce_text_search_function);
+      this.debounce_text_search_function = setTimeout(() => {
+        this.text_search = this.debounce_text_search;
       }, 500);
     },
     new_lang() {
       this.$root.updateLocalLang(this.new_lang);
     },
-    search_filter() {
-      this.setQueryURLFromSearch();
-    },
-    search_type() {
+    text_search() {
       this.setQueryURLFromSearch();
     },
     show_collection_meta() {
@@ -366,9 +386,8 @@ export default {
     $route: {
       handler(to) {
         if (this.$route.query) {
-          this.debounce_search_filter = this.search_filter =
-            this.$route.query.search_for || "";
-          this.search_type = this.$route.query.search_in || false;
+          this.debounce_text_search = this.text_search =
+            this.$route.query.text_search || "";
           this.show_collection_meta = this.$route.query.collection || false;
         }
       },
@@ -483,19 +502,34 @@ export default {
       if (!this.sorted_fragments) return false;
 
       return this.sorted_fragments.filter((f) => {
-        const sf = this.search_filter.toLowerCase();
+        if (
+          this.text_search &&
+          !f.title.toLowerCase().includes(this.text_search.toLowerCase()) &&
+          !this.doFragmentMediasIncludeText({
+            fragment_media: f,
+            text: this.text_search.toLowerCase(),
+          })
+        )
+          return false;
 
-        if (sf === "") return true;
-        else if (this.search_type === "title")
-          return f.title.toLowerCase().includes(sf);
-        else if (this.search_type === "keywords")
-          return (
-            f.keywords && f.keywords.find((k) => k.title.toLowerCase() === sf)
-          );
-        else if (this.search_type === "tags")
-          return f.tags && f.tags.find((k) => k.title.toLowerCase() === sf);
+        // if has has keywords search, but no keywords or no keywords match
+        if (
+          this.keyword_search &&
+          (!f.keywords ||
+            !f.keywords.some((k) => k.title === this.keyword_search))
+        )
+          return false;
 
-        return false;
+        // TODO
+
+        // if (this.search_type === "keywords")
+        //   return (
+        //     f.keywords && f.keywords.find((k) => k.title.toLowerCase() === sf)
+        //   );
+        // else if (this.search_type === "tags")
+        //   return f.tags && f.tags.find((k) => k.title.toLowerCase() === sf);
+
+        return true;
       });
     },
     all_tags() {
@@ -545,32 +579,67 @@ export default {
         this.show_collection_meta === media_filename ? false : media_filename;
     },
     setKeywordFilter(kw) {
-      if (this.search_filter === kw && this.search_type === "keywords")
-        return (this.debounce_search_filter = this.search_filter = "");
-      this.search_type = "keywords";
-      this.debounce_search_filter = this.search_filter = kw;
+      this.keyword_search = this.keyword_search === kw ? false : kw;
     },
     setTagFilter(tag) {
-      if (this.search_filter === tag && this.search_type === "tags")
-        return (this.debounce_search_filter = this.search_filter = "");
-      this.search_type = "tags";
-      this.debounce_search_filter = this.search_filter = tag;
+      this.tag_search = this.tag_search === tag ? false : tag;
+    },
+    doFragmentMediasIncludeText({ fragment_media, text }) {
+      if (
+        typeof fragment_media.medias_slugs !== "object" ||
+        fragment_media.medias_slugs.length === 0
+      )
+        return false;
+
+      const fragment_medias = fragment_media.medias_slugs.reduce(
+        (acc, item) => {
+          const linked_media = this.medias.find(
+            (m) => m.metaFileName === item.metaFileName
+          );
+          if (linked_media) acc.push(linked_media);
+          return acc;
+        },
+        []
+      );
+
+      function extractContent(html) {
+        return new DOMParser().parseFromString(html, "text/html")
+          .documentElement.textContent;
+      }
+
+      const all_text_content = fragment_medias.reduce((acc, fm) => {
+        if (fm.content) acc += extractContent(fm.content).toLowerCase() + " ";
+        if (fm.caption) acc += fm.caption.toLowerCase() + " ";
+        if (fm.source) acc += fm.source.toLowerCase() + " ";
+        if (fm.description) acc += fm.description.toLowerCase() + " ";
+
+        if (
+          Array.isArray(fm.thumbs) &&
+          fm.thumbs[0] &&
+          fm.thumbs[0].hasOwnProperty("siteData")
+        ) {
+          if (fm.thumbs[0].siteData.title)
+            acc += fm.thumbs[0].siteData.title.toLowerCase() + " ";
+          if (fm.thumbs[0].siteData.description)
+            acc += fm.thumbs[0].siteData.description.toLowerCase() + " ";
+        }
+
+        return acc;
+      }, "");
+
+      return all_text_content.includes(text);
     },
     setQueryURLFromSearch() {
-      if (
-        this.$route.query.search_for === this.search_filter &&
-        this.$route.query.search_in === this.search_type
-      )
-        return;
-
       let query = Object.assign({}, this.$route.query) || {};
-      if (this.search_filter !== "") {
-        query.search_for = this.search_filter;
-        query.search_in = this.search_type;
-      } else {
-        delete query.search_for;
-        delete query.search_in;
-      }
+
+      // TODO
+      // if (this.text_search !== "") {
+      //   query.search_for = this.text_search;
+      //   query.search_in = this.search_type;
+      // } else {
+      //   delete query.search_for;
+      //   delete query.search_in;
+      // }
       this.$router.push({
         query,
       });
@@ -646,14 +715,34 @@ export default {
 }
 
 .m_corpus--fragments--sort {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: calc(var(--spacing) * 2);
-
   margin: 0 calc(var(--spacing) * 2);
   padding: calc(var(--spacing) / 2) 0 0;
   // border-bottom: 2px solid var(--color-bluegreen);
+
+  > * {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: calc(var(--spacing));
+  }
+}
+
+.m_corpus--fragments--sort--filterList {
+  > * {
+    display: flex;
+    gap: calc(var(--spacing) / 2);
+
+    > button {
+      background: var(--color-bluegreen);
+      padding: 0 calc(var(--spacing) / 4);
+
+      &:hover,
+      &:active,
+      &:focus {
+        background: #f4f4f2;
+      }
+    }
+  }
 }
 
 .m_corpus--fragments--collection {

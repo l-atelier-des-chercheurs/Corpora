@@ -91,6 +91,10 @@ module.exports = (function () {
       fr: "Aucun récit ne correspond à votre recherche",
       en: "No results match your criteria(s)",
     },
+    text_search: {
+      fr: "Recherche de texte",
+      en: "Text search",
+    },
     created: {
       fr: "Créé",
       en: "Created",
@@ -390,6 +394,10 @@ module.exports = (function () {
     keywords: {
       fr: "Mot(s)-clé(s)",
       en: "Keyword(s)",
+    },
+    filters: {
+      fr: "Filtre(s)",
+      en: "Filter(s)",
     },
     no_with_similar_keywords: {
       fr: "Aucuns récits avec des mots-clés similaires",

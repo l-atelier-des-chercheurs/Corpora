@@ -1003,6 +1003,12 @@ audio {
     margin-right: calc(var(--spacing) / 4);
     margin-bottom: calc(var(--spacing) / 4);
 
+    &:hover,
+    &:active,
+    &:focus {
+      background: #f4f4f2;
+    }
+
     &.is--active {
       color: white;
       background-color: var(--color-black);
@@ -2071,7 +2077,7 @@ twitter-widget.twitter-tweet {
   width: 13px;
   height: 13px;
   border-radius: 50%;
-  background: #c0d8dd;
+  background: var(--color-bluegreen);
   animation-timing-function: cubic-bezier(0, 1, 1, 0);
 }
 .lds-ellipsis div:nth-child(1) {

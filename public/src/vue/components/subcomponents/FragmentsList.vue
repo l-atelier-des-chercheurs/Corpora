@@ -46,9 +46,9 @@
 
       <template v-if="fragments">
         <div
-          v-for="fragment in fragments"
+          v-for="(fragment, index) in fragments"
           class="m_fragments--fragment"
-          :key="fragment.metaFileName"
+          :key="fragment.metaFileName + '.' + index"
         >
           <FragmentContent
             :context="'preview'"
