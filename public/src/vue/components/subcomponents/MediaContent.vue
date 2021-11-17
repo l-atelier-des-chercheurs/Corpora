@@ -172,7 +172,10 @@
             </div>
           </template>
 
-          <div v-if="!should_load_embed && embedURL" class="_siteCard--embed">
+          <div
+            v-if="!should_load_embed && embedURL && context !== 'preview'"
+            class="_siteCard--embed"
+          >
             <label class="margin-bottom-verysmall">{{ $t("embed") }}</label>
             <!-- <div
               class="margin-bottom-verysmall"
