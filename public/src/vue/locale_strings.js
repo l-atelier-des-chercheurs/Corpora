@@ -63,6 +63,10 @@ module.exports = (function () {
       fr: "Charger",
       en: "Load",
     },
+    load_player: {
+      fr: "Charger le lecteur",
+      en: "Load player",
+    },
     file_max_size: {
       fr: "Taille max. des fichiers",
       en: "Max file size",

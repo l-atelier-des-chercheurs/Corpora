@@ -200,11 +200,12 @@ label:not(.no-style) {
   }
   &::-webkit-scrollbar-track {
     background: var(--scrollbarBG);
+    width: 4px;
   }
   &::-webkit-scrollbar-thumb {
     background-color: var(--thumbBG);
-    // border-radius: 2px;
-    border: 4px solid var(--scrollbarBG);
+    border-radius: 6px;
+    border: 6px solid var(--scrollbarBG);
     border-top-width: calc(var(--spacing) * 2);
     border-bottom-width: calc(var(--spacing) * 2);
 
@@ -817,7 +818,7 @@ audio {
 
 ._siteCard {
   display: flex;
-  flex-flow: row nowrap;
+  flex-flow: row wrap;
   background-color: rgba(141, 141, 141, 0.1);
   border-radius: 2px;
   overflow: hidden;
@@ -825,7 +826,8 @@ audio {
   font-size: 0.7em;
 
   ._siteCard--image {
-    flex: 0 0 33%;
+    flex: 0 0 25%;
+    min-width: 200px;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -837,7 +839,9 @@ audio {
       background: white;
     }
   }
-  ._siteCard--text {
+  ._siteCard--text,
+  ._siteCard--embed {
+    flex: 1 1 100px;
     padding: calc(var(--spacing) / 2);
   }
   ._siteCard--text--title {
@@ -1266,8 +1270,8 @@ audio {
     border-radius: 2px;
     // border: 1px solid #f4f4f2;
 
-    display: flex;
-    flex-flow: row wrap;
+    // display: flex;
+    // flex-flow: row wrap;
 
     transition: background-color 0.2s ease-out;
 
