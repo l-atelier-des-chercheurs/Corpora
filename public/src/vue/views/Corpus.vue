@@ -520,14 +520,11 @@ export default {
         )
           return false;
 
-        // TODO
-
-        // if (this.search_type === "keywords")
-        //   return (
-        //     f.keywords && f.keywords.find((k) => k.title.toLowerCase() === sf)
-        //   );
-        // else if (this.search_type === "tags")
-        //   return f.tags && f.tags.find((k) => k.title.toLowerCase() === sf);
+        if (
+          this.tag_search &&
+          (!f.tags || !f.tags.some((k) => k.title === this.tag_search))
+        )
+          return false;
 
         return true;
       });
@@ -735,6 +732,7 @@ export default {
     > button {
       background: var(--color-bluegreen);
       padding: 0 calc(var(--spacing) / 4);
+      text-transform: inherit;
 
       &:hover,
       &:active,
