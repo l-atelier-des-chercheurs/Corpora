@@ -514,10 +514,13 @@ export default {
       )
         return;
 
-      let query = this.$route.query || {};
+      let query = Object.assign({}, this.$route.query) || {};
       if (this.search_filter !== "") {
         query.search_for = this.search_filter;
         query.search_in = this.search_type;
+      } else {
+        delete query.search_for;
+        delete query.search_in;
       }
       this.$router.push({
         query,
@@ -526,13 +529,14 @@ export default {
     setQueryURLFromCollection() {
       if (this.$route.query.collection === this.show_collection_meta) return;
 
-      let query = this.$route.query || {};
-
+      let query = Object.assign({}, this.$route.query) || {};
       if (this.show_collection_meta)
-        (query.collection = this.show_collection_meta),
-          this.$router.push({
-            query,
-          });
+        query.collection = this.show_collection_meta;
+      else delete query.collection;
+
+      this.$router.push({
+        query,
+      });
     },
     createNewMoment() {
       let contribution_moments =
