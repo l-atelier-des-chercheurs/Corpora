@@ -424,7 +424,8 @@ export default {
       if (
         // if image is gif and context is not 'preview', let’s show the original gif
         // this.context !== "preview" &&
-        this.mediaURL.toLowerCase().endsWith(".gif")
+        this.mediaURL.toLowerCase().endsWith(".gif") ||
+        this.context === "full"
       ) {
         return this.mediaURL;
       }

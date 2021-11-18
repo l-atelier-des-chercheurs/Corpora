@@ -1558,8 +1558,8 @@ audio {
       position: absolute;
       top: 0;
       right: 0;
-      width: auto;
-      height: auto;
+      height: 100%;
+      width: 100%;
       object-fit: contain;
       object-position: center;
     }
