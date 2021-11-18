@@ -259,6 +259,9 @@
                     </button>
                   </div>
                 </div>
+                <!-- <div class="m_corpus--fragments--sort--pagination">
+                  {{ fragments_paginated }}
+                </div> -->
               </div>
               <div
                 v-if="text_search !== '' && filtered_fragments.length === 0"
@@ -340,6 +343,11 @@ export default {
       show_edit_corpus_for: false,
 
       new_lang: this.$root.lang.current,
+
+      pagination: {
+        current_page: 1,
+        number_of_fragments_per_page: 50,
+      },
 
       text_search: "",
       debounce_text_search: "",
@@ -423,6 +431,16 @@ export default {
       //   return {};
       // }
     },
+
+    fragments_paginated() {
+      return this.filtered_fragments.slice(
+        (this.pagination.current_page - 1) *
+          this.pagination.number_of_fragments_per_page,
+        this.pagination.current_page *
+          this.pagination.number_of_fragments_per_page
+      );
+    },
+
     opened_fragment() {
       if (!this.$route.params.fragmentId || !this.sorted_fragments)
         return false;
