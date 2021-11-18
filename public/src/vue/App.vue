@@ -792,7 +792,7 @@ audio {
   iframe,
   video {
     display: block;
-    width: 100%;
+    max-width: 100%;
     background-color: var(--color-black);
 
     // max-height: var(--fragment-width);
@@ -1774,7 +1774,7 @@ twitter-widget.twitter-tweet {
   min-width: 100px;
   font-family: inherit;
   font-weight: 300;
-  border-radius: 8px;
+  // border-radius: 8px;
 
   button {
     min-height: 0;

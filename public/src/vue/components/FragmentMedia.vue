@@ -474,17 +474,23 @@ export default {
 .m_fragmentMedia {
   position: relative;
   // border-radius: 8px;
+  padding: calc(var(--spacing) / 2) calc(var(--spacing));
 
   &[data-type="text"] {
-    padding: calc(var(--spacing) / 2) calc(var(--spacing));
+    padding: calc(var(--spacing) / 2) calc(var(--spacing) / 4 * 3);
   }
   &:not([data-type="text"]) {
     .m_fragmentMedia--infos--caption,
     .m_fragmentMedia--infos--source {
-      padding: 0 calc(var(--spacing));
+      // padding: 0 calc(var(--spacing));
     }
   }
-
+  &[data-type="text"] {
+    .m_fragmentMedia--infos--caption,
+    .m_fragmentMedia--infos--source {
+      padding: calc(var(--spacing) / 4);
+    }
+  }
   .m_fragmentMedia--content {
     min-height: 3em;
     position: relative;
