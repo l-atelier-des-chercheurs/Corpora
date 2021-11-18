@@ -27,7 +27,6 @@
           </a>
           <button type="button">{{ $t("guide") }}</button>
           <button type="button">{{ $t("about_corpus") }}</button>
-          <button type="button"></button>
           <div class="margin-sides-medium">
             <div class="margin-vert-small">
               <div class="custom-select">
@@ -43,6 +42,7 @@
               </div>
             </div>
           </div>
+          <button type="button"></button>
         </div>
       </div>
 
