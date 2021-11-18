@@ -828,11 +828,12 @@ audio {
   flex-flow: row wrap;
   // background-color: rgba(141, 141, 141, 0.1);
   overflow: hidden;
-  padding: calc(var(--spacing) / 2);
+  // padding: calc(var(--spacing) / 2);
 
-  font-size: 0.7em;
+  // font-size: 0.7em;
 
   ._siteCard--image {
+    position: relative;
     flex: 1 0 25%;
     min-width: 200px;
     max-width: 260px;
@@ -845,6 +846,30 @@ audio {
       height: 100%;
       object-fit: contain;
       background: white;
+    }
+
+    ._siteCard--image--playButton {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: transparent;
+
+      display: flex;
+      justify-content: center;
+      align-items: center;
+
+      svg {
+        width: 24px;
+        height: 24px;
+      }
+      circle {
+        fill: var(--color-bluegreen);
+      }
+      polygon {
+        fill: white;
+      }
     }
   }
   ._siteCard--text,

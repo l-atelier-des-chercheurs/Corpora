@@ -149,10 +149,32 @@
               (siteOG.local_image || siteOG.title || siteOG.description)
             "
           >
-            <div v-if="siteOG_image" class="_siteCard--image">
-              <a :href="link_url" target="_blank">
-                <img :src="siteOG_image" />
-              </a>
+            <div class="_siteCard--image">
+              <!-- <a :href="link_url" target="_blank"> -->
+              <img v-if="siteOG_image" :src="siteOG_image" />
+              <button
+                v-if="!should_load_embed && embedURL && context !== 'preview'"
+                type="button"
+                class="_siteCard--image--playButton"
+                @click="load_this_embed = true"
+              >
+                <svg
+                  version="1.1"
+                  xmlns="http://www.w3.org/2000/svg"
+                  xmlns:xlink="http://www.w3.org/1999/xlink"
+                  x="0px"
+                  y="0px"
+                  viewBox="0 0 168 168"
+                  style="enable-background: new 0 0 168 168"
+                  xml:space="preserve"
+                >
+                  <circle style="" cx="84" cy="84" r="84" />
+                  <polygon
+                    fill="currentColor"
+                    points="57.3,39.4 136.8,85.8 57.3,132.2 		"
+                  />
+                </svg>
+              </button>
             </div>
             <div class="_siteCard--text">
               <div v-if="siteOG.title" class="_siteCard--text--title">
@@ -171,32 +193,6 @@
               {{ $t("no_preview_available") }}
             </div>
           </template>
-
-          <div
-            v-if="!should_load_embed && embedURL && context !== 'preview'"
-            class="_siteCard--embed"
-          >
-            <label class="margin-bottom-verysmall">{{ $t("embed") }}</label>
-            <!-- <div
-              class="margin-bottom-verysmall"
-              style="
-                text-overflow: ellipsis;
-                white-space: nowrap;
-                overflow: hidden;
-              "
-            >
-              <a :href="media.content" target="_blank">{{ media.content }}</a>
-            </div> -->
-            <div class="margin-bottom-verysmall">
-              <button
-                type="button"
-                class="_load"
-                @click="load_this_embed = true"
-              >
-                {{ $t("load_player") }}
-              </button>
-            </div>
-          </div>
         </div>
       </template>
       <template v-else>
