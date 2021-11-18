@@ -561,7 +561,7 @@ export default {
       }
 
       const videoId = getId(url);
-      return `https://www.youtube.com/embed/${videoId}`;
+      return `https://www.youtube.com/embed/${videoId}?autoplay=1`;
     },
     getVimeoEmbedURLFromURL(url) {
       function getId(url) {
@@ -571,7 +571,7 @@ export default {
       }
 
       const videoId = getId(url);
-      return `https://player.vimeo.com/video/${videoId}`;
+      return `https://player.vimeo.com/video/${videoId}?autoplay=1`;
     },
     getSoundcloudEmbedURLFromURL(url) {
       return `https://w.soundcloud.com/player/?url=${url}&color=0066cc`;
