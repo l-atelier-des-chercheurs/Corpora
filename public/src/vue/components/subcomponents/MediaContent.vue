@@ -10,6 +10,7 @@
         :srcset="imageSrcSetAttr"
         :sizes="imageSizesAttr"
         :src="linkToImageThumb"
+        loading="lazy"
         draggable="false"
       />
     </template>
