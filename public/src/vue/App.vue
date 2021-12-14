@@ -519,7 +519,8 @@ input[type="checkbox"] {
 }
 
 input,
-textarea {
+textarea,
+.ql-editor {
   font-size: 1.2em;
   padding: 0.4em calc(0.4em - 2px) 0.4em 0.4em;
   border: none;
@@ -527,6 +528,9 @@ textarea {
   width: 100%;
   max-width: 320px;
   -webkit-appearance: none;
+
+  background: white;
+  color: var(--color-black);
 
   border-left: 2px solid transparent;
 
@@ -1234,10 +1238,6 @@ audio {
   z-index: 20000;
 }
 
-.ql-editor {
-  background-color: rgba(141, 141, 141, 0.1);
-}
-
 .m_modal--mask {
   position: fixed;
   z-index: 10000;
@@ -1779,6 +1779,11 @@ twitter-widget.twitter-tweet {
       min-height: 0;
     }
   }
+}
+
+.admin_cat {
+  border: 2px solid white;
+  padding: 0 calc(var(--spacing) / 3);
 }
 
 .plyr {
