@@ -1,7 +1,6 @@
 <template>
   <div
     class="m_fragmentContent custom_scrollbar"
-    :style="`--fragment-width: ${fragment_width}px`"
     :class="{
       'is--highlighted': highlight_corpus,
       'is--preview': context === 'preview',
@@ -398,23 +397,24 @@ export default {
       bottom: 0;
       left: 0;
       width: 100%;
-      height: 50px;
+      height: 2px;
       z-index: 10;
       pointer-events: none;
 
-      background: linear-gradient(
-        180deg,
-        hsla(48, 71%, 92%, 0) 0%,
-        hsla(48, 71%, 92%, 0.25) 35%,
-        hsla(48, 71%, 92%, 0.5) 65%,
-        hsla(48, 71%, 92%, 1) 100%
-      );
+      // background: linear-gradient(
+      //   180deg,
+      //   hsla(48, 71%, 92%, 0) 0%,
+      //   hsla(48, 71%, 92%, 0.25) 35%,
+      //   hsla(48, 71%, 92%, 0.5) 65%,
+      //   hsla(48, 71%, 92%, 1) 100%
+      // );
+      background: hsla(48, 71%, 92%, 1);
 
       transition: all 1.5s cubic-bezier(0.19, 1, 0.22, 1);
     }
 
     &:hover::after {
-      height: 150px;
+      height: 58px;
     }
   }
 
@@ -436,8 +436,8 @@ export default {
     //   var(--color-black) 100%
     // );
     background: var(--color-beige);
-    border-radius: 4px;
-    box-shadow: 0px 0px 4px 0px rgba(41, 41, 41, 0.8);
+    // border-radius: 4px;
+    // box-shadow: 0px 0px 4px 0px rgba(41, 41, 41, 0.8);
 
     transition: opacity 4s cubic-bezier(0.19, 1, 0.22, 1);
 
@@ -447,7 +447,7 @@ export default {
   }
 
   &.is--preview .m_fragmentContent--content {
-    box-shadow: 0px 0px 4px 0px rgba(204, 208, 218, 0.8);
+    // box-shadow: 0px 0px 4px 0px rgba(204, 208, 218, 0.8);
   }
 
   &.is--highlighted {
