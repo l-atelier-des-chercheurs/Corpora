@@ -414,7 +414,7 @@ export default {
     }
 
     &:hover::after {
-      height: 58px;
+      // height: 58px;
     }
   }
 
