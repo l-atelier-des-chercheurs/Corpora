@@ -194,7 +194,7 @@ label:not(.no-style) {
   --thumbBG: #90a4ae;
 
   &::-webkit-scrollbar {
-    width: 12px;
+    width: 16px;
   }
   & {
     scrollbar-width: thin;
@@ -202,14 +202,16 @@ label:not(.no-style) {
   }
   &::-webkit-scrollbar-track {
     background: var(--scrollbarBG);
-    width: 4px;
+    width: 14px;
   }
   &::-webkit-scrollbar-thumb {
     background-color: var(--thumbBG);
-    border-radius: 6px;
+
+    border-radius: 2px;
+    background-clip: padding-box;
     border: 6px solid var(--scrollbarBG);
-    border-top-width: calc(var(--spacing) * 2);
-    border-bottom-width: calc(var(--spacing) * 2);
+    border-top-width: calc(var(--spacing) / 2);
+    border-bottom-width: calc(var(--spacing) / 2);
 
     &:hover {
       background-color: #ccd0da;
@@ -219,7 +221,7 @@ label:not(.no-style) {
 
 .custom_scrollbar_dark {
   --scrollbarBG: transparent;
-  --thumbBG: #90a4ae;
+  --thumbBG: var(--color-beige);
 }
 
 .m_advancedMenu {
@@ -795,9 +797,13 @@ audio {
     max-width: 100%;
     background-color: var(--color-black);
 
-    // max-height: var(--fragment-width);
     object-fit: scale-down;
     object-fit: cover;
+  }
+
+  iframe,
+  video {
+    width: 100%;
   }
 
   iframe {
@@ -854,24 +860,13 @@ audio {
       left: 0;
       width: 100%;
       height: 100%;
-      background: transparent;
 
-      display: flex;
-      justify-content: center;
-      align-items: center;
-
-      svg {
-        width: 24px;
-        height: 24px;
-      }
-      circle {
-        fill: var(--color-bluegreen);
-      }
-      polygon {
-        fill: white;
+      &:hover {
+        background-color: rgba(255, 255, 255, 0.25);
       }
     }
   }
+
   ._siteCard--text,
   ._siteCard--embed {
     flex: 1 1 100px;
@@ -882,6 +877,24 @@ audio {
     font-weight: bold;
   }
   ._siteCard--text--description {
+  }
+}
+
+._playButton {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: transparent;
+
+  svg {
+    width: 24px;
+    height: 24px;
+  }
+  circle {
+    fill: var(--color-bluegreen);
+  }
+  polygon {
+    fill: white;
   }
 }
 
