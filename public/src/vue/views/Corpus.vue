@@ -26,7 +26,7 @@
             />
           </a>
           <button type="button">{{ $t("guide") }}</button>
-          <button type="button">{{ $t("about_corpus") }}</button>
+          <!-- <button type="button">{{ $t("about_corpus") }}</button> -->
           <div class="margin-sides-medium">
             <div class="margin-vert-small">
               <div class="custom-select">
@@ -90,6 +90,24 @@
               <label>{{ $t("description") }}</label>
 
               <p v-html="corpus.description" />
+            </div>
+
+            <div class="m_corpus--tags" v-if="all_tags && all_tags.length > 0">
+              <label>{{ $t("tags") }}</label>
+              <div class="m_keywordField m_keywordField_tags">
+                <button
+                  type="button"
+                  class="tag"
+                  v-for="tag in all_tags"
+                  :key="tag"
+                  @click="setTagFilter(tag)"
+                  :class="{
+                    'is--active': tag === tag_search,
+                  }"
+                >
+                  {{ tag }}
+                </button>
+              </div>
             </div>
 
             <div class="m_corpus--collections">
@@ -161,24 +179,6 @@
                   }"
                 >
                   {{ keyword }}
-                </button>
-              </div>
-            </div>
-
-            <div class="m_corpus--tags" v-if="all_tags && all_tags.length > 0">
-              <label>{{ $t("tags") }}</label>
-              <div class="m_keywordField m_keywordField_tags">
-                <button
-                  type="button"
-                  class="tag"
-                  v-for="tag in all_tags"
-                  :key="tag"
-                  @click="setTagFilter(tag)"
-                  :class="{
-                    'is--active': tag === tag_search,
-                  }"
-                >
-                  {{ tag }}
                 </button>
               </div>
             </div>
