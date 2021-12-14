@@ -1108,6 +1108,7 @@ module.exports = (function () {
         let code = `var promise = Promise.resolve(document.documentElement.innerHTML); 
                   promise.then(data => data)`;
 
+        if (!win) return reject();
         win.webContents.executeJavaScript(code, true).then((html) => {
           // console.log(html); // will be your innherhtml
           const parsed_meta = _parseHTMLMetaTags({ html });
