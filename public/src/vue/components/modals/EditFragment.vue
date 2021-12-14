@@ -29,6 +29,18 @@
         <CollectMode v-model="fragmentdata.contribution_moment" />
       </div> -->
 
+      <div class="margin-bottom-small admin_cat" v-if="$root.can_admin_corpora">
+        <i>admin</i>
+        <label>{{ $t("categories") }}</label>
+        <TagsInput
+          :allKeywords="all_tags_rightly_formatted"
+          :keywords="fragmentdata.tags"
+          :type="'tabs'"
+          :placeholder="$t('add_tab')"
+          @tagsChanged="(newTags) => (fragmentdata.tags = newTags)"
+        />
+      </div>
+
       <div class="margin-bottom-small">
         <label>{{ $t("keywords") }}</label>
         <TagsInput
@@ -38,17 +50,6 @@
           :keywords="fragmentdata.keywords"
           :placeholder="$t('add_keyword')"
           @tagsChanged="(newKeywords) => (fragmentdata.keywords = newKeywords)"
-        />
-      </div>
-
-      <div class="margin-bottom-small">
-        <label>{{ $t("categories") }}</label>
-        <TagsInput
-          :allKeywords="all_tags_rightly_formatted"
-          :keywords="fragmentdata.tags"
-          :type="'tabs'"
-          :placeholder="$t('add_tab')"
-          @tagsChanged="(newTags) => (fragmentdata.tags = newTags)"
         />
       </div>
     </template>

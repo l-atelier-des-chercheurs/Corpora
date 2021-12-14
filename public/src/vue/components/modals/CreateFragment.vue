@@ -29,17 +29,8 @@
         <CollectMode v-model="fragmentdata.contribution_moment" />
       </div> -->
 
-      <div class="margin-bottom-small">
-        <label>{{ $t("keywords") }}</label>
-        <TagsInput
-          :allKeywords="all_keywords_rightly_formatted"
-          :type="'keywords'"
-          :placeholder="$t('add_keyword')"
-          @tagsChanged="(newKeywords) => (fragmentdata.keywords = newKeywords)"
-        />
-      </div>
-
-      <div class="margin-bottom-small">
+      <div class="margin-bottom-small admin_cat" v-if="$root.can_admin_corpora">
+        <i>admin</i>
         <label>{{ $t("categories") }}</label>
         <TagsInput
           :allKeywords="all_tags_rightly_formatted"
@@ -48,6 +39,16 @@
           :placeholder="$t('add_tab')"
           :show_existing_by_default="true"
           @tagsChanged="(newTags) => (fragmentdata.tags = newTags)"
+        />
+      </div>
+
+      <div class="margin-bottom-small">
+        <label>{{ $t("keywords") }}</label>
+        <TagsInput
+          :allKeywords="all_keywords_rightly_formatted"
+          :type="'keywords'"
+          :placeholder="$t('add_keyword')"
+          @tagsChanged="(newKeywords) => (fragmentdata.keywords = newKeywords)"
         />
       </div>
     </template>
