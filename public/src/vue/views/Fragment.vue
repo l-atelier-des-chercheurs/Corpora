@@ -8,7 +8,10 @@
   >
     <template slot="body">
       <div class="_sideBySide">
-        <div class="_singleFragment custom_scrollbar custom_scrollbar_dark">
+        <div
+          class="_singleFragment custom_scrollbar custom_scrollbar_dark"
+          ref="singleFragmentContainer"
+        >
           <transition name="fade" :duration="200" mode="out-in">
             <FragmentContent
               v-if="opened_fragment"
@@ -142,7 +145,11 @@ export default {
   },
   beforeDestroy() {},
   watch: {
-    "opened_fragment.metaFileName"() {},
+    "opened_fragment.metaFileName"() {
+      const single_fragment_container =
+        document.querySelector("._singleFragment");
+      if (single_fragment_container) single_fragment_container.scrollTop = 0;
+    },
   },
   computed: {
     all_fragments_except_current() {
@@ -192,7 +199,6 @@ export default {
 <style lang="scss" scoped>
 ._sideBySide {
   // grid-gap: calc(var(--spacing) * 2);
-
   ._fragmentList {
     padding: calc(var(--spacing) / 2);
   }
@@ -204,16 +210,22 @@ export default {
       max-height: 100vh;
       overflow: auto;
       // padding: clamp(2vmin, 4vw, calc(var(--spacing) * 4));
-      padding: calc(var(--spacing) * 2);
+      // padding: calc(var(--spacing));
     }
 
     ._singleFragment {
       flex: 1 1 600px;
+      padding: calc(var(--spacing) / 2);
+      padding-right: 0;
     }
     ._fragmentList {
       flex: 0 1 320px;
     }
   }
+}
+
+._singleFragment {
+  scroll-behavior: smooth;
 }
 
 ._fragmentList {
@@ -230,14 +242,21 @@ export default {
 
 ._fragmentList {
 }
+
+._fragmentList--content {
+  margin-bottom: calc(var(--spacing) * 1);
+}
 ._fragmentList--content:last-child {
   padding-bottom: calc(var(--spacing) * 4) !important;
+}
+._fragmentList--content > h2 {
+  margin: calc(var(--spacing) / 2) 0;
 }
 ._fragmentList--content--list {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
   /* grid-auto-rows: max-content; */
-  grid-gap: calc(var(--spacing) * 1) calc(var(--spacing) * 1);
+  grid-gap: calc(var(--spacing) / 2);
   // padding: 0 calc(var(--spacing) * 2) calc(var(--spacing) * 2);
 }
 
