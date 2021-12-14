@@ -48,18 +48,6 @@
         />
       </div>
 
-      <!-- Sort in tabs -->
-      <!-- <div class="margin-bottom-small">
-        <label for="sortInTabs">
-          <input
-            type="checkbox"
-            id="sortInTabs"
-            v-model="corpusdata.sort_in_tabs"
-          />
-          {{ $t("sort_in_tabs_by_default") }}
-        </label>
-      </div> -->
-
       <!-- Password -->
       <div class="margin-bottom-small">
         <label>{{ $t("password") }}</label>
@@ -107,7 +95,6 @@ export default {
         description: "",
         password: "",
         keywords: [],
-        // sort_in_tabs: false,
       },
       preview: undefined,
       askBeforeClosingModal: false,

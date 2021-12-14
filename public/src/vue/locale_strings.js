@@ -119,10 +119,6 @@ module.exports = (function () {
       fr: "Nom",
       en: "Name",
     },
-    sort_in_tabs_by_default: {
-      fr: "Ranger dans des onglets par défaut",
-      en: "Sort in tabs by default",
-    },
     guide: {
       fr: "Guide d’utilisation",
       en: "How to use",
@@ -158,10 +154,6 @@ module.exports = (function () {
     show: {
       fr: "Afficher",
       en: "Show",
-    },
-    display_in_tabs: {
-      fr: "Ranger dans des onglets",
-      en: "By tabs",
     },
     position: {
       fr: "Position",
@@ -420,8 +412,8 @@ module.exports = (function () {
       en: "Add a keyword",
     },
     add_tab: {
-      fr: "Rattacher à un onglet",
-      en: "Link to tab",
+      fr: "Rattacher à une catégorie",
+      en: "Link to a tag",
     },
     suggestion: {
       fr: "Suggestion",
