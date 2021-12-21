@@ -545,10 +545,15 @@ textarea,
 
 .input-addon {
   font-size: 1.2em;
+  // height: 100%;
 
   > * {
     padding: 0.4em 0.8em;
+    height: 100%;
     border: none;
+
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
   }
 }
 
@@ -770,6 +775,11 @@ input[type="submit"] {
         color: var(--color-black);
       }
     }
+  }
+
+  &[disabled] {
+    background: var(--active-color);
+    cursor: default;
   }
 }
 

@@ -138,27 +138,26 @@
               <label for="fragments-search">{{
                 $t("search_in_fragments")
               }}</label>
-              <div class="flex-nowrap">
+              <form
+                class="flex-nowrap align-items-stretch"
+                @submit.prevent="text_search = text_search_in_field"
+              >
                 <input
                   type="search"
                   id="fragments-search"
-                  v-model="debounce_text_search"
+                  v-model="text_search_in_field"
                   :aria-label="$t('search_in_fragments')"
                 />
 
-                <span
-                  class="input-addon"
-                  v-if="debounce_text_search.length > 0"
-                >
+                <span class="input-addon">
                   <button
-                    type="button"
-                    :disabled="debounce_text_search.length === 0"
-                    @click="debounce_text_search = ''"
+                    type="submit"
+                    :disabled="text_search === text_search_in_field"
                   >
-                    ×
+                    √
                   </button>
                 </span>
-              </div>
+              </form>
             </div>
 
             <div
@@ -236,7 +235,7 @@
                     <button
                       type="button"
                       v-if="text_search"
-                      @click="debounce_text_search = text_search = ''"
+                      @click="text_search = ''"
                     >
                       {{ $t("text") }} = {{ text_search }}
                       ×
@@ -350,8 +349,7 @@ export default {
       },
 
       text_search: "",
-      debounce_text_search: "",
-      debounce_text_search_function: undefined,
+      text_search_in_field: "",
 
       keyword_search: false,
       tag_search: false,
@@ -374,13 +372,6 @@ export default {
   },
   destroyed() {},
   watch: {
-    debounce_text_search: function () {
-      if (this.debounce_text_search_function)
-        clearTimeout(this.debounce_text_search_function);
-      this.debounce_text_search_function = setTimeout(() => {
-        this.text_search = this.debounce_text_search;
-      }, 500);
-    },
     new_lang() {
       this.$root.updateLocalLang(this.new_lang);
     },
@@ -399,7 +390,7 @@ export default {
     $route: {
       handler(to) {
         if (this.$route.query) {
-          this.debounce_text_search = this.text_search =
+          this.text_search = this.text_search_in_field =
             this.$route.query.text_search || "";
           this.keyword_search = this.$route.query.keyword_search || false;
           this.tag_search = this.$route.query.tag_search || false;
