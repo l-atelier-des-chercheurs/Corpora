@@ -303,6 +303,14 @@ module.exports = (function () {
       fr: "Envoyé",
       en: "Sent",
     },
+    reason_for_sharing: {
+      fr: "Raisons du partage",
+      en: "Reasons for sharing",
+    },
+    reactions: {
+      fr: "Réactions",
+      en: "Reactions",
+    },
     by_creation_date: {
       fr: "Par date de création",
       en: "By creation date",

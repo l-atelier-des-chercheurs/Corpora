@@ -27,15 +27,75 @@
             />
           </transition>
         </div>
-
-        <aside class="_fragmentList custom_scrollbar custom_scrollbar_dark">
-          <Loader v-if="!show_fragmentlist" class="_fragmentList--loader" />
+        <aside
+          class="
+            _fragmentListAndReactions
+            custom_scrollbar custom_scrollbar_dark
+          "
+        >
+          <Loader
+            v-if="!show_fragmentListAndReactions"
+            class="_fragmentListAndReactions--loader"
+          />
 
           <transition name="fade" :duration="200" mode="out-in">
             <div
-              class="_fragmentList--content"
-              v-if="show_fragmentlist && linked_fragments"
+              class="_fragmentListAndReactions--content"
+              v-if="show_fragmentListAndReactions && linked_fragments"
             >
+              <div class="_reactions">
+                <i>todo</i>
+                <h2>
+                  {{ $t("reason_for_sharing") }}
+                </h2>
+
+                <div>
+                  <i>
+                    Ici un texte personnalisable par la personne qui a créé le
+                    récit pour indiquer la raison d’être du fragment.
+                  </i>
+                </div>
+                <br />
+                <h2>
+                  {{ $t("reactions") }}
+                </h2>
+                <div>
+                  <h3>Liste de réponses/réactions d’autres personnes</h3>
+                  <ul>
+                    <li>
+                      <a href="">Réaction #1</a>
+                    </li>
+                    <li>
+                      <a href="">Réaction #2</a>
+                    </li>
+                    <li>
+                      <a href="">Réaction #3</a>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+
+              <div class="_collections">
+                <i>todo</i>
+                <h2>
+                  {{ $t("collections") }}
+                  <i>todo</i>
+                </h2>
+                <div>Ce récit figure dans les collections suivantes :</div>
+                <br />
+                <div>
+                  Ajouter ce récit à une collection :
+                  <select>
+                    <option
+                      v-for="collection in sorted_collections"
+                      :key="collection.media_filename"
+                    >
+                      {{ collection.title }}
+                    </option>
+                  </select>
+                </div>
+              </div>
+
               <template v-if="linked_fragments.length === 0">
                 <h2>
                   {{ $t("no_with_similar_keywords") }}
@@ -49,7 +109,7 @@
                 </h2>
 
                 <transition-group
-                  class="_fragmentList--content--list"
+                  class="_fragmentListAndReactions--content--list"
                   name="list-complete"
                   tag="div"
                 >
@@ -70,9 +130,9 @@
             </div>
           </transition>
           <div
-            class="_fragmentList--content"
+            class="_fragmentListAndReactions--content"
             v-if="
-              show_fragmentlist &&
+              show_fragmentListAndReactions &&
               not_linked_fragments &&
               not_linked_fragments.length > 0
             "
@@ -91,7 +151,7 @@
 
             <transition-group
               v-if="show_not_linked_fragments"
-              class="_fragmentList--content--list"
+              class="_fragmentListAndReactions--content--list"
               name="list-complete"
               tag="div"
             >
@@ -133,14 +193,14 @@ export default {
   },
   data() {
     return {
-      show_fragmentlist: false,
+      show_fragmentListAndReactions: false,
       show_not_linked_fragments: false,
     };
   },
   created() {},
   mounted() {
     setTimeout(() => {
-      this.show_fragmentlist = true;
+      this.show_fragmentListAndReactions = true;
     }, 600);
   },
   beforeDestroy() {},
@@ -159,6 +219,21 @@ export default {
           (f) => f.metaFileName !== this.opened_fragment.metaFileName
         )
       );
+    },
+    sorted_collections() {
+      if (
+        typeof this.corpus.medias !== "object" ||
+        Object.values(this.corpus.medias).length === 0
+      )
+        return false;
+
+      let collections = Object.values(this.corpus.medias).filter(
+        (m) => m.type === "collection"
+      );
+      collections = this.$_.sortBy(collections, "date_created");
+      collections.reverse();
+
+      return collections;
     },
     linked_fragments() {
       if (!this.all_fragments_except_current) return false;
@@ -199,7 +274,7 @@ export default {
 <style lang="scss" scoped>
 ._sideBySide {
   // grid-gap: calc(var(--spacing) * 2);
-  ._fragmentList {
+  ._fragmentListAndReactions {
     padding: calc(var(--spacing) / 2);
   }
 
@@ -218,7 +293,7 @@ export default {
       padding: calc(var(--spacing) / 2);
       padding-right: 0;
     }
-    ._fragmentList {
+    ._fragmentListAndReactions {
       flex: 0 1 320px;
     }
   }
@@ -228,7 +303,7 @@ export default {
   scroll-behavior: smooth;
 }
 
-._fragmentList {
+._fragmentListAndReactions {
   position: relative;
 
   h2 {
@@ -240,19 +315,19 @@ export default {
   }
 }
 
-._fragmentList {
+._fragmentListAndReactions {
 }
 
-._fragmentList--content {
+._fragmentListAndReactions--content {
   margin-bottom: calc(var(--spacing) * 1);
 }
-._fragmentList--content:last-child {
+._fragmentListAndReactions--content:last-child {
   padding-bottom: calc(var(--spacing) * 4) !important;
 }
-._fragmentList--content > h2 {
+._fragmentListAndReactions--content > h2 {
   margin: calc(var(--spacing) / 2) 0;
 }
-._fragmentList--content--list {
+._fragmentListAndReactions--content--list {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
   /* grid-auto-rows: max-content; */
@@ -260,8 +335,21 @@ export default {
   // padding: 0 calc(var(--spacing) * 2) calc(var(--spacing) * 2);
 }
 
-._fragmentList--loader {
+._fragmentListAndReactions--loader {
   // max-height: 500px;
   align-items: flex-start;
+}
+
+._reactions,
+._collections {
+  background-color: var(--color-beige);
+  padding: calc(var(--spacing) / 2);
+  padding-bottom: calc(var(--spacing));
+  margin-bottom: calc(var(--spacing));
+
+  h2 {
+    margin-top: 0;
+    color: inherit;
+  }
 }
 </style>
