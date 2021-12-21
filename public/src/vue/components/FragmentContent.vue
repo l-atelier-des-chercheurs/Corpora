@@ -10,6 +10,24 @@
       <div class="m_fragmentContent--content--top">
         <h2>{{ fragment.title }}</h2>
 
+        <div @click="show_advanced_meta = !show_advanced_meta">
+          <template v-if="!show_advanced_meta">
+            {{ $t("created_on") }}&nbsp;{{
+              $root.formatDateToHuman(fragment.date_created)
+            }}
+          </template>
+          <template v-else>
+            <div>
+              {{ $t("created") }}&nbsp;•
+              {{ $root.formatDateToPrecise(fragment.date_created) }}
+            </div>
+            <div>
+              {{ $t("edited") }}&nbsp;•
+              {{ $root.formatDateToPrecise(fragment.date_modified) }}
+            </div>
+          </template>
+        </div>
+
         <div class="motsclestags">
           <template v-if="fragment.keywords && fragment.keywords.length > 0">
             <span v-for="kw in fragment.keywords" :key="kw.title">
@@ -21,11 +39,6 @@
               •&hairsp;{{ tag.title }}
             </span>
           </template>
-          <!-- <label>
-          {{ $t("created") }}&nbsp;{{
-            $root.formatDateToHuman(fragment.date_created)
-          }}
-        </label> -->
         </div>
       </div>
 
@@ -196,6 +209,7 @@ export default {
   data() {
     return {
       show_advanced_menu: false,
+      show_advanced_meta: false,
       show_edit_fragment: false,
       highlight_corpus: false,
     };
@@ -460,9 +474,10 @@ export default {
   .m_fragmentContent--content--top {
     margin: calc(var(--spacing)) 0;
     padding: 0 var(--spacing);
+    text-align: center;
     h2 {
       margin: 0;
-      text-align: center;
+      margin-bottom: var(--spacing);
     }
   }
   &.is--preview .m_fragmentContent--content--top {

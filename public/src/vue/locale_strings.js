@@ -103,6 +103,10 @@ module.exports = (function () {
       fr: "Éditer",
       en: "Edit",
     },
+    edited: {
+      fr: "Dernière modification",
+      en: "Last edit",
+    },
     last_edited_on: {
       fr: "Dernière modification le",
       en: "Last edit on",
