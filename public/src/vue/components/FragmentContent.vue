@@ -10,7 +10,7 @@
       <div class="m_fragmentContent--content--top">
         <h2>{{ fragment.title }}</h2>
 
-        <div @click="show_advanced_meta = !show_advanced_meta">
+        <div class="_meta" @click="show_advanced_meta = !show_advanced_meta">
           <template v-if="!show_advanced_meta">
             {{ $t("created_on") }}&nbsp;{{
               $root.formatDateToHuman(fragment.date_created)
@@ -477,7 +477,12 @@ export default {
     text-align: center;
     h2 {
       margin: 0;
-      margin-bottom: var(--spacing);
+      margin-bottom: calc(var(--spacing) / 2);
+    }
+
+    ._meta {
+      font-size: 0.8rem;
+      text-transform: lowercase;
     }
   }
   &.is--preview .m_fragmentContent--content--top {
