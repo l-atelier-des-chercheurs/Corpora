@@ -63,6 +63,10 @@ module.exports = (function () {
       fr: "Charger",
       en: "Load",
     },
+    load_player: {
+      fr: "Afficher le lecteur",
+      en: "Load player",
+    },
     file_max_size: {
       fr: "Taille max. des fichiers",
       en: "Max file size",
@@ -72,7 +76,7 @@ module.exports = (function () {
       en: "Sort stories by",
     },
     personal_data_and_legal_notices: {
-      fr: "cookies, données personnelles et mentions légales",
+      fr: "Cookies, données personnelles et mentions légales",
       en: "Cookies, personal data and legal notices",
     },
     created_on: {
@@ -87,6 +91,10 @@ module.exports = (function () {
       fr: "Aucun récit ne correspond à votre recherche",
       en: "No results match your criteria(s)",
     },
+    text_search: {
+      fr: "Recherche de texte",
+      en: "Text search",
+    },
     created: {
       fr: "Créé",
       en: "Created",
@@ -94,6 +102,10 @@ module.exports = (function () {
     edit: {
       fr: "Éditer",
       en: "Edit",
+    },
+    edited: {
+      fr: "Dernière modification",
+      en: "Last edit",
     },
     last_edited_on: {
       fr: "Dernière modification le",
@@ -110,10 +122,6 @@ module.exports = (function () {
     name: {
       fr: "Nom",
       en: "Name",
-    },
-    sort_in_tabs_by_default: {
-      fr: "Ranger dans des onglets par défaut",
-      en: "Sort in tabs by default",
     },
     guide: {
       fr: "Guide d’utilisation",
@@ -147,9 +155,9 @@ module.exports = (function () {
       fr: "Options d’affichage",
       en: "Display options",
     },
-    display_in_tabs: {
-      fr: "Ranger dans des onglets",
-      en: "By tabs",
+    show: {
+      fr: "Afficher",
+      en: "Show",
     },
     position: {
       fr: "Position",
@@ -258,6 +266,7 @@ module.exports = (function () {
       fr: "Afficher tous les récits",
       en: "Show all stories",
     },
+
     online: {
       fr: "En ligne",
       en: "Online",
@@ -293,6 +302,22 @@ module.exports = (function () {
     sent: {
       fr: "Envoyé",
       en: "Sent",
+    },
+    reason_for_sharing: {
+      fr: "Raisons du partage",
+      en: "Reasons for sharing",
+    },
+    reactions: {
+      fr: "Réactions",
+      en: "Reactions",
+    },
+    by_creation_date: {
+      fr: "Par date de création",
+      en: "By creation date",
+    },
+    by_title: {
+      fr: "Par titre",
+      en: "By title",
     },
     retry: {
       fr: "Réessayer",
@@ -339,8 +364,12 @@ module.exports = (function () {
       en: "Description, source…",
     },
     create_a_story: {
-      fr: "Créer un récit",
-      en: "Create a story",
+      fr: "Ajouter un nouveau récit",
+      en: "Add a new story",
+    },
+    stories: {
+      fr: "Récits",
+      en: "Stories",
     },
     add_a_story_to_coll: {
       fr: "Ajouter un récit à cette collection",
@@ -370,6 +399,14 @@ module.exports = (function () {
       fr: "Mot(s)-clé(s)",
       en: "Keyword(s)",
     },
+    filters: {
+      fr: "Filtre(s)",
+      en: "Filter(s)",
+    },
+    no_with_similar_keywords: {
+      fr: "Aucuns récits avec des mots-clés similaires",
+      en: "No stories with similar keywords",
+    },
     with_similar_keywords: {
       fr: "récits avec des mots-clés similaires",
       en: "stories with similar keywords",
@@ -387,8 +424,8 @@ module.exports = (function () {
       en: "Add a keyword",
     },
     add_tab: {
-      fr: "Rattacher à un onglet",
-      en: "Link to tab",
+      fr: "Rattacher à une catégorie",
+      en: "Link to a tag",
     },
     suggestion: {
       fr: "Suggestion",

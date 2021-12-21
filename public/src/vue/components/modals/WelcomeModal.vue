@@ -175,7 +175,7 @@
               >l&#39;Atelier des chercheurs</a
             >
             et
-            <a href="plurality-university.org" target="_blank">
+            <a href="https://plurality-university.org" target="_blank">
               le réseau Université de la Pluralité
             </a>
             pour constituer collectivement des corpus d&#39;œuvres et de
@@ -230,7 +230,7 @@
               >l&#39;Atelier des chercheurs</a
             >
             and
-            <a href="plurality-university.org" target="_blank"
+            <a href="https://plurality-university.org" target="_blank"
               >the Plurality University Network</a
             >
             in order to collectively build corpuses.

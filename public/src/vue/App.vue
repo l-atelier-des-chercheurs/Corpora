@@ -40,6 +40,8 @@ export default {
   --color-bluegreen: #c0d8dd;
   --color-beige: #fdfbf2;
   --panel-width: 320px;
+
+  // --body-bg: #ededed;
 }
 
 body {
@@ -140,7 +142,7 @@ label:not(.no-style) {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
   grid-gap: calc(var(--spacing) * 1);
-  padding: calc(var(--spacing) * 2);
+  padding: calc(var(--spacing) * 1) calc(var(--spacing) * 2);
 
   > * {
     display: flex;
@@ -157,7 +159,7 @@ label:not(.no-style) {
   flex-flow: row wrap;
   align-items: center;
   justify-content: center;
-  margin: calc(var(--spacing) * 1.9) 0;
+  margin: calc(var(--spacing) / 2) 0;
 
   .m_fragments--createFragment--addFragmentButton {
     color: var(--color-black);
@@ -192,7 +194,7 @@ label:not(.no-style) {
   --thumbBG: #90a4ae;
 
   &::-webkit-scrollbar {
-    width: 12px;
+    width: 16px;
   }
   & {
     scrollbar-width: thin;
@@ -200,13 +202,16 @@ label:not(.no-style) {
   }
   &::-webkit-scrollbar-track {
     background: var(--scrollbarBG);
+    width: 14px;
   }
   &::-webkit-scrollbar-thumb {
     background-color: var(--thumbBG);
-    // border-radius: 2px;
-    border: 4px solid var(--scrollbarBG);
-    border-top-width: calc(var(--spacing) * 2);
-    border-bottom-width: calc(var(--spacing) * 2);
+
+    border-radius: 2px;
+    background-clip: padding-box;
+    border: 6px solid var(--scrollbarBG);
+    border-top-width: calc(var(--spacing) / 2);
+    border-bottom-width: calc(var(--spacing) / 2);
 
     &:hover {
       background-color: #ccd0da;
@@ -216,7 +221,7 @@ label:not(.no-style) {
 
 .custom_scrollbar_dark {
   --scrollbarBG: transparent;
-  --thumbBG: #90a4ae;
+  --thumbBG: var(--color-beige);
 }
 
 .m_advancedMenu {
@@ -514,7 +519,8 @@ input[type="checkbox"] {
 }
 
 input,
-textarea {
+textarea,
+.ql-editor {
   font-size: 1.2em;
   padding: 0.4em calc(0.4em - 2px) 0.4em 0.4em;
   border: none;
@@ -522,6 +528,9 @@ textarea {
   width: 100%;
   max-width: 320px;
   -webkit-appearance: none;
+
+  background: white;
+  color: var(--color-black);
 
   border-left: 2px solid transparent;
 
@@ -536,10 +545,15 @@ textarea {
 
 .input-addon {
   font-size: 1.2em;
+  // height: 100%;
 
   > * {
     padding: 0.4em 0.8em;
+    height: 100%;
     border: none;
+
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
   }
 }
 
@@ -611,6 +625,7 @@ select::-ms-expand {
 }
 
 .custom-select_tiny {
+  max-width: 150px;
   &::after {
     top: 3px;
   }
@@ -761,6 +776,11 @@ input[type="submit"] {
       }
     }
   }
+
+  &[disabled] {
+    background: var(--active-color);
+    cursor: default;
+  }
 }
 
 img,
@@ -788,12 +808,16 @@ audio {
   iframe,
   video {
     display: block;
-    width: 100%;
+    max-width: 100%;
     background-color: var(--color-black);
 
-    // max-height: var(--fragment-width);
     object-fit: scale-down;
     object-fit: cover;
+  }
+
+  iframe,
+  video {
+    width: 100%;
   }
 
   iframe {
@@ -803,6 +827,10 @@ audio {
 
   pre {
     margin: 0;
+  }
+
+  &.type-link {
+    background-color: rgba(141, 141, 141, 0.1);
   }
 }
 
@@ -817,15 +845,18 @@ audio {
 
 ._siteCard {
   display: flex;
-  flex-flow: row nowrap;
-  background-color: rgba(141, 141, 141, 0.1);
-  border-radius: 2px;
+  flex-flow: row wrap;
+  // background-color: rgba(141, 141, 141, 0.1);
   overflow: hidden;
+  // padding: calc(var(--spacing) / 2);
 
-  font-size: 0.7em;
+  // font-size: 0.7em;
 
   ._siteCard--image {
-    flex: 0 0 33%;
+    position: relative;
+    flex: 1 0 25%;
+    min-width: 200px;
+    max-width: 260px;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -836,8 +867,23 @@ audio {
       object-fit: contain;
       background: white;
     }
+
+    ._siteCard--image--playButton {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+
+      &:hover {
+        background-color: rgba(255, 255, 255, 0.25);
+      }
+    }
   }
-  ._siteCard--text {
+
+  ._siteCard--text,
+  ._siteCard--embed {
+    flex: 1 1 100px;
     padding: calc(var(--spacing) / 2);
   }
   ._siteCard--text--title {
@@ -845,6 +891,24 @@ audio {
     font-weight: bold;
   }
   ._siteCard--text--description {
+  }
+}
+
+._playButton {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: transparent;
+
+  svg {
+    width: 24px;
+    height: 24px;
+  }
+  circle {
+    fill: var(--color-bluegreen);
+  }
+  polygon {
+    fill: white;
   }
 }
 
@@ -991,6 +1055,12 @@ audio {
     margin-right: calc(var(--spacing) / 4);
     margin-bottom: calc(var(--spacing) / 4);
 
+    &:hover,
+    &:active,
+    &:focus {
+      background: #f4f4f2;
+    }
+
     &.is--active {
       color: white;
       background-color: var(--color-black);
@@ -1099,7 +1169,7 @@ audio {
   flex-flow: row wrap;
   color: var(--color-gray);
   gap: calc(var(--spacing) / 4);
-  max-height: 100px;
+  // max-height: 100px;
   justify-content: center;
   line-height: 1;
 
@@ -1176,10 +1246,6 @@ audio {
 .alertify,
 .alertify-logs {
   z-index: 20000;
-}
-
-.ql-editor {
-  background-color: rgba(141, 141, 141, 0.1);
 }
 
 .m_modal--mask {
@@ -1314,7 +1380,7 @@ audio {
     }
 
     .m_modal--container {
-      max-width: calc(var(--panel-width) * 4);
+      max-width: calc(var(--panel-width) * 3.5);
       align-self: flex-start;
       .m_modal--preview {
         height: auto;
@@ -1515,8 +1581,8 @@ audio {
       position: absolute;
       top: 0;
       right: 0;
-      width: auto;
-      height: auto;
+      height: 100%;
+      width: 100%;
       object-fit: contain;
       object-position: center;
     }
@@ -1725,13 +1791,18 @@ twitter-widget.twitter-tweet {
   }
 }
 
+.admin_cat {
+  border: 2px solid white;
+  padding: 0 calc(var(--spacing) / 3);
+}
+
 .plyr {
   width: 100%;
   height: 100%;
   min-width: 100px;
   font-family: inherit;
   font-weight: 300;
-  border-radius: 8px;
+  // border-radius: 8px;
 
   button {
     min-height: 0;
@@ -1798,6 +1869,7 @@ twitter-widget.twitter-tweet {
 
   > *:first-child {
     margin-top: 0;
+    padding: ~"calc(var(--spacing) / 4)";
 
     > *:first-child {
       margin-top: 0;
@@ -2058,7 +2130,7 @@ twitter-widget.twitter-tweet {
   width: 13px;
   height: 13px;
   border-radius: 50%;
-  background: #c0d8dd;
+  background: var(--color-bluegreen);
   animation-timing-function: cubic-bezier(0, 1, 1, 0);
 }
 .lds-ellipsis div:nth-child(1) {

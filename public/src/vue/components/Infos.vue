@@ -32,18 +32,6 @@
           <p>Connected as admin</p>
         </template>
       </div>
-
-      <button
-        type="button"
-        class="button-nostyle a"
-        @click="
-          $root.settings.show_welcome_modal = true;
-          $root.settings.unfold_legal_pane = true;
-        "
-        :class="{ 'is--active': $root.settings.show_welcome_modal }"
-      >
-        {{ $t("personal_data_and_legal_notices") }}
-      </button>
     </div>
   </div>
 </template>

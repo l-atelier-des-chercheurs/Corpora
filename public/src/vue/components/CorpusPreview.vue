@@ -3,9 +3,10 @@
     <div class="m_corpusPreview--title">
       <h2>{{ corpus.name }}</h2>
     </div>
-    <div class="m_corpusPreview--subtitle">
+    <div class="m_corpusPreview--subtitle" v-if="corpus.subtitle">
       <h3>{{ corpus.subtitle }}</h3>
     </div>
+
     <div class="m_corpusPreview--time">
       <time>
         {{ $t("created_on") }}&nbsp;{{
@@ -19,9 +20,9 @@
         }}
       </time>
     </div>
-    <div class="m_corpusPreview--description">
+    <!-- <div class="m_corpusPreview--description">
       <p v-html="corpus.description" />
-    </div>
+    </div> -->
     <div v-if="previewURL" class="m_corpusPreview--preview">
       <img :src="previewURL" class draggable="false" />
     </div>
@@ -243,30 +244,36 @@ export default {
 </script>
 <style lang="scss" scoped>
 .m_corpusPreview {
-  // border-top: 1px solid currentColor;
-  background: var(--active-color);
+  border-top: 2px solid var(--color-bluegreen);
+  // background: var(--active-color);
   // margin: var(--spacing);
-  padding: calc(var(--spacing) / 2);
+  padding: calc(var(--spacing)) 0;
   border-radius: 2px;
 
   > *:not(:last-child) {
-    margin-bottom: var(--spacing);
-  }
-
-  .m_corpusPreview--title {
-    display: block;
-    h2 {
-      margin-top: 0;
-    }
-  }
-
-  .m_corpusPreview--description > p {
-    display: block;
-    // text-overflow: ellipsis;
-    // white-space: nowrap;
-    // overflow: hidden;
+    margin-bottom: calc(var(--spacing) / 2);
   }
 }
+.m_corpusPreview--title {
+  display: block;
+  h2 {
+    margin-top: 0;
+    margin: 0;
+  }
+}
+.m_corpusPreview--subtitle {
+  h3 {
+    margin: 0;
+  }
+}
+
+.m_corpusPreview--description > p {
+  display: block;
+  // text-overflow: ellipsis;
+  // white-space: nowrap;
+  // overflow: hidden;
+}
+
 .m_corpusPreview--preview {
   max-width: 140px;
 }
@@ -275,6 +282,10 @@ export default {
   button {
     vertical-align: middle;
   }
+}
+
+.m_corpusPreview--time {
+  font-style: italic;
 }
 
 .m_corpusPreview--open {

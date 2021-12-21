@@ -5,10 +5,8 @@
       <input type="password" autofocus v-model="$root.admin_pwd" />
     </template>
     <template v-else>
-      <div>
+      <div class="m_list--titles">
         <h1>Les corpus</h1>
-      </div>
-      <div>
         <button
           type="button"
           class="buttonLink"
@@ -23,11 +21,16 @@
           @close="show_create_corpus = false"
         />
       </div>
+      <input
+        type="text"
+        v-model="find_by_title"
+        placeholder="Chercher par titre"
+      />
 
       <div class="m_list--corpuses">
         <div
           class="m_list--corpuses--corpus"
-          v-for="corpus in sorted_corpuses"
+          v-for="corpus in filtered_corpus"
           :key="corpus.slugFolderName"
         >
           <CorpusPreview :corpus="corpus" />
@@ -49,6 +52,7 @@ export default {
   data() {
     return {
       show_create_corpus: false,
+      find_by_title: "",
     };
   },
   created() {},
@@ -62,25 +66,34 @@ export default {
     sorted_corpuses() {
       return this.$_.sortBy(this.corpuses, "date_created").reverse();
     },
+    filtered_corpus() {
+      return this.sorted_corpuses.filter(
+        (c) =>
+          !this.find_by_title ||
+          c.name.toLowerCase().includes(this.find_by_title.toLowerCase())
+      );
+    },
   },
   methods: {},
 };
 </script>
 <style lang="scss" scoped>
 .m_list {
-  display: flex;
-  flex-flow: row wrap;
-  align-items: center;
-  justify-content: center;
-
   > * {
     margin: var(--spacing);
   }
 }
 
+.m_list--titles {
+  display: flex;
+  flex-flow: row wrap;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing);
+}
 .m_list--corpuses {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-  gap: calc(var(--spacing) * 2);
+  gap: calc(var(--spacing));
 }
 </style>

@@ -8,7 +8,7 @@
     <template slot="header">{{ media.media_filename }}</template>
     <template slot="preview">
       <MediaContent
-        :context="'edit'"
+        :context="'full'"
         :media="media"
         :slugFolderName="slugFolderName"
         :read_only="false"

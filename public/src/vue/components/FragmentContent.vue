@@ -1,7 +1,6 @@
 <template>
   <div
     class="m_fragmentContent custom_scrollbar"
-    :style="`--fragment-width: ${fragment_width}px`"
     :class="{
       'is--highlighted': highlight_corpus,
       'is--preview': context === 'preview',
@@ -11,22 +10,35 @@
       <div class="m_fragmentContent--content--top">
         <h2>{{ fragment.title }}</h2>
 
+        <div class="_meta" @click="show_advanced_meta = !show_advanced_meta">
+          <template v-if="!show_advanced_meta">
+            {{ $t("created_on") }}&nbsp;{{
+              $root.formatDateToHuman(fragment.date_created)
+            }}
+          </template>
+          <template v-else>
+            <div>
+              {{ $t("created") }}&nbsp;•
+              {{ $root.formatDateToPrecise(fragment.date_created) }}
+            </div>
+            <div>
+              {{ $t("edited") }}&nbsp;•
+              {{ $root.formatDateToPrecise(fragment.date_modified) }}
+            </div>
+          </template>
+        </div>
+
         <div class="motsclestags">
           <template v-if="fragment.keywords && fragment.keywords.length > 0">
             <span v-for="kw in fragment.keywords" :key="kw.title">
-              # {{ kw.title }}
+              #&hairsp;{{ kw.title }}
             </span>
           </template>
           <template v-if="fragment.tags && fragment.tags.length > 0">
             <span v-for="tag in fragment.tags" :key="tag.title">
-              • {{ tag.title }}
+              •&hairsp;{{ tag.title }}
             </span>
           </template>
-          <!-- <label>
-          {{ $t("created") }}&nbsp;{{
-            $root.formatDateToHuman(fragment.date_created)
-          }}
-        </label> -->
         </div>
       </div>
 
@@ -197,6 +209,7 @@ export default {
   data() {
     return {
       show_advanced_menu: false,
+      show_advanced_meta: false,
       show_edit_fragment: false,
       highlight_corpus: false,
     };
@@ -398,15 +411,24 @@ export default {
       bottom: 0;
       left: 0;
       width: 100%;
-      height: 15px;
+      height: 2px;
       z-index: 10;
       pointer-events: none;
 
-      background: linear-gradient(
-        180deg,
-        hsla(48, 71%, 92%, 0) 0%,
-        hsla(48, 71%, 92%, 15) calc(100%)
-      );
+      // background: linear-gradient(
+      //   180deg,
+      //   hsla(48, 71%, 92%, 0) 0%,
+      //   hsla(48, 71%, 92%, 0.25) 35%,
+      //   hsla(48, 71%, 92%, 0.5) 65%,
+      //   hsla(48, 71%, 92%, 1) 100%
+      // );
+      background: hsla(48, 71%, 92%, 1);
+
+      transition: all 1.5s cubic-bezier(0.19, 1, 0.22, 1);
+    }
+
+    &:hover::after {
+      // height: 58px;
     }
   }
 
@@ -428,8 +450,8 @@ export default {
     //   var(--color-black) 100%
     // );
     background: var(--color-beige);
-    border-radius: 4px;
-    box-shadow: 0px 0px 4px 0px rgba(41, 41, 41, 0.8);
+    // border-radius: 4px;
+    // box-shadow: 0px 0px 4px 0px rgba(41, 41, 41, 0.8);
 
     transition: opacity 4s cubic-bezier(0.19, 1, 0.22, 1);
 
@@ -439,7 +461,7 @@ export default {
   }
 
   &.is--preview .m_fragmentContent--content {
-    box-shadow: 0px 0px 4px 0px rgba(204, 208, 218, 0.8);
+    // box-shadow: 0px 0px 4px 0px rgba(204, 208, 218, 0.8);
   }
 
   &.is--highlighted {
@@ -452,9 +474,15 @@ export default {
   .m_fragmentContent--content--top {
     margin: calc(var(--spacing)) 0;
     padding: 0 var(--spacing);
+    text-align: center;
     h2 {
       margin: 0;
-      text-align: center;
+      margin-bottom: calc(var(--spacing) / 2);
+    }
+
+    ._meta {
+      font-size: 0.8rem;
+      text-transform: lowercase;
     }
   }
   &.is--preview .m_fragmentContent--content--top {
@@ -528,7 +556,7 @@ export default {
   // }
 
   &:hover {
-    background-color: rgba(255, 255, 255, 0.25);
+    // background-color: rgba(255, 255, 255, 0.45);
 
     .m_fragmentContent--open--open {
       transform: translateY(0px);

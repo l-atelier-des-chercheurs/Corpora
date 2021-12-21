@@ -10,6 +10,7 @@
         :srcset="imageSrcSetAttr"
         :sizes="imageSizesAttr"
         :src="linkToImageThumb"
+        loading="lazy"
         draggable="false"
       />
     </template>
@@ -143,59 +144,79 @@
           </a>
         </div>
         <div class="_siteCard">
-          <div>
-            <template
-              v-if="
-                siteOG &&
-                (siteOG.local_image || siteOG.title || siteOG.description)
-              "
-            >
-              <div v-if="siteOG_image" class="_siteCard--image">
-                <a :href="link_url" target="_blank">
-                  <img :src="siteOG_image" />
-                </a>
-              </div>
-              <div class="_siteCard--text">
-                <div v-if="siteOG.title" class="_siteCard--text--title">
-                  {{ siteOG.title }}
-                </div>
-                <div
-                  v-if="siteOG.description"
-                  class="_siteCard--text--description"
-                >
-                  {{ siteOG.description }}
-                </div>
-              </div>
-            </template>
-            <template v-else>
-              <div class="padding-verysmall">
-                {{ $t("no_preview_available") }}
-              </div>
-            </template>
-          </div>
-
-          <div v-if="!should_load_embed && embedURL">
-            <label class="margin-bottom-verysmall">{{ $t("embed") }}</label>
-            <div
-              class="margin-bottom-verysmall"
-              style="
-                text-overflow: ellipsis;
-                white-space: nowrap;
-                overflow: hidden;
-              "
-            >
-              <a :href="media.content" target="_blank">{{ media.content }}</a>
-            </div>
-            <div class="margin-bottom-verysmall">
+          <template
+            v-if="
+              siteOG &&
+              (siteOG.local_image || siteOG.title || siteOG.description)
+            "
+          >
+            <div class="_siteCard--image">
+              <!-- <a :href="link_url" target="_blank"> -->
+              <img v-if="siteOG_image" :src="siteOG_image" />
               <button
+                v-if="!should_load_embed && embedURL && context !== 'preview'"
                 type="button"
-                class="_load"
+                class="_playButton _siteCard--image--playButton"
                 @click="load_this_embed = true"
               >
-                {{ $t("load") }}
+                <svg
+                  version="1.1"
+                  xmlns="http://www.w3.org/2000/svg"
+                  xmlns:xlink="http://www.w3.org/1999/xlink"
+                  x="0px"
+                  y="0px"
+                  viewBox="0 0 168 168"
+                  style="enable-background: new 0 0 168 168"
+                  xml:space="preserve"
+                >
+                  <circle style="" cx="84" cy="84" r="84" />
+                  <polygon
+                    fill="currentColor"
+                    points="57.3,39.4 136.8,85.8 57.3,132.2 		"
+                  />
+                </svg>
               </button>
             </div>
-          </div>
+            <div class="_siteCard--text">
+              <div v-if="siteOG.title" class="_siteCard--text--title">
+                {{ siteOG.title }}
+              </div>
+              <div
+                v-if="siteOG.description"
+                class="_siteCard--text--description"
+              >
+                {{ siteOG.description }}
+              </div>
+            </div>
+          </template>
+          <template v-else>
+            <div class="padding-verysmall">
+              {{ $t("no_preview_available") }}
+              <button
+                v-if="!should_load_embed && embedURL && context !== 'preview'"
+                type="button"
+                class="_playButton"
+                @click="load_this_embed = true"
+              >
+                <svg
+                  version="1.1"
+                  xmlns="http://www.w3.org/2000/svg"
+                  xmlns:xlink="http://www.w3.org/1999/xlink"
+                  x="0px"
+                  y="0px"
+                  viewBox="0 0 168 168"
+                  style="enable-background: new 0 0 168 168"
+                  xml:space="preserve"
+                >
+                  <circle style="" cx="84" cy="84" r="84" />
+                  <polygon
+                    fill="currentColor"
+                    points="57.3,39.4 136.8,85.8 57.3,132.2 		"
+                  />
+                </svg>
+              </button>
+            </div>
+          </template>
         </div>
       </template>
       <template v-else>
@@ -426,7 +447,8 @@ export default {
       if (
         // if image is gif and context is not 'preview', let’s show the original gif
         // this.context !== "preview" &&
-        this.mediaURL.toLowerCase().endsWith(".gif")
+        this.mediaURL.toLowerCase().endsWith(".gif") ||
+        this.context === "full"
       ) {
         return this.mediaURL;
       }
@@ -560,7 +582,7 @@ export default {
       }
 
       const videoId = getId(url);
-      return `https://www.youtube.com/embed/${videoId}`;
+      return `https://www.youtube.com/embed/${videoId}?autoplay=1`;
     },
     getVimeoEmbedURLFromURL(url) {
       function getId(url) {
@@ -570,7 +592,7 @@ export default {
       }
 
       const videoId = getId(url);
-      return `https://player.vimeo.com/video/${videoId}`;
+      return `https://player.vimeo.com/video/${videoId}?autoplay=1`;
     },
     getSoundcloudEmbedURLFromURL(url) {
       return `https://w.soundcloud.com/player/?url=${url}&color=0066cc`;
