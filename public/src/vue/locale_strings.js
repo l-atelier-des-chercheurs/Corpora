@@ -364,8 +364,8 @@ module.exports = (function () {
       en: "Description, source…",
     },
     create_a_story: {
-      fr: "Créer un récit",
-      en: "Create a story",
+      fr: "Ajouter un nouveau récit",
+      en: "Add a new story",
     },
     stories: {
       fr: "Récits",
