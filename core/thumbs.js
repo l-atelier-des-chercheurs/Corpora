@@ -1138,6 +1138,14 @@ module.exports = (function () {
 
     var result = {};
 
+    dev.logverbose(
+      `THUMBS — _parseHTMLMetaTags : using cheerio to parse HTML tags ${JSON.stringify(
+        keys,
+        null,
+        4
+      )}`
+    );
+
     keys.forEach(function (key) {
       if (
         meta[key].attribs &&
