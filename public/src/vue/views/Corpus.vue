@@ -748,7 +748,7 @@ export default {
 .m_corpus--fragments--sort {
   margin: 0 calc(var(--spacing) * 2);
   padding: calc(var(--spacing) / 2) 0 0;
-  // border-bottom: 2px solid var(--color-bluegreen);
+  // border-bottom: 2px solid var(--color-blue);
 
   > * {
     display: flex;
@@ -764,7 +764,7 @@ export default {
     gap: calc(var(--spacing) / 2);
 
     > button {
-      background: var(--color-bluegreen);
+      background: var(--color-blue);
       padding: 0 calc(var(--spacing) / 4);
       text-transform: inherit;
 
@@ -792,7 +792,7 @@ export default {
   padding: 0 calc(var(--spacing) * 2);
   // padding: 0;
   margin: calc(var(--spacing) * 2) 0;
-  border-left: 2px solid var(--color-bluegreen);
+  border-left: 2px dotted var(--color-blue);
   // text-align: right;
 
   // display: flex;
@@ -874,7 +874,7 @@ export default {
 }
 .m_topBar--content {
   padding: calc(var(--spacing) * 2) 0;
-  border-bottom: 2px solid var(--color-bluegreen);
+  border-bottom: 2px dotted var(--color-blue);
 
   display: flex;
   align-items: center;
@@ -927,7 +927,7 @@ export default {
 
 .m_corpus--collections--coll {
   // background-color: transparent;
-  // background-color: var(--color-beige);
+  // background-color: var(--color-lightgray);
 
   // border-radius: 8px;
   width: 100%;
@@ -955,7 +955,7 @@ export default {
 }
 
 ._bottomFooter {
-  border-top: 2px solid var(--color-bluegreen);
+  border-top: 2px dotted var(--color-blue);
   padding: calc(var(--spacing) * 2) 0;
   margin: 0 calc(var(--spacing) * 2);
 

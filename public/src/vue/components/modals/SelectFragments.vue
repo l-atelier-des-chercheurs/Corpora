@@ -189,7 +189,7 @@ export default {
 </script>
 <style lang="scss" scoped>
 .m_selectFragments {
-  // background-color: var(--color-beige);
+  // background-color: var(--color-lightgray);
   // margin: calc(var(--spacing) * 2);
   // padding: calc(var(--spacing) * 1);
 
@@ -199,7 +199,7 @@ export default {
 }
 
 .m_selectFragments--coll {
-  // background-color: var(--color-beige);
+  // background-color: var(--color-lightgray);
   margin: calc(var(--spacing) * 2) 0;
   // padding: calc(var(--spacing) * 1);
 }
@@ -207,7 +207,7 @@ export default {
 h2,
 small,
 label {
-  color: var(--color-beige);
+  color: var(--color-lightgray);
   padding: 0 calc(var(--spacing) * 2);
   margin: 0;
 }
@@ -222,7 +222,7 @@ label {
 }
 
 ._pos {
-  color: var(--color-beige);
+  color: var(--color-lightgray);
 }
 
 ._fsLoader {

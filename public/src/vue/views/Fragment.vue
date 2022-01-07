@@ -290,8 +290,8 @@ export default {
 
     ._singleFragment {
       flex: 1 1 600px;
-      padding: calc(var(--spacing) / 2);
-      padding-right: 0;
+      // padding: calc(var(--spacing) / 2);
+      // padding-right: 0;
     }
     ._fragmentListAndReactions {
       flex: 0 1 320px;
@@ -307,7 +307,7 @@ export default {
   position: relative;
 
   h2 {
-    color: var(--color-beige);
+    color: var(--color-lightgray);
 
     &:first-child() {
       margin-top: 0;
@@ -342,7 +342,7 @@ export default {
 
 ._reactions,
 ._collections {
-  background-color: var(--color-beige);
+  background-color: var(--color-lightgray);
   padding: calc(var(--spacing) / 2);
   padding-bottom: calc(var(--spacing));
   margin-bottom: calc(var(--spacing));

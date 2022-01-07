@@ -461,7 +461,7 @@ export default {
 
           &:hover {
             // background-color: var(--active-color);
-            color: var(--color-orange);
+            color: var(--color-purple);
           }
 
           .text_label {
@@ -587,7 +587,7 @@ export default {
   .menu_encart--button:not(.is--shown) {
     background-color: var(--color-black);
     > * {
-      color: var(--color-beige);
+      color: var(--color-lightgray);
       svg {
       }
     }
