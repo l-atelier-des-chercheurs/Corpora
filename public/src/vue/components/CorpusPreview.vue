@@ -244,7 +244,7 @@ export default {
 </script>
 <style lang="scss" scoped>
 .m_corpusPreview {
-  border-top: 2px solid var(--color-bluegreen);
+  border-top: 2px dotted var(--color-blue);
   // background: var(--active-color);
   // margin: var(--spacing);
   padding: calc(var(--spacing)) 0;

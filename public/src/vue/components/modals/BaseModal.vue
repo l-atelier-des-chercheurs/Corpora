@@ -421,11 +421,13 @@ export default {
 </script>
 <style scoped lang="scss">
 .m_modal--mask.typeOfModal-LargeAndScroll {
-  background: rgba(60, 53, 65, 0.95);
+  // background: rgba(60, 53, 65, 1);
+  // background: var(--body-bg);
+  background: rgba(237, 237, 237, 0.95);
   padding: 0;
 
   .m_modal--close_button {
-    color: var(--color-beige);
+    color: var(--color-lightgray);
 
     svg {
       filter: drop-shadow(0px 0px 4px rgba(41, 41, 41, 0.8));
