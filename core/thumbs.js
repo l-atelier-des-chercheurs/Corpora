@@ -1081,7 +1081,8 @@ module.exports = (function () {
             meta_cache_fullpath,
             global.settings.textEncoding,
             (err, results) => {
-              return resolve(JSON.parse(results));
+              if (results) return resolve(JSON.parse(results));
+              return resolve({});
             }
           );
         }
@@ -1108,7 +1109,7 @@ module.exports = (function () {
         let code = `var promise = Promise.resolve(document.documentElement.innerHTML); 
                   promise.then(data => data)`;
 
-        if (!win) return reject();
+        if (!win || !win.webContents) return reject();
         win.webContents.executeJavaScript(code, true).then((html) => {
           // console.log(html); // will be your innherhtml
           const parsed_meta = _parseHTMLMetaTags({ html });
