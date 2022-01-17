@@ -676,9 +676,9 @@ module.exports = (function () {
           // case of non-existent media
           // we need to return the absence of meta for this media
           meta = {
-            metaFileName,
             _isAbsent: true,
           };
+        meta.metaFileName = metaFileName;
 
         folders_and_medias[slugFolderName].medias[metaFileName] = meta;
       }
