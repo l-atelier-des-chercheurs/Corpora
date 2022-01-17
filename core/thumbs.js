@@ -1140,10 +1140,8 @@ module.exports = (function () {
     var result = {};
 
     dev.logverbose(
-      `THUMBS — _parseHTMLMetaTags : using cheerio to parse HTML tags ${JSON.stringify(
-        keys,
-        null,
-        4
+      `THUMBS — _parseHTMLMetaTags : using cheerio to parse HTML tags ${keys.join(
+        ","
       )}`
     );
 
