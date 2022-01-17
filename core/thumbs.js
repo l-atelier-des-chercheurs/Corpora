@@ -1139,7 +1139,8 @@ module.exports = (function () {
             meta_cache_fullpath,
             global.settings.textEncoding,
             (err, results) => {
-              return resolve(JSON.parse(results));
+              if (results) return resolve(JSON.parse(results));
+              return resolve({});
             }
           );
         }
