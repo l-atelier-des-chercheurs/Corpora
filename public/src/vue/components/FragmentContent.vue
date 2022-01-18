@@ -372,18 +372,6 @@ export default {
 
   .m_fragmentContent--content {
     position: relative;
-  }
-
-  &.is--preview .m_fragmentContent--content {
-    height: 320px;
-    width: 100%;
-    overflow: hidden;
-    padding: 0;
-    margin-top: calc(-0.5 * var(--slide_on_hover));
-    padding-top: calc(1.5 * var(--slide_on_hover));
-    border-bottom-left-radius: 0;
-    border-bottom-right-radius: 0;
-    // box-shadow: 0px 0px 4px 0px rgba(204, 208, 218, 0.8);
 
     &::after {
       content: "";
@@ -407,12 +395,24 @@ export default {
 
       // background: hsla(48, 71%, 92%, 1);
       // background: black;
-      box-shadow: 0 0 0.7rem 1.5rem var(--color-lightgray);
+      box-shadow: 0 0 0.5rem 0.75rem var(--color-lightgray);
       background: var(--color-lightgray);
       // box-shadow: inset 0.5rem 0.5rem red;
 
       transition: all 1.5s cubic-bezier(0.19, 1, 0.22, 1);
     }
+  }
+
+  &.is--preview .m_fragmentContent--content {
+    height: 320px;
+    width: 100%;
+    overflow: hidden;
+    padding: 0;
+    margin-top: calc(-0.5 * var(--slide_on_hover));
+    padding-top: calc(1.5 * var(--slide_on_hover));
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+    // box-shadow: 0px 0px 4px 0px rgba(204, 208, 218, 0.8);
 
     .m_fragmentContent--content--inner {
       margin: 0;
@@ -458,7 +458,7 @@ export default {
 
     // box-shadow: 0px 0px 4px 0px rgba(41, 41, 41, 0.8);
 
-    transition: all 0.4s cubic-bezier(0.19, 1, 0.22, 1);
+    transition: all 0.4s 0.15s cubic-bezier(0.19, 1, 0.22, 1);
   }
 }
 

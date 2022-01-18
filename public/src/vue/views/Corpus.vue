@@ -57,7 +57,7 @@
         :slugFolderName="corpus.slugFolderName"
       />
 
-      <div class="m_corpus" ref="corpus">
+      <div class="m_corpus" ref="corpus" v-if="$route.name !== 'Informations'">
         <div class="m_corpus--presentation">
           <div class="m_feedbacks">
             <a
@@ -90,6 +90,14 @@
               <label>{{ $t("description") }}</label>
 
               <p v-html="corpus.description" />
+
+              <router-link
+                :to="{
+                  name: 'Informations',
+                }"
+                class="button"
+                v-html="$t('more_infos')"
+              />
             </div>
 
             <div class="m_corpus--tags" v-if="all_tags && all_tags.length > 0">
@@ -295,9 +303,15 @@
           {{ $t("personal_data_and_legal_notices") }}
         </button>
 
-        <a href="plurality-university.org" target="_blank">
-          <img src="/images/U+_LogoLabels-1_Blue.png" draggable="false" />
-        </a>
+        <div>
+          <div class="margin-sides-medium">
+            <div class="flex-nowrap">
+              Corpora v{{ $root.state.appVersion }}
+              &nbsp;
+              <Admin />
+            </div>
+          </div>
+        </div>
       </footer>
 
       <CreateCollection
@@ -877,6 +891,7 @@ export default {
   border-bottom: 2px dotted var(--color-blue);
 
   display: flex;
+  flex-flow: row wrap;
   align-items: center;
   gap: calc(var(--spacing) * 3);
 
@@ -949,20 +964,21 @@ export default {
   position: absolute;
   top: 5px;
   right: 0px;
-  width: 217px;
+  max-width: 317px;
+  width: 40vw;
   transform: rotate(4deg);
   image-rendering: crisp-edges;
 }
 
 ._bottomFooter {
   border-top: 2px dotted var(--color-blue);
-  padding: calc(var(--spacing) * 2) 0;
+  padding: calc(var(--spacing)) 0;
   margin: 0 calc(var(--spacing) * 2);
 
   display: flex;
   flex-flow: row wrap;
   gap: var(--spacing);
-  justify-content: center;
+  justify-content: space-between;
 
   .a {
     text-transform: inherit;

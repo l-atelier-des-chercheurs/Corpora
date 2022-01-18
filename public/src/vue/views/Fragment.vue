@@ -213,7 +213,9 @@ export default {
       return (
         this.fragments &&
         this.fragments.filter(
-          (f) => f.metaFileName !== this.opened_fragment.metaFileName
+          (f) =>
+            this.opened_fragment &&
+            f.metaFileName !== this.opened_fragment.metaFileName
         )
       );
     },

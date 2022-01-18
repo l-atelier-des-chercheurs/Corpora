@@ -44,8 +44,8 @@ module.exports = (function () {
       de: "Dauer",
     },
     feedbacks: {
-      fr: "Retours/aide",
-      en: "Feedback",
+      fr: "Retours/aide ✉️",
+      en: "Feedback ✉️",
     },
     link: {
       fr: "Lien",
@@ -326,6 +326,10 @@ module.exports = (function () {
     save: {
       fr: "Enregistrer",
       en: "Save",
+    },
+    more_infos: {
+      fr: "En savoir plus",
+      en: "More informations",
     },
     add: {
       fr: "Ajouter",
