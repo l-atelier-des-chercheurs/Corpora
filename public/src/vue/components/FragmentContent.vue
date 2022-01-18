@@ -167,10 +167,9 @@
             >
               {{ $t("alreay_read") }}
             </span>
-
-            <span class="m_fragmentContent--open--open">
+            <!-- <span class="m_fragmentContent--open--open">
               {{ $t("open") }}
-            </span>
+            </span> -->
           </router-link>
         </template>
       </div>
@@ -369,7 +368,7 @@ export default {
 .m_fragmentContent {
   width: 100%;
 
-  --slide_on_hover: 15px;
+  --slide_on_hover: 25px;
 
   .m_fragmentContent--content {
     position: relative;
@@ -408,7 +407,7 @@ export default {
 
       // background: hsla(48, 71%, 92%, 1);
       // background: black;
-      box-shadow: 0 0 0.5rem 1rem var(--color-lightgray);
+      box-shadow: 0 0 0.7rem 1.5rem var(--color-lightgray);
       background: var(--color-lightgray);
       // box-shadow: inset 0.5rem 0.5rem red;
 
@@ -417,6 +416,7 @@ export default {
 
     .m_fragmentContent--content--inner {
       margin: 0;
+      overflow: hidden;
     }
 
     .m_fragmentContent--content--inner--top {
@@ -438,6 +438,7 @@ export default {
     // margin-right: 4px;
     // margin-left: 4px;
 
+    pointer-events: auto;
     padding: calc(var(--spacing) * 1) 0;
     margin: calc(var(--spacing) * 1) 0;
 
@@ -453,7 +454,7 @@ export default {
     // background: var(--body-bg);
     background: white;
     // border: 2px solid black;
-    border-radius: 10px;
+    border-radius: 20px;
 
     // box-shadow: 0px 0px 4px 0px rgba(41, 41, 41, 0.8);
 

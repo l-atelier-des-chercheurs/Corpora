@@ -28,10 +28,7 @@
           </transition>
         </div>
         <aside
-          class="
-            _fragmentListAndReactions
-            custom_scrollbar custom_scrollbar_dark
-          "
+          class="_fragmentListAndReactions custom_scrollbar custom_scrollbar_dark"
         >
           <Loader
             v-if="!show_fragmentListAndReactions"
