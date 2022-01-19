@@ -3,10 +3,21 @@
     <div v-if="!edit_mode" v-html="content" class="mediaTextContent" />
     <CollaborativeEditor v-else v-model="new_content" />
 
-    <button type="button" v-if="allow_editing" @click="edit_mode = !edit_mode">
-      edit
-    </button>
-    <button type="button" @click="save()" v-if="edit_mode">save</button>
+    <div class="margin-vert-verysmall ta-ri">
+      <button
+        type="button"
+        v-if="allow_editing && !edit_mode"
+        @click="edit_mode = true"
+      >
+        {{ $t("edit") }}
+      </button>
+      <button type="button" v-if="edit_mode" @click="edit_mode = false">
+        {{ $t("cancel") }}
+      </button>
+      <button type="button" @click="save()" v-if="edit_mode">
+        {{ $t("save") }}
+      </button>
+    </div>
 
     <!-- :help="help ? $t(help) : ''" -->
   </div>
@@ -45,7 +56,9 @@ export default {
   mounted() {},
   beforeDestroy() {},
   watch: {
-    edit_mode() {},
+    edit_mode() {
+      if (this.edit_mode) this.new_content = this.content;
+    },
     content() {
       this.new_content = this.content;
     },
