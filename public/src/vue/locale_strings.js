@@ -44,8 +44,8 @@ module.exports = (function () {
       de: "Dauer",
     },
     feedbacks: {
-      fr: "Retours/aide",
-      en: "Feedback",
+      fr: "Retours/aide ✉️",
+      en: "Feedback ✉️",
     },
     link: {
       fr: "Lien",
@@ -54,6 +54,10 @@ module.exports = (function () {
     search_in_fragments: {
       fr: "Chercher dans les récits",
       en: "Search in stories",
+    },
+    back_to_fragments: {
+      fr: "Retour aux récits",
+      en: "Back to stories",
     },
     embed: {
       fr: "Intégration",
@@ -326,6 +330,10 @@ module.exports = (function () {
     save: {
       fr: "Enregistrer",
       en: "Save",
+    },
+    more_infos: {
+      fr: "En savoir plus",
+      en: "More informations",
     },
     add: {
       fr: "Ajouter",

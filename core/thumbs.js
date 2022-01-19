@@ -1139,7 +1139,8 @@ module.exports = (function () {
             meta_cache_fullpath,
             global.settings.textEncoding,
             (err, results) => {
-              return resolve(JSON.parse(results));
+              if (results) return resolve(JSON.parse(results));
+              return resolve({});
             }
           );
         }
@@ -1209,10 +1210,8 @@ module.exports = (function () {
     var result = {};
 
     dev.logverbose(
-      `THUMBS — _parseHTMLMetaTags : using cheerio to parse HTML tags ${JSON.stringify(
-        keys,
-        null,
-        4
+      `THUMBS — _parseHTMLMetaTags : using cheerio to parse HTML tags ${keys.join(
+        ","
       )}`
     );
 

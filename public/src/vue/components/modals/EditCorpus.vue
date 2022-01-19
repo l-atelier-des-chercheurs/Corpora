@@ -147,7 +147,7 @@ export default {
       }
       const thumb = this.corpus.preview.filter((p) => p.size === 640);
       if (thumb.length > 0) {
-        return `${thumb[0].path}`;
+        return `/${thumb[0].path}`;
       }
       return "";
     },

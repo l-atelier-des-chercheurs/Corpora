@@ -35,9 +35,8 @@ export default {
   --color-gray: hsl(275, 10%, 63%);
   --color-white: #fff;
   --color-lightgray: #ededed;
-  --active-color: #ccd0da;
+  --active-color: var(--color-gray);
   --color-blue: #5444ff;
-  --color-purple: #c53efe;
   --color-purple: #c53efe;
   --body-bg: var(--color-lightgray);
   --panel-width: 320px;
@@ -194,7 +193,7 @@ label:not(.no-style) {
 
 .custom_scrollbar {
   --scrollbarBG: #e2edef;
-  --thumbBG: #90a4ae;
+  --thumbBG: var(--color-blue);
 
   &::-webkit-scrollbar {
     width: 16px;
@@ -414,6 +413,9 @@ h2 {
 
 .ta-ce {
   text-align: center;
+}
+.ta-ri {
+  text-align: right;
 }
 .tt-lc {
   text-transform: lowercase;
@@ -689,7 +691,7 @@ button,
 input[type="submit"] {
   border: none;
   color: var(--color-black);
-  background: #ccd0da;
+  background: var(--active-color);
   cursor: pointer;
   text-transform: lowercase;
   font-size: 0.8rem;
@@ -832,7 +834,8 @@ audio {
     margin: 0;
   }
 
-  &.type-link {
+  &.type-link,
+  &.type-embed {
     background-color: rgba(141, 141, 141, 0.1);
   }
 }
@@ -1270,7 +1273,7 @@ audio {
   align-items: center;
   justify-content: center;
 
-  transition: all 0.1s cubic-bezier(0.19, 1, 0.22, 1);
+  transition: all 0.2s cubic-bezier(0.19, 1, 0.22, 1);
 
   #app:not(.is--wide) & {
     align-items: flex-start;
@@ -2175,5 +2178,14 @@ twitter-widget.twitter-tweet {
   100% {
     transform: translate(24px, 0);
   }
+}
+
+.margin-vert-small {
+  margin-top: var(--spacing);
+  margin-bottom: var(--spacing);
+}
+.margin-vert-verysmall {
+  margin-top: ~"calc(var(--spacing) / 2)";
+  margin-bottom: ~"calc(var(--spacing) / 2)";
 }
 </style>

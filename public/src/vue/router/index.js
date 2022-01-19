@@ -3,6 +3,7 @@ import VueRouter from "vue-router";
 import List from "../views/List.vue";
 import Corpus from "../views/Corpus.vue";
 import Fragment from "../views/Fragment.vue";
+import Informations from "../views/Informations.vue";
 
 Vue.use(VueRouter);
 
@@ -20,7 +21,13 @@ const routes = [
     component: Corpus,
     children: [
       {
-        path: ":fragmentId",
+        path: "informations",
+        name: "Informations",
+        title: "Informations",
+        component: Informations,
+      },
+      {
+        path: "stories/:fragmentId",
         name: "Fragment",
         title: "Corpora",
         component: Fragment,

@@ -5,8 +5,14 @@
       'is--preview': context === 'preview',
     }"
   >
-    <div class="m_fragmentContent--content">
-      <div class="m_fragmentContent--content--inner">
+    <div class="m_fragmentContent--content" @mouseenter="updateMouseCoords">
+      <div
+        class="m_fragmentContent--content--inner"
+        :style="`
+            --random_angle : ${random_angle};
+            --slide_on_hover: ${slide_on_hover}rem;
+          `"
+      >
         <div class="m_fragmentContent--content--inner--top">
           <h2>{{ fragment.title }}</h2>
 
@@ -167,10 +173,9 @@
             >
               {{ $t("alreay_read") }}
             </span>
-
-            <span class="m_fragmentContent--open--open">
+            <!-- <span class="m_fragmentContent--open--open">
               {{ $t("open") }}
-            </span>
+            </span> -->
           </router-link>
         </template>
       </div>
@@ -212,6 +217,9 @@ export default {
       show_advanced_menu: false,
       show_advanced_meta: false,
       show_edit_fragment: false,
+
+      random_angle: (Math.random() - 0.5) * 4,
+      slide_on_hover: 1,
     };
   },
   created() {},
@@ -243,6 +251,13 @@ export default {
     },
   },
   methods: {
+    updateMouseCoords(event) {
+      const percent_hover_x = event.offsetX / event.target.offsetWidth;
+      this.random_angle = (percent_hover_x - 0.5) * 4;
+
+      // const percent_hover_y = event.offsetY / event.target.offsetHeight;
+      // this.slide_on_hover = Math.min(1, percent_hover_y * 1);
+    },
     removeFragment() {
       this.$alertify
         .okBtn(this.$t("yes"))
@@ -367,9 +382,9 @@ export default {
 </script>
 <style lang="scss" scoped>
 .m_fragmentContent {
+  position: relative;
   width: 100%;
-
-  --slide_on_hover: 15px;
+  --slide_on_hover: 1rem;
 
   .m_fragmentContent--content {
     position: relative;
@@ -377,11 +392,17 @@ export default {
 
   &.is--preview .m_fragmentContent--content {
     height: 320px;
-    width: 100%;
     overflow: hidden;
     padding: 0;
-    margin-top: calc(-0.5 * var(--slide_on_hover));
+    margin-top: calc(-1.5 * var(--slide_on_hover));
     padding-top: calc(1.5 * var(--slide_on_hover));
+
+    width: calc(100% + var(--slide_on_hover));
+    margin-left: calc(-0.5 * var(--slide_on_hover));
+    margin-right: calc(0.5 * var(--slide_on_hover));
+    padding-left: calc(0.5 * var(--slide_on_hover));
+    padding-right: calc(0.5 * var(--slide_on_hover));
+
     border-bottom-left-radius: 0;
     border-bottom-right-radius: 0;
     // box-shadow: 0px 0px 4px 0px rgba(204, 208, 218, 0.8);
@@ -395,7 +416,7 @@ export default {
       left: 0;
       width: 100%;
       height: 0px;
-      z-index: 10;
+      // z-index: 10;
       pointer-events: none;
 
       // background: linear-gradient(
@@ -408,7 +429,7 @@ export default {
 
       // background: hsla(48, 71%, 92%, 1);
       // background: black;
-      box-shadow: 0 0 0.5rem 1rem var(--color-lightgray);
+      box-shadow: 0 0 0.5rem 0.75rem var(--color-lightgray);
       background: var(--color-lightgray);
       // box-shadow: inset 0.5rem 0.5rem red;
 
@@ -417,6 +438,10 @@ export default {
 
     .m_fragmentContent--content--inner {
       margin: 0;
+      overflow: hidden;
+      scroll-behavior: smooth;
+
+      transform-origin: 50% 100px;
     }
 
     .m_fragmentContent--content--inner--top {
@@ -425,7 +450,8 @@ export default {
 
     &:hover {
       .m_fragmentContent--content--inner {
-        transform: translateY(calc(-1 * var(--slide_on_hover)));
+        transform: translateY(calc(-1 * var(--slide_on_hover)))
+          rotate(calc(var(--random_angle) * 1deg));
         color: var(--color-blue);
       }
     }
@@ -438,8 +464,10 @@ export default {
     // margin-right: 4px;
     // margin-left: 4px;
 
+    pointer-events: auto;
     padding: calc(var(--spacing) * 1) 0;
     margin: calc(var(--spacing) * 1) 0;
+    border-top: 2px solid var(--color-blue);
 
     // background-color: #fff;
     // background-color: #f9f3db;
@@ -453,7 +481,7 @@ export default {
     // background: var(--body-bg);
     background: white;
     // border: 2px solid black;
-    border-radius: 10px;
+    // border-radius: 10px;
 
     // box-shadow: 0px 0px 4px 0px rgba(41, 41, 41, 0.8);
 

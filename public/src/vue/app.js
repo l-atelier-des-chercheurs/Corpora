@@ -35,6 +35,12 @@ Vue.use(VueI18n);
 import VuePlyr from "vue-plyr";
 Vue.use(VuePlyr);
 
+import TextField from "./components/subcomponents/TextField.vue";
+Vue.component("TextField", TextField);
+
+import Admin from "./components/subcomponents/Admin.vue";
+Vue.component("Admin", Admin);
+
 Vue.component("Loader", {
   name: "Loader",
   template: `
