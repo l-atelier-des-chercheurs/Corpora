@@ -587,7 +587,7 @@ export default {
 .m_addMedias.is--collapsed {
   .m_addMedias--buttons--openHideButton:not(.is--active) {
     &::before {
-      transform: scale(6);
+      transform: scale(2);
     }
   }
 }

@@ -222,7 +222,7 @@ let vm = new Vue({
 
     currentTime: "",
     app_is_fullscreen: false,
-    admin_pwd: "",
+    admin_pwd: localstore.get("admin_pwd") ? localstore.get("admin_pwd") : "",
 
     fragments_read: [],
 
@@ -344,6 +344,9 @@ let vm = new Vue({
             this.fragments_read.push(to.fullPath);
       },
       immediate: true,
+    },
+    admin_pwd() {
+      localstore.set("admin_pwd", this.admin_pwd);
     },
   },
   computed: {

@@ -13,8 +13,9 @@
           ref="singleFragmentContainer"
         >
           <transition name="fade" :duration="200" mode="out-in" appear>
+            <Loader v-if="!opened_fragment" />
             <FragmentContent
-              v-if="opened_fragment"
+              v-else
               :key="opened_fragment.metaFileName"
               :context="'edit'"
               :fragment="opened_fragment"
@@ -90,11 +91,13 @@
               </div>
 
               <template v-if="linked_fragments.length === 0">
+                <hr />
                 <h2>
                   {{ $t("no_with_similar_keywords") }}
                 </h2>
               </template>
               <template v-else>
+                <hr />
                 <h2>
                   {{
                     linked_fragments.length + " " + $t("with_similar_keywords")
@@ -109,6 +112,7 @@
                   <FragmentContent
                     v-for="(fragment, index) in linked_fragments"
                     :key="fragment.metaFileName + '.' + index"
+                    class="_fragmentListAndReactions--content--list--item"
                     :context="'preview'"
                     :corpus="corpus"
                     :all_keywords="all_keywords"
@@ -123,6 +127,7 @@
               <template
                 v-if="not_linked_fragments && not_linked_fragments.length > 0"
               >
+                <hr />
                 <h2>
                   {{
                     not_linked_fragments.length + " " + $t("other_fragments")
@@ -148,6 +153,7 @@
                 >
                   <FragmentContent
                     v-for="(fragment, index) in not_linked_fragments"
+                    class="_fragmentListAndReactions--content--list--item"
                     :key="fragment.metaFileName + '_' + index"
                     :context="'preview'"
                     :corpus="corpus"
@@ -191,16 +197,18 @@ export default {
     };
   },
   created() {},
-  mounted() {
-    this.loadFragment();
-  },
+  mounted() {},
   beforeDestroy() {},
   watch: {
-    "opened_fragment.metaFileName"() {
-      const single_fragment_container =
-        document.querySelector("._singleFragment");
-      if (single_fragment_container) single_fragment_container.scrollTop = 0;
-      this.loadFragment();
+    "opened_fragment.metaFileName": {
+      handler: function () {
+        if (this.opened_fragment.metaFileName) this.loadFragment();
+
+        const single_fragment_container =
+          document.querySelector("._singleFragment");
+        if (single_fragment_container) single_fragment_container.scrollTop = 0;
+      },
+      immediate: true,
     },
   },
   computed: {
@@ -273,10 +281,6 @@ export default {
 </script>
 <style lang="scss" scoped>
 ._sideBySide {
-  // grid-gap: calc(var(--spacing) * 2);
-  padding-top: calc(var(--spacing) * 1);
-  padding-bottom: calc(var(--spacing) * 1);
-
   > * {
     padding-top: calc(var(--spacing) * 1);
     padding-bottom: calc(var(--spacing) * 1);
@@ -288,6 +292,7 @@ export default {
   .app:not(.mobile_view) & {
     display: flex;
     flex-flow: row nowrap;
+    // gap: calc(var(--spacing) / 2);
     > * {
       max-height: 100vh;
       overflow: auto;
@@ -298,10 +303,9 @@ export default {
     ._singleFragment {
       flex: 1 1 600px;
 
-      padding-top: calc(var(--spacing) * 1) !important;
-      padding-bottom: calc(var(--spacing) * 1) !important;
-
-      // padding: calc(var(--spacing) / 2);
+      padding-top: calc(var(--spacing) * 1);
+      padding-bottom: calc(var(--spacing) * 1);
+      padding: calc(var(--spacing) / 1);
       // padding-right: 0;
     }
     ._fragmentListAndReactions {
@@ -311,6 +315,7 @@ export default {
 }
 
 ._singleFragment {
+  position: relative;
   scroll-behavior: smooth;
 }
 
@@ -344,6 +349,7 @@ export default {
   grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
   /* grid-auto-rows: max-content; */
   grid-gap: calc(var(--spacing) / 2);
+
   // padding: 0 calc(var(--spacing) * 2) calc(var(--spacing) * 2);
 }
 

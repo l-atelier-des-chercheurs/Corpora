@@ -222,6 +222,10 @@ module.exports = (function () {
       fr: "Tous les récits",
       en: "All stories",
     },
+    all_corpus: {
+      fr: "Tous les corpus",
+      en: "All corpus",
+    },
     source: {
       fr: "Lien",
       en: "link",

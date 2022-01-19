@@ -1,10 +1,7 @@
 <template>
   <div class="m_list">
-    <template v-if="!$root.can_admin_corpora">
-      <p>Enter password to admin</p>
-      <input type="password" autofocus v-model="$root.admin_pwd" />
-    </template>
-    <template v-else>
+    <Admin :collapsable="false" />
+    <template v-if="$root.can_admin_corpora">
       <div class="m_list--titles">
         <h1>Les corpus</h1>
         <button

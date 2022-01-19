@@ -13,12 +13,16 @@
     <div class="margin-vert-small">
       <label>Description</label>
       <TextField
+        v-if="corpus.description_long"
         :field_name="'description_long'"
         :content="corpus.description_long"
         type="corpus"
         :slugFolderName="corpus.slugFolderName"
         :allow_editing="$root.can_admin_corpora"
       />
+      <small v-else class="text-gray">
+        Connect as admin to add a description
+      </small>
     </div>
   </div>
 </template>
@@ -47,6 +51,10 @@ export default {
 
   .ql-editor {
     max-width: none;
+  }
+
+  @media (min-width: 480px) {
+    margin-left: 33%;
   }
 }
 </style>
