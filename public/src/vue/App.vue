@@ -414,6 +414,9 @@ h2 {
 .ta-ce {
   text-align: center;
 }
+.ta-ri {
+  text-align: right;
+}
 .tt-lc {
   text-transform: lowercase;
 }
@@ -2180,5 +2183,9 @@ twitter-widget.twitter-tweet {
 .margin-vert-small {
   margin-top: var(--spacing);
   margin-bottom: var(--spacing);
+}
+.margin-vert-verysmall {
+  margin-top: ~"calc(var(--spacing) / 2)";
+  margin-bottom: ~"calc(var(--spacing) / 2)";
 }
 </style>
