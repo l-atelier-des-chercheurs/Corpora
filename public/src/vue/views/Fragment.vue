@@ -12,9 +12,10 @@
           class="_singleFragment custom_scrollbar custom_scrollbar_dark"
           ref="singleFragmentContainer"
         >
-          <transition name="fade" :duration="200" mode="out-in">
+          <transition name="fade" :duration="200" mode="out-in" appear>
+            <Loader v-if="!opened_fragment" />
             <FragmentContent
-              v-if="opened_fragment"
+              v-else
               :key="opened_fragment.metaFileName"
               :context="'edit'"
               :fragment="opened_fragment"
@@ -28,21 +29,14 @@
           </transition>
         </div>
         <aside
-          class="
-            _fragmentListAndReactions
-            custom_scrollbar custom_scrollbar_dark
-          "
+          class="_fragmentListAndReactions custom_scrollbar custom_scrollbar_dark"
         >
-          <Loader
-            v-if="!show_fragmentListAndReactions"
-            class="_fragmentListAndReactions--loader"
-          />
-
           <transition name="fade" :duration="200" mode="out-in">
-            <div
-              class="_fragmentListAndReactions--content"
-              v-if="show_fragmentListAndReactions && linked_fragments"
-            >
+            <Loader
+              v-if="is_loading_fragment_sidebar"
+              class="_fragmentListAndReactions--loader"
+            />
+            <div class="_fragmentListAndReactions--content" v-else>
               <div class="_reactions">
                 <i>todo</i>
                 <h2>
@@ -97,11 +91,13 @@
               </div>
 
               <template v-if="linked_fragments.length === 0">
+                <hr />
                 <h2>
                   {{ $t("no_with_similar_keywords") }}
                 </h2>
               </template>
               <template v-else>
+                <hr />
                 <h2>
                   {{
                     linked_fragments.length + " " + $t("with_similar_keywords")
@@ -116,6 +112,49 @@
                   <FragmentContent
                     v-for="(fragment, index) in linked_fragments"
                     :key="fragment.metaFileName + '.' + index"
+                    class="_fragmentListAndReactions--content--list--item"
+                    :context="'preview'"
+                    :corpus="corpus"
+                    :all_keywords="all_keywords"
+                    :all_tags="all_tags"
+                    :medias="medias"
+                    :fragment="fragment"
+                    :fragment_width="300"
+                    :slugFolderName="corpus.slugFolderName"
+                  />
+                </transition-group>
+              </template>
+              <template
+                v-if="not_linked_fragments && not_linked_fragments.length > 0"
+              >
+                <hr />
+                <h2>
+                  {{
+                    not_linked_fragments.length + " " + $t("other_fragments")
+                  }}
+                </h2>
+
+                <button
+                  type="button"
+                  v-if="!show_not_linked_fragments"
+                  @click="show_not_linked_fragments = true"
+                >
+                  {{ $t("show") }}
+                </button>
+
+                <transition-group
+                  v-if="show_not_linked_fragments"
+                  class="_fragmentListAndReactions--content--list"
+                  name="list-complete"
+                  tag="div"
+                  :key="
+                    not_linked_fragments.map((f) => f.metaFileName).join(',')
+                  "
+                >
+                  <FragmentContent
+                    v-for="(fragment, index) in not_linked_fragments"
+                    class="_fragmentListAndReactions--content--list--item"
+                    :key="fragment.metaFileName + '_' + index"
                     :context="'preview'"
                     :corpus="corpus"
                     :all_keywords="all_keywords"
@@ -129,46 +168,6 @@
               </template>
             </div>
           </transition>
-          <div
-            class="_fragmentListAndReactions--content"
-            v-if="
-              show_fragmentListAndReactions &&
-              not_linked_fragments &&
-              not_linked_fragments.length > 0
-            "
-          >
-            <h2>
-              {{ not_linked_fragments.length + " " + $t("other_fragments") }}
-            </h2>
-
-            <button
-              type="button"
-              v-if="!show_not_linked_fragments"
-              @click="show_not_linked_fragments = true"
-            >
-              {{ $t("show") }}
-            </button>
-
-            <transition-group
-              v-if="show_not_linked_fragments"
-              class="_fragmentListAndReactions--content--list"
-              name="list-complete"
-              tag="div"
-            >
-              <FragmentContent
-                v-for="(fragment, index) in not_linked_fragments"
-                :key="fragment.metaFileName + '_' + index"
-                :context="'preview'"
-                :corpus="corpus"
-                :all_keywords="all_keywords"
-                :all_tags="all_tags"
-                :medias="medias"
-                :fragment="fragment"
-                :fragment_width="300"
-                :slugFolderName="corpus.slugFolderName"
-              />
-            </transition-group>
-          </div>
         </aside>
       </div>
     </template>
@@ -193,22 +192,23 @@ export default {
   },
   data() {
     return {
-      show_fragmentListAndReactions: false,
+      is_loading_fragment_sidebar: true,
       show_not_linked_fragments: false,
     };
   },
   created() {},
-  mounted() {
-    setTimeout(() => {
-      this.show_fragmentListAndReactions = true;
-    }, 600);
-  },
+  mounted() {},
   beforeDestroy() {},
   watch: {
-    "opened_fragment.metaFileName"() {
-      const single_fragment_container =
-        document.querySelector("._singleFragment");
-      if (single_fragment_container) single_fragment_container.scrollTop = 0;
+    "opened_fragment.metaFileName": {
+      handler: function () {
+        if (this.opened_fragment.metaFileName) this.loadFragment();
+
+        const single_fragment_container =
+          document.querySelector("._singleFragment");
+        if (single_fragment_container) single_fragment_container.scrollTop = 0;
+      },
+      immediate: true,
     },
   },
   computed: {
@@ -216,7 +216,9 @@ export default {
       return (
         this.fragments &&
         this.fragments.filter(
-          (f) => f.metaFileName !== this.opened_fragment.metaFileName
+          (f) =>
+            this.opened_fragment &&
+            f.metaFileName !== this.opened_fragment.metaFileName
         )
       );
     },
@@ -258,6 +260,12 @@ export default {
         query: this.$route.query ? this.$route.query : {},
       });
     },
+    loadFragment() {
+      this.is_loading_fragment_sidebar = true;
+      setTimeout(() => {
+        this.is_loading_fragment_sidebar = false;
+      }, 600);
+    },
     hasCommonKeywordWithOpened(f) {
       if (
         !this.opened_fragment.keywords ||
@@ -273,14 +281,18 @@ export default {
 </script>
 <style lang="scss" scoped>
 ._sideBySide {
-  // grid-gap: calc(var(--spacing) * 2);
+  > * {
+    padding-top: calc(var(--spacing) * 1);
+    padding-bottom: calc(var(--spacing) * 1);
+  }
   ._fragmentListAndReactions {
-    padding: calc(var(--spacing) / 2);
+    // padding: calc(var(--spacing) / 2);
   }
 
   .app:not(.mobile_view) & {
     display: flex;
     flex-flow: row nowrap;
+    // gap: calc(var(--spacing) / 2);
     > * {
       max-height: 100vh;
       overflow: auto;
@@ -290,8 +302,11 @@ export default {
 
     ._singleFragment {
       flex: 1 1 600px;
-      padding: calc(var(--spacing) / 2);
-      padding-right: 0;
+
+      padding-top: calc(var(--spacing) * 1);
+      padding-bottom: calc(var(--spacing) * 1);
+      padding: calc(var(--spacing) / 1);
+      // padding-right: 0;
     }
     ._fragmentListAndReactions {
       flex: 0 1 320px;
@@ -300,6 +315,7 @@ export default {
 }
 
 ._singleFragment {
+  position: relative;
   scroll-behavior: smooth;
 }
 
@@ -307,7 +323,7 @@ export default {
   position: relative;
 
   h2 {
-    color: var(--color-beige);
+    // color: var(--color-lightgray);
 
     &:first-child() {
       margin-top: 0;
@@ -320,6 +336,7 @@ export default {
 
 ._fragmentListAndReactions--content {
   margin-bottom: calc(var(--spacing) * 1);
+  padding: calc(var(--spacing));
 }
 ._fragmentListAndReactions--content:last-child {
   padding-bottom: calc(var(--spacing) * 4) !important;
@@ -332,6 +349,7 @@ export default {
   grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
   /* grid-auto-rows: max-content; */
   grid-gap: calc(var(--spacing) / 2);
+
   // padding: 0 calc(var(--spacing) * 2) calc(var(--spacing) * 2);
 }
 
@@ -342,8 +360,7 @@ export default {
 
 ._reactions,
 ._collections {
-  background-color: var(--color-beige);
-  padding: calc(var(--spacing) / 2);
+  background-color: var(--color-lightgray);
   padding-bottom: calc(var(--spacing));
   margin-bottom: calc(var(--spacing));
 
@@ -353,3 +370,4 @@ export default {
   }
 }
 </style>
+<style lang="scss"></style>

@@ -48,14 +48,19 @@
           {{ mediadata.content }}
         </div>
         <template v-else> -->
-        <input
-          type="url"
-          class="border-none bg-transparent"
-          placeholder="URL"
-          v-model="mediadata.content"
-          ref="textField"
-        />
-        <small v-html="$t('link_instructions')" />
+        <label>{{ $t("link") }}</label>
+        <div>
+          <input
+            type="url"
+            class="border-none bg-transparent"
+            placeholder="URL"
+            v-model="mediadata.content"
+            ref="textField"
+          />
+        </div>
+        <div>
+          <small v-html="$t('link_instructions')" />
+        </div>
         <!-- </template> -->
         <template v-if="should_be_embed">
           <div>
@@ -361,6 +366,14 @@ export default {
     //     };
     //   }
     // },
+    is_touch: function () {
+      if (!this.is_touch && !this.is_hovered)
+        this.show_advanced_menu_for_media = false;
+    },
+    is_hovered: function () {
+      if (!this.is_touch && !this.is_hovered)
+        this.show_advanced_menu_for_media = false;
+    },
   },
   computed: {
     media_was_created_x_hours_ago() {
@@ -436,6 +449,9 @@ export default {
       //   this.mediadata.type = "embed";
       // if (this.media.type === "embed" && !this.should_be_embed)
       //   this.mediadata.type = "link";
+
+      if (this.media.type === "link" && this.should_be_embed)
+        this.mediadata.content = this.mediadata.content.trim();
 
       this.$root
         .editMedia({
@@ -646,7 +662,7 @@ export default {
     // bottom: 0;
     width: 100%;
     padding: calc(var(--spacing) / 4);
-    text-align: center;
+    text-align: left;
     border-bottom: 2px solid rgba(141, 141, 141, 0.1);
 
     text-overflow: ellipsis;

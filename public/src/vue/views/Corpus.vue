@@ -5,6 +5,15 @@
       <WelcomeModal v-if="$root.settings.show_welcome_modal" />
 
       <div class="m_topBar">
+        <div class v-if="$root.can_admin_corpora">
+          <router-link
+            :to="{
+              name: 'Corpora',
+            }"
+            v-html="$t('all_corpus')"
+          />
+        </div>
+
         <div class="m_topBar--content">
           <router-link
             :to="{
@@ -57,7 +66,7 @@
         :slugFolderName="corpus.slugFolderName"
       />
 
-      <div class="m_corpus" ref="corpus">
+      <div class="m_corpus" ref="corpus" v-if="$route.name !== 'Informations'">
         <div class="m_corpus--presentation">
           <div class="m_feedbacks">
             <a
@@ -90,6 +99,14 @@
               <label>{{ $t("description") }}</label>
 
               <p v-html="corpus.description" />
+
+              <router-link
+                :to="{
+                  name: 'Informations',
+                }"
+                class="button"
+                v-html="$t('more_infos')"
+              />
             </div>
 
             <div class="m_corpus--tags" v-if="all_tags && all_tags.length > 0">
@@ -186,13 +203,14 @@
           <div v-if="previewURL" class="m_corpus--presentation--vignette">
             <img :src="previewURL" class draggable="false" />
           </div>
-
-          <hr />
-          <Infos />
         </div>
 
         <transition name="fade" :duration="200" mode="out-in">
-          <div class="m_corpus--fragments" :key="show_collection_meta">
+          <Loader
+            v-if="is_loading_medias"
+            class="m_corpus--fragments _localLoader"
+          />
+          <div v-else class="m_corpus--fragments" :key="show_collection_meta">
             <Collection
               v-if="shown_collection"
               :corpus="corpus"
@@ -295,9 +313,15 @@
           {{ $t("personal_data_and_legal_notices") }}
         </button>
 
-        <a href="plurality-university.org" target="_blank">
-          <img src="/images/U+_LogoLabels-1_Blue.png" draggable="false" />
-        </a>
+        <div>
+          <div class="margin-sides-medium">
+            <div class="flex-nowrap">
+              Corpora v{{ $root.state.appVersion }}
+              &nbsp;
+              <Admin />
+            </div>
+          </div>
+        </div>
       </footer>
 
       <CreateCollection
@@ -311,7 +335,6 @@
   </div>
 </template>
 <script>
-import Infos from "../components/Infos.vue";
 import CorpusPwd from "../components/modals/CorpusPwd.vue";
 import WelcomeModal from "../components/modals/WelcomeModal.vue";
 import CollectMode from "../components/subcomponents/CollectMode.vue";
@@ -323,7 +346,6 @@ import Collection from "../components/subcomponents/Collection.vue";
 export default {
   props: {},
   components: {
-    Infos,
     CorpusPwd,
     WelcomeModal,
     CollectMode,
@@ -338,6 +360,8 @@ export default {
 
       show_create_time_modal: false,
       new_source_name: "",
+
+      is_loading_medias: false,
 
       show_edit_corpus_for: false,
 
@@ -605,10 +629,14 @@ export default {
   },
   methods: {
     loadCorpus() {
+      this.is_loading_medias = true;
       this.$nextTick(() => {
         this.$socketio.listMedias({
           type: "corpus",
           slugFolderName: this.$route.params.slugFolderName,
+        });
+        this.$eventHub.$once(`socketio.corpus.medias_listed`, () => {
+          this.is_loading_medias = false;
         });
       });
     },
@@ -748,7 +776,7 @@ export default {
 .m_corpus--fragments--sort {
   margin: 0 calc(var(--spacing) * 2);
   padding: calc(var(--spacing) / 2) 0 0;
-  // border-bottom: 2px solid var(--color-bluegreen);
+  // border-bottom: 2px solid var(--color-blue);
 
   > * {
     display: flex;
@@ -764,7 +792,7 @@ export default {
     gap: calc(var(--spacing) / 2);
 
     > button {
-      background: var(--color-bluegreen);
+      // background: var(--color-blue);
       padding: 0 calc(var(--spacing) / 4);
       text-transform: inherit;
 
@@ -788,11 +816,11 @@ export default {
   // in case of very small height of viewport
   // max-height: 100vh;
   // max-width: 52ch;
-  overflow-y: auto;
+  // overflow-y: auto;
   padding: 0 calc(var(--spacing) * 2);
   // padding: 0;
   margin: calc(var(--spacing) * 2) 0;
-  border-left: 2px solid var(--color-bluegreen);
+  border-left: 2px dotted var(--color-blue);
   // text-align: right;
 
   // display: flex;
@@ -854,12 +882,12 @@ export default {
 
 .m_feedbacks {
   position: fixed;
-  bottom: var(--spacing);
-  right: 50px;
+  bottom: calc(var(--spacing) * 3);
+  right: calc(var(--spacing) * 2);
   background-color: var(--color-black);
   color: white;
   margin: 0;
-  padding: calc(var(--spacing) / 2) var(--spacing);
+  padding: calc(var(--spacing) / 2) calc(var(--spacing);
   border-radius: 24px;
   z-index: 10000;
 
@@ -874,9 +902,10 @@ export default {
 }
 .m_topBar--content {
   padding: calc(var(--spacing) * 2) 0;
-  border-bottom: 2px solid var(--color-bluegreen);
+  border-bottom: 2px dotted var(--color-blue);
 
   display: flex;
+  flex-flow: row wrap;
   align-items: center;
   gap: calc(var(--spacing) * 3);
 
@@ -927,7 +956,7 @@ export default {
 
 .m_corpus--collections--coll {
   // background-color: transparent;
-  // background-color: var(--color-beige);
+  // background-color: var(--color-lightgray);
 
   // border-radius: 8px;
   width: 100%;
@@ -949,20 +978,21 @@ export default {
   position: absolute;
   top: 5px;
   right: 0px;
-  width: 217px;
+  max-width: 317px;
+  width: 40vw;
   transform: rotate(4deg);
   image-rendering: crisp-edges;
 }
 
 ._bottomFooter {
-  border-top: 2px solid var(--color-bluegreen);
-  padding: calc(var(--spacing) * 2) 0;
+  border-top: 2px dotted var(--color-blue);
+  padding: calc(var(--spacing)) 0;
   margin: 0 calc(var(--spacing) * 2);
 
   display: flex;
   flex-flow: row wrap;
   gap: var(--spacing);
-  justify-content: center;
+  justify-content: space-between;
 
   .a {
     text-transform: inherit;
@@ -972,5 +1002,10 @@ export default {
     width: 100%;
     max-width: 340px;
   }
+}
+
+._localLoader {
+  position: relative;
+  height: 50vh;
 }
 </style>

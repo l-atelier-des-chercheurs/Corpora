@@ -41,10 +41,11 @@
         <p>
           Il peut inclure des contenus issus de services tiers (Twitter,
           YouTube, Vimeo ou SoundCloud) dont l'affichage provoque le dépôt de
-          cookies sur votre ordinateur. Pour cette raison, nous vous proposons
-          deux modes de navigation :
+          cookies sur votre ordinateur.
+          <!-- Pour cette raison, nous vous proposons
+          deux modes de navigation : -->
         </p>
-        <p>
+        <!-- <p>
           <label for="CreateQRCode">
             <input
               type="checkbox"
@@ -68,7 +69,7 @@
             contenus tiers, ce qui provoquera en général le dépôt de cookies de
             la part du site d'origine.
           </label>
-        </p>
+        </p> -->
         <p>
           Pour exercer vos droits sur les données collectées par les tiers ou
           pour toute question sur ces traitements, contactez directement les
