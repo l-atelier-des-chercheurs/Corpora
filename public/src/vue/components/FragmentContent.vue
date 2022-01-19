@@ -372,6 +372,18 @@ export default {
 
   .m_fragmentContent--content {
     position: relative;
+  }
+
+  &.is--preview .m_fragmentContent--content {
+    height: 320px;
+    width: 100%;
+    overflow: hidden;
+    padding: 0;
+    margin-top: calc(-0.5 * var(--slide_on_hover));
+    padding-top: calc(1.5 * var(--slide_on_hover));
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+    // box-shadow: 0px 0px 4px 0px rgba(204, 208, 218, 0.8);
 
     &::after {
       content: "";
@@ -401,18 +413,6 @@ export default {
 
       transition: all 1.5s cubic-bezier(0.19, 1, 0.22, 1);
     }
-  }
-
-  &.is--preview .m_fragmentContent--content {
-    height: 320px;
-    width: 100%;
-    overflow: hidden;
-    padding: 0;
-    margin-top: calc(-0.5 * var(--slide_on_hover));
-    padding-top: calc(1.5 * var(--slide_on_hover));
-    border-bottom-left-radius: 0;
-    border-bottom-right-radius: 0;
-    // box-shadow: 0px 0px 4px 0px rgba(204, 208, 218, 0.8);
 
     .m_fragmentContent--content--inner {
       margin: 0;
