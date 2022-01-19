@@ -1006,6 +1006,12 @@ module.exports = (function () {
         if (!exists) {
           _getPageMetadata({ url })
             .then((_metadata) => {
+              function endsWithAny(suffixes, string) {
+                return suffixes.some(function (suffix) {
+                  return string.endsWith(suffix);
+                });
+              }
+
               let results = {};
               if (_metadata.hasOwnProperty("title"))
                 results.title = _metadata.title;
@@ -1024,6 +1030,11 @@ module.exports = (function () {
                 if (image_url) {
                   results.image = image_url;
                 }
+              }
+
+              if (!results.image) {
+                if (endsWithAny([".jpg", ".jpeg", ".png", ".gif"], url))
+                  results.image = url;
               }
 
               new Promise((resolve, reject) => {
