@@ -194,8 +194,6 @@
           <div v-if="previewURL" class="m_corpus--presentation--vignette">
             <img :src="previewURL" class draggable="false" />
           </div>
-
-          <hr />
           <Infos />
         </div>
 
@@ -788,7 +786,7 @@ export default {
     gap: calc(var(--spacing) / 2);
 
     > button {
-      background: var(--color-blue);
+      // background: var(--color-blue);
       padding: 0 calc(var(--spacing) / 4);
       text-transform: inherit;
 

@@ -55,6 +55,10 @@ module.exports = (function () {
       fr: "Chercher dans les récits",
       en: "Search in stories",
     },
+    back_to_fragments: {
+      fr: "Retour aux récits",
+      en: "Back to stories",
+    },
     embed: {
       fr: "Intégration",
       en: "Embed",

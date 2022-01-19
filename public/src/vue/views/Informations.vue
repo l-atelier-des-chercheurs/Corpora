@@ -7,7 +7,7 @@
           params: { slugFolderName: corpus.slugFolderName },
         }"
         class="button"
-        v-html="$t('all')"
+        v-html="$t('back_to_fragments')"
       />
     </div>
     <div class="margin-vert-small">

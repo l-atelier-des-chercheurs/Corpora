@@ -831,7 +831,8 @@ audio {
     margin: 0;
   }
 
-  &.type-link {
+  &.type-link,
+  &.type-embed {
     background-color: rgba(141, 141, 141, 0.1);
   }
 }

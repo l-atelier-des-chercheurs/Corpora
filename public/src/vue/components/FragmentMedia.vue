@@ -48,14 +48,19 @@
           {{ mediadata.content }}
         </div>
         <template v-else> -->
-        <input
-          type="url"
-          class="border-none bg-transparent"
-          placeholder="URL"
-          v-model="mediadata.content"
-          ref="textField"
-        />
-        <small v-html="$t('link_instructions')" />
+        <label>{{ $t("link") }}</label>
+        <div>
+          <input
+            type="url"
+            class="border-none bg-transparent"
+            placeholder="URL"
+            v-model="mediadata.content"
+            ref="textField"
+          />
+        </div>
+        <div>
+          <small v-html="$t('link_instructions')" />
+        </div>
         <!-- </template> -->
         <template v-if="should_be_embed">
           <div>
@@ -654,7 +659,7 @@ export default {
     // bottom: 0;
     width: 100%;
     padding: calc(var(--spacing) / 4);
-    text-align: center;
+    text-align: left;
     border-bottom: 2px solid rgba(141, 141, 141, 0.1);
 
     text-overflow: ellipsis;

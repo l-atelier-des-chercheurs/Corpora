@@ -5,10 +5,13 @@
       'is--preview': context === 'preview',
     }"
   >
-    <div class="m_fragmentContent--content">
+    <div class="m_fragmentContent--content" @mouseenter="updateMouseCoords">
       <div
         class="m_fragmentContent--content--inner"
-        :style="`--random_angle : ${random_angle}`"
+        :style="`
+            --random_angle : ${random_angle};
+            --slide_on_hover: ${slide_on_hover}rem;
+          `"
       >
         <div class="m_fragmentContent--content--inner--top">
           <h2>{{ fragment.title }}</h2>
@@ -214,6 +217,9 @@ export default {
       show_advanced_menu: false,
       show_advanced_meta: false,
       show_edit_fragment: false,
+
+      random_angle: (Math.random() - 0.5) * 4,
+      slide_on_hover: 1,
     };
   },
   created() {},
@@ -221,10 +227,6 @@ export default {
   beforeDestroy() {},
   watch: {},
   computed: {
-    random_angle() {
-      // return -3;
-      return (Math.random() - 0.5) * 4;
-    },
     already_visited() {
       const fullPath = `/${this.slugFolderName}/${this.fragment.media_filename}`;
       return this.$root.fragments_read.includes(fullPath);
@@ -249,6 +251,13 @@ export default {
     },
   },
   methods: {
+    updateMouseCoords(event) {
+      const percent_hover_x = event.offsetX / event.target.offsetWidth;
+      this.random_angle = (percent_hover_x - 0.5) * 4;
+
+      // const percent_hover_y = event.offsetY / event.target.offsetHeight;
+      // this.slide_on_hover = Math.min(1, percent_hover_y * 1);
+    },
     removeFragment() {
       this.$alertify
         .okBtn(this.$t("yes"))
@@ -476,7 +485,7 @@ export default {
 
     // box-shadow: 0px 0px 4px 0px rgba(41, 41, 41, 0.8);
 
-    transition: all 0.4s 0.15s cubic-bezier(0.19, 1, 0.22, 1);
+    transition: all 0.4s cubic-bezier(0.19, 1, 0.22, 1);
   }
 }
 
