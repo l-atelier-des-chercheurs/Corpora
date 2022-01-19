@@ -450,6 +450,9 @@ export default {
       // if (this.media.type === "embed" && !this.should_be_embed)
       //   this.mediadata.type = "link";
 
+      if (this.media.type === "link" && this.should_be_embed)
+        this.mediadata.content = this.mediadata.content.trim();
+
       this.$root
         .editMedia({
           type: "corpus",
