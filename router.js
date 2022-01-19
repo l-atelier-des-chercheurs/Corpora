@@ -16,8 +16,7 @@ module.exports = function (app) {
    * routing event
    */
   app.get("/", load_index);
-  app.get("/:slug", load_index);
-  app.get("/:slug/:fragment", load_index);
+  app.get("/:slug/*", load_index);
   app.get("/_archives/:type/:slugFolderName", downloadArchive);
   app.post("/_file-upload/:type/:slugFolderName", postFile);
 
