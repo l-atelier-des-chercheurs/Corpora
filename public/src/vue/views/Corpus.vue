@@ -200,7 +200,11 @@
         </div>
 
         <transition name="fade" :duration="200" mode="out-in">
-          <div class="m_corpus--fragments" :key="show_collection_meta">
+          <Loader
+            v-if="is_loading_medias"
+            class="m_corpus--fragments _localLoader"
+          />
+          <div v-else class="m_corpus--fragments" :key="show_collection_meta">
             <Collection
               v-if="shown_collection"
               :corpus="corpus"
@@ -352,6 +356,8 @@ export default {
 
       show_create_time_modal: false,
       new_source_name: "",
+
+      is_loading_medias: false,
 
       show_edit_corpus_for: false,
 
@@ -619,10 +625,14 @@ export default {
   },
   methods: {
     loadCorpus() {
+      this.is_loading_medias = true;
       this.$nextTick(() => {
         this.$socketio.listMedias({
           type: "corpus",
           slugFolderName: this.$route.params.slugFolderName,
+        });
+        this.$eventHub.$once(`socketio.corpus.medias_listed`, () => {
+          this.is_loading_medias = false;
         });
       });
     },
@@ -988,5 +998,10 @@ export default {
     width: 100%;
     max-width: 340px;
   }
+}
+
+._localLoader {
+  position: relative;
+  height: 50vh;
 }
 </style>
