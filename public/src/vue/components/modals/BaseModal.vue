@@ -146,12 +146,7 @@
 
       <transition name="fade" :duration="600">
         <button
-          class="
-            button-round
-            bg-blanc
-            m_modal--minimize_button
-            padding-verysmall
-          "
+          class="button-round bg-blanc m_modal--minimize_button padding-verysmall"
           @click="toggleMinimize"
           v-if="showModal && can_minimize"
           :class="{ is_minimized: is_minimized }"

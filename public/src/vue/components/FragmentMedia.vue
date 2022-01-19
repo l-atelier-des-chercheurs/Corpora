@@ -361,6 +361,14 @@ export default {
     //     };
     //   }
     // },
+    is_touch: function () {
+      if (!this.is_touch && !this.is_hovered)
+        this.show_advanced_menu_for_media = false;
+    },
+    is_hovered: function () {
+      if (!this.is_touch && !this.is_hovered)
+        this.show_advanced_menu_for_media = false;
+    },
   },
   computed: {
     media_was_created_x_hours_ago() {

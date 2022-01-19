@@ -12,7 +12,7 @@
           class="_singleFragment custom_scrollbar custom_scrollbar_dark"
           ref="singleFragmentContainer"
         >
-          <transition name="fade" :duration="200" mode="out-in">
+          <transition name="fade" :duration="200" mode="out-in" appear>
             <FragmentContent
               v-if="opened_fragment"
               :key="opened_fragment.metaFileName"
@@ -30,16 +30,12 @@
         <aside
           class="_fragmentListAndReactions custom_scrollbar custom_scrollbar_dark"
         >
-          <Loader
-            v-if="!show_fragmentListAndReactions"
-            class="_fragmentListAndReactions--loader"
-          />
-
           <transition name="fade" :duration="200" mode="out-in">
-            <div
-              class="_fragmentListAndReactions--content"
-              v-if="show_fragmentListAndReactions && linked_fragments"
-            >
+            <Loader
+              v-if="is_loading_fragment_sidebar"
+              class="_fragmentListAndReactions--loader"
+            />
+            <div class="_fragmentListAndReactions--content" v-else>
               <div class="_reactions">
                 <i>todo</i>
                 <h2>
@@ -124,48 +120,48 @@
                   />
                 </transition-group>
               </template>
+              <template
+                v-if="not_linked_fragments && not_linked_fragments.length > 0"
+              >
+                <h2>
+                  {{
+                    not_linked_fragments.length + " " + $t("other_fragments")
+                  }}
+                </h2>
+
+                <button
+                  type="button"
+                  v-if="!show_not_linked_fragments"
+                  @click="show_not_linked_fragments = true"
+                >
+                  {{ $t("show") }}
+                </button>
+
+                <transition-group
+                  v-if="show_not_linked_fragments"
+                  class="_fragmentListAndReactions--content--list"
+                  name="list-complete"
+                  tag="div"
+                  :key="
+                    not_linked_fragments.map((f) => f.metaFileName).join(',')
+                  "
+                >
+                  <FragmentContent
+                    v-for="(fragment, index) in not_linked_fragments"
+                    :key="fragment.metaFileName + '_' + index"
+                    :context="'preview'"
+                    :corpus="corpus"
+                    :all_keywords="all_keywords"
+                    :all_tags="all_tags"
+                    :medias="medias"
+                    :fragment="fragment"
+                    :fragment_width="300"
+                    :slugFolderName="corpus.slugFolderName"
+                  />
+                </transition-group>
+              </template>
             </div>
           </transition>
-          <div
-            class="_fragmentListAndReactions--content"
-            v-if="
-              show_fragmentListAndReactions &&
-              not_linked_fragments &&
-              not_linked_fragments.length > 0
-            "
-          >
-            <h2>
-              {{ not_linked_fragments.length + " " + $t("other_fragments") }}
-            </h2>
-
-            <button
-              type="button"
-              v-if="!show_not_linked_fragments"
-              @click="show_not_linked_fragments = true"
-            >
-              {{ $t("show") }}
-            </button>
-
-            <transition-group
-              v-if="show_not_linked_fragments"
-              class="_fragmentListAndReactions--content--list"
-              name="list-complete"
-              tag="div"
-            >
-              <FragmentContent
-                v-for="(fragment, index) in not_linked_fragments"
-                :key="fragment.metaFileName + '_' + index"
-                :context="'preview'"
-                :corpus="corpus"
-                :all_keywords="all_keywords"
-                :all_tags="all_tags"
-                :medias="medias"
-                :fragment="fragment"
-                :fragment_width="300"
-                :slugFolderName="corpus.slugFolderName"
-              />
-            </transition-group>
-          </div>
         </aside>
       </div>
     </template>
@@ -190,15 +186,13 @@ export default {
   },
   data() {
     return {
-      show_fragmentListAndReactions: false,
+      is_loading_fragment_sidebar: true,
       show_not_linked_fragments: false,
     };
   },
   created() {},
   mounted() {
-    setTimeout(() => {
-      this.show_fragmentListAndReactions = true;
-    }, 600);
+    this.loadFragment();
   },
   beforeDestroy() {},
   watch: {
@@ -206,6 +200,7 @@ export default {
       const single_fragment_container =
         document.querySelector("._singleFragment");
       if (single_fragment_container) single_fragment_container.scrollTop = 0;
+      this.loadFragment();
     },
   },
   computed: {
@@ -257,6 +252,12 @@ export default {
         query: this.$route.query ? this.$route.query : {},
       });
     },
+    loadFragment() {
+      this.is_loading_fragment_sidebar = true;
+      setTimeout(() => {
+        this.is_loading_fragment_sidebar = false;
+      }, 600);
+    },
     hasCommonKeywordWithOpened(f) {
       if (
         !this.opened_fragment.keywords ||
@@ -273,8 +274,15 @@ export default {
 <style lang="scss" scoped>
 ._sideBySide {
   // grid-gap: calc(var(--spacing) * 2);
+  padding-top: calc(var(--spacing) * 1);
+  padding-bottom: calc(var(--spacing) * 1);
+
+  > * {
+    padding-top: calc(var(--spacing) * 1);
+    padding-bottom: calc(var(--spacing) * 1);
+  }
   ._fragmentListAndReactions {
-    padding: calc(var(--spacing) / 2);
+    // padding: calc(var(--spacing) / 2);
   }
 
   .app:not(.mobile_view) & {
@@ -289,6 +297,10 @@ export default {
 
     ._singleFragment {
       flex: 1 1 600px;
+
+      padding-top: calc(var(--spacing) * 1) !important;
+      padding-bottom: calc(var(--spacing) * 1) !important;
+
       // padding: calc(var(--spacing) / 2);
       // padding-right: 0;
     }
@@ -306,7 +318,7 @@ export default {
   position: relative;
 
   h2 {
-    color: var(--color-lightgray);
+    // color: var(--color-lightgray);
 
     &:first-child() {
       margin-top: 0;
@@ -319,6 +331,7 @@ export default {
 
 ._fragmentListAndReactions--content {
   margin-bottom: calc(var(--spacing) * 1);
+  padding: calc(var(--spacing));
 }
 ._fragmentListAndReactions--content:last-child {
   padding-bottom: calc(var(--spacing) * 4) !important;
@@ -342,7 +355,6 @@ export default {
 ._reactions,
 ._collections {
   background-color: var(--color-lightgray);
-  padding: calc(var(--spacing) / 2);
   padding-bottom: calc(var(--spacing));
   margin-bottom: calc(var(--spacing));
 
@@ -352,3 +364,4 @@ export default {
   }
 }
 </style>
+<style lang="scss"></style>

@@ -6,7 +6,10 @@
     }"
   >
     <div class="m_fragmentContent--content">
-      <div class="m_fragmentContent--content--inner">
+      <div
+        class="m_fragmentContent--content--inner"
+        :style="`--random_angle : ${random_angle}`"
+      >
         <div class="m_fragmentContent--content--inner--top">
           <h2>{{ fragment.title }}</h2>
 
@@ -218,6 +221,10 @@ export default {
   beforeDestroy() {},
   watch: {},
   computed: {
+    random_angle() {
+      // return -3;
+      return (Math.random() - 0.5) * 4;
+    },
     already_visited() {
       const fullPath = `/${this.slugFolderName}/${this.fragment.media_filename}`;
       return this.$root.fragments_read.includes(fullPath);
@@ -366,9 +373,9 @@ export default {
 </script>
 <style lang="scss" scoped>
 .m_fragmentContent {
+  position: relative;
   width: 100%;
-
-  --slide_on_hover: 25px;
+  --slide_on_hover: 1rem;
 
   .m_fragmentContent--content {
     position: relative;
@@ -376,11 +383,17 @@ export default {
 
   &.is--preview .m_fragmentContent--content {
     height: 320px;
-    width: 100%;
     overflow: hidden;
     padding: 0;
-    margin-top: calc(-0.5 * var(--slide_on_hover));
+    margin-top: calc(-1.5 * var(--slide_on_hover));
     padding-top: calc(1.5 * var(--slide_on_hover));
+
+    width: calc(100% + var(--slide_on_hover));
+    margin-left: calc(-0.5 * var(--slide_on_hover));
+    margin-right: calc(0.5 * var(--slide_on_hover));
+    padding-left: calc(0.5 * var(--slide_on_hover));
+    padding-right: calc(0.5 * var(--slide_on_hover));
+
     border-bottom-left-radius: 0;
     border-bottom-right-radius: 0;
     // box-shadow: 0px 0px 4px 0px rgba(204, 208, 218, 0.8);
@@ -394,7 +407,7 @@ export default {
       left: 0;
       width: 100%;
       height: 0px;
-      z-index: 10;
+      // z-index: 10;
       pointer-events: none;
 
       // background: linear-gradient(
@@ -417,6 +430,9 @@ export default {
     .m_fragmentContent--content--inner {
       margin: 0;
       overflow: hidden;
+      scroll-behavior: smooth;
+
+      transform-origin: 50% 100px;
     }
 
     .m_fragmentContent--content--inner--top {
@@ -425,7 +441,8 @@ export default {
 
     &:hover {
       .m_fragmentContent--content--inner {
-        transform: translateY(calc(-1 * var(--slide_on_hover)));
+        transform: translateY(calc(-1 * var(--slide_on_hover)))
+          rotate(calc(var(--random_angle) * 1deg));
         color: var(--color-blue);
       }
     }
@@ -441,6 +458,7 @@ export default {
     pointer-events: auto;
     padding: calc(var(--spacing) * 1) 0;
     margin: calc(var(--spacing) * 1) 0;
+    border-top: 2px solid var(--color-blue);
 
     // background-color: #fff;
     // background-color: #f9f3db;
@@ -454,7 +472,7 @@ export default {
     // background: var(--body-bg);
     background: white;
     // border: 2px solid black;
-    border-radius: 20px;
+    // border-radius: 10px;
 
     // box-shadow: 0px 0px 4px 0px rgba(41, 41, 41, 0.8);
 

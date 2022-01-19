@@ -1,6 +1,6 @@
 <template>
   <div>
-    <transition-group class="m_fragments" name="list-complete" tag="div">
+    <div class="m_fragments">
       <div
         v-if="show_create_button"
         class="m_fragments--createFragment"
@@ -75,7 +75,7 @@
         </div>
       </template>
       <div v-for="index in 3" :key="index" />
-    </transition-group>
+    </div>
   </div>
 </template>
 <script>

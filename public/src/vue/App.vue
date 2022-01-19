@@ -193,7 +193,7 @@ label:not(.no-style) {
 
 .custom_scrollbar {
   --scrollbarBG: #e2edef;
-  --thumbBG: #90a4ae;
+  --thumbBG: var(--color-blue);
 
   &::-webkit-scrollbar {
     width: 16px;
@@ -1269,7 +1269,7 @@ audio {
   align-items: center;
   justify-content: center;
 
-  transition: all 0.1s cubic-bezier(0.19, 1, 0.22, 1);
+  transition: all 0.2s cubic-bezier(0.19, 1, 0.22, 1);
 
   #app:not(.is--wide) & {
     align-items: flex-start;
