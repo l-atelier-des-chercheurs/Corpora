@@ -10,7 +10,7 @@
         class="m_fragmentContent--content--inner"
         :style="`
             --random_angle : ${random_angle};
-            --slide_on_hover: ${slide_on_hover}rem;
+            //--slide_on_hover: ${slide_on_hover}rem;
           `"
       >
         <div class="m_fragmentContent--content--inner--top">
@@ -18,9 +18,8 @@
 
           <div class="_meta" @click="show_advanced_meta = !show_advanced_meta">
             <template v-if="!show_advanced_meta">
-              {{ $t("created_on") }}&nbsp;{{
-                $root.formatDateToHuman(fragment.date_created)
-              }}
+              {{ $t("created") }}&nbsp;•
+              {{ $root.formatDateToPrecise(fragment.date_created) }}
             </template>
             <template v-else>
               <div>
@@ -253,7 +252,7 @@ export default {
   methods: {
     updateMouseCoords(event) {
       const percent_hover_x = event.offsetX / event.target.offsetWidth;
-      this.random_angle = (percent_hover_x - 0.5) * 4;
+      this.random_angle = (percent_hover_x - 0.5) * 6;
 
       // const percent_hover_y = event.offsetY / event.target.offsetHeight;
       // this.slide_on_hover = Math.min(1, percent_hover_y * 1);
@@ -384,27 +383,33 @@ export default {
 .m_fragmentContent {
   position: relative;
   width: 100%;
-  --slide_on_hover: 1rem;
 
   .m_fragmentContent--content {
     position: relative;
   }
 
   &.is--preview .m_fragmentContent--content {
-    height: 320px;
+    --slide_on_hover: 6rem;
+    --move_top_for_slide: calc(-1.8 * var(--slide_on_hover));
+    --preview_height: 360px;
+
+    height: var(--preview_height);
     overflow: hidden;
     padding: 0;
-    margin-top: calc(-1.5 * var(--slide_on_hover));
-    padding-top: calc(1.5 * var(--slide_on_hover));
+    pointer-events: none;
+
+    margin-top: var(--move_top_for_slide);
+    padding-top: calc(-1 * var(--move_top_for_slide));
 
     width: calc(100% + var(--slide_on_hover));
     margin-left: calc(-0.5 * var(--slide_on_hover));
-    margin-right: calc(0.5 * var(--slide_on_hover));
+    margin-right: calc(-0.5 * var(--slide_on_hover));
     padding-left: calc(0.5 * var(--slide_on_hover));
     padding-right: calc(0.5 * var(--slide_on_hover));
 
     border-bottom-left-radius: 0;
     border-bottom-right-radius: 0;
+
     // box-shadow: 0px 0px 4px 0px rgba(204, 208, 218, 0.8);
 
     &::after {
@@ -438,8 +443,8 @@ export default {
 
     .m_fragmentContent--content--inner {
       margin: 0;
-      overflow: hidden;
-      scroll-behavior: smooth;
+      box-shadow: 0 0 0.5rem 0rem var(--color-lightgray);
+      pointer-events: auto;
 
       transform-origin: 50% 100px;
     }
@@ -530,6 +535,9 @@ export default {
   bottom: 0;
   z-index: 11;
   text-decoration: none;
+  pointer-events: auto;
+
+  min-height: var(--preview_height);
   // background-color: rgba(255, 255, 255, 0.1);
 
   display: flex;

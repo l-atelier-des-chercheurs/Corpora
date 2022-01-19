@@ -226,6 +226,10 @@ label:not(.no-style) {
   --thumbBG: var(--color-lightgray);
 }
 
+.text-gray {
+  color: var(--color-gray);
+}
+
 .m_advancedMenu {
   position: relative;
   display: flex;
@@ -331,7 +335,8 @@ ol ul {
 /* Let's make sure all's aligned */
 hr,
 .hr {
-  border: 0.5px solid var(--color-blue);
+  border: none;
+  border-top: 2px dotted var(--color-blue);
   margin: var(--spacing) 0;
 }
 a,
@@ -1273,7 +1278,7 @@ audio {
   align-items: center;
   justify-content: center;
 
-  transition: all 0.2s cubic-bezier(0.19, 1, 0.22, 1);
+  transition: all 0.5s cubic-bezier(0.19, 1, 0.22, 1);
 
   #app:not(.is--wide) & {
     align-items: flex-start;
@@ -1286,6 +1291,7 @@ audio {
   &.is_invisible {
     // background-color: transparent;
     opacity: 0;
+    transform: translateY(50px);
     pointer-events: none;
   }
 
@@ -1386,7 +1392,7 @@ audio {
     }
 
     .m_modal--container {
-      max-width: calc(var(--panel-width) * 3.5);
+      max-width: calc(var(--panel-width) * 2.5);
       align-self: flex-start;
       .m_modal--preview {
         height: auto;

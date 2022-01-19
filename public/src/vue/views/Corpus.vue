@@ -5,6 +5,15 @@
       <WelcomeModal v-if="$root.settings.show_welcome_modal" />
 
       <div class="m_topBar">
+        <div class v-if="$root.can_admin_corpora">
+          <router-link
+            :to="{
+              name: 'Corpora',
+            }"
+            v-html="$t('all_corpus')"
+          />
+        </div>
+
         <div class="m_topBar--content">
           <router-link
             :to="{
@@ -194,7 +203,6 @@
           <div v-if="previewURL" class="m_corpus--presentation--vignette">
             <img :src="previewURL" class draggable="false" />
           </div>
-          <Infos />
         </div>
 
         <transition name="fade" :duration="200" mode="out-in">
@@ -327,7 +335,6 @@
   </div>
 </template>
 <script>
-import Infos from "../components/Infos.vue";
 import CorpusPwd from "../components/modals/CorpusPwd.vue";
 import WelcomeModal from "../components/modals/WelcomeModal.vue";
 import CollectMode from "../components/subcomponents/CollectMode.vue";
@@ -339,7 +346,6 @@ import Collection from "../components/subcomponents/Collection.vue";
 export default {
   props: {},
   components: {
-    Infos,
     CorpusPwd,
     WelcomeModal,
     CollectMode,
@@ -810,7 +816,7 @@ export default {
   // in case of very small height of viewport
   // max-height: 100vh;
   // max-width: 52ch;
-  overflow-y: auto;
+  // overflow-y: auto;
   padding: 0 calc(var(--spacing) * 2);
   // padding: 0;
   margin: calc(var(--spacing) * 2) 0;
@@ -876,12 +882,12 @@ export default {
 
 .m_feedbacks {
   position: fixed;
-  bottom: var(--spacing);
-  right: 50px;
+  bottom: calc(var(--spacing) * 3);
+  right: calc(var(--spacing) * 2);
   background-color: var(--color-black);
   color: white;
   margin: 0;
-  padding: calc(var(--spacing) / 2) var(--spacing);
+  padding: calc(var(--spacing) / 2) calc(var(--spacing);
   border-radius: 24px;
   z-index: 10000;
 

@@ -422,10 +422,13 @@ export default {
   padding: 0;
 
   .m_modal--close_button {
-    color: var(--color-lightgray);
+    color: var(--color-black);
+    background: var(--body-bg);
+    box-shadow: 0 0 0.5rem 0.75rem var(--body-bg);
+    border-radius: 50%;
 
     svg {
-      filter: drop-shadow(0px 0px 4px rgba(41, 41, 41, 0.8));
+      // filter: drop-shadow(0px 0px 4px rgba(41, 41, 41, 0.8));
     }
   }
 }
