@@ -160,7 +160,7 @@
                 type="button"
                 v-for="collection in sorted_collections_subset"
                 :key="collection.media_filename"
-                class="m_corpus--collections--coll"
+                class="collList"
                 :class="{
                   'is--active':
                     show_collection_meta === collection.media_filename,
@@ -1067,36 +1067,6 @@ export default {
 .m_corpus--search {
   select {
     margin: calc(var(--spacing) / 4) 0;
-  }
-}
-
-.m_corpus--collections--coll {
-  background-color: transparent;
-  // background-color: var(--color-lightgray);
-
-  // border-radius: 8px;
-  width: 100%;
-  display: block;
-  padding: calc(var(--spacing) / 4);
-  margin: 0 0 calc(var(--spacing) / 2) 0;
-  // margin: 0 calc(-1 * var(--spacing) / 4) calc(var(--spacing) / 2);
-
-  text-align: left;
-  text-transform: inherit;
-
-  border-left: 2px solid var(--color-purple);
-
-  &.is--active {
-    background: var(--color-purple);
-  }
-
-  ._title {
-    font-family: "base9";
-    font-weight: bold;
-  }
-
-  &::before {
-    // content: ">";
   }
 }
 

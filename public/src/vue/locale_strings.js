@@ -51,9 +51,33 @@ module.exports = (function () {
       fr: "Lien",
       en: "Link",
     },
+    fragment_included_in_collections: {
+      fr: "Ce récit est présent dans les collections suivantes",
+      en: "This story is part of the following collections",
+    },
+    fragment_included_in_no_collections: {
+      fr: "Ce récit n’est présent dans aucune collection. Cliquez sur <i>éditer</i> pour l’ajouter.",
+      en: "This story isn’t part of any collections. Click <i>edit</i> to add to existing collections.",
+    },
+    fragment_in_all_collections_already: {
+      fr: "Ce récit figure déjà dans toutes les collections",
+      en: "This fragment is already included in all collections",
+    },
+    create_collection_first: {
+      fr: "Créez d’abord une collection en fermant cette page.",
+      en: "Create a collection first by closing this page.",
+    },
+    add_story_to_collection: {
+      fr: "Ajouter ce récit à une collection",
+      en: "Add this story to a collection",
+    },
     search_in_fragments: {
       fr: "Chercher dans les récits",
       en: "Search in stories",
+    },
+    no_reason_yet: {
+      fr: "À renseigner",
+      en: "Unknown so far",
     },
     show_fragments: {
       fr: "Afficher les récits",
@@ -456,6 +480,10 @@ module.exports = (function () {
     remove_image: {
       fr: "Retirer l’image",
       en: "Remove image",
+    },
+    remove_from_coll: {
+      fr: "Retirer",
+      en: "Remove",
     },
     add_keyword: {
       fr: "Ajouter un mot-clé",
