@@ -24,17 +24,23 @@
         />
       </div>
 
-      <!-- Human name -->
       <div class="margin-bottom-small">
         <label>{{ $t("subtitle") }}</label>
         <input type="text" v-model.trim="corpusdata.subtitle" />
+      </div>
+      <div class="margin-bottom-small">
+        <label>{{ $t("subtitle") }} (anglais)</label>
+        <input type="text" v-model.trim="corpusdata.subtitle_en" />
       </div>
 
       <!-- Human name -->
       <div class="margin-bottom-small">
         <label>{{ $t("description") }}</label>
-        <!-- <textarea v-model.trim="corpusdata.description" @keydown.enter.stop /> -->
         <CollaborativeEditor v-model="corpusdata.description" />
+      </div>
+      <div class="margin-bottom-small">
+        <label>{{ $t("description") }} (anglais)</label>
+        <CollaborativeEditor v-model="corpusdata.description_en" />
       </div>
 
       <!-- Preview -->
@@ -126,7 +132,9 @@ export default {
       corpusdata: {
         name: this.corpus.name,
         subtitle: this.corpus.subtitle,
+        subtitle_en: this.corpus.subtitle_en,
         description: this.corpus.description,
+        description_en: this.corpus.description_en,
         corpus_default_view: this.corpus.corpus_default_view,
         password: this.corpus_password ? this.corpus_password : "",
       },

@@ -23,7 +23,14 @@
           >
             <hgroup>
               <h1 v-if="!!corpus.name">{{ corpus.name }}</h1>
-              <h2 v-if="!!corpus.subtitle">{{ corpus.subtitle }}</h2>
+              <h2>
+                <template v-if="$root.lang.current === 'fr'">
+                  {{ corpus.subtitle }}
+                </template>
+                <template v-else-if="$root.lang.current === 'en'">
+                  {{ corpus.subtitle_en }}
+                </template>
+              </h2>
             </hgroup>
           </router-link>
 
@@ -97,9 +104,13 @@
 
             <div class="m_corpus--description margin-bottom-small">
               <label>{{ $t("description") }}</label>
-
-              <p v-html="corpus.description" />
-
+              <p
+                v-html="
+                  $root.lang.current === 'fr'
+                    ? corpus.description
+                    : corpus.description_en
+                "
+              />
               <router-link
                 :to="{
                   name: 'Informations',

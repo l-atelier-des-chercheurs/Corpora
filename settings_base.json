@@ -53,10 +53,19 @@
         "subtitle": {
           "type": "string"
         },
+        "subtitle_en": {
+          "type": "string"
+        },
         "description": {
           "type": "string"
         },
+        "description_en": {
+          "type": "string"
+        },
         "description_long": {
+          "type": "string"
+        },
+        "description_long_en": {
           "type": "string"
         },
         "date_created": {

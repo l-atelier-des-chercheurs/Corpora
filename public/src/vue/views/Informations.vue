@@ -7,22 +7,34 @@
           params: { slugFolderName: corpus.slugFolderName },
         }"
         class="button"
-        v-html="$t('back_to_fragments')"
+        v-html="'← ' + $t('back_to_fragments')"
       />
     </div>
-    <div class="margin-vert-small">
-      <label>Description</label>
-      <TextField
-        v-if="corpus.description_long"
-        :field_name="'description_long'"
-        :content="corpus.description_long"
-        type="corpus"
-        :slugFolderName="corpus.slugFolderName"
-        :allow_editing="$root.can_admin_corpora"
-      />
-      <small v-else class="text-gray">
-        Connect as admin to add a description
-      </small>
+    <div class="margin-vert-small _description">
+      <template v-if="$root.lang.current === 'fr'">
+        <TextField
+          :field_name="'description_long'"
+          :content="corpus.description_long"
+          type="corpus"
+          :slugFolderName="corpus.slugFolderName"
+          :allow_editing="$root.can_admin_corpora"
+        />
+        <small v-if="!corpus.description_long" class="text-gray">
+          Pas encore de description. Admin : connectez-vous pour en ajouter une.
+        </small>
+      </template>
+      <template v-else-if="$root.lang.current === 'en'">
+        <TextField
+          :field_name="'description_long_en'"
+          :content="corpus.description_long_en"
+          type="corpus"
+          :slugFolderName="corpus.slugFolderName"
+          :allow_editing="$root.can_admin_corpora"
+        />
+        <small v-if="!corpus.description_long_en" class="text-gray">
+          No description yet. Admin: connect to add one.
+        </small>
+      </template>
     </div>
   </div>
 </template>
@@ -45,8 +57,10 @@ export default {
 </script>
 <style lang="scss">
 .m_informations {
-  padding: calc(var(--spacing)) calc(var(--spacing) * 2)
-    calc(var(--spacing) * 2);
+  padding: 0 calc(var(--spacing) * 2) calc(var(--spacing) * 2);
+}
+
+._description {
   max-width: 99ch;
 
   .ql-editor {

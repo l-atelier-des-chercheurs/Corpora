@@ -3,8 +3,15 @@
     <div class="m_corpusPreview--title">
       <h2>{{ corpus.name }}</h2>
     </div>
-    <div class="m_corpusPreview--subtitle" v-if="corpus.subtitle">
-      <h3>{{ corpus.subtitle }}</h3>
+    <div class="m_corpusPreview--subtitle">
+      <h3>
+        <template v-if="$root.lang.current === 'fr'">
+          {{ corpus.subtitle }}
+        </template>
+        <template v-else-if="$root.lang.current === 'en'">
+          {{ corpus.subtitle_en }}
+        </template>
+      </h3>
     </div>
 
     <div class="m_corpusPreview--time">
