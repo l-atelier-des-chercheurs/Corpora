@@ -37,19 +37,60 @@
               class="_fragmentListAndReactions--loader"
             />
             <div class="_fragmentListAndReactions--content" v-else>
+              <div class="margin-vert-small _lang">
+                <div class="custom-select">
+                  <select v-model="new_lang">
+                    <option
+                      v-for="lang in this.$root.lang.available"
+                      :key="lang.key"
+                      :value="lang.key"
+                    >
+                      {{ lang.name }}
+                    </option>
+                  </select>
+                </div>
+              </div>
+
               <div class="_reactions">
-                <i>todo</i>
                 <h2>
                   {{ $t("reason_for_sharing") }}
                 </h2>
 
                 <div>
-                  <i>
-                    Ici un texte personnalisable par la personne qui a créé le
-                    récit pour indiquer la raison d’être du fragment.
-                  </i>
+                  <template v-if="$root.lang.current === 'fr'">
+                    <TextField
+                      :field_name="'reason_for_sharing'"
+                      :content="opened_fragment.reason_for_sharing"
+                      type2="media"
+                      :metaFileName="opened_fragment.metaFileName"
+                      :slugFolderName="corpus.slugFolderName"
+                      :allow_editing="true"
+                    />
+                    <small
+                      v-if="!opened_fragment.reason_for_sharing"
+                      class="text-gray"
+                    >
+                      {{ $t("none_yet") }}
+                    </small>
+                  </template>
+                  <template v-else-if="$root.lang.current === 'en'">
+                    <TextField
+                      :field_name="'reason_for_sharing_en'"
+                      :content="opened_fragment.reason_for_sharing_en"
+                      type2="media"
+                      :metaFileName="opened_fragment.metaFileName"
+                      :slugFolderName="corpus.slugFolderName"
+                      :allow_editing="true"
+                    />
+                    <small
+                      v-if="!opened_fragment.reason_for_sharing_en"
+                      class="text-gray"
+                    >
+                      {{ $t("none_yet") }}
+                    </small>
+                  </template>
                 </div>
-                <br />
+                <!-- <br />
                 <h2>
                   {{ $t("reactions") }}
                 </h2>
@@ -66,7 +107,7 @@
                       <a href="">Réaction #3</a>
                     </li>
                   </ul>
-                </div>
+                </div> -->
               </div>
 
               <div class="_collections">
@@ -198,6 +239,7 @@ export default {
     return {
       is_loading_fragment_sidebar: true,
       show_not_linked_fragments: false,
+      new_lang: this.$root.lang.current,
     };
   },
   created() {},
@@ -214,7 +256,11 @@ export default {
       },
       immediate: true,
     },
+    new_lang() {
+      this.$root.updateLocalLang(this.new_lang);
+    },
   },
+
   computed: {
     all_fragments_except_current() {
       return (
@@ -264,6 +310,7 @@ export default {
         query: this.$route.query ? this.$route.query : {},
       });
     },
+
     loadFragment() {
       this.is_loading_fragment_sidebar = true;
       setTimeout(() => {
@@ -364,14 +411,27 @@ export default {
 
 ._reactions,
 ._collections {
-  background-color: var(--color-lightgray);
+  // background-color: var(--color-lightgray);
   padding-bottom: calc(var(--spacing));
   margin-bottom: calc(var(--spacing));
 
   h2 {
     margin-top: 0;
+    margin-bottom: 0;
     color: inherit;
   }
 }
+
+._lang {
+  select {
+    color: black;
+  }
+}
 </style>
-<style lang="scss"></style>
+<style lang="scss">
+._reactions {
+  .mediaTextContent {
+    margin-left: calc(-1 * var(--spacing) / 4);
+  }
+}
+</style>

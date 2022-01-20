@@ -55,9 +55,9 @@ module.exports = (function () {
       fr: "Chercher dans les récits",
       en: "Search in stories",
     },
-    back_to_fragments: {
-      fr: "Retour aux récits",
-      en: "Back to stories",
+    show_fragments: {
+      fr: "Afficher les récits",
+      en: "Show all stories",
     },
     fragments: {
       fr: "Récits",

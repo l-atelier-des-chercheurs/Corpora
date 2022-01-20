@@ -127,6 +127,12 @@
           "source": {
             "type": "string"
           },
+          "reason_for_sharing": {
+            "type": "string"
+          },
+          "reason_for_sharing_en": {
+            "type": "string"
+          },
           "type": {
             "type": "string",
             "options": [

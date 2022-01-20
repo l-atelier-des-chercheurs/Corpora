@@ -394,7 +394,10 @@ export default {
         "list",
         "media",
       ],
-      placeholder: "Écrire le texte ici…",
+      placeholder:
+        this.$root.lang.current === "fr"
+          ? "Écrire le texte ici…"
+          : "Write text here",
     });
 
     this.$refs.editor.dataset.quill = this.editor;

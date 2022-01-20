@@ -38,8 +38,10 @@ export default {
     },
     type: {
       type: String,
-      default: "datasets",
+      default: "corpus",
     },
+    metaFileName: String,
+    type2: String,
     slugFolderName: String,
     allow_editing: {
       type: Boolean,
@@ -77,14 +79,29 @@ export default {
     save() {
       this.is_saving = true;
 
-      this.$root
-        .editFolder({
-          type: this.type,
-          slugFolderName: this.slugFolderName,
-          data: {
-            [this.field_name]: this.new_content,
-          },
-        })
+      return Promise.resolve()
+        .then(
+          this.type2 &&
+            this.type2 === "media" &&
+            this.$root.editMedia({
+              type: this.type,
+              slugFolderName: this.slugFolderName,
+              slugMediaName: this.metaFileName,
+              data: {
+                [this.field_name]: this.new_content,
+              },
+            })
+        )
+        .then(
+          !this.type2 &&
+            this.$root.editFolder({
+              type: this.type,
+              slugFolderName: this.slugFolderName,
+              data: {
+                [this.field_name]: this.new_content,
+              },
+            })
+        )
         .then(() => {
           this.is_saving = false;
           this.edit_mode = false;
