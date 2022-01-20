@@ -125,7 +125,11 @@
                 </transition-group>
               </template>
               <template
-                v-if="not_linked_fragments && not_linked_fragments.length > 0"
+                v-if="
+                  not_linked_fragments &&
+                  not_linked_fragments.length > 0 &&
+                  false
+                "
               >
                 <hr />
                 <h2>

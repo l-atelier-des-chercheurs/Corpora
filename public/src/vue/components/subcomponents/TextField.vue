@@ -1,16 +1,19 @@
 <template>
   <div class="">
+    <label v-if="title">{{ $t(title) }}</label>
+
     <div v-if="!edit_mode" v-html="content" class="mediaTextContent" />
     <CollaborativeEditor v-else v-model="new_content" />
 
+    <button
+      type="button"
+      v-if="allow_editing && !edit_mode"
+      @click="edit_mode = true"
+    >
+      {{ $t("edit") }}
+    </button>
+
     <div class="margin-vert-verysmall ta-ri">
-      <button
-        type="button"
-        v-if="allow_editing && !edit_mode"
-        @click="edit_mode = true"
-      >
-        {{ $t("edit") }}
-      </button>
       <button type="button" v-if="edit_mode" @click="edit_mode = false">
         {{ $t("cancel") }}
       </button>
@@ -27,6 +30,7 @@ import CollaborativeEditor from "./CollaborativeEditor.vue";
 
 export default {
   props: {
+    title: String,
     field_name: String,
     content: {
       type: String,

@@ -104,7 +104,7 @@
                 :to="{
                   name: 'Informations',
                 }"
-                class="button"
+                class="button _linkToReadmore"
                 v-html="$t('more_infos')"
               />
             </div>
@@ -115,7 +115,7 @@
                 <button
                   type="button"
                   class="tag"
-                  v-for="tag in all_tags"
+                  v-for="tag in all_tags_subset"
                   :key="tag"
                   @click="setTagFilter(tag)"
                   :class="{
@@ -125,14 +125,29 @@
                   {{ tag }}
                 </button>
               </div>
+              <button
+                type="button"
+                v-if="!show_all_tags"
+                @click="show_all_tags = true"
+              >
+                ► {{ $t("show_all_tags") }}
+              </button>
             </div>
 
             <div class="m_corpus--collections">
-              <label for="fragments-search">{{ $t("collections") }}</label>
+              <label for="fragments-search"
+                >{{ $t("collections") }}
+                <button
+                  type="button"
+                  @click="show_create_collection_modal = true"
+                >
+                  {{ $t("create") }}
+                </button>
+              </label>
 
               <button
                 type="button"
-                v-for="collection in sorted_collections"
+                v-for="collection in sorted_collections_subset"
                 :key="collection.media_filename"
                 class="m_corpus--collections--coll"
                 :class="{
@@ -141,13 +156,31 @@
                 }"
                 @click="openCollection(collection.media_filename)"
               >
-                {{ collection.title }}
+                <div class="_title">
+                  {{ collection.title }}
+                </div>
+                <template
+                  v-if="
+                    collection.fragments_slugs &&
+                    Array.isArray(collection.fragments_slugs)
+                  "
+                >
+                  {{ collection.fragments_slugs.length }}
+                </template>
+                <template v-else>0</template>
+                {{ $t("fragments") }}
               </button>
+
               <button
                 type="button"
-                @click="show_create_collection_modal = true"
+                class="_showallcoll"
+                v-if="
+                  !show_all_collections &&
+                  sorted_collections_subset.length < sorted_collections.length
+                "
+                @click="show_all_collections = true"
               >
-                {{ $t("create_a_collection") }}
+                ► {{ $t("show_all_collections") }}
               </button>
             </div>
 
@@ -191,7 +224,7 @@
                 <button
                   type="button"
                   class="tag"
-                  v-for="[keyword, count] in all_keywords_with_counts"
+                  v-for="[keyword, count] in keywords_subset"
                   :key="keyword"
                   @click="setKeywordFilter(keyword)"
                   :class="{
@@ -203,10 +236,14 @@
               </div>
               <button
                 type="button"
-                v-if="!show_all_keywords"
+                v-if="
+                  !show_all_keywords &&
+                  keywords_subset &&
+                  keywords_subset.length < all_keywords_with_counts.length
+                "
                 @click="show_all_keywords = true"
               >
-                {{ $t("show_all_keywords") }}
+                ► {{ $t("show_all_keywords") }}
               </button>
             </div>
           </div>
@@ -226,7 +263,7 @@
               v-if="shown_collection"
               :corpus="corpus"
               :collection="shown_collection"
-              :fragments="filtered_fragments"
+              :fragments="sorted_fragments"
               :all_keywords="all_keywords"
               :all_tags="all_tags"
               :medias="medias"
@@ -287,9 +324,6 @@
                     </button>
                   </div>
                 </div>
-                <!-- <div class="m_corpus--fragments--sort--pagination">
-                  {{ fragments_paginated }}
-                </div> -->
               </div>
               <div
                 v-if="text_search !== '' && filtered_fragments.length === 0"
@@ -378,12 +412,9 @@ export default {
 
       new_lang: this.$root.lang.current,
 
-      pagination: {
-        current_page: 1,
-        number_of_fragments_per_page: 50,
-      },
-
       show_all_keywords: false,
+      show_all_collections: false,
+      show_all_tags: false,
 
       text_search: "",
       text_search_in_field: "",
@@ -460,15 +491,6 @@ export default {
       // }
     },
 
-    fragments_paginated() {
-      return this.filtered_fragments.slice(
-        (this.pagination.current_page - 1) *
-          this.pagination.number_of_fragments_per_page,
-        this.pagination.current_page *
-          this.pagination.number_of_fragments_per_page
-      );
-    },
-
     opened_fragment() {
       if (!this.$route.params.fragmentId || !this.sorted_fragments)
         return false;
@@ -487,8 +509,9 @@ export default {
       );
     },
     current_collection_fragments() {
-      if (!this.show_collection_meta) return [];
+      if (!this.show_collection_meta) return false;
       if (
+        !this.shown_collection ||
         !this.shown_collection.fragments_slugs ||
         !Array.isArray(this.shown_collection.fragments_slugs)
       )
@@ -543,10 +566,27 @@ export default {
       let collections = Object.values(this.corpus.medias).filter(
         (m) => m.type === "collection"
       );
-      collections = this.$_.sortBy(collections, "date_created");
-      collections.reverse();
+      // collections = this.$_.sortBy(collections, "fragments_slugs");
+      // collections.reverse();
+      collections = collections.sort(function (a, b) {
+        const _bc =
+          b.fragments_slugs && b.fragments_slugs.length
+            ? b.fragments_slugs.length
+            : 0;
+        const _ac =
+          a.fragments_slugs && a.fragments_slugs.length
+            ? a.fragments_slugs.length
+            : 0;
+        return _bc - _ac;
+      });
 
       return collections;
+    },
+    sorted_collections_subset() {
+      if (!this.sorted_collections) return false;
+      if (!this.show_all_collections)
+        return this.sorted_collections.slice(0, 3);
+      return this.sorted_collections;
     },
     sorted_fragments() {
       if (
@@ -598,9 +638,10 @@ export default {
 
         if (
           this.show_collection_meta &&
-          !this.current_collection_fragments
-            .map((_f) => _f.metaFileName)
-            .includes(f.metaFileName)
+          (!this.current_collection_fragments ||
+            !this.current_collection_fragments
+              .map((_f) => _f.metaFileName)
+              .includes(f.metaFileName))
         )
           return false;
 
@@ -623,6 +664,10 @@ export default {
       all_tags.sort((a, b) => a.localeCompare(b));
       return all_tags;
     },
+    all_tags_subset() {
+      if (!this.show_all_tags) return this.all_tags.slice(0, 5);
+      return this.all_tags;
+    },
 
     all_keywords() {
       if (!this.sorted_fragments) return [];
@@ -641,7 +686,7 @@ export default {
       return all_keywords;
     },
     all_keywords_with_counts() {
-      if (!this.sorted_fragments || !this.all_keywords) return [];
+      if (!this.sorted_fragments || !this.all_keywords) return false;
 
       let all_keywords = this.sorted_fragments.reduce((acc, f) => {
         if (!!f.keywords && Array.isArray(f.keywords) && f.keywords.length > 0)
@@ -655,9 +700,14 @@ export default {
         return b[1] - a[1];
       });
 
-      if (!this.show_all_keywords)
-        return sorted_keywords_with_count.splice(0, 10);
       return sorted_keywords_with_count;
+    },
+
+    keywords_subset() {
+      if (!this.all_keywords_with_counts) return false;
+      if (!this.show_all_keywords)
+        return this.all_keywords_with_counts.slice(0, 10);
+      return this.all_keywords_with_counts;
     },
   },
   methods: {
@@ -752,8 +802,18 @@ export default {
       if (!this.show_collection_meta) delete query.collection;
       else query.collection = this.show_collection_meta;
 
+      if (query.collection) {
+        this.show_all_collections = true;
+      }
+
       this.$router.push({
         query,
+        params: { savePosition: true },
+      });
+
+      window.scrollTo({
+        top: 0,
+        behavior: "smooth",
       });
     },
     createNewMoment() {
@@ -827,6 +887,13 @@ export default {
   }
 }
 
+.m_corpus--description {
+  ._linkToReadmore {
+    display: inline-block;
+    margin-top: calc(var(--spacing) / 2);
+  }
+}
+
 .m_corpus--fragments--sort--filterList {
   > * {
     display: flex;
@@ -864,13 +931,10 @@ export default {
   border-left: 2px dotted var(--color-blue);
   // text-align: right;
 
-  // display: flex;
-  // flex-flow: column nowrap;
-  // justify-content: space-between;
   .m_corpus--presentation--content {
     // text-align: right;
     > * {
-      margin-bottom: calc(var(--spacing));
+      margin-bottom: calc(var(--spacing) * 2);
     }
   }
 }
@@ -996,19 +1060,29 @@ export default {
 }
 
 .m_corpus--collections--coll {
-  // background-color: transparent;
+  background-color: transparent;
   // background-color: var(--color-lightgray);
 
   // border-radius: 8px;
   width: 100%;
   display: block;
-  padding: calc(var(--spacing) / 2);
+  padding: calc(var(--spacing) / 4);
   margin: 0 0 calc(var(--spacing) / 2) 0;
+  // margin: 0 calc(-1 * var(--spacing) / 4) calc(var(--spacing) / 2);
 
   text-align: left;
   text-transform: inherit;
-  font-family: "base9";
-  font-weight: bold;
+
+  border-left: 2px solid var(--color-purple);
+
+  &.is--active {
+    background: var(--color-purple);
+  }
+
+  ._title {
+    font-family: "base9";
+    font-weight: bold;
+  }
 
   &::before {
     // content: ">";
@@ -1022,7 +1096,7 @@ export default {
   max-width: 317px;
   width: 40vw;
   transform: rotate(4deg);
-  image-rendering: crisp-edges;
+  // image-rendering: crisp-edges;
 }
 
 ._bottomFooter {
@@ -1064,5 +1138,18 @@ export default {
   font-weight: bold;
   font-size: 80%;
   margin: 0 calc(var(--spacing) / 4);
+}
+
+.m_corpus--tags button {
+  background: transparent;
+}
+
+.m_corpus--keywords > button {
+  background: var(--color-purple);
+  background: transparent;
+}
+
+._showallcoll {
+  background: transparent;
 }
 </style>

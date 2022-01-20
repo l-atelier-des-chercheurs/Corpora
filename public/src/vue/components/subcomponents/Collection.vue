@@ -28,7 +28,6 @@
           </button>
         </div>
       </div>
-
       <SelectFragments
         v-if="show_selectfragments_modal"
         :collection="collection"
@@ -59,7 +58,7 @@ export default {
     all_tags: Array,
     all_keywords: Array,
     medias: [Boolean, Array],
-    collection_fragments: Array,
+    collection_fragments: [Boolean, Array],
   },
   components: {
     FragmentContent,

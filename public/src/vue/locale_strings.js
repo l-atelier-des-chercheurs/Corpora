@@ -59,6 +59,10 @@ module.exports = (function () {
       fr: "Retour aux récits",
       en: "Back to stories",
     },
+    fragments: {
+      fr: "Récits",
+      en: "Stories",
+    },
     embed: {
       fr: "Intégration",
       en: "Embed",
@@ -303,6 +307,10 @@ module.exports = (function () {
       fr: "Non",
       en: "No",
     },
+    none: {
+      fr: "Aucun",
+      en: "None",
+    },
     moveup: {
       fr: "Déplacer ↑",
       en: "Move up ↑",
@@ -360,10 +368,7 @@ module.exports = (function () {
       fr: "Créer un corpus",
       en: "Create a corpus",
     },
-    create_a_collection: {
-      fr: "Créer une collection",
-      en: "Create a collection",
-    },
+
     edit_corpus: {
       fr: "Éditer un corpus",
       en: "Edit a corpus",
@@ -420,9 +425,17 @@ module.exports = (function () {
       fr: "Mot(s)-clé(s)",
       en: "Keyword(s)",
     },
+    show_all_tags: {
+      fr: "Afficher toutes les catégories",
+      en: "Show all tags",
+    },
     show_all_keywords: {
       fr: "Afficher tous les mots-clés",
       en: "Show all keywords",
+    },
+    show_all_collections: {
+      fr: "Afficher toutes les collections",
+      en: "Show all collections",
     },
     filters: {
       fr: "Filtre(s)",

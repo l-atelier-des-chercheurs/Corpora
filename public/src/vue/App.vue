@@ -32,7 +32,7 @@ export default {
 :root {
   --spacing: 1rem;
   --color-black: #3c3541;
-  --color-gray: hsl(275, 10%, 63%);
+  --color-gray: #a297aa;
   --color-white: #fff;
   --color-lightgray: #ededed;
   --active-color: var(--color-gray);
@@ -529,8 +529,7 @@ input[type="checkbox"] {
 }
 
 input,
-textarea,
-.ql-editor {
+textarea {
   font-size: 1.2em;
   padding: 0.4em calc(0.4em - 2px) 0.4em 0.4em;
   border: none;
@@ -551,6 +550,10 @@ textarea,
     outline: 0px;
     border-left: 2px solid var(--color-purple);
   }
+}
+
+.ql-editor {
+  max-width: none;
 }
 
 .input-addon {
@@ -1122,13 +1125,14 @@ audio {
   &.m_keywordField_tags {
     .tag,
     > button {
-      background-color: var(--body-bg) !important;
-      font-family: "base9";
-      font-weight: bold;
+      // background-color: var(--body-bg) !important;
+      // font-family: "base9";
+      // font-weight: bold;
       border-radius: 1em;
-      padding: 0.2em 1em;
-      padding-left: 0em;
-      border: 2px solid var(--color-blue);
+      padding: 0.3em 0em;
+      padding-right: 1em;
+      // border: 1px solid var(--color-blue);
+      background: white;
 
       &.is--active {
         color: white;
