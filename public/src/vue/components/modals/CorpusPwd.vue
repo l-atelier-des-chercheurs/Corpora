@@ -15,18 +15,27 @@
 
       <div class="margin-bottom-small">
         <!-- <label>{{ $t("password") }}</label> -->
-        <input type="password" v-model="pwd" required autofocus autoselect />
+        <PasswordField
+          :required="true"
+          :placeholder="'…'"
+          :field_type="'current-password'"
+          :value="pwd"
+          @input="(value) => (pwd = value)"
+        />
       </div>
 
-      <span class="switch switch-xs margin-bottom-small">
+      <span
+        class="switch switch-xs margin-bottom-small flex-nowrap align-items-stretch"
+      >
         <input
           id="remember_password_on_this_device"
           type="checkbox"
           v-model="remember_password_on_this_device"
-          disabled
         />
         <label for="remember_password_on_this_device">
-          {{ $t("remember_password_on_this_device") }}
+          <small>
+            {{ $t("remember_password_on_this_device") }}
+          </small>
         </label>
       </span>
     </template>
