@@ -100,10 +100,11 @@
         </p>
         <p>
           It may include content from third-party platforms which install
-          cookies on your computer. We offer two modes of navigation:
+          cookies on your computer.
+          <!-- We offer two modes of navigation: -->
         </p>
 
-        <p>
+        <!-- <p>
           <label for="CreateQRCode">
             <input
               type="checkbox"
@@ -126,7 +127,7 @@
             Refuse cookies: you will have to click in order to display 3rd-party
             content, which will usually generate cookies on your computer.
           </label>
-        </p>
+        </p> -->
 
         <p>
           If you want to exercise your rights on data collected by 3rd-party

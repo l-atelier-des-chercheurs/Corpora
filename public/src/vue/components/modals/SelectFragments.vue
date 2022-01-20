@@ -33,7 +33,11 @@
           name="list-complete"
           tag="div"
         >
-          <div class="m_fragments--createFragment" key="createFragment">
+          <div
+            class="m_fragments--createFragment"
+            key="createFragment"
+            v-if="false"
+          >
             <button
               type="button"
               class="m_fragments--createFragment--addFragmentButton"

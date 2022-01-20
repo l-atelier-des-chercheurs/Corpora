@@ -252,7 +252,7 @@ module.exports = (function () {
     },
     create_add_remove_fragments: {
       fr: "Créer de nouveaux récits, et ajouter ou retirer des récits existants à la collection.",
-      fr: "Create new stories, and add or remove existing stories from the collection.",
+      en: "Create new stories, and add or remove existing stories from the collection.",
     },
     fragments_not_in_collection: {
       fr: "Tous les récits",

@@ -1444,6 +1444,10 @@ audio {
       .m_modal--sidebar {
         margin-top: 0;
       }
+
+      &[data-originComponent] {
+        max-width: calc(var(--panel-width) * 3.5);
+      }
     }
   }
   &.typeOfModal-ExportVideo {
