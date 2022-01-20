@@ -135,6 +135,14 @@ module.exports = (function () {
       fr: "À propos de ce corpus",
       en: "About this corpus",
     },
+    corpus_default_view: {
+      fr: "Mode d’affichage du Corpus",
+      en: "Corpus default view",
+    },
+    corpus_default_view_instructions: {
+      fr: "Indiquer ici les paramètres qui seront chargés à l’ouverture de la page d’accueil du corpus. Exemple : si le lien est https://platform.plurality-university.org/clothes?tag_search=Body, écrire ?tag_search=Body",
+      en: "Write here the parameters to use. For example: https://platform.plurality-university.org/clothes?tag_search=Body -> ?tag_search=Body",
+    },
     title: {
       fr: "Titre",
       en: "Title",
@@ -331,6 +339,7 @@ module.exports = (function () {
       fr: "Réessayer",
       en: "Retry",
     },
+
     save: {
       fr: "Enregistrer",
       en: "Save",

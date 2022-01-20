@@ -87,6 +87,15 @@
           </small>
         </template>
       </div>
+
+      <!-- Default corpus view -->
+      <div class="margin-bottom-small" v-if="$root.can_admin_corpora">
+        <label>{{ $t("corpus_default_view") }}</label>
+        <input type="text" v-model.trim="corpusdata.corpus_default_view" />
+        <small>
+          {{ $t("corpus_default_view_instructions") }}
+        </small>
+      </div>
     </template>
 
     <template slot="submit_button">{{ $t("save") }}</template>
@@ -118,6 +127,7 @@ export default {
         name: this.corpus.name,
         subtitle: this.corpus.subtitle,
         description: this.corpus.description,
+        corpus_default_view: this.corpus.corpus_default_view,
         password: this.corpus_password ? this.corpus_password : "",
       },
       tag: "",

@@ -636,6 +636,14 @@ export default {
           slugFolderName: this.$route.params.slugFolderName,
         });
         this.$eventHub.$once(`socketio.corpus.medias_listed`, () => {
+          if (this.corpus.corpus_default_view) {
+            // only redirect if homepage
+            if (
+              // this.$route.name === "Corpus" &&
+              Object.keys(this.$route.query).length === 0
+            )
+              this.$router.push({ path: this.corpus.corpus_default_view });
+          }
           this.is_loading_medias = false;
         });
       });

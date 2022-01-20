@@ -78,6 +78,9 @@
         "sort_in_tabs": {
           "type": "boolean",
           "default": false
+        },
+        "corpus_default_view": {
+          "type": "string"
         }
       },
       "medias": {
