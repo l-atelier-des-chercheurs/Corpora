@@ -550,6 +550,20 @@ module.exports = (function () {
       fr: "Les modifications n’ont pas pu être enregistrées",
       en: "Failed to save changes",
     },
+    adding_password_warning: {
+      fr: "Attention ! Si vous ajoutez ou modifiez un mot de passe tous les utilisateurs qui y sont actuellement connectés devront le renseigner avant de pouvoir continuer à contribuer.",
+      en: "Warning! Adding or changing the password will disconnect all users until they enter the new password.",
+      nl: "Opgelet! Als u een wachtwoord toevoegt of wijzigt, moeten alle gebruikers die er momenteel mee verbonden zijn dit invoeren voordat ze een bijdrage kunnen blijven leveren..",
+      oc: "Avisa ! Si volètz apondre o modificar un mot de Santa-Clara totes los utilizaires que i son ara conectats deuràn l'entresenhar abans que de poder continuar.",
+      de: "Achtung! Wenn Sie en Passwort hinzufügen oder ändern, müssen Sie alle derzeit eingeloggten Benutzer informieren, damit diese das neue Passwort eingeben.",
+    },
+    removing_password_warning: {
+      fr: "Si vous retirez le mot de passe tous les utilisateurs qui ont accès à do•doc pourront modifier le projet.",
+      en: "Removing the password for this project will allow everyone to access, edit and delete it.",
+      nl: "Als u het wachtwoord verwijdert, kunnen alle gebruikers die toegang hebben tot do•doc het project wijzigen.",
+      oc: "Si tiratz lo mot de Santa-Clara totes los utilizaires qu'an accès a do•doc poiràn modificar lo projècte.",
+      de: "Wenn Sie das Passwort entfernen, können alle Benutzer, die Zugriff auf do•doc haben, das Projekt bearbeiten bzw. löschen.",
+    },
   };
 
   return messages;
