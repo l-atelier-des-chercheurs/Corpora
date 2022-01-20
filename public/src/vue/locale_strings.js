@@ -420,6 +420,10 @@ module.exports = (function () {
       fr: "Mot(s)-clé(s)",
       en: "Keyword(s)",
     },
+    show_all_keywords: {
+      fr: "Afficher tous les mots-clés",
+      en: "Show all keywords",
+    },
     filters: {
       fr: "Filtre(s)",
       en: "Filter(s)",

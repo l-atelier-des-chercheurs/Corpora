@@ -179,24 +179,35 @@
 
             <div
               class="m_corpus--keywords"
-              v-if="all_keywords && all_keywords.length > 0"
+              v-if="
+                all_keywords_with_counts && all_keywords_with_counts.length > 0
+              "
             >
               <label>{{ $t("keywords") }}</label>
+
+              <!-- {{ all_keywords_with_counts }} -->
 
               <div class="m_keywordField m_keywordField_keywords">
                 <button
                   type="button"
                   class="tag"
-                  v-for="keyword in all_keywords"
+                  v-for="[keyword, count] in all_keywords_with_counts"
                   :key="keyword"
                   @click="setKeywordFilter(keyword)"
                   :class="{
                     'is--active': keyword === keyword_search,
                   }"
                 >
-                  {{ keyword }}
+                  {{ keyword }} <span class="_count">{{ count }}</span>
                 </button>
               </div>
+              <button
+                type="button"
+                v-if="!show_all_keywords"
+                @click="show_all_keywords = true"
+              >
+                {{ $t("show_all_keywords") }}
+              </button>
             </div>
           </div>
 
@@ -371,6 +382,8 @@ export default {
         current_page: 1,
         number_of_fragments_per_page: 50,
       },
+
+      show_all_keywords: false,
 
       text_search: "",
       text_search_in_field: "",
@@ -610,6 +623,7 @@ export default {
       all_tags.sort((a, b) => a.localeCompare(b));
       return all_tags;
     },
+
     all_keywords() {
       if (!this.sorted_fragments) return [];
 
@@ -625,6 +639,25 @@ export default {
 
       all_keywords.sort((a, b) => a.localeCompare(b));
       return all_keywords;
+    },
+    all_keywords_with_counts() {
+      if (!this.sorted_fragments || !this.all_keywords) return [];
+
+      let all_keywords = this.sorted_fragments.reduce((acc, f) => {
+        if (!!f.keywords && Array.isArray(f.keywords) && f.keywords.length > 0)
+          acc = acc.concat(f.keywords.map((t) => t.title));
+        return acc;
+      }, []);
+
+      const sorted_keywords_with_count = Object.entries(
+        this.$_.countBy(all_keywords)
+      ).sort(function (a, b) {
+        return b[1] - a[1];
+      });
+
+      if (!this.show_all_keywords)
+        return sorted_keywords_with_count.splice(0, 10);
+      return sorted_keywords_with_count;
     },
   },
   methods: {
@@ -895,7 +928,7 @@ export default {
   background-color: var(--color-black);
   color: white;
   margin: 0;
-  padding: calc(var(--spacing) / 2) calc(var(--spacing);
+  padding: calc(var(--spacing) / 2) calc(var(--spacing));
   border-radius: 24px;
   z-index: 10000;
 
@@ -1015,5 +1048,21 @@ export default {
 ._localLoader {
   position: relative;
   height: 50vh;
+}
+
+._count {
+  background: var(--color-black);
+  background: rgba(60, 53, 65, 0.25);
+  // border: 2px solid var(--color-black);
+  width: 1rem;
+  height: 1rem;
+  // color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 80%;
+  margin: 0 calc(var(--spacing) / 4);
 }
 </style>
