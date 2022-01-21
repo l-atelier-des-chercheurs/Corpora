@@ -41,6 +41,9 @@ Vue.component("TextField", TextField);
 import Admin from "./components/subcomponents/Admin.vue";
 Vue.component("Admin", Admin);
 
+import PasswordField from "./components/subcomponents/PasswordField.vue";
+Vue.component("PasswordField", PasswordField);
+
 Vue.component("Loader", {
   name: "Loader",
   template: `

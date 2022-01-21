@@ -19,6 +19,7 @@
           { is_minimized: is_minimized },
         ]"
         @keyup.ctrl.enter="$emit('submit')"
+        :data-originComponent="$parent.$options._componentTag"
       >
         <div class="m_modal--container--content" ref="modalContent">
           <div v-if="!!this.$slots['preview']" class="m_modal--preview">

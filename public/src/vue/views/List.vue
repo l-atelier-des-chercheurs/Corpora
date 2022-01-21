@@ -3,7 +3,7 @@
     <Admin :collapsable="false" />
     <template v-if="$root.can_admin_corpora">
       <div class="m_list--titles">
-        <h1>Les corpus</h1>
+        <h1>Les corpus (admin)</h1>
         <button
           type="button"
           class="buttonLink"

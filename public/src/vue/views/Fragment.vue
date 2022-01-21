@@ -37,19 +37,62 @@
               class="_fragmentListAndReactions--loader"
             />
             <div class="_fragmentListAndReactions--content" v-else>
+              <div class="margin-vert-small _lang">
+                <div class="custom-select custom-select_tiny">
+                  <select v-model="new_lang">
+                    <option
+                      v-for="lang in this.$root.lang.available"
+                      :key="lang.key"
+                      :value="lang.key"
+                    >
+                      {{ lang.name }}
+                    </option>
+                  </select>
+                </div>
+              </div>
+
               <div class="_reactions">
-                <i>todo</i>
                 <h2>
                   {{ $t("reason_for_sharing") }}
                 </h2>
 
                 <div>
-                  <i>
-                    Ici un texte personnalisable par la personne qui a créé le
-                    récit pour indiquer la raison d’être du fragment.
-                  </i>
+                  <template v-if="$root.lang.current === 'fr'">
+                    <small
+                      v-if="!opened_fragment.reason_for_sharing"
+                      class="text-gray"
+                    >
+                      {{ $t("no_reason_yet") }}
+                    </small>
+
+                    <TextField
+                      :field_name="'reason_for_sharing'"
+                      :content="opened_fragment.reason_for_sharing"
+                      type2="media"
+                      :metaFileName="opened_fragment.metaFileName"
+                      :slugFolderName="corpus.slugFolderName"
+                      :allow_editing="true"
+                    />
+                  </template>
+                  <template v-else-if="$root.lang.current === 'en'">
+                    <small
+                      v-if="!opened_fragment.reason_for_sharing_en"
+                      class="text-gray"
+                    >
+                      {{ $t("no_reason_yet") }}
+                    </small>
+
+                    <TextField
+                      :field_name="'reason_for_sharing_en'"
+                      :content="opened_fragment.reason_for_sharing_en"
+                      type2="media"
+                      :metaFileName="opened_fragment.metaFileName"
+                      :slugFolderName="corpus.slugFolderName"
+                      :allow_editing="true"
+                    />
+                  </template>
                 </div>
-                <br />
+                <!-- <br />
                 <h2>
                   {{ $t("reactions") }}
                 </h2>
@@ -66,27 +109,89 @@
                       <a href="">Réaction #3</a>
                     </li>
                   </ul>
-                </div>
+                </div> -->
               </div>
 
               <div class="_collections">
-                <i>todo</i>
                 <h2>
                   {{ $t("collections") }}
-                  <i>todo</i>
+
+                  <button
+                    type="button"
+                    @click="edit_coll = !edit_coll"
+                    :class="{
+                      'is--active': edit_coll,
+                    }"
+                  >
+                    {{ $t("edit") }}
+                  </button>
                 </h2>
-                <div>Ce récit figure dans les collections suivantes :</div>
-                <br />
-                <div>
-                  Ajouter ce récit à une collection :
-                  <select>
-                    <option
-                      v-for="collection in sorted_collections"
-                      :key="collection.media_filename"
-                    >
+                <div
+                  v-if="collections_fragment_is_in.length > 0"
+                  v-html="$t('fragment_included_in_collections')"
+                />
+                <div
+                  v-else-if="!edit_coll"
+                  v-html="$t('fragment_included_in_no_collections')"
+                />
+
+                <div class="">
+                  <div
+                    v-for="collection in collections_fragment_is_in"
+                    :key="collection.metaFileName"
+                    class="collList"
+                  >
+                    <div class="_title">
                       {{ collection.title }}
-                    </option>
-                  </select>
+                    </div>
+                    <template
+                      v-if="
+                        collection.fragments_slugs &&
+                        Array.isArray(collection.fragments_slugs)
+                      "
+                    >
+                      {{ collection.fragments_slugs.length }}
+                    </template>
+                    <template v-else>0</template>
+                    {{ $t("fragments") }}
+                    <button
+                      type="button"
+                      v-if="edit_coll"
+                      @click="removeFromColl(collection.metaFileName)"
+                    >
+                      {{ $t("remove_from_coll") }}
+                    </button>
+                  </div>
+                </div>
+
+                <div v-if="edit_coll">
+                  <template v-if="sorted_collections.length === 0">
+                    {{ $t("create_collection_first") }}
+                  </template>
+
+                  <template v-else>
+                    {{ $t("add_story_to_collection") }}
+                    <div v-if="collections_fragment_isnt_in.length === 0">
+                      <small>
+                        {{ $t("fragment_in_all_collections_already") }}
+                      </small>
+                    </div>
+
+                    <div v-else class="custom-select _collSelect">
+                      <select v-model="collection_to_add_fragment_to">
+                        <option
+                          v-for="collection in collections_fragment_isnt_in"
+                          :value="collection.metaFileName"
+                          :key="collection.media_filename"
+                        >
+                          {{ collection.title }}
+                        </option>
+                      </select>
+                      <button type="button" @click="addFragmentToColl">
+                        {{ $t("add") }}
+                      </button>
+                    </div>
+                  </template>
                 </div>
               </div>
 
@@ -125,7 +230,11 @@
                 </transition-group>
               </template>
               <template
-                v-if="not_linked_fragments && not_linked_fragments.length > 0"
+                v-if="
+                  not_linked_fragments &&
+                  not_linked_fragments.length > 0 &&
+                  false
+                "
               >
                 <hr />
                 <h2>
@@ -194,6 +303,10 @@ export default {
     return {
       is_loading_fragment_sidebar: true,
       show_not_linked_fragments: false,
+      new_lang: this.$root.lang.current,
+      edit_coll: false,
+
+      collection_to_add_fragment_to: false,
     };
   },
   created() {},
@@ -210,7 +323,11 @@ export default {
       },
       immediate: true,
     },
+    new_lang() {
+      this.$root.updateLocalLang(this.new_lang);
+    },
   },
+
   computed: {
     all_fragments_except_current() {
       return (
@@ -252,6 +369,24 @@ export default {
         (f) => !linked_fragments_meta.includes(f.metaFileName)
       );
     },
+    collections_fragment_is_in() {
+      return this.sorted_collections.filter(
+        (c) =>
+          c.fragments_slugs &&
+          c.fragments_slugs.find(
+            (fs) => fs.metaFileName === this.opened_fragment.metaFileName
+          )
+      );
+    },
+    collections_fragment_isnt_in() {
+      return this.sorted_collections.filter(
+        (c) =>
+          !c.fragments_slugs ||
+          !c.fragments_slugs.find(
+            (fs) => fs.metaFileName === this.opened_fragment.metaFileName
+          )
+      );
+    },
   },
   methods: {
     closeModal() {
@@ -260,6 +395,53 @@ export default {
         query: this.$route.query ? this.$route.query : {},
       });
     },
+
+    addFragmentToColl() {
+      if (!this.collection_to_add_fragment_to) return;
+
+      const coll = this.sorted_collections.find(
+        (c) => c.metaFileName === this.collection_to_add_fragment_to
+      );
+      let fs = coll.fragments_slugs || [];
+
+      fs.push({
+        metaFileName: this.opened_fragment.metaFileName,
+      });
+
+      this.$root.editMedia({
+        type: "corpus",
+        slugFolderName: this.corpus.slugFolderName,
+        slugMediaName: coll.metaFileName,
+        data: {
+          fragments_slugs: fs,
+        },
+      });
+      // .then((mdata) => {
+      //   // setTimeout(() => {
+      //   this.is_sending_content_to_server = false;
+      //   // }, 300);
+      // });
+    },
+    removeFromColl(metaFileName) {
+      const coll = this.sorted_collections.find(
+        (c) => c.metaFileName === metaFileName
+      );
+      let fs = coll.fragments_slugs || [];
+
+      fs = fs.filter(
+        (i) => i.metaFileName !== this.opened_fragment.metaFileName
+      );
+
+      this.$root.editMedia({
+        type: "corpus",
+        slugFolderName: this.corpus.slugFolderName,
+        slugMediaName: coll.metaFileName,
+        data: {
+          fragments_slugs: fs,
+        },
+      });
+    },
+
     loadFragment() {
       this.is_loading_fragment_sidebar = true;
       setTimeout(() => {
@@ -360,14 +542,43 @@ export default {
 
 ._reactions,
 ._collections {
-  background-color: var(--color-lightgray);
+  // background-color: var(--color-lightgray);
   padding-bottom: calc(var(--spacing));
   margin-bottom: calc(var(--spacing));
 
   h2 {
     margin-top: 0;
+    margin-bottom: 0;
     color: inherit;
   }
 }
+
+._lang {
+  select {
+    color: black;
+  }
+}
+
+._collSelect {
+  display: flex;
+  flex-flow: row nowrap;
+  max-width: none;
+
+  select {
+    max-width: none;
+    flex: 1;
+  }
+  button {
+    margin: 0 calc(var(--spacing) / 4);
+    background-color: var(--color-blue);
+    color: white;
+  }
+}
 </style>
-<style lang="scss"></style>
+<style lang="scss">
+._reactions {
+  .mediaTextContent {
+    margin-left: calc(-1 * var(--spacing) / 4);
+  }
+}
+</style>

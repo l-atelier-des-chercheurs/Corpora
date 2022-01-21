@@ -47,6 +47,8 @@ const router = new VueRouter({
       position = savedPosition;
     }
 
+    if (to.params.savePosition) return {};
+
     if (from.name === "Fragment" && to.name === "Corpus") return false;
     if (from.name === "Corpus" && to.name === "Fragment") return false;
 

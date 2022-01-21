@@ -2,19 +2,62 @@
   <div>
     <div class="m_collection">
       <div class="m_collection--presentation">
-        <h2>
-          {{ collection.title }}
-        </h2>
+        <div class="_titleBar">
+          <h2>
+            <template v-if="!rename_coll">
+              {{ collection.title }}
+            </template>
+            <form v-else @submit.prevent="submitNewCollName">
+              <input type="text" v-model="new_coll_name" />
+              <div>
+                <button type="button" @click="rename_coll = false">
+                  {{ $t("cancel") }}
+                </button>
+                <button type="submit">
+                  {{ $t("valider") }}
+                </button>
+              </div>
+            </form>
+          </h2>
+
+          <div class="_buttonRow">
+            <button type="button" @click="rename_coll = !rename_coll">
+              {{ $t("rename") }}
+            </button>
+            <button type="button" @click="removeCollection">
+              {{ $t("remove") }}
+            </button>
+          </div>
+        </div>
         <div>
-          {{ $t("created") }}&nbsp;{{
-            $root.formatDateToHuman(collection.date_created).toLowerCase()
-          }}
+          <div class="_meta" @click="show_advanced_meta = !show_advanced_meta">
+            <template v-if="!show_advanced_meta">
+              {{ $t("created") }}&nbsp;•
+              {{ $root.formatDateToPrecise(collection.date_created) }}
+            </template>
+            <template v-else>
+              <div>
+                {{ $t("created") }}&nbsp;•
+                {{ $root.formatDateToPrecise(collection.date_created) }}
+              </div>
+              <div>
+                {{ $t("edited") }}&nbsp;•
+                {{ $root.formatDateToPrecise(collection.date_modified) }}
+              </div>
+            </template>
+          </div>
         </div>
 
         <br />
 
-        <label>{{ $t("description") }}</label>
-        // TODO
+        <TextField
+          :field_name="'collection_description'"
+          :content="collection.collection_description"
+          type2="media"
+          :metaFileName="collection.metaFileName"
+          :slugFolderName="corpus.slugFolderName"
+          :allow_editing="true"
+        />
 
         <hr />
 
@@ -28,7 +71,6 @@
           </button>
         </div>
       </div>
-
       <SelectFragments
         v-if="show_selectfragments_modal"
         :collection="collection"
@@ -59,7 +101,7 @@ export default {
     all_tags: Array,
     all_keywords: Array,
     medias: [Boolean, Array],
-    collection_fragments: Array,
+    collection_fragments: [Boolean, Array],
   },
   components: {
     FragmentContent,
@@ -69,12 +111,19 @@ export default {
   data() {
     return {
       show_selectfragments_modal: false,
+      show_advanced_meta: false,
+      rename_coll: false,
+      new_coll_name: "",
     };
   },
   created() {},
   mounted() {},
   beforeDestroy() {},
-  watch: {},
+  watch: {
+    rename_coll() {
+      if (this.rename_coll) this.new_coll_name = this.collection.title;
+    },
+  },
   computed: {},
   methods: {
     addToCollection({ metaFileName, index }) {
@@ -95,6 +144,25 @@ export default {
       // else fragments_slugs.unshift({ metaFileName });
       this.updateMedia({ data: { fragments_slugs } });
     },
+    removeCollection() {
+      this.$alertify
+        .okBtn(this.$t("yes"))
+        .cancelBtn(this.$t("cancel"))
+        .confirm(this.$t("sure_to_remove_collection"), () => {
+          this.$root.removeMedia({
+            type: "corpus",
+            slugFolderName: this.corpus.slugFolderName,
+            slugMediaName: this.collection.metaFileName,
+          });
+
+          let query = Object.assign({}, this.$route.query) || {};
+          delete query.collection;
+          this.$router.push({
+            query,
+            params: { savePosition: true },
+          });
+        });
+    },
 
     changePos({ metaFileName, $event }) {
       const new_pos = Number.parseFloat($event.currentTarget.value) - 1;
@@ -111,20 +179,31 @@ export default {
       this.updateMedia({ data: { fragments_slugs } });
     },
     updateMedia({ data }) {
-      this.is_sending_content_to_server = true;
+      return new Promise((resolve, reject) => {
+        this.is_sending_content_to_server = true;
 
-      this.$root
-        .editMedia({
-          type: "corpus",
-          slugFolderName: this.corpus.slugFolderName,
-          slugMediaName: this.collection.metaFileName,
-          data,
-        })
-        .then((mdata) => {
-          // setTimeout(() => {
-          this.is_sending_content_to_server = false;
-          // }, 300);
-        });
+        this.$root
+          .editMedia({
+            type: "corpus",
+            slugFolderName: this.corpus.slugFolderName,
+            slugMediaName: this.collection.metaFileName,
+            data,
+          })
+          .then((mdata) => {
+            // setTimeout(() => {
+            this.is_sending_content_to_server = false;
+            // }, 300);
+          });
+      });
+    },
+    submitNewCollName() {
+      this.updateMedia({
+        data: {
+          title: this.new_coll_name,
+        },
+      });
+
+      this.rename_coll = false;
     },
   },
 };
@@ -143,5 +222,12 @@ export default {
 
 .m_fragments {
   padding-top: calc(var(--spacing) / 2);
+}
+
+._titleBar {
+  display: flex;
+  flex-flow: row nowrap;
+  align-items: center;
+  justify-content: space-between;
 }
 </style>

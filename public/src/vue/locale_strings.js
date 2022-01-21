@@ -51,13 +51,41 @@ module.exports = (function () {
       fr: "Lien",
       en: "Link",
     },
+    fragment_included_in_collections: {
+      fr: "Ce récit est présent dans les collections suivantes",
+      en: "This story is part of the following collections",
+    },
+    fragment_included_in_no_collections: {
+      fr: "Ce récit n’est présent dans aucune collection. Cliquez sur <i>éditer</i> pour l’ajouter.",
+      en: "This story isn’t part of any collections. Click <i>edit</i> to add to existing collections.",
+    },
+    fragment_in_all_collections_already: {
+      fr: "Ce récit figure déjà dans toutes les collections",
+      en: "This fragment is already included in all collections",
+    },
+    create_collection_first: {
+      fr: "Créez d’abord une collection en fermant cette page.",
+      en: "Create a collection first by closing this page.",
+    },
+    add_story_to_collection: {
+      fr: "Ajouter ce récit à une collection",
+      en: "Add this story to a collection",
+    },
     search_in_fragments: {
       fr: "Chercher dans les récits",
       en: "Search in stories",
     },
-    back_to_fragments: {
-      fr: "Retour aux récits",
-      en: "Back to stories",
+    no_reason_yet: {
+      fr: "À renseigner",
+      en: "Unknown so far",
+    },
+    show_fragments: {
+      fr: "Afficher les récits",
+      en: "Show all stories",
+    },
+    fragments: {
+      fr: "Récits",
+      en: "Stories",
     },
     embed: {
       fr: "Intégration",
@@ -91,6 +119,10 @@ module.exports = (function () {
       fr: "Fermer",
       en: "Close",
     },
+    results: {
+      fr: "résultats",
+      en: "results",
+    },
     no_results: {
       fr: "Aucun récit ne correspond à votre recherche",
       en: "No results match your criteria(s)",
@@ -106,6 +138,10 @@ module.exports = (function () {
     edit: {
       fr: "Éditer",
       en: "Edit",
+    },
+    edit_corpus: {
+      fr: "Éditer le corpus",
+      en: "Edit corpus",
     },
     edited: {
       fr: "Dernière modification",
@@ -134,6 +170,14 @@ module.exports = (function () {
     about_corpus: {
       fr: "À propos de ce corpus",
       en: "About this corpus",
+    },
+    corpus_default_view: {
+      fr: "Mode d’affichage du Corpus",
+      en: "Corpus default view",
+    },
+    corpus_default_view_instructions: {
+      fr: "Indiquer ici les paramètres qui seront chargés à l’ouverture de la page d’accueil du corpus. Exemple : si le lien est https://platform.plurality-university.org/clothes?tag_search=Body, écrire ?tag_search=Body",
+      en: "Write here the parameters to use. For example: https://platform.plurality-university.org/clothes?tag_search=Body -> ?tag_search=Body",
     },
     title: {
       fr: "Titre",
@@ -216,15 +260,15 @@ module.exports = (function () {
     },
     create_add_remove_fragments: {
       fr: "Créer de nouveaux récits, et ajouter ou retirer des récits existants à la collection.",
-      fr: "Create new stories, and add or remove existing stories from the collection.",
+      en: "Create new stories, and add or remove existing stories from the collection.",
     },
     fragments_not_in_collection: {
       fr: "Tous les récits",
       en: "All stories",
     },
     all_corpus: {
-      fr: "Tous les corpus",
-      en: "All corpus",
+      fr: "Tous les corpus (admin)",
+      en: "All corpus (admin)",
     },
     source: {
       fr: "Lien",
@@ -245,6 +289,10 @@ module.exports = (function () {
     sure_to_remove_fragment: {
       fr: "Voulez-vous vraiment supprimer ce récit ?",
       en: "Do you really want to remove this story?",
+    },
+    sure_to_remove_fragment_from_coll: {
+      fr: "Voulez-vous vraiment retirer ce récit de cette collection ?",
+      en: "Do you really want to remove this story from this collection?",
     },
     fragments_in_collection: {
       fr: "Récits appartenants à cette collection",
@@ -270,6 +318,10 @@ module.exports = (function () {
       fr: "Voulez-vous vraiment supprimer ce média ?",
       en: "Do you really want to remove this media?",
     },
+    sure_to_remove_collection: {
+      fr: "Voulez-vous vraiment supprimer cette collection ?",
+      en: "Do you really want to remove this collection?",
+    },
     all: {
       fr: "Afficher tous les récits",
       en: "Show all stories",
@@ -294,6 +346,10 @@ module.exports = (function () {
     no: {
       fr: "Non",
       en: "No",
+    },
+    none: {
+      fr: "Aucun",
+      en: "None",
     },
     moveup: {
       fr: "Déplacer ↑",
@@ -331,6 +387,7 @@ module.exports = (function () {
       fr: "Réessayer",
       en: "Retry",
     },
+
     save: {
       fr: "Enregistrer",
       en: "Save",
@@ -351,14 +408,7 @@ module.exports = (function () {
       fr: "Créer un corpus",
       en: "Create a corpus",
     },
-    create_a_collection: {
-      fr: "Créer une collection",
-      en: "Create a collection",
-    },
-    edit_corpus: {
-      fr: "Éditer un corpus",
-      en: "Edit a corpus",
-    },
+
     create: {
       fr: "Créer",
       en: "Create",
@@ -411,9 +461,21 @@ module.exports = (function () {
       fr: "Mot(s)-clé(s)",
       en: "Keyword(s)",
     },
-    filters: {
-      fr: "Filtre(s)",
-      en: "Filter(s)",
+    show_all_tags: {
+      fr: "Afficher toutes les catégories",
+      en: "Show all tags",
+    },
+    show_all_keywords: {
+      fr: "Afficher tous les mots-clés",
+      en: "Show all keywords",
+    },
+    show_all_collections: {
+      fr: "Afficher toutes les collections",
+      en: "Show all collections",
+    },
+    your_search: {
+      fr: "Votre recherche",
+      en: "Your search",
     },
     no_with_similar_keywords: {
       fr: "Aucuns récits avec des mots-clés similaires",
@@ -430,6 +492,10 @@ module.exports = (function () {
     remove_image: {
       fr: "Retirer l’image",
       en: "Remove image",
+    },
+    remove_from_coll: {
+      fr: "Retirer",
+      en: "Remove",
     },
     add_keyword: {
       fr: "Ajouter un mot-clé",
@@ -549,6 +615,20 @@ module.exports = (function () {
     failed_to_save_media: {
       fr: "Les modifications n’ont pas pu être enregistrées",
       en: "Failed to save changes",
+    },
+    adding_password_warning: {
+      fr: "Attention ! Si vous ajoutez ou modifiez un mot de passe tous les utilisateurs qui y sont actuellement connectés devront le renseigner avant de pouvoir continuer à contribuer.",
+      en: "Warning! Adding or changing the password will disconnect all users until they enter the new password.",
+      nl: "Opgelet! Als u een wachtwoord toevoegt of wijzigt, moeten alle gebruikers die er momenteel mee verbonden zijn dit invoeren voordat ze een bijdrage kunnen blijven leveren..",
+      oc: "Avisa ! Si volètz apondre o modificar un mot de Santa-Clara totes los utilizaires que i son ara conectats deuràn l'entresenhar abans que de poder continuar.",
+      de: "Achtung! Wenn Sie en Passwort hinzufügen oder ändern, müssen Sie alle derzeit eingeloggten Benutzer informieren, damit diese das neue Passwort eingeben.",
+    },
+    removing_password_warning: {
+      fr: "Si vous retirez le mot de passe tous les utilisateurs qui ont accès à do•doc pourront modifier le projet.",
+      en: "Removing the password for this project will allow everyone to access, edit and delete it.",
+      nl: "Als u het wachtwoord verwijdert, kunnen alle gebruikers die toegang hebben tot do•doc het project wijzigen.",
+      oc: "Si tiratz lo mot de Santa-Clara totes los utilizaires qu'an accès a do•doc poiràn modificar lo projècte.",
+      de: "Wenn Sie das Passwort entfernen, können alle Benutzer, die Zugriff auf do•doc haben, das Projekt bearbeiten bzw. löschen.",
     },
   };
 

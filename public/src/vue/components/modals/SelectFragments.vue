@@ -5,10 +5,6 @@
     :typeOfModal="'LargeAndScroll'"
     :askBeforeClosingModal="askBeforeClosingModal"
   >
-    <!-- <template slot="header">
-      <span class>{{ $t("create_a_collection") }}</span>
-    </template> -->
-
     <template slot="body">
       <div class="m_selectFragments">
         <div class="m_selectFragments--coll">
@@ -16,11 +12,12 @@
           <h2>
             {{ collection.title }}
           </h2>
+          <small>
+            {{ $t("create_add_remove_fragments") }}
+          </small>
         </div>
 
-        <div>
-          {{ $t("create_add_remove_fragments") }}
-        </div>
+        <hr />
 
         <h2>
           {{ $t("fragments_in_collection") }}
@@ -29,13 +26,18 @@
         <div v-if="!collection_fragments">
           <small>{{ $t("none") }}</small>
         </div>
+
         <transition-group
           v-else
           class="m_fragments"
           name="list-complete"
           tag="div"
         >
-          <div class="m_fragments--createFragment" key="createFragment">
+          <div
+            class="m_fragments--createFragment"
+            key="createFragment"
+            v-if="false"
+          >
             <button
               type="button"
               class="m_fragments--createFragment--addFragmentButton"
@@ -112,7 +114,7 @@
               <button
                 type="button"
                 class="_removeFromColl"
-                @click="$emit('removeFromCollection', fragment.metaFileName)"
+                @click="removeColl(fragment.metaFileName)"
               >
                 {{ $t("remove") }}
               </button>
@@ -120,13 +122,15 @@
           </div>
           <div v-for="index in 3" :key="index" />
         </transition-group>
+
+        <hr />
         <h2>
           {{ $t("fragments_not_in_collection") }}
         </h2>
-        <div v-if="!other_fragments">
+
+        <div v-if="!other_fragments || other_fragments.length === 0">
           <small>{{ $t("none") }}</small>
         </div>
-
         <FragmentsList
           v-else
           :corpus="corpus"
@@ -184,7 +188,16 @@ export default {
       return this.fragments.filter((f) => !fss.includes(f.metaFileName));
     },
   },
-  methods: {},
+  methods: {
+    removeColl(metaFileName) {
+      this.$alertify
+        .okBtn(this.$t("yes"))
+        .cancelBtn(this.$t("cancel"))
+        .confirm(this.$t("sure_to_remove_fragment_from_coll"), () => {
+          this.$emit("removeFromCollection", metaFileName);
+        });
+    },
+  },
 };
 </script>
 <style lang="scss" scoped>
@@ -207,7 +220,7 @@ export default {
 h2,
 small,
 label {
-  color: var(--color-lightgray);
+  // color: var(--color-lightgray);
   padding: 0 calc(var(--spacing) * 2);
   margin: 0;
 }

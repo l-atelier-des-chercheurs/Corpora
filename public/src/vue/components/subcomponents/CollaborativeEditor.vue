@@ -394,7 +394,10 @@ export default {
         "list",
         "media",
       ],
-      placeholder: "Écrire le texte ici…",
+      placeholder:
+        this.$root.lang.current === "fr"
+          ? "Écrire le texte ici…"
+          : "Write text here",
     });
 
     this.$refs.editor.dataset.quill = this.editor;
@@ -846,7 +849,7 @@ export default {
   outline: none;
   overflow-y: auto;
   padding: 12px 15px;
-  min-height: 2em;
+  min-height: 1.5em;
   tab-size: 4;
   -moz-tab-size: 4;
   text-align: left;
@@ -1191,6 +1194,7 @@ export default {
   pointer-events: none;
   position: absolute;
   right: 15px;
+  padding: calc(var(--spacing) / 4);
 }
 .ql-bubble.ql-toolbar:after,
 .ql-bubble .ql-toolbar:after {

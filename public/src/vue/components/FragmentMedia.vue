@@ -637,13 +637,17 @@ export default {
     // width: 16px;
     // height: 16px;
     // padding: 4px;
-    fill: white;
-    filter: drop-shadow(0px 0px 2px rgba(226, 237, 239, 0.8));
-    filter: drop-shadow(0px 0px 3px rgba(110, 110, 110, 0.4));
+    fill: var(--color-black);
+    // filter: drop-shadow(0px 0px 2px rgba(226, 237, 239, 0.8));
+    // filter: drop-shadow(0px 0px 3px rgba(110, 110, 110, 0.4));
   }
 
   &:hover {
     background: var(--color-black);
+
+    svg {
+      fill: white;
+    }
   }
 }
 </style>

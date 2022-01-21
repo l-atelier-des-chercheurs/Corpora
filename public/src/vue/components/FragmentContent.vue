@@ -5,7 +5,15 @@
       'is--preview': context === 'preview',
     }"
   >
-    <div class="m_fragmentContent--content" @mouseenter="updateMouseCoords">
+    <div
+      class="m_fragmentContent--content"
+      :class="{
+        'is--opened':
+          $route.params.fragmentId &&
+          fragment.media_filename === $route.params.fragmentId,
+      }"
+      @mouseenter="updateMouseCoords"
+    >
       <div
         class="m_fragmentContent--content--inner"
         :style="`
@@ -389,7 +397,7 @@ export default {
   }
 
   &.is--preview .m_fragmentContent--content {
-    --slide_on_hover: 6rem;
+    --slide_on_hover: 5rem;
     --move_top_for_slide: calc(-1.8 * var(--slide_on_hover));
     --preview_height: 360px;
 
@@ -453,10 +461,11 @@ export default {
       margin-top: 0;
     }
 
-    &:hover {
+    &:hover,
+    &.is--opened {
       .m_fragmentContent--content--inner {
         transform: translateY(calc(-1 * var(--slide_on_hover)))
-          rotate(calc(var(--random_angle) * 1deg));
+          rotate(calc(var(--random_angle) * 1deg)) scale(1.03);
         color: var(--color-blue);
       }
     }

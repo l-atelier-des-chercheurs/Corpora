@@ -32,7 +32,7 @@ export default {
 :root {
   --spacing: 1rem;
   --color-black: #3c3541;
-  --color-gray: hsl(275, 10%, 63%);
+  --color-gray: #a297aa;
   --color-white: #fff;
   --color-lightgray: #ededed;
   --active-color: var(--color-gray);
@@ -529,8 +529,7 @@ input[type="checkbox"] {
 }
 
 input,
-textarea,
-.ql-editor {
+textarea {
   font-size: 1.2em;
   padding: 0.4em calc(0.4em - 2px) 0.4em 0.4em;
   border: none;
@@ -551,6 +550,10 @@ textarea,
     outline: 0px;
     border-left: 2px solid var(--color-purple);
   }
+}
+
+.ql-editor {
+  max-width: none;
 }
 
 .input-addon {
@@ -585,6 +588,9 @@ select::-ms-expand {
   margin: 4px 0;
   position: relative;
   color: var(--color-black);
+}
+
+.custom-select_xs {
 }
 
 .custom-select::after {
@@ -696,7 +702,7 @@ button,
 input[type="submit"] {
   border: none;
   color: var(--color-black);
-  background: var(--active-color);
+  background: white;
   cursor: pointer;
   text-transform: lowercase;
   font-size: 0.8rem;
@@ -719,7 +725,7 @@ input[type="submit"] {
   }
 
   &.is--active {
-    background: var(--color-lightgray);
+    background: var(--color-purple);
   }
 
   &.button-bg_rounded {
@@ -923,6 +929,36 @@ audio {
   }
 }
 
+.collList {
+  background-color: transparent;
+  // background-color: var(--color-lightgray);
+
+  // border-radius: 8px;
+  width: 100%;
+  display: block;
+  padding: calc(var(--spacing) / 4);
+  margin: 0 0 calc(var(--spacing) / 2) 0;
+  // margin: 0 calc(-1 * var(--spacing) / 4) calc(var(--spacing) / 2);
+
+  text-align: left;
+  text-transform: inherit;
+
+  border-left: 2px solid var(--color-purple);
+
+  &.is--active {
+    background: var(--color-purple);
+  }
+
+  ._title {
+    font-family: "base9";
+    font-weight: bold;
+  }
+
+  &::before {
+    // content: ">";
+  }
+}
+
 .m_keywordField,
 .vue-tags-input {
   position: relative;
@@ -1122,13 +1158,14 @@ audio {
   &.m_keywordField_tags {
     .tag,
     > button {
-      background-color: var(--body-bg) !important;
-      font-family: "base9";
-      font-weight: bold;
+      // background-color: var(--body-bg) !important;
+      // font-family: "base9";
+      // font-weight: bold;
       border-radius: 1em;
-      padding: 0.2em 1em;
-      padding-left: 0em;
-      border: 2px solid var(--color-blue);
+      padding: 0.3em 0em;
+      padding-right: 1em;
+      // border: 1px solid var(--color-blue);
+      background: white;
 
       &.is--active {
         color: white;
@@ -1291,7 +1328,6 @@ audio {
   &.is_invisible {
     // background-color: transparent;
     opacity: 0;
-    transform: translateY(50px);
     pointer-events: none;
   }
 
@@ -1317,10 +1353,11 @@ audio {
   pointer-events: all;
   z-index: 1000;
 
-  // transition: all 0.1s cubic-bezier(0.19, 1, 0.22, 1);
+  transition: all 1s cubic-bezier(0.19, 1, 0.22, 1);
 
   &.is_invisible {
     opacity: 0;
+    transform: translateY(50px);
     pointer-events: none;
     // transform: translate3d(0, 5px, 0);
   }
@@ -1406,6 +1443,10 @@ audio {
 
       .m_modal--sidebar {
         margin-top: 0;
+      }
+
+      &[data-originComponent] {
+        max-width: calc(var(--panel-width) * 3.5);
       }
     }
   }
@@ -1878,13 +1919,15 @@ twitter-widget.twitter-tweet {
 .mediaTextContent {
   position: relative;
   color: inherit;
+  padding: ~"calc(var(--spacing) / 4)";
 
-  > *:first-child {
-    margin-top: 0;
-    padding: ~"calc(var(--spacing) / 4)";
-
-    > *:first-child {
+  > * {
+    &:first-child {
       margin-top: 0;
+
+      > *:first-child {
+        margin-top: 0;
+      }
     }
   }
 

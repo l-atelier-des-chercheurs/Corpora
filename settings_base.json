@@ -53,10 +53,19 @@
         "subtitle": {
           "type": "string"
         },
+        "subtitle_en": {
+          "type": "string"
+        },
         "description": {
           "type": "string"
         },
+        "description_en": {
+          "type": "string"
+        },
         "description_long": {
+          "type": "string"
+        },
+        "description_long_en": {
           "type": "string"
         },
         "date_created": {
@@ -78,6 +87,9 @@
         "sort_in_tabs": {
           "type": "boolean",
           "default": false
+        },
+        "corpus_default_view": {
+          "type": "string"
         }
       },
       "medias": {
@@ -113,6 +125,15 @@
             "type": "string"
           },
           "source": {
+            "type": "string"
+          },
+          "reason_for_sharing": {
+            "type": "string"
+          },
+          "reason_for_sharing_en": {
+            "type": "string"
+          },
+          "collection_description": {
             "type": "string"
           },
           "type": {

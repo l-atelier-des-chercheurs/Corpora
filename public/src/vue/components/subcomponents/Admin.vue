@@ -12,7 +12,12 @@
       </button>
       <div v-if="show_admin_login || !collapsable">
         <p>Password to admin</p>
-        <input type="password" autofocus v-model="$root.admin_pwd" />
+        <input
+          ref="input"
+          type="password"
+          autofocus
+          v-model="$root.admin_pwd"
+        />
       </div>
     </template>
     <div class="_connected" v-else>
@@ -47,7 +52,15 @@ export default {
   created() {},
   mounted() {},
   beforeDestroy() {},
-  watch: {},
+  watch: {
+    show_admin_login() {
+      if (this.show_admin_login) {
+        this.$nextTick(() => {
+          if (this.$refs.input) this.$refs.input.focus();
+        });
+      }
+    },
+  },
   computed: {},
   methods: {},
 };
