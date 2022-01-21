@@ -96,7 +96,7 @@
 
       <!-- Default corpus view -->
       <div class="margin-bottom-small" v-if="$root.can_admin_corpora">
-        <label>{{ $t("corpus_default_view") }}</label>
+        <label>{{ $t("corpus_default_view") }} (admin)</label>
         <input type="text" v-model.trim="corpusdata.corpus_default_view" />
         <small>
           {{ $t("corpus_default_view_instructions") }}

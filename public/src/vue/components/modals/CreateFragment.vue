@@ -30,8 +30,7 @@
       </div> -->
 
       <div class="margin-bottom-small admin_cat" v-if="$root.can_admin_corpora">
-        <i>admin</i>
-        <label>{{ $t("categories") }}</label>
+        <label>{{ $t("categories") }} (admin)</label>
         <TagsInput
           :allKeywords="all_tags_rightly_formatted"
           :allow_new_terms="$root.can_admin_corpora"

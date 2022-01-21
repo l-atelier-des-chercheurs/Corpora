@@ -267,8 +267,8 @@ module.exports = (function () {
       en: "All stories",
     },
     all_corpus: {
-      fr: "Tous les corpus",
-      en: "All corpus",
+      fr: "Tous les corpus (admin)",
+      en: "All corpus (admin)",
     },
     source: {
       fr: "Lien",
@@ -409,10 +409,6 @@ module.exports = (function () {
       en: "Create a corpus",
     },
 
-    edit_corpus: {
-      fr: "Éditer un corpus",
-      en: "Edit a corpus",
-    },
     create: {
       fr: "Créer",
       en: "Create",

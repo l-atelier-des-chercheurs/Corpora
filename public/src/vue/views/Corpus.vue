@@ -91,7 +91,7 @@
                 class="button-small"
                 @click="show_edit_corpus_for = true"
               >
-                {{ $t("edit_corpus") }}
+                {{ $t("edit_corpus") }} (admin)
               </button>
             </div>
             <EditCorpus
