@@ -1328,7 +1328,6 @@ audio {
   &.is_invisible {
     // background-color: transparent;
     opacity: 0;
-    transform: translateY(50px);
     pointer-events: none;
   }
 
@@ -1354,10 +1353,11 @@ audio {
   pointer-events: all;
   z-index: 1000;
 
-  // transition: all 0.1s cubic-bezier(0.19, 1, 0.22, 1);
+  transition: all 1s cubic-bezier(0.19, 1, 0.22, 1);
 
   &.is_invisible {
     opacity: 0;
+    transform: translateY(50px);
     pointer-events: none;
     // transform: translate3d(0, 5px, 0);
   }

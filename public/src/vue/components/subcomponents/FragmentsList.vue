@@ -124,4 +124,14 @@ export default {
   methods: {},
 };
 </script>
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.m_fragments--fragment {
+  transform-origin: 50% 100%;
+
+  transition: all 0.5s cubic-bezier(0.19, 1, 0.22, 1);
+  &.is--opened {
+    // opacity: 0;
+    transform: scale(1.1);
+  }
+}
+</style>
