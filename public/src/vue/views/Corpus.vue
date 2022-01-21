@@ -91,7 +91,7 @@
                 class="button-small"
                 @click="show_edit_corpus_for = true"
               >
-                {{ $t("edit") }}
+                {{ $t("edit_corpus") }}
               </button>
             </div>
             <EditCorpus
@@ -201,7 +201,7 @@
               }}</label>
               <form
                 class="flex-nowrap align-items-stretch"
-                @submit.prevent="text_search = text_search_in_field"
+                @submit.prevent="setTextFilter"
               >
                 <input
                   type="search"
@@ -285,12 +285,19 @@
               <div class="m_corpus--fragments--sort">
                 <div>
                   <small>
-                    {{ $t("stories") }} • {{ filtered_fragments.length
-                    }}<template
+                    <template
+                      v-if="
+                        filtered_fragments.length === sorted_fragments.length
+                      "
+                    >
+                      {{ $t("stories") }} • {{ filtered_fragments.length }}
+                    </template>
+                    <template
                       v-if="
                         filtered_fragments.length !== sorted_fragments.length
                       "
-                      >/{{ sorted_fragments.length }}</template
+                      >{{ filtered_fragments.length }}
+                      {{ $t("results") }}</template
                     >
                   </small>
                   <div class="custom-select custom-select_tiny">
@@ -307,7 +314,7 @@
                   class="m_corpus--fragments--sort--filterList"
                 >
                   <div>
-                    <small>{{ $t("filters") }}</small>
+                    <small>{{ $t("your_search") }}</small>
 
                     <button
                       type="button"
@@ -454,18 +461,7 @@ export default {
     new_lang() {
       this.$root.updateLocalLang(this.new_lang);
     },
-    text_search() {
-      this.setQueryURLFromFilters();
-    },
-    keyword_search() {
-      this.setQueryURLFromFilters();
-    },
-    tag_search() {
-      this.setQueryURLFromFilters();
-    },
-    show_collection_meta() {
-      this.setQueryURLFromFilters();
-    },
+    show_collection_meta() {},
     $route: {
       handler(to) {
         if (this.$route.query) {
@@ -744,14 +740,33 @@ export default {
     },
 
     openCollection(media_filename) {
+      this.tag_search = false;
+      this.keyword_search = false;
+      this.text_search = this.text_search_in_field = "";
+
       this.show_collection_meta =
         this.show_collection_meta === media_filename ? false : media_filename;
+      this.setQueryURLFromFilters();
     },
     setKeywordFilter(kw) {
+      this.tag_search = false;
+      this.text_search = this.text_search_in_field = "";
+
       this.keyword_search = this.keyword_search === kw ? false : kw;
+      this.setQueryURLFromFilters();
     },
     setTagFilter(tag) {
+      this.keyword_search = false;
+      this.text_search = this.text_search_in_field = "";
+
       this.tag_search = this.tag_search === tag ? false : tag;
+      this.setQueryURLFromFilters();
+    },
+    setTextFilter() {
+      this.keyword_search = this.tag_search = false;
+
+      this.text_search = this.text_search_in_field;
+      this.setQueryURLFromFilters();
     },
     doFragmentMediasIncludeText({ fragment_media, text }) {
       if (

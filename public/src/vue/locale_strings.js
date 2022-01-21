@@ -119,6 +119,10 @@ module.exports = (function () {
       fr: "Fermer",
       en: "Close",
     },
+    results: {
+      fr: "résultats",
+      en: "results",
+    },
     no_results: {
       fr: "Aucun récit ne correspond à votre recherche",
       en: "No results match your criteria(s)",
@@ -134,6 +138,10 @@ module.exports = (function () {
     edit: {
       fr: "Éditer",
       en: "Edit",
+    },
+    edit_corpus: {
+      fr: "Éditer le corpus",
+      en: "Edit corpus",
     },
     edited: {
       fr: "Dernière modification",
@@ -282,6 +290,10 @@ module.exports = (function () {
       fr: "Voulez-vous vraiment supprimer ce récit ?",
       en: "Do you really want to remove this story?",
     },
+    sure_to_remove_fragment_from_coll: {
+      fr: "Voulez-vous vraiment retirer ce récit de cette collection ?",
+      en: "Do you really want to remove this story from this collection?",
+    },
     fragments_in_collection: {
       fr: "Récits appartenants à cette collection",
       en: "Stories in this collection",
@@ -305,6 +317,10 @@ module.exports = (function () {
     sure_to_remove_media: {
       fr: "Voulez-vous vraiment supprimer ce média ?",
       en: "Do you really want to remove this media?",
+    },
+    sure_to_remove_collection: {
+      fr: "Voulez-vous vraiment supprimer cette collection ?",
+      en: "Do you really want to remove this collection?",
     },
     all: {
       fr: "Afficher tous les récits",
@@ -461,9 +477,9 @@ module.exports = (function () {
       fr: "Afficher toutes les collections",
       en: "Show all collections",
     },
-    filters: {
-      fr: "Filtre(s)",
-      en: "Filter(s)",
+    your_search: {
+      fr: "Votre recherche",
+      en: "Your search",
     },
     no_with_similar_keywords: {
       fr: "Aucuns récits avec des mots-clés similaires",
