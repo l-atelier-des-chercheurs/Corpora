@@ -114,7 +114,7 @@
               <button
                 type="button"
                 class="_removeFromColl"
-                @click="$emit('removeFromCollection', fragment.metaFileName)"
+                @click="removeColl(fragment.metaFileName)"
               >
                 {{ $t("remove") }}
               </button>
@@ -188,7 +188,16 @@ export default {
       return this.fragments.filter((f) => !fss.includes(f.metaFileName));
     },
   },
-  methods: {},
+  methods: {
+    removeColl(metaFileName) {
+      this.$alertify
+        .okBtn(this.$t("yes"))
+        .cancelBtn(this.$t("cancel"))
+        .confirm(this.$t("sure_to_remove_fragment_from_coll"), () => {
+          this.$emit("removeFromCollection", metaFileName);
+        });
+    },
+  },
 };
 </script>
 <style lang="scss" scoped>

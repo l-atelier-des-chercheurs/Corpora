@@ -702,7 +702,7 @@ button,
 input[type="submit"] {
   border: none;
   color: var(--color-black);
-  background: var(--active-color);
+  background: white;
   cursor: pointer;
   text-transform: lowercase;
   font-size: 0.8rem;

@@ -133,6 +133,9 @@
           "reason_for_sharing_en": {
             "type": "string"
           },
+          "collection_description": {
+            "type": "string"
+          },
           "type": {
             "type": "string",
             "options": [
