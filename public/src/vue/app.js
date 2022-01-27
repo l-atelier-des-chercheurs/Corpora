@@ -22,6 +22,12 @@ import locale_strings from "./locale_strings.js";
 
 Vue.prototype.$eventHub = new Vue(); // Global event bus
 
+Vue.component("v-style", {
+  render: function (createElement) {
+    return createElement("style", this.$slots.default);
+  },
+});
+
 import VueRouter from "vue-router";
 import router from "./router";
 Vue.use(VueRouter);

@@ -83,6 +83,7 @@
               >{{ $t("feedbacks") }}</a
             >
           </div>
+          <CSS />
 
           <div class="m_corpus--presentation--content">
             <div class="margin-bottom-small" v-if="$root.can_admin_corpora">
@@ -405,6 +406,7 @@ import EditCorpus from "../components/modals/EditCorpus.vue";
 import FragmentsList from "../components/subcomponents/FragmentsList.vue";
 import CreateCollection from "../components/modals/CreateCollection.vue";
 import Collection from "../components/subcomponents/Collection.vue";
+import CSS from "../components/subcomponents/CSS.vue";
 
 export default {
   props: {},
@@ -416,6 +418,7 @@ export default {
     FragmentsList,
     CreateCollection,
     Collection,
+    CSS,
   },
   data() {
     return {
