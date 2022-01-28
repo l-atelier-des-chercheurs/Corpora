@@ -1214,52 +1214,82 @@ module.exports = (function () {
 
   function _parseHTMLMetaTags({ html }) {
     var $ = cheerio.load(html);
-
-    var meta = $("meta");
-    var keys = Object.keys(meta);
-
-    var result = {};
+    var page_meta = {};
 
     dev.logverbose(
-      `THUMBS — _parseHTMLMetaTags : using cheerio to parse HTML tags ${keys.join(
-        ","
-      )}`
+      `THUMBS — _parseHTMLMetaTags : using cheerio to parse HTML tags`
     );
 
-    keys.forEach(function (key) {
-      if (
-        meta[key].attribs &&
-        meta[key].attribs.property &&
-        meta[key].attribs.property.indexOf("og") == 0
-      ) {
-        var og = meta[key].attribs.property.split(":");
+    if ($('meta[property="og:title"]').attr("content")) {
+      page_meta.title = $('meta[property="og:title"]').attr("content");
+    } else if ($("title").text()) {
+      page_meta.title = $("title").text();
+    }
 
-        if (og.length > 2) {
-          if (result[og[1]]) {
-            if (
-              typeof result[og[1]] == "string" ||
-              result[og[1]] instanceof String
-            ) {
-              var set = {};
-              set["name"] = result[og[1]];
-              set[og[2]] = meta[key].attribs.content;
-              result[og[1]] = set;
-            } else {
-              ex_set = result[og[1]];
-              ex_set[og[2]] = meta[key].attribs.content;
-              result[og[1]] = ex_set;
-            }
-          } else {
-            var set = {};
-            set[og[2]] = meta[key].attribs.content;
-            result[og[1]] = set;
-          }
-        } else {
-          result[og[1]] = meta[key].attribs.content;
-        }
-      }
-    });
-    return result;
+    if ($('meta[property="og:description"]').attr("content")) {
+      page_meta.description = $('meta[property="og:description"]').attr(
+        "content"
+      );
+    } else if ($('meta[name="description"]').attr("content")) {
+      page_meta.description = $('meta[name="description"]').attr("content");
+    }
+
+    if ($('meta[property="og:image"]').attr("content")) {
+      page_meta.image = $('meta[property="og:image"]').attr("content");
+    }
+
+    // see https://gist.github.com/waltir/82c94c834de630f9030f95f1d8ba81cf#file-cheerio_meta-js
+    //   let post = {
+    //     title: $('h1').text(),
+    //     canonical: $('link[rel="canonical"]').attr('href'),
+    //     description: $('meta[name="description"]').attr('content'),
+    //     // Get OG Values
+    //     og_title: $('meta[property="og:title"]').attr('content'),
+    //     og_url: $('meta[property="og:url"]').attr('content'),
+    //     og_img: $('meta[property="og:image"]').attr('content'),
+    //     og_type: $('meta[property="og:type"]').attr('content'),
+    //     // Get Twitter Values
+    //     twitter_site: $('meta[name="twitter:site"]').attr('content'),
+    //     twitter_domain: $('meta[name="twitter:domain"]').attr('content'),
+    //     twitter_img_src: $('meta[name="twitter:image:src"]').attr('content'),
+    //     // Get Facebook Values
+    //     fb_appid: $('meta[property="fb:app_id"]').attr('content'),
+    //     fb_pages: $('meta[property="fb:pages"]').attr('content'),
+    // }
+    // keys.forEach(function (key) {
+    //   if (
+    //     meta[key].attribs &&
+    //     meta[key].attribs.property &&
+    //     meta[key].attribs.property.indexOf("og") == 0
+    //   ) {
+    //     var og = meta[key].attribs.property.split(":");
+
+    //     if (og.length > 2) {
+    //       if (result[og[1]]) {
+    //         if (
+    //           typeof result[og[1]] == "string" ||
+    //           result[og[1]] instanceof String
+    //         ) {
+    //           var set = {};
+    //           set["name"] = result[og[1]];
+    //           set[og[2]] = meta[key].attribs.content;
+    //           result[og[1]] = set;
+    //         } else {
+    //           ex_set = result[og[1]];
+    //           ex_set[og[2]] = meta[key].attribs.content;
+    //           result[og[1]] = ex_set;
+    //         }
+    //       } else {
+    //         var set = {};
+    //         set[og[2]] = meta[key].attribs.content;
+    //         result[og[1]] = set;
+    //       }
+    //     } else {
+    //       result[og[1]] = meta[key].attribs.content;
+    //     }
+    //   }
+    // });
+    return page_meta;
   }
 
   function _makeLinkThumb({
