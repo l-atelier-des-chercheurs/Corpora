@@ -41,7 +41,7 @@
               draggable="false"
             />
           </a>
-          <button type="button">{{ $t("guide") }}</button>
+          <!-- <button type="button">{{ $t("guide") }}</button> -->
           <!-- <button type="button">{{ $t("about_corpus") }}</button> -->
           <div class="margin-sides-medium">
             <div class="margin-vert-small">
