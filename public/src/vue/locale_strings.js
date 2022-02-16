@@ -75,10 +75,6 @@ module.exports = (function () {
       fr: "Chercher dans les récits",
       en: "Search in stories",
     },
-    no_reason_yet: {
-      fr: "À renseigner",
-      en: "Unknown so far",
-    },
     show_fragments: {
       fr: "Afficher les récits",
       en: "Show all stories",
@@ -367,10 +363,15 @@ module.exports = (function () {
       fr: "Envoyé",
       en: "Sent",
     },
-    reason_for_sharing: {
-      fr: "Raisons du partage",
-      en: "Reasons for sharing",
+    comment: {
+      fr: "Commenter",
+      en: "Comment",
     },
+    no_comment_yet: {
+      fr: "À renseigner",
+      en: "Empty for now",
+    },
+
     reactions: {
       fr: "Réactions",
       en: "Reactions",

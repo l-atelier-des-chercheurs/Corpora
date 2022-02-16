@@ -27,6 +27,25 @@
               :slugFolderName="slugFolderName"
             />
           </transition>
+
+          <div class="_comments">
+            {{ $t("comment") }}
+
+            <div>
+              <small v-if="!opened_fragment.comments" class="text-gray">
+                {{ $t("no_comment_yet") }}
+              </small>
+
+              <TextField
+                :field_name="'comments'"
+                :content="opened_fragment.comments"
+                type2="media"
+                :metaFileName="opened_fragment.metaFileName"
+                :slugFolderName="corpus.slugFolderName"
+                :allow_editing="true"
+              />
+            </div>
+          </div>
         </div>
         <aside
           class="_fragmentListAndReactions custom_scrollbar custom_scrollbar_dark"
@@ -49,67 +68,6 @@
                     </option>
                   </select>
                 </div>
-              </div>
-
-              <div class="_reactions">
-                <h2>
-                  {{ $t("reason_for_sharing") }}
-                </h2>
-
-                <div>
-                  <template v-if="$root.lang.current === 'fr'">
-                    <small
-                      v-if="!opened_fragment.reason_for_sharing"
-                      class="text-gray"
-                    >
-                      {{ $t("no_reason_yet") }}
-                    </small>
-
-                    <TextField
-                      :field_name="'reason_for_sharing'"
-                      :content="opened_fragment.reason_for_sharing"
-                      type2="media"
-                      :metaFileName="opened_fragment.metaFileName"
-                      :slugFolderName="corpus.slugFolderName"
-                      :allow_editing="true"
-                    />
-                  </template>
-                  <template v-else-if="$root.lang.current === 'en'">
-                    <small
-                      v-if="!opened_fragment.reason_for_sharing_en"
-                      class="text-gray"
-                    >
-                      {{ $t("no_reason_yet") }}
-                    </small>
-
-                    <TextField
-                      :field_name="'reason_for_sharing_en'"
-                      :content="opened_fragment.reason_for_sharing_en"
-                      type2="media"
-                      :metaFileName="opened_fragment.metaFileName"
-                      :slugFolderName="corpus.slugFolderName"
-                      :allow_editing="true"
-                    />
-                  </template>
-                </div>
-                <!-- <br />
-                <h2>
-                  {{ $t("reactions") }}
-                </h2>
-                <div>
-                  <h3>Liste de réponses/réactions d’autres personnes</h3>
-                  <ul>
-                    <li>
-                      <a href="">Réaction #1</a>
-                    </li>
-                    <li>
-                      <a href="">Réaction #2</a>
-                    </li>
-                    <li>
-                      <a href="">Réaction #3</a>
-                    </li>
-                  </ul>
-                </div> -->
               </div>
 
               <div class="_collections">
@@ -540,7 +498,6 @@ export default {
   align-items: flex-start;
 }
 
-._reactions,
 ._collections {
   // background-color: var(--color-lightgray);
   padding-bottom: calc(var(--spacing));
@@ -551,6 +508,10 @@ export default {
     margin-bottom: 0;
     color: inherit;
   }
+}
+
+._comments {
+  background: white;
 }
 
 ._lang {
@@ -575,10 +536,4 @@ export default {
   }
 }
 </style>
-<style lang="scss">
-._reactions {
-  .mediaTextContent {
-    margin-left: calc(-1 * var(--spacing) / 4);
-  }
-}
-</style>
+<style lang="scss"></style>
