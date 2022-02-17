@@ -4,97 +4,31 @@
     <template v-else>
       <WelcomeModal v-if="$root.settings.show_welcome_modal" />
 
-      <div class="m_topBar">
-        <div class v-if="$root.can_admin_corpora">
-          <router-link
-            :to="{
-              name: 'Corpora',
-            }"
-            v-html="$t('all_corpus')"
-          />
-        </div>
-
-        <div class="m_topBar--content">
-          <router-link
-            :to="{
-              name: 'Corpus',
-              params: { slugFolderName: corpus.slugFolderName },
-            }"
-          >
-            <hgroup>
-              <h1 v-if="!!corpus.name">{{ corpus.name }}</h1>
-              <h2>
-                <template v-if="$root.lang.current === 'fr'">
-                  {{ corpus.subtitle }}
-                </template>
-                <template v-else-if="$root.lang.current === 'en'">
-                  {{ corpus.subtitle_en }}
-                </template>
-              </h2>
-            </hgroup>
-          </router-link>
-
-          <a href="https://plurality-university.org" target="_blank">
-            <img
-              class="_logo"
-              src="/images/U+_LogoLabels-1_Blue.png"
-              draggable="false"
+      <div class="_corpusContainer">
+        <main
+          class="_corpusContainer--leftCont"
+          ref="fragmentPane"
+          @scroll="onScroll"
+        >
+          <!-- <div class="margin-vert-small" v-if="$root.can_admin_corpora">
+            <router-link
+              :to="{
+                name: 'Corpora',
+              }"
+              v-html="$t('all_corpus')"
             />
-          </a>
-          <!-- <button type="button">{{ $t("guide") }}</button> -->
-          <!-- <button type="button">{{ $t("about_corpus") }}</button> -->
-          <div class="margin-sides-medium">
-            <div class="margin-vert-small">
-              <div class="custom-select">
-                <select v-model="new_lang">
-                  <option
-                    v-for="lang in this.$root.lang.available"
-                    :key="lang.key"
-                    :value="lang.key"
-                  >
-                    {{ lang.name }}
-                  </option>
-                </select>
-              </div>
-            </div>
-          </div>
-          <button type="button"></button>
-        </div>
-      </div>
+          </div> -->
 
-      <router-view
-        :fragments="sorted_fragments"
-        :context="'edit'"
-        :corpus="corpus"
-        :all_keywords="all_keywords"
-        :all_tags="all_tags"
-        :medias="medias"
-        :opened_fragment="opened_fragment"
-        :slugFolderName="corpus.slugFolderName"
-      />
-
-      <div class="m_corpus" ref="corpus" v-if="$route.name !== 'Informations'">
-        <div class="m_corpus--presentation">
-          <div class="m_feedbacks">
-            <a
-              class="js--openInBrowser"
-              target="_blank"
-              href="mailto:info@plurality-university.org?subject=feedbacks%20on%20Corpora"
-              >{{ $t("feedbacks") }}</a
+          <div class="_navPages">
+            <button
+              v-if="$root.can_admin_corpora"
+              type="button"
+              class="button-small"
+              @click="show_edit_corpus_for = true"
             >
-          </div>
-          <CSS />
+              {{ $t("edit_corpus") }} (admin)
+            </button>
 
-          <div class="m_corpus--presentation--content">
-            <div class="margin-bottom-small" v-if="$root.can_admin_corpora">
-              <button
-                type="button"
-                class="button-small"
-                @click="show_edit_corpus_for = true"
-              >
-                {{ $t("edit_corpus") }} (admin)
-              </button>
-            </div>
             <EditCorpus
               v-if="show_edit_corpus_for"
               :corpus="corpus"
@@ -103,214 +37,140 @@
               @close="show_edit_corpus_for = false"
             />
 
-            <div class="m_corpus--description margin-bottom-small">
-              <label>{{ $t("description") }}</label>
-              <p
-                v-html="
-                  $root.lang.current === 'fr'
-                    ? corpus.description
-                    : corpus.description_en
-                "
-              />
-              <router-link
-                :to="{
-                  name: 'Informations',
-                }"
-                class="button _linkToReadmore"
-                v-html="$t('more_infos')"
-              />
-            </div>
-
-            <div class="m_corpus--tags" v-if="all_tags && all_tags.length > 0">
-              <label>{{ $t("tags") }}</label>
-              <div class="m_keywordField m_keywordField_tags">
-                <button
-                  type="button"
-                  class="tag"
-                  v-for="tag in all_tags_subset"
-                  :key="tag"
-                  @click="setTagFilter(tag)"
-                  :class="{
-                    'is--active': tag === tag_search,
-                  }"
-                >
-                  {{ tag }}
-                </button>
-              </div>
-              <button
-                type="button"
-                v-if="!show_all_tags"
-                @click="show_all_tags = true"
-              >
-                ► {{ $t("show_all_tags") }}
-              </button>
-            </div>
-
-            <div class="m_corpus--collections">
-              <label for="fragments-search"
-                >{{ $t("collections") }}
-                <button
-                  type="button"
-                  @click="show_create_collection_modal = true"
-                >
-                  {{ $t("create") }}
-                </button>
-              </label>
-
-              <button
-                type="button"
-                v-for="collection in sorted_collections_subset"
-                :key="collection.media_filename"
-                class="collList"
-                :class="{
-                  'is--active':
-                    show_collection_meta === collection.media_filename,
-                }"
-                @click="openCollection(collection.media_filename)"
-              >
-                <div class="_title">
-                  {{ collection.title }}
-                </div>
-                <template
-                  v-if="
-                    collection.fragments_slugs &&
-                    Array.isArray(collection.fragments_slugs)
-                  "
-                >
-                  {{ collection.fragments_slugs.length }}
-                </template>
-                <template v-else>0</template>
-                {{ $t("fragments") }}
-              </button>
-
-              <button
-                type="button"
-                class="_showallcoll"
-                v-if="
-                  !show_all_collections &&
-                  sorted_collections_subset.length < sorted_collections.length
-                "
-                @click="show_all_collections = true"
-              >
-                ► {{ $t("show_all_collections") }}
-              </button>
-            </div>
-
-            <div class="m_corpus--search">
-              <label for="fragments-search">{{
-                $t("search_in_fragments")
-              }}</label>
-              <form
-                class="flex-nowrap align-items-stretch"
-                @submit.prevent="setTextFilter"
-              >
-                <input
-                  type="search"
-                  id="fragments-search"
-                  v-model="text_search_in_field"
-                  :aria-label="$t('search_in_fragments')"
-                />
-
-                <span class="input-addon">
-                  <button
-                    type="submit"
-                    :disabled="text_search === text_search_in_field"
-                  >
-                    √
-                  </button>
-                </span>
-              </form>
-            </div>
-
-            <div
-              class="m_corpus--keywords"
-              v-if="
-                all_keywords_with_counts && all_keywords_with_counts.length > 0
-              "
-            >
-              <label>{{ $t("keywords") }}</label>
-
-              <!-- {{ all_keywords_with_counts }} -->
-
-              <div class="m_keywordField m_keywordField_keywords">
-                <button
-                  type="button"
-                  class="tag"
-                  v-for="[keyword, count] in keywords_subset"
-                  :key="keyword"
-                  @click="setKeywordFilter(keyword)"
-                  :class="{
-                    'is--active': keyword === keyword_search,
-                  }"
-                >
-                  {{ keyword }} <span class="_count">{{ count }}</span>
-                </button>
-              </div>
-              <button
-                type="button"
-                v-if="
-                  !show_all_keywords &&
-                  keywords_subset &&
-                  keywords_subset.length < all_keywords_with_counts.length
-                "
-                @click="show_all_keywords = true"
-              >
-                ► {{ $t("show_all_keywords") }}
-              </button>
-            </div>
-          </div>
-
-          <div v-if="previewURL" class="m_corpus--presentation--vignette">
-            <img :src="previewURL" class draggable="false" />
-          </div>
-        </div>
-
-        <transition name="fade" :duration="200" mode="out-in">
-          <Loader
-            v-if="is_loading_medias"
-            class="m_corpus--fragments _localLoader"
-          />
-          <div v-else class="m_corpus--fragments" :key="show_collection_meta">
-            <Collection
-              v-if="shown_collection"
-              :corpus="corpus"
-              :collection="shown_collection"
-              :fragments="sorted_fragments"
-              :all_keywords="all_keywords"
-              :all_tags="all_tags"
-              :medias="medias"
-              :collection_fragments="current_collection_fragments"
+            <router-link
+              :to="{
+                name: 'Informations',
+              }"
+              class="button"
+              v-html="$t('about')"
             />
 
-            <div>
-              <div class="m_corpus--fragments--sort">
+            <LangSwitch />
+          </div>
+
+          <h1 v-if="!!corpus.name">
+            <router-link
+              :to="{
+                name: 'Corpus',
+                params: { slugFolderName: corpus.slugFolderName },
+              }"
+              @click.native.prevent="resetFiltersAndScrollTop"
+              event
+            >
+              {{ corpus.name }}
+            </router-link>
+          </h1>
+          <h2>
+            <router-link
+              :to="{
+                name: 'Corpus',
+                params: { slugFolderName: corpus.slugFolderName },
+              }"
+            >
+              <template v-if="$root.lang.current === 'fr'">
+                {{ corpus.subtitle }}
+              </template>
+              <template v-else-if="$root.lang.current === 'en'">
+                {{ corpus.subtitle_en }}
+              </template>
+            </router-link>
+          </h2>
+
+          <div class="m_corpus--description margin-bottom-small">
+            <p
+              v-if="$route.name !== 'Informations'"
+              v-html="
+                $root.lang.current === 'fr'
+                  ? corpus.description
+                  : corpus.description_en
+              "
+            />
+          </div>
+          <div class="m_feedbacks">
+            <a
+              class="js--openInBrowser"
+              target="_blank"
+              href="mailto:info@plurality-university.org?subject=feedbacks%20on%20Corpora"
+              >{{ $t("feedbacks") }}</a
+            >
+          </div>
+
+          <router-view
+            :fragments="sorted_fragments"
+            :context="'edit'"
+            :corpus="corpus"
+            :all_keywords="all_keywords"
+            :all_tags="all_tags"
+            :medias="medias"
+            :opened_fragment="opened_fragment"
+            :slugFolderName="corpus.slugFolderName"
+          />
+
+          <div
+            class="m_corpus"
+            ref="corpus"
+            v-if="$route.name !== 'Informations'"
+          >
+            <transition name="fade" :duration="200" mode="out-in">
+              <Loader
+                v-if="is_loading_medias"
+                class="m_corpus--fragments _localLoader"
+              />
+              <div
+                v-else
+                class="m_corpus--fragments"
+                :key="show_collection_meta"
+              >
+                <Collection
+                  v-if="shown_collection"
+                  :corpus="corpus"
+                  :collection="shown_collection"
+                  :fragments="sorted_fragments"
+                  :all_keywords="all_keywords"
+                  :all_tags="all_tags"
+                  :medias="medias"
+                  :collection_fragments="current_collection_fragments"
+                />
+
                 <div>
-                  <small>
-                    <template
-                      v-if="
-                        filtered_fragments.length === sorted_fragments.length
-                      "
-                    >
-                      {{ $t("stories") }} • {{ filtered_fragments.length }}
-                    </template>
-                    <template
-                      v-if="
-                        filtered_fragments.length !== sorted_fragments.length
-                      "
-                      >{{ filtered_fragments.length }}
-                      {{ $t("results") }}</template
-                    >
-                  </small>
-                  <div class="custom-select custom-select_tiny">
-                    <select v-model="sort_fragments_by">
-                      <option value="date_created">
-                        {{ $t("by_creation_date") }}
-                      </option>
-                      <option value="title">{{ $t("by_title") }}</option>
-                    </select>
-                  </div>
-                </div>
-                <div
+                  <div class="">
+                    <div class="_indicator m_fragments">
+                      <div>
+                        {{ $t("stories") }}&nbsp;: {{ filtered_fragments.length
+                        }}<template
+                          v-if="
+                            filtered_fragments.length !==
+                            sorted_fragments.length
+                          "
+                          >&nbsp;/&nbsp;{{ sorted_fragments.length }}
+                        </template>
+                      </div>
+
+                      <div class="_sortMode">
+                        <button
+                          type="button"
+                          :class="{
+                            'is--active': sort_fragments_by === 'date_created',
+                          }"
+                          @click="sort_fragments_by = 'date_created'"
+                        >
+                          {{ $t("by_creation_date") }}
+                        </button>
+                        <button
+                          type="button"
+                          :class="{
+                            'is--active': sort_fragments_by === 'title',
+                          }"
+                          @click="sort_fragments_by = 'title'"
+                        >
+                          {{ $t("by_title") }}
+                        </button>
+                      </div>
+                      <div />
+                      <div />
+                      <div />
+                    </div>
+                    <!-- <div
                   v-if="text_search || keyword_search || tag_search"
                   class="m_corpus--fragments--sort--filterList"
                 >
@@ -341,60 +201,105 @@
                       {{ $t("tags") }} = {{ tag_search }}
                       ×
                     </button>
+                  </div> 
+                </div> -->
                   </div>
+                  <div
+                    v-if="text_search !== '' && filtered_fragments.length === 0"
+                    class="m_corpus--fragments--notice"
+                  >
+                    {{ $t("no_results") }}
+                  </div>
+
+                  <FragmentsList
+                    v-else
+                    :corpus="corpus"
+                    :all_keywords="all_keywords"
+                    :all_tags="all_tags"
+                    :medias="medias"
+                    :fragments="filtered_fragments"
+                  />
                 </div>
               </div>
-              <div
-                v-if="text_search !== '' && filtered_fragments.length === 0"
-                class="m_corpus--fragments--notice"
+            </transition>
+          </div>
+
+          <div class="_scrollTop">
+            <transition name="slide-up">
+              <button
+                type="button"
+                :title="$t('scroll_to_top')"
+                @click="scrollToTop"
+                v-if="fragments_pane_scrolled > 150"
               >
-                {{ $t("no_results") }}
+                <svg
+                  version="1.1"
+                  xmlns="http://www.w3.org/2000/svg"
+                  xmlns:xlink="http://www.w3.org/1999/xlink"
+                  x="0px"
+                  y="0px"
+                  viewBox="0 0 56.6 50.1"
+                  style="enable-background: new 0 0 56.6 50.1"
+                  xml:space="preserve"
+                  aria-hidden="true"
+                  stroke="currentColor"
+                  fill="transparent"
+                >
+                  <g>
+                    <path
+                      vector-effect="non-scaling-stroke"
+                      d="M24.8,49c0,0,5-23.9-22.7-23.9V25C29.9,25,24.8,1.1,24.8,1.1"
+                    ></path>
+                    <line
+                      vector-effect="non-scaling-stroke"
+                      x1="1.3"
+                      y1="25.1"
+                      x2="55.3"
+                      y2="25.1"
+                    ></line>
+                  </g>
+                </svg>
+              </button>
+            </transition>
+          </div>
+
+          <footer class="_bottomFooter">
+            <button
+              type="button"
+              class="button-nostyle a"
+              @click="
+                $root.settings.show_welcome_modal = true;
+                $root.settings.unfold_legal_pane = true;
+              "
+              :class="{ 'is--active': $root.settings.show_welcome_modal }"
+            >
+              {{ $t("personal_data_and_legal_notices") }}
+            </button>
+
+            <div>
+              <div class="margin-sides-medium">
+                <div class="flex-nowrap">
+                  Corpora v{{ $root.state.appVersion }}
+                  &nbsp;
+                  <Admin />
+                </div>
               </div>
-
-              <FragmentsList
-                v-else
-                :corpus="corpus"
-                :all_keywords="all_keywords"
-                :all_tags="all_tags"
-                :medias="medias"
-                :fragments="filtered_fragments"
-              />
             </div>
-          </div>
-        </transition>
+          </footer>
+        </main>
+        <aside class="_corpusContainer--rightCont">
+          <Sidebar
+            :sorted_fragments="sorted_fragments"
+            :all_keywords="all_keywords"
+            :all_tags="all_tags"
+            :keyword_search.sync="keyword_search"
+            :tag_search.sync="tag_search"
+            :text_search.sync="text_search"
+            :show_collection_meta.sync="show_collection_meta"
+            @scrollTop="scrollToTop"
+          />
+        </aside>
       </div>
-
-      <footer class="_bottomFooter">
-        <button
-          type="button"
-          class="button-nostyle a"
-          @click="
-            $root.settings.show_welcome_modal = true;
-            $root.settings.unfold_legal_pane = true;
-          "
-          :class="{ 'is--active': $root.settings.show_welcome_modal }"
-        >
-          {{ $t("personal_data_and_legal_notices") }}
-        </button>
-
-        <div>
-          <div class="margin-sides-medium">
-            <div class="flex-nowrap">
-              Corpora v{{ $root.state.appVersion }}
-              &nbsp;
-              <Admin />
-            </div>
-          </div>
-        </div>
-      </footer>
-
-      <CreateCollection
-        v-if="show_create_collection_modal"
-        :collections="collections"
-        :slugFolderName="corpus.slugFolderName"
-        @close="show_create_collection_modal = false"
-        @openCollection="openCollection"
-      />
     </template>
   </div>
 </template>
@@ -404,9 +309,10 @@ import WelcomeModal from "../components/modals/WelcomeModal.vue";
 import CollectMode from "../components/subcomponents/CollectMode.vue";
 import EditCorpus from "../components/modals/EditCorpus.vue";
 import FragmentsList from "../components/subcomponents/FragmentsList.vue";
-import CreateCollection from "../components/modals/CreateCollection.vue";
 import Collection from "../components/subcomponents/Collection.vue";
 import CSS from "../components/subcomponents/CSS.vue";
+import LangSwitch from "../components/subcomponents/LangSwitch.vue";
+import Sidebar from "../components/subcomponents/Sidebar.vue";
 
 export default {
   props: {},
@@ -416,9 +322,10 @@ export default {
     CollectMode,
     EditCorpus,
     FragmentsList,
-    CreateCollection,
     Collection,
     CSS,
+    LangSwitch,
+    Sidebar,
   },
   data() {
     return {
@@ -430,16 +337,9 @@ export default {
       is_loading_medias: false,
 
       show_edit_corpus_for: false,
-
-      new_lang: this.$root.lang.current,
-
-      show_all_keywords: false,
-      show_all_collections: false,
-      show_all_tags: false,
+      fragments_pane_scrolled: 0,
 
       text_search: "",
-      text_search_in_field: "",
-
       keyword_search: false,
       tag_search: false,
 
@@ -461,22 +361,7 @@ export default {
   },
   destroyed() {},
   watch: {
-    new_lang() {
-      this.$root.updateLocalLang(this.new_lang);
-    },
     show_collection_meta() {},
-    $route: {
-      handler(to) {
-        if (this.$route.query) {
-          this.text_search = this.text_search_in_field =
-            this.$route.query.text_search || "";
-          this.keyword_search = this.$route.query.keyword_search || false;
-          this.tag_search = this.$route.query.tag_search || false;
-          this.show_collection_meta = this.$route.query.collection || false;
-        }
-      },
-      immediate: true,
-    },
   },
   computed: {
     corpus() {
@@ -592,12 +477,6 @@ export default {
 
       return collections;
     },
-    sorted_collections_subset() {
-      if (!this.sorted_collections) return false;
-      if (!this.show_all_collections)
-        return this.sorted_collections.slice(0, 3);
-      return this.sorted_collections;
-    },
     sorted_fragments() {
       if (
         typeof this.corpus.medias !== "object" ||
@@ -674,10 +553,6 @@ export default {
       all_tags.sort((a, b) => a.localeCompare(b));
       return all_tags;
     },
-    all_tags_subset() {
-      if (!this.show_all_tags) return this.all_tags.slice(0, 5);
-      return this.all_tags;
-    },
 
     all_keywords() {
       if (!this.sorted_fragments) return [];
@@ -694,30 +569,6 @@ export default {
 
       all_keywords.sort((a, b) => a.localeCompare(b));
       return all_keywords;
-    },
-    all_keywords_with_counts() {
-      if (!this.sorted_fragments || !this.all_keywords) return false;
-
-      let all_keywords = this.sorted_fragments.reduce((acc, f) => {
-        if (!!f.keywords && Array.isArray(f.keywords) && f.keywords.length > 0)
-          acc = acc.concat(f.keywords.map((t) => t.title));
-        return acc;
-      }, []);
-
-      const sorted_keywords_with_count = Object.entries(
-        this.$_.countBy(all_keywords)
-      ).sort(function (a, b) {
-        return b[1] - a[1];
-      });
-
-      return sorted_keywords_with_count;
-    },
-
-    keywords_subset() {
-      if (!this.all_keywords_with_counts) return false;
-      if (!this.show_all_keywords)
-        return this.all_keywords_with_counts.slice(0, 10);
-      return this.all_keywords_with_counts;
     },
   },
   methods: {
@@ -742,35 +593,6 @@ export default {
       });
     },
 
-    openCollection(media_filename) {
-      this.tag_search = false;
-      this.keyword_search = false;
-      this.text_search = this.text_search_in_field = "";
-
-      this.show_collection_meta =
-        this.show_collection_meta === media_filename ? false : media_filename;
-      this.setQueryURLFromFilters();
-    },
-    setKeywordFilter(kw) {
-      this.tag_search = false;
-      this.text_search = this.text_search_in_field = "";
-
-      this.keyword_search = this.keyword_search === kw ? false : kw;
-      this.setQueryURLFromFilters();
-    },
-    setTagFilter(tag) {
-      this.keyword_search = false;
-      this.text_search = this.text_search_in_field = "";
-
-      this.tag_search = this.tag_search === tag ? false : tag;
-      this.setQueryURLFromFilters();
-    },
-    setTextFilter() {
-      this.keyword_search = this.tag_search = false;
-
-      this.text_search = this.text_search_in_field;
-      this.setQueryURLFromFilters();
-    },
     doFragmentMediasIncludeText({ fragment_media, text }) {
       if (
         typeof fragment_media.medias_slugs !== "object" ||
@@ -816,35 +638,23 @@ export default {
 
       return all_text_content.includes(text);
     },
-    setQueryURLFromFilters() {
-      let query = Object.assign({}, this.$route.query) || {};
 
-      if (this.text_search === "") delete query.text_search;
-      else query.text_search = this.text_search;
-
-      if (!this.keyword_search) delete query.keyword_search;
-      else query.keyword_search = this.keyword_search;
-
-      if (!this.tag_search) delete query.tag_search;
-      else query.tag_search = this.tag_search;
-
-      if (!this.show_collection_meta) delete query.collection;
-      else query.collection = this.show_collection_meta;
-
-      if (query.collection) {
-        this.show_all_collections = true;
-      }
-
-      this.$router.push({
-        query,
-        params: { savePosition: true },
-      });
-
-      window.scrollTo({
+    scrollToTop() {
+      this.$refs.fragmentPane.scrollTo({
         top: 0,
         behavior: "smooth",
       });
     },
+    resetFiltersAndScrollTop() {
+      this.text_search = "";
+      this.keyword_search = false;
+      this.tag_search = false;
+      this.scrollToTop();
+    },
+    onScroll() {
+      this.fragments_pane_scrolled = this.$refs.fragmentPane.scrollTop;
+    },
+
     createNewMoment() {
       let contribution_moments =
         this.corpus.hasOwnProperty("contribution_moments") &&
@@ -916,13 +726,6 @@ export default {
   }
 }
 
-.m_corpus--description {
-  ._linkToReadmore {
-    display: inline-block;
-    margin-top: calc(var(--spacing) / 2);
-  }
-}
-
 .m_corpus--fragments--sort--filterList {
   > * {
     display: flex;
@@ -946,74 +749,6 @@ export default {
   padding: calc(var(--spacing) * 2);
 }
 
-.m_corpus--presentation {
-  // position: absolute;
-  // margin-right: calc(var(--spacing) * 2);
-  z-index: 1;
-  // in case of very small height of viewport
-  // max-height: 100vh;
-  // max-width: 52ch;
-  // overflow-y: auto;
-  padding: 0 calc(var(--spacing) * 2);
-  // padding: 0;
-  margin: calc(var(--spacing) * 2) 0;
-  border-left: 2px dotted var(--color-blue);
-  // text-align: right;
-
-  .m_corpus--presentation--content {
-    // text-align: right;
-    > * {
-      margin-bottom: calc(var(--spacing) * 2);
-    }
-  }
-}
-
-.m_corpus--presentation--name {
-  h1 + h3 {
-    margin-top: calc(-1 * var(--spacing));
-  }
-}
-.m_corpus--presentation--description,
-.m_corpus--presentation--contributionModes,
-.m_corpus--presentation--displayOptions {
-  margin-bottom: calc(var(--spacing) * 1.5);
-}
-
-.m_corpus--presentation--contributionModes,
-.m_corpus--presentation--displayOptions {
-  padding: calc(var(--spacing) / 2);
-  background-color: #c0d1d5;
-  border-radius: 4px;
-
-  button,
-  .button {
-    background-color: var(--color-white);
-  }
-
-  > div {
-    // border-left: 2px solid var(--body-bg);
-    // padding-left: calc(var(--spacing) / 2);
-
-    > *:last-child {
-      margin-bottom: 0;
-    }
-
-    .custom-select {
-      margin: 0;
-    }
-  }
-}
-
-.m_corpus--presentation--vignette {
-  max-width: 240px;
-  margin-bottom: 0;
-  flex: 0 0 140px;
-
-  img {
-    object-fit: scale-down;
-  }
-}
-
 .m_feedbacks {
   position: fixed;
   bottom: calc(var(--spacing) * 3);
@@ -1030,64 +765,6 @@ export default {
   }
 }
 
-.m_topBar {
-  width: 100%;
-  padding: 0 calc(var(--spacing) * 2);
-}
-.m_topBar--content {
-  padding: calc(var(--spacing) * 2) 0;
-  border-bottom: 2px dotted var(--color-blue);
-
-  display: flex;
-  flex-flow: row wrap;
-  align-items: center;
-  gap: calc(var(--spacing) * 3);
-
-  a {
-    text-decoration: none;
-    color: inherit;
-  }
-
-  h1,
-  h2 {
-    margin-top: 0;
-    margin-bottom: 0;
-  }
-
-  hgroup {
-    // padding-right: calc(var(--spacing) * 2);
-  }
-
-  button {
-    background: inherit;
-    font-family: inherit;
-    font-size: 1.5rem;
-    line-height: 1.09;
-  }
-
-  > *:last-child {
-    margin-right: 0;
-    flex: 1;
-    text-align: right;
-  }
-
-  .custom-select {
-    margin-right: 0;
-    margin-left: auto;
-    width: 90px;
-    select {
-      margin-left: auto;
-      margin-right: 0;
-    }
-  }
-}
-
-.m_corpus--search {
-  select {
-    margin: calc(var(--spacing) / 4) 0;
-  }
-}
-
 ._logo {
   position: absolute;
   top: 5px;
@@ -1099,9 +776,9 @@ export default {
 }
 
 ._bottomFooter {
-  border-top: 2px dotted var(--color-blue);
+  border-top: 1px solid var(--color-blue);
   padding: calc(var(--spacing)) 0;
-  margin: 0 calc(var(--spacing) * 2);
+  // margin: 0 calc(var(--spacing));
 
   display: flex;
   flex-flow: row wrap;
@@ -1123,32 +800,104 @@ export default {
   height: 50vh;
 }
 
-._count {
-  background: var(--color-black);
-  background: rgba(60, 53, 65, 0.25);
-  // border: 2px solid var(--color-black);
-  width: 1rem;
-  height: 1rem;
-  // color: white;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: bold;
-  font-size: 80%;
-  margin: 0 calc(var(--spacing) / 4);
-}
-
-.m_corpus--tags button {
-  background: transparent;
-}
-
-.m_corpus--keywords > button {
-  background: var(--color-purple);
-  background: transparent;
-}
-
 ._showallcoll {
   background: transparent;
+}
+
+._corpusContainer {
+  height: 100vh;
+  width: 100%;
+
+  display: flex;
+  flex-flow: row nowrap;
+
+  > * {
+    overflow-y: auto;
+  }
+
+  ._corpusContainer--leftCont {
+    flex: 1 1 auto;
+
+    padding: calc(var(--spacing) * 1) calc(var(--spacing) * 2);
+  }
+
+  ._corpusContainer--rightCont {
+    flex: 0 0 260px;
+    border-left: 1px solid var(--color-blue);
+  }
+}
+
+._topBar {
+  display: block;
+  flex-flow: row wrap;
+  justify-content: space-between;
+  align-items: flex-start;
+  overflow: visible;
+}
+
+._navPages {
+  float: right;
+  display: flex;
+  align-items: center;
+  gap: calc(var(--spacing));
+  margin-top: calc(var(--spacing) / 2);
+}
+
+h1,
+h2 {
+  margin-top: calc(var(--spacing) * 1);
+  margin-bottom: calc(var(--spacing) * 2);
+  pointer-events: none;
+
+  > a {
+    pointer-events: auto;
+  }
+}
+
+h1 {
+  position: sticky;
+  top: 0;
+  z-index: 1001;
+}
+
+._indicator {
+  font-family: var(--ff-top-level);
+
+  text-align: left;
+
+  > * {
+    display: block;
+  }
+}
+._sortMode {
+  button {
+    display: block;
+    padding: 0;
+  }
+}
+
+._scrollTop {
+  position: absolute;
+  z-index: 10;
+  bottom: 0;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  pointer-events: none;
+
+  button {
+    width: 3em;
+    height: 3em;
+    background-color: var(--color-lightgray);
+    box-shadow: 0 0 1rem 1rem var(--color-lightgray);
+    border-radius: 100%;
+    margin-bottom: calc(var(--spacing) * 2);
+
+    pointer-events: auto;
+
+    svg {
+      transform: rotate(90deg);
+    }
+  }
 }
 </style>

@@ -435,7 +435,6 @@ export default {
               calc(var(--spacing) / 4) 0;
             margin-left: 0;
 
-            font-family: "base12";
             font-style: italic;
 
             color: currentColor;

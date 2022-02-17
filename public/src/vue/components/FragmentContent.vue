@@ -22,26 +22,69 @@
           `"
       >
         <div class="m_fragmentContent--content--inner--top">
-          <h2>{{ fragment.title }}</h2>
-
           <div class="_meta" @click="show_advanced_meta = !show_advanced_meta">
-            <template v-if="!show_advanced_meta">
-              {{ $t("created") }}&nbsp;•
-              {{ $root.formatDateToPrecise(fragment.date_created) }}
-            </template>
-            <template v-else>
-              <div>
-                {{ $t("created") }}&nbsp;•
-                {{ $root.formatDateToPrecise(fragment.date_created) }}
+            <div v-if="!show_advanced_meta" class="_meta--oneLine">
+              <div class="_date">
+                {{
+                  $root.formatDate({ date: fragment.date_created, format: "L" })
+                }}
               </div>
-              <div>
-                {{ $t("edited") }}&nbsp;•
-                {{ $root.formatDateToPrecise(fragment.date_modified) }}
+              <div class="_time">
+                {{
+                  $root.formatDate({
+                    date: fragment.date_created,
+                    format: "LT",
+                  })
+                }}
               </div>
-            </template>
+            </div>
+            <div v-else>
+              {{ $t("created") }}
+              <div class="_meta--oneLine">
+                <div class="_date">
+                  {{
+                    $root.formatDate({
+                      date: fragment.date_created,
+                      format: "L",
+                    })
+                  }}
+                </div>
+                <div class="_time">
+                  {{
+                    $root.formatDate({
+                      date: fragment.date_created,
+                      format: "LT",
+                    })
+                  }}
+                </div>
+              </div>
+              {{ $t("edited") }}
+              <div class="_meta--oneLine">
+                <div class="_date">
+                  {{
+                    $root.formatDate({
+                      date: fragment.date_modified,
+                      format: "L",
+                    })
+                  }}
+                </div>
+                <div class="_time">
+                  {{
+                    $root.formatDate({
+                      date: fragment.date_modified,
+                      format: "LT",
+                    })
+                  }}
+                </div>
+              </div>
+            </div>
           </div>
 
-          <div class="motsclestags">
+          <div class="_title">
+            <h2>{{ fragment.title }}</h2>
+          </div>
+
+          <div class="motsclestags" v-if="context !== 'preview'">
             <template v-if="fragment.keywords && fragment.keywords.length > 0">
               <span v-for="kw in fragment.keywords" :key="kw.title">
                 #&hairsp;{{ kw.title }}
@@ -253,15 +296,16 @@ export default {
         return acc;
       }, []);
 
+      //
+
       if (this.context === "preview") return fragment_medias.slice(0, 2);
       return fragment_medias;
     },
   },
   methods: {
     updateMouseCoords(event) {
-      const percent_hover_x = event.offsetX / event.target.offsetWidth;
-      this.random_angle = (percent_hover_x - 0.5) * 6;
-
+      // const percent_hover_x = event.offsetX / event.target.offsetWidth;
+      // this.random_angle = (percent_hover_x - 0.5) * 6;
       // const percent_hover_y = event.offsetY / event.target.offsetHeight;
       // this.slide_on_hover = Math.min(1, percent_hover_y * 1);
     },
@@ -397,9 +441,9 @@ export default {
   }
 
   &.is--preview .m_fragmentContent--content {
-    --slide_on_hover: 5rem;
+    --slide_on_hover: 1rem;
     --move_top_for_slide: calc(-1.8 * var(--slide_on_hover));
-    --preview_height: 360px;
+    --preview_height: 260px;
 
     height: var(--preview_height);
     overflow: hidden;
@@ -453,19 +497,36 @@ export default {
       margin: 0;
       box-shadow: 0 0 0.5rem 0rem var(--color-lightgray);
       pointer-events: auto;
+      min-height: 300px;
 
       transform-origin: 50% 100px;
     }
 
     .m_fragmentContent--content--inner--top {
-      margin-top: 0;
+      ._title {
+        height: 5em;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      h2 {
+        display: -webkit-box;
+        -webkit-line-clamp: 3;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        text-overflow: ellipsis;
+
+        font-size: 1.3rem;
+      }
     }
 
     &:hover,
     &.is--opened {
       .m_fragmentContent--content--inner {
-        transform: translateY(calc(-1 * var(--slide_on_hover)))
-          rotate(calc(var(--random_angle) * 1deg)) scale(1.03);
+        transform: translateY(calc(-1 * var(--slide_on_hover))) scale(1);
+        // transform: translateY(calc(-1 * var(--slide_on_hover)))
+        //   rotate(calc(var(--random_angle) * 1deg)) scale(1);
         color: var(--color-blue);
       }
     }
@@ -479,9 +540,9 @@ export default {
     // margin-left: 4px;
 
     pointer-events: auto;
-    padding: calc(var(--spacing) * 1) 0;
+    padding: calc(var(--spacing) / 2) 0;
     margin: calc(var(--spacing) * 1) 0;
-    border-top: 2px solid var(--color-blue);
+    border-top: 1px solid var(--color-blue);
 
     // background-color: #fff;
     // background-color: #f9f3db;
@@ -504,17 +565,32 @@ export default {
 }
 
 .m_fragmentContent--content--inner--top {
-  margin: calc(var(--spacing)) 0;
-  padding: 0 var(--spacing);
+  margin: 0 0;
+  padding: 0 calc(var(--spacing));
   text-align: center;
-  h2 {
-    margin: 0;
-    margin-bottom: calc(var(--spacing) / 2);
+
+  ._title {
+    margin: calc(var(--spacing) / 1) 0;
+    padding: 0 calc(var(--spacing) / 2);
+
+    h2 {
+      display: block;
+      margin: 0;
+    }
   }
 
   ._meta {
-    font-size: 0.8rem;
+    font-family: var(--ff-top-level);
+    font-size: 0.6rem;
     text-transform: lowercase;
+    text-align: left;
+    margin-left: calc(var(--spacing) / -2);
+    margin-right: calc(var(--spacing) / -2);
+  }
+
+  ._meta--oneLine {
+    display: flex;
+    justify-content: space-between;
   }
 }
 

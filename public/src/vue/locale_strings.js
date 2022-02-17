@@ -72,8 +72,8 @@ module.exports = (function () {
       en: "Add this story to a collection",
     },
     search_in_fragments: {
-      fr: "Chercher dans les récits",
-      en: "Search in stories",
+      fr: "Rechercher",
+      en: "Search",
     },
     show_fragments: {
       fr: "Afficher les récits",
@@ -377,12 +377,12 @@ module.exports = (function () {
       en: "Reactions",
     },
     by_creation_date: {
-      fr: "Par date de création",
-      en: "By creation date",
+      fr: "Trier par date de création",
+      en: "Sort by date",
     },
     by_title: {
-      fr: "Par titre",
-      en: "By title",
+      fr: "Trier par titre",
+      en: "Sort by title",
     },
     retry: {
       fr: "Réessayer",
@@ -393,9 +393,9 @@ module.exports = (function () {
       fr: "Enregistrer",
       en: "Save",
     },
-    more_infos: {
-      fr: "En savoir plus",
-      en: "More informations",
+    about: {
+      fr: "à propos",
+      en: "about",
     },
     add: {
       fr: "Ajouter",
@@ -427,8 +427,8 @@ module.exports = (function () {
       en: "Description, source…",
     },
     create_a_story: {
-      fr: "Ajouter un nouveau récit",
-      en: "Add a new story",
+      fr: "Ajouter un récit",
+      en: "Add a story",
     },
     stories: {
       fr: "Récits",
@@ -630,6 +630,10 @@ module.exports = (function () {
       nl: "Als u het wachtwoord verwijdert, kunnen alle gebruikers die toegang hebben tot do•doc het project wijzigen.",
       oc: "Si tiratz lo mot de Santa-Clara totes los utilizaires qu'an accès a do•doc poiràn modificar lo projècte.",
       de: "Wenn Sie das Passwort entfernen, können alle Benutzer, die Zugriff auf do•doc haben, das Projekt bearbeiten bzw. löschen.",
+    },
+    scroll_to_top: {
+      fr: "Remonter",
+      en: "Scroll to top",
     },
   };
 

@@ -74,12 +74,12 @@ Vue.component("tippy", TippyComponent);
 let lang_settings = {
   available: [
     {
-      key: "fr",
-      name: "Français",
-    },
-    {
       key: "en",
       name: "English",
+    },
+    {
+      key: "fr",
+      name: "Français",
     },
   ],
   default: "en",
@@ -639,6 +639,9 @@ let vm = new Vue({
     },
     formatDateToPrecise(date) {
       return this.$moment(date, "YYYY-MM-DD HH:mm:ss").format("LTS L");
+    },
+    formatDate({ date, format }) {
+      return this.$moment(date, "YYYY-MM-DD HH:mm:ss").format(format);
     },
     formatDurationToMinuteHours(date) {
       return this.$moment.utc(date).format("mm:ss");
