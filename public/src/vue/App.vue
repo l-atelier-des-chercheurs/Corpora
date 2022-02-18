@@ -659,7 +659,8 @@ input[type="submit"] {
     outline: 0;
   }
 
-  &.is--active {
+  &.is--active,
+  &.router-link-exact-active {
     color: var(--color-blue);
     outline: 0;
   }

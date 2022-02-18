@@ -130,17 +130,9 @@
     <div class="_collectionsList">
       <label for="fragments-search">{{ $t("collections") }} </label>
 
-      <button type="button" @click="show_create_collection_modal = true">
+      <button type="button" @click="$emit('showCreateCollection')">
         + {{ $t("create_your_collection") }}
       </button>
-
-      <CreateCollection
-        v-if="show_create_collection_modal"
-        :collections="collections"
-        :slugFolderName="corpus.slugFolderName"
-        @close="show_create_collection_modal = false"
-        @openCollection="openCollection"
-      />
 
       <button
         type="button"
@@ -189,8 +181,6 @@
   </div>
 </template>
 <script>
-import CreateCollection from "../../components/modals/CreateCollection.vue";
-
 export default {
   props: {
     fragments: [Boolean, Array],
@@ -205,14 +195,11 @@ export default {
 
     show_collection_meta: [Boolean, String],
   },
-  components: {
-    CreateCollection,
-  },
+  components: {},
   data() {
     return {
       show_all_tags: false,
       show_all_keywords: false,
-      show_create_collection_modal: false,
 
       text_search_in_field: "",
     };
@@ -252,6 +239,9 @@ export default {
       this.setQueryURLFromFilters();
     },
     text_search() {
+      this.setQueryURLFromFilters();
+    },
+    show_collection_meta() {
       this.setQueryURLFromFilters();
     },
   },
@@ -333,13 +323,11 @@ export default {
       this.setAllFiltersToZero();
       this.$emit("update:text_search", this.text_search_in_field);
     },
-
-    openCollection(media_filename) {
+    openCollection(coll) {
       this.setAllFiltersToZero();
-
       this.$emit(
         "update:show_collection_meta",
-        this.show_collection_meta === media_filename ? false : media_filename
+        this.show_collection_meta === coll ? false : coll
       );
     },
 

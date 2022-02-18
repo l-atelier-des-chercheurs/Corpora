@@ -293,6 +293,14 @@
             :text_search.sync="text_search"
             :show_collection_meta.sync="show_collection_meta"
             @scrollTop="scrollToTop"
+            @showCreateCollection="show_create_collection_modal = true"
+          />
+          <CreateCollection
+            v-if="show_create_collection_modal"
+            :collections="sorted_collections"
+            :slugFolderName="corpus.slugFolderName"
+            @close="show_create_collection_modal = false"
+            @openCollection="openCollection"
           />
         </aside>
       </div>
@@ -309,6 +317,7 @@ import Collection from "../components/subcomponents/Collection.vue";
 import CSS from "../components/subcomponents/CSS.vue";
 import LangSwitch from "../components/subcomponents/LangSwitch.vue";
 import Sidebar from "../components/subcomponents/Sidebar.vue";
+import CreateCollection from "../components/modals/CreateCollection.vue";
 
 export default {
   props: {},
@@ -322,6 +331,7 @@ export default {
     CSS,
     LangSwitch,
     Sidebar,
+    CreateCollection,
   },
   data() {
     return {
@@ -333,6 +343,7 @@ export default {
       is_loading_medias: false,
 
       show_edit_corpus_for: false,
+      show_create_collection_modal: false,
       fragments_pane_scrolled: 0,
 
       text_search: "",
@@ -627,6 +638,13 @@ export default {
       }, "");
 
       return all_text_content.includes(text);
+    },
+
+    openCollection(media_filename) {
+      debugger;
+      this.resetFiltersAndScrollTop();
+      this.show_collection_meta =
+        this.show_collection_meta === media_filename ? false : media_filename;
     },
 
     scrollToTop() {
