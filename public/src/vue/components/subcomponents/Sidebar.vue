@@ -13,12 +13,35 @@
           :aria-label="$t('search_in_fragments')"
         />
 
-        <span class="input-addon">
-          <button
-            type="submit"
-            :disabled="text_search === text_search_in_field"
-          >
-            √
+        <span class="input-addon" v-if="text_search !== text_search_in_field">
+          <button type="submit">
+            <svg
+              version="1.1"
+              xmlns="http://www.w3.org/2000/svg"
+              xmlns:xlink="http://www.w3.org/1999/xlink"
+              x="0px"
+              y="0px"
+              viewBox="0 0 56.6 50.1"
+              style="enable-background: new 0 0 56.6 50.1"
+              xml:space="preserve"
+              aria-hidden="true"
+              stroke="currentColor"
+              fill="transparent"
+            >
+              <g>
+                <path
+                  vector-effect="non-scaling-stroke"
+                  d="M24.8,49c0,0,5-23.9-22.7-23.9V25C29.9,25,24.8,1.1,24.8,1.1"
+                ></path>
+                <line
+                  vector-effect="non-scaling-stroke"
+                  x1="1.3"
+                  y1="25.1"
+                  x2="55.3"
+                  y2="25.1"
+                ></line>
+              </g>
+            </svg>
           </button>
         </span>
       </form>
@@ -26,32 +49,90 @@
 
     <div class="_tags" v-if="all_tags && all_tags.length > 0">
       <label>{{ $t("tags") }}</label>
-      <div class="m_keywordField m_keywordField_tags">
+      <div class="m_keywordField">
         <button
           type="button"
           class="tag"
-          v-for="tag in all_tags_subset"
+          v-for="[tag, count] in all_tags_subset"
           :key="tag"
           @click="setTagFilter(tag)"
           :class="{
             'is--active': tag === tag_search,
           }"
         >
-          {{ tag }}
+          {{ tag }} ({{ count }})
         </button>
+
+        <template
+          v-if="
+            all_tags &&
+            (all_tags_subset.length < all_tags.length || show_all_tags)
+          "
+        >
+          <button
+            type="button"
+            class="more"
+            @click="show_all_tags = !show_all_tags"
+          >
+            <template v-if="!show_all_tags">
+              {{ $t("show_all_tags") }}
+            </template>
+            <template v-else>
+              {{ $t("hide") }}
+            </template>
+          </button>
+        </template>
       </div>
-      <button type="button" v-if="!show_all_tags" @click="show_all_tags = true">
-        ► {{ $t("show_all_tags") }}
-      </button>
     </div>
 
-    <div class="_collections" v-if="false">
-      <label for="fragments-search"
-        >{{ $t("collections") }}
-        <button type="button" @click="show_create_collection_modal = true">
-          {{ $t("create") }}
+    <div
+      class="_keywords"
+      v-if="all_keywords_with_counts && all_keywords_with_counts.length > 0"
+    >
+      <label>{{ $t("keywords") }}</label>
+
+      <div class="m_keywordField">
+        <button
+          type="button"
+          class="keyword"
+          v-for="[keyword, count] in keywords_subset"
+          :key="keyword"
+          @click="setKeywordFilter(keyword)"
+          :class="{
+            'is--active': keyword === keyword_search,
+          }"
+        >
+          {{ keyword }} ({{ count }})
         </button>
-      </label>
+
+        <template
+          v-if="
+            all_keywords &&
+            (keywords_subset.length < all_keywords.length || show_all_keywords)
+          "
+        >
+          <button
+            type="button"
+            class="more"
+            @click="show_all_keywords = !show_all_keywords"
+          >
+            <template v-if="!show_all_keywords">
+              {{ $t("show_all_keywords") }}
+            </template>
+            <template v-else>
+              {{ $t("hide") }}
+            </template>
+          </button>
+        </template>
+      </div>
+    </div>
+
+    <div class="_collections">
+      <label for="fragments-search">{{ $t("collections") }} </label>
+
+      <button type="button" @click="show_create_collection_modal = true">
+        {{ $t("create_your_collection") }}
+      </button>
 
       <CreateCollection
         v-if="show_create_collection_modal"
@@ -74,6 +155,7 @@
         <div class="_title">
           {{ collection.title }}
         </div>
+
         <template
           v-if="
             collection.fragments_slugs &&
@@ -86,51 +168,26 @@
         {{ $t("fragments") }}
       </button>
 
-      <button
-        type="button"
-        class="_showallcoll"
+      <template
         v-if="
-          !show_all_collections &&
-          sorted_collections_subset.length < sorted_collections.length
+          sorted_collections_subset.length &&
+          (sorted_collections_subset.length < sorted_collections.length ||
+            show_all_collections)
         "
-        @click="show_all_collections = true"
       >
-        ► {{ $t("show_all_collections") }}
-      </button>
-    </div>
-
-    <div
-      class="_keywords"
-      v-if="all_keywords_with_counts && all_keywords_with_counts.length > 0"
-    >
-      <label>{{ $t("keywords") }}</label>
-
-      <!-- {{ all_keywords_with_counts }} -->
-      <div class="m_keywordField m_keywordField_keywords">
         <button
           type="button"
-          class="tag"
-          v-for="[keyword, count] in keywords_subset"
-          :key="keyword"
-          @click="setKeywordFilter(keyword)"
-          :class="{
-            'is--active': keyword === keyword_search,
-          }"
+          class="more"
+          @click="show_all_collections = !show_all_collections"
         >
-          {{ keyword }} <span class="_count">{{ count }}</span>
+          <template v-if="!show_all_collections">
+            {{ $t("show_all_collections") }}
+          </template>
+          <template v-else>
+            {{ $t("hide") }}
+          </template>
         </button>
-      </div>
-      <button
-        type="button"
-        v-if="
-          !show_all_keywords &&
-          keywords_subset &&
-          keywords_subset.length < all_keywords_with_counts.length
-        "
-        @click="show_all_keywords = true"
-      >
-        ► {{ $t("show_all_keywords") }}
-      </button>
+      </template>
     </div>
   </div>
 </template>
@@ -139,13 +196,15 @@ import CreateCollection from "../../components/modals/CreateCollection.vue";
 
 export default {
   props: {
-    sorted_fragments: [Boolean, Array],
+    fragments: [Boolean, Array],
     all_keywords: Array,
     all_tags: Array,
 
     keyword_search: [Boolean, String],
     tag_search: [Boolean, String],
     text_search: [String],
+
+    sorted_collections: [Boolean, Array],
 
     show_collection_meta: [Boolean, String],
   },
@@ -200,15 +259,34 @@ export default {
     },
   },
   computed: {
+    all_tags_with_counts() {
+      if (!this.fragments || !this.all_tags) return false;
+
+      let all_tags = this.fragments.reduce((acc, f) => {
+        if (!!f.tags && Array.isArray(f.tags) && f.tags.length > 0)
+          acc = acc.concat(f.tags.map((t) => t.title));
+        return acc;
+      }, []);
+
+      const sorted_tags_with_count = Object.entries(
+        this.$_.countBy(all_tags)
+      ).sort(function (a, b) {
+        return b[1] - a[1];
+      });
+
+      return sorted_tags_with_count;
+    },
+
     all_tags_subset() {
-      if (!this.show_all_tags) return this.all_tags.slice(0, 5);
-      return this.all_tags;
+      if (!this.all_tags_with_counts) return false;
+      if (!this.show_all_tags) return this.all_tags_with_counts.slice(0, 5);
+      return this.all_tags_with_counts;
     },
 
     all_keywords_with_counts() {
-      if (!this.sorted_fragments || !this.all_keywords) return false;
+      if (!this.fragments || !this.all_keywords) return false;
 
-      let all_keywords = this.sorted_fragments.reduce((acc, f) => {
+      let all_keywords = this.fragments.reduce((acc, f) => {
         if (!!f.keywords && Array.isArray(f.keywords) && f.keywords.length > 0)
           acc = acc.concat(f.keywords.map((t) => t.title));
         return acc;
@@ -225,7 +303,7 @@ export default {
     keywords_subset() {
       if (!this.all_keywords_with_counts) return false;
       if (!this.show_all_keywords)
-        return this.all_keywords_with_counts.slice(0, 10);
+        return this.all_keywords_with_counts.slice(0, 5);
       return this.all_keywords_with_counts;
     },
 
@@ -288,19 +366,29 @@ export default {
 
       this.$router.push({
         query,
+        name: "Corpus",
         params: { savePosition: true },
       });
 
-      this.$emit("scrollTop");
+      this.$nextTick(() => {
+        this.$emit("scrollTop");
+      });
     },
   },
 };
 </script>
 <style lang="scss" scoped>
 ._sidebarContent {
-  padding: calc(var(--spacing) * 2) calc(var(--spacing) * 2);
+  padding: calc(var(--spacing) * 2);
+  padding-bottom: 0;
   > * {
     margin-bottom: calc(var(--spacing) * 2);
+  }
+}
+
+.m_keywordField {
+  button {
+    display: flex;
   }
 }
 

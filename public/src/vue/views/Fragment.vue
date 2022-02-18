@@ -56,20 +56,6 @@
               class="_fragmentListAndReactions--loader"
             />
             <div class="_fragmentListAndReactions--content" v-else>
-              <div class="margin-vert-small _lang">
-                <div class="custom-select custom-select_tiny">
-                  <select v-model="new_lang">
-                    <option
-                      v-for="lang in this.$root.lang.available"
-                      :key="lang.key"
-                      :value="lang.key"
-                    >
-                      {{ lang.name }}
-                    </option>
-                  </select>
-                </div>
-              </div>
-
               <div class="_collections">
                 <h2>
                   {{ $t("collections") }}
@@ -268,8 +254,12 @@ export default {
     };
   },
   created() {},
-  mounted() {},
-  beforeDestroy() {},
+  mounted() {
+    document.addEventListener("keydown", this.escClose);
+  },
+  beforeDestroy() {
+    document.removeEventListener("keydown", this.escClose);
+  },
   watch: {
     "opened_fragment.metaFileName": {
       handler: function () {
@@ -353,7 +343,9 @@ export default {
         query: this.$route.query ? this.$route.query : {},
       });
     },
-
+    escClose(e) {
+      if (e.keyCode == 27) this.closeModal();
+    },
     addFragmentToColl() {
       if (!this.collection_to_add_fragment_to) return;
 
@@ -422,8 +414,8 @@ export default {
 <style lang="scss" scoped>
 ._sideBySide {
   > * {
-    padding-top: calc(var(--spacing) * 1);
-    padding-bottom: calc(var(--spacing) * 1);
+    padding-top: calc(var(--spacing) / 2);
+    padding-bottom: calc(var(--spacing) / 2);
   }
   ._fragmentListAndReactions {
     // padding: calc(var(--spacing) / 2);
@@ -432,7 +424,7 @@ export default {
   .app:not(.mobile_view) & {
     display: flex;
     flex-flow: row nowrap;
-    // gap: calc(var(--spacing) / 2);
+    gap: calc(var(--spacing));
     > * {
       max-height: 100vh;
       overflow: auto;
@@ -441,15 +433,15 @@ export default {
     }
 
     ._singleFragment {
-      flex: 1 1 600px;
+      flex: 1 1 auto;
 
-      padding-top: calc(var(--spacing) * 1);
-      padding-bottom: calc(var(--spacing) * 1);
-      padding: calc(var(--spacing) / 1);
+      // padding-top: calc(var(--spacing)  1);
+      // padding-bottom: calc(var(--spacing) * 1);
+      // padding: calc(var(--spacing) * 2) 0;
       // padding-right: 0;
     }
     ._fragmentListAndReactions {
-      flex: 0 1 320px;
+      flex: 0 0 260px;
     }
   }
 }

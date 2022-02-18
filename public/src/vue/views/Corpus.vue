@@ -2,7 +2,7 @@
   <div style="" v-if="corpus">
     <CorpusPwd v-if="!can_access_corpus" :corpus="corpus" />
     <template v-else>
-      <WelcomeModal v-if="$root.settings.show_welcome_modal" />
+      <Bandeau v-if="$root.settings.show_bandeau" />
 
       <div class="_corpusContainer">
         <main
@@ -78,7 +78,7 @@
 
           <div class="m_corpus--description margin-bottom-small">
             <p
-              v-if="$route.name !== 'Informations'"
+              v-if="['Corpus', 'Fragment'].includes($route.name)"
               v-html="
                 $root.lang.current === 'fr'
                   ? corpus.description
@@ -109,7 +109,7 @@
           <div
             class="m_corpus"
             ref="corpus"
-            v-if="$route.name !== 'Informations'"
+            v-if="['Corpus', 'Fragment'].includes($route.name)"
           >
             <transition name="fade" :duration="200" mode="out-in">
               <Loader
@@ -264,18 +264,13 @@
           </div>
 
           <footer class="_bottomFooter">
-            <button
-              type="button"
-              class="button-nostyle a"
-              @click="
-                $root.settings.show_welcome_modal = true;
-                $root.settings.unfold_legal_pane = true;
-              "
-              :class="{ 'is--active': $root.settings.show_welcome_modal }"
-            >
-              {{ $t("personal_data_and_legal_notices") }}
-            </button>
-
+            <router-link
+              :to="{
+                name: 'Mentions légales',
+              }"
+              class="button"
+              v-html="$t('personal_data_and_legal_notices')"
+            />
             <div>
               <div class="margin-sides-medium">
                 <div class="flex-nowrap">
@@ -289,9 +284,10 @@
         </main>
         <aside class="_corpusContainer--rightCont">
           <Sidebar
-            :sorted_fragments="sorted_fragments"
+            :fragments="fragments"
             :all_keywords="all_keywords"
             :all_tags="all_tags"
+            :sorted_collections="sorted_collections"
             :keyword_search.sync="keyword_search"
             :tag_search.sync="tag_search"
             :text_search.sync="text_search"
@@ -305,7 +301,7 @@
 </template>
 <script>
 import CorpusPwd from "../components/modals/CorpusPwd.vue";
-import WelcomeModal from "../components/modals/WelcomeModal.vue";
+import Bandeau from "../components/subcomponents/Bandeau.vue";
 import CollectMode from "../components/subcomponents/CollectMode.vue";
 import EditCorpus from "../components/modals/EditCorpus.vue";
 import FragmentsList from "../components/subcomponents/FragmentsList.vue";
@@ -318,7 +314,7 @@ export default {
   props: {},
   components: {
     CorpusPwd,
-    WelcomeModal,
+    Bandeau,
     CollectMode,
     EditCorpus,
     FragmentsList,
@@ -343,7 +339,6 @@ export default {
       keyword_search: false,
       tag_search: false,
 
-      show_create_collection_modal: false,
       show_collection_meta: false,
 
       // show_fragments_for: {},
@@ -362,6 +357,14 @@ export default {
   destroyed() {},
   watch: {
     show_collection_meta() {},
+    $route: {
+      handler() {
+        this.$nextTick(() => {
+          // this.scrollToTop();
+        });
+      },
+      deep: true,
+    },
   },
   computed: {
     corpus() {
@@ -387,10 +390,9 @@ export default {
     },
 
     opened_fragment() {
-      if (!this.$route.params.fragmentId || !this.sorted_fragments)
-        return false;
+      if (!this.$route.params.fragmentId || !this.fragments) return false;
 
-      return this.sorted_fragments.find(
+      return this.fragments.find(
         (f) => f.media_filename === this.$route.params.fragmentId
       );
     },
@@ -414,7 +416,7 @@ export default {
 
       return this.shown_collection.fragments_slugs.reduce((acc, fs) => {
         const metaFileName = fs.metaFileName;
-        const fragment = this.sorted_fragments.find(
+        const fragment = this.fragments.find(
           (f) => f.metaFileName === metaFileName
         );
         if (fragment) acc.push(fragment);
@@ -452,15 +454,9 @@ export default {
       return Object.values(this.corpus.medias);
     },
     sorted_collections() {
-      if (
-        typeof this.corpus.medias !== "object" ||
-        Object.values(this.corpus.medias).length === 0
-      )
-        return false;
+      if (!this.medias) return false;
 
-      let collections = Object.values(this.corpus.medias).filter(
-        (m) => m.type === "collection"
-      );
+      let collections = this.medias.filter((m) => m.type === "collection");
       // collections = this.$_.sortBy(collections, "fragments_slugs");
       // collections.reverse();
       collections = collections.sort(function (a, b) {
@@ -477,25 +473,19 @@ export default {
 
       return collections;
     },
+
+    fragments() {
+      if (!this.medias) return false;
+      return this.medias.filter((m) => m.type === "fragment");
+    },
+
     sorted_fragments() {
-      if (
-        typeof this.corpus.medias !== "object" ||
-        Object.values(this.corpus.medias).length === 0
-      )
-        return false;
+      if (!this.fragments) return false;
 
-      let fragments = Object.values(this.corpus.medias).filter(
-        (m) => m.type === "fragment"
-      );
-
-      if (this.sort_fragments_by === "date_created") {
-        fragments = this.$_.sortBy(fragments, "date_created");
-        fragments.reverse();
-      } else if (this.sort_fragments_by === "title") {
-        fragments.sort((a, b) => a.title.localeCompare(b.title));
-      }
-
-      return fragments;
+      if (this.sort_fragments_by === "date_created")
+        return this.$_.sortBy(this.fragments, "date_created").reverse();
+      else if (this.sort_fragments_by === "title")
+        return this.fragments.sort((a, b) => a.title.localeCompare(b.title));
     },
     filtered_fragments() {
       if (!this.sorted_fragments) return false;
@@ -538,9 +528,9 @@ export default {
       });
     },
     all_tags() {
-      if (!this.sorted_fragments) return [];
+      if (!this.fragments) return [];
 
-      let all_tags = this.sorted_fragments.reduce((acc, f) => {
+      let all_tags = this.fragments.reduce((acc, f) => {
         if (!!f.tags && Array.isArray(f.tags) && f.tags.length > 0)
           acc = acc.concat(f.tags.map((t) => t.title));
         return acc;
@@ -555,9 +545,9 @@ export default {
     },
 
     all_keywords() {
-      if (!this.sorted_fragments) return [];
+      if (!this.fragments) return [];
 
-      let all_keywords = this.sorted_fragments.reduce((acc, f) => {
+      let all_keywords = this.fragments.reduce((acc, f) => {
         if (!!f.keywords && Array.isArray(f.keywords) && f.keywords.length > 0)
           acc = acc.concat(f.keywords.map((t) => t.title));
         return acc;
@@ -640,6 +630,7 @@ export default {
     },
 
     scrollToTop() {
+      console.log(`Corpus / scrollToTop`);
       this.$refs.fragmentPane.scrollTo({
         top: 0,
         behavior: "smooth",
@@ -798,10 +789,6 @@ export default {
 ._localLoader {
   position: relative;
   height: 50vh;
-}
-
-._showallcoll {
-  background: transparent;
 }
 
 ._corpusContainer {

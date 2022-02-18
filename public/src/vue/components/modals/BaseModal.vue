@@ -24,7 +24,7 @@
         <div class="m_modal--container--content" ref="modalContent">
           <div v-if="!!this.$slots['preview']" class="m_modal--preview">
             <!-- if there is no sidebar, output header here -->
-            <template v-if="!this.$slots['sidebar']">
+            <template v-if="!$slots['sidebar'] && $slots['header']">
               <div class="m_modal--header">
                 <h3 class="margin-none">
                   <slot name="header">default header</slot>

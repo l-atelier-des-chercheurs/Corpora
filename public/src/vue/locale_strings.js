@@ -51,6 +51,14 @@ module.exports = (function () {
       fr: "Lien",
       en: "Link",
     },
+    learn_more: {
+      fr: "Plus d’informations",
+      en: "Learn more",
+    },
+    I_agree: {
+      fr: "OK",
+      en: "I agree",
+    },
     fragment_included_in_collections: {
       fr: "Ce récit est présent dans les collections suivantes",
       en: "This story is part of the following collections",
@@ -66,6 +74,10 @@ module.exports = (function () {
     create_collection_first: {
       fr: "Créez d’abord une collection en fermant cette page.",
       en: "Create a collection first by closing this page.",
+    },
+    create_your_collection: {
+      fr: "créez votre collection",
+      en: "create your collection",
     },
     add_story_to_collection: {
       fr: "Ajouter ce récit à une collection",
@@ -455,16 +467,20 @@ module.exports = (function () {
       en: "Tab(s)",
     },
     tags: {
-      fr: "Catégorie(s)",
-      en: "Categorie(s)",
+      fr: "Catégories",
+      en: "Categories",
     },
     keywords: {
-      fr: "Mot(s)-clé(s)",
-      en: "Keyword(s)",
+      fr: "Mots-clés",
+      en: "Keywords",
     },
     show_all_tags: {
       fr: "Afficher toutes les catégories",
       en: "Show all tags",
+    },
+    hide: {
+      fr: "Masquer",
+      en: "Hide",
     },
     show_all_keywords: {
       fr: "Afficher tous les mots-clés",

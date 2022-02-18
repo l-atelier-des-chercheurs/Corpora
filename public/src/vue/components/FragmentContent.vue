@@ -84,15 +84,27 @@
             <h2>{{ fragment.title }}</h2>
           </div>
 
-          <div class="motsclestags" v-if="context !== 'preview'">
-            <template v-if="fragment.keywords && fragment.keywords.length > 0">
-              <span v-for="kw in fragment.keywords" :key="kw.title">
-                #&hairsp;{{ kw.title }}
+          <div
+            class="m_keywordField m_keywordField--inline margin-bottom-verysmall"
+            v-if="context !== 'preview'"
+          >
+            <template v-if="fragment.tags && fragment.tags.length > 0">
+              <span v-for="tag in fragment.tags" :key="tag.title" class="tag">
+                {{ tag.title }}
               </span>
             </template>
-            <template v-if="fragment.tags && fragment.tags.length > 0">
-              <span v-for="tag in fragment.tags" :key="tag.title">
-                •&hairsp;{{ tag.title }}
+          </div>
+          <div
+            class="m_keywordField m_keywordField--inline margin-bottom-verysmall"
+            v-if="context !== 'preview'"
+          >
+            <template v-if="fragment.keywords && fragment.keywords.length > 0">
+              <span
+                v-for="kw in fragment.keywords"
+                class="keyword"
+                :key="kw.title"
+              >
+                {{ kw.title }}
               </span>
             </template>
           </div>
@@ -108,36 +120,7 @@
             class="m_advancedMenu--toggleButton"
             :class="{ 'is--active': show_advanced_menu }"
           >
-            <!-- <svg class="svg-icon" viewBox="0 0 20 20">
-            <path
-              fill="none"
-              d="M3.936,7.979c-1.116,0-2.021,0.905-2.021,2.021s0.905,2.021,2.021,2.021S5.957,11.116,5.957,10
-                  S5.052,7.979,3.936,7.979z M3.936,11.011c-0.558,0-1.011-0.452-1.011-1.011s0.453-1.011,1.011-1.011S4.946,9.441,4.946,10
-                  S4.494,11.011,3.936,11.011z M16.064,7.979c-1.116,0-2.021,0.905-2.021,2.021s0.905,2.021,2.021,2.021s2.021-0.905,2.021-2.021
-                  S17.181,7.979,16.064,7.979z M16.064,11.011c-0.559,0-1.011-0.452-1.011-1.011s0.452-1.011,1.011-1.011S17.075,9.441,17.075,10
-                  S16.623,11.011,16.064,11.011z M10,7.979c-1.116,0-2.021,0.905-2.021,2.021S8.884,12.021,10,12.021s2.021-0.905,2.021-2.021
-                  S11.116,7.979,10,7.979z M10,11.011c-0.558,0-1.011-0.452-1.011-1.011S9.442,8.989,10,8.989S11.011,9.441,11.011,10
-                  S10.558,11.011,10,11.011z"
-            />
-          </svg>-->
-            <!-- Generator: Adobe Illustrator 24.1.0, SVG Export Plug-In  -->
-            <svg
-              version="1.1"
-              xmlns="http://www.w3.org/2000/svg"
-              xmlns:xlink="http://www.w3.org/1999/xlink"
-              x="0px"
-              y="0px"
-              width="4px"
-              height="16.2px"
-              viewBox="0 0 4 16.2"
-              style="enable-background: new 0 0 4 16.2"
-              xml:space="preserve"
-            >
-              <path
-                d="M0,14.1c0,1.1,0.9,2,2,2s2-0.9,2-2s-0.9-2-2-2S0,13,0,14.1z M0,2c0,1.1,0.9,2,2,2s2-0.9,2-2S3.1,0,2,0
-	S0,0.9,0,2z M0,8.1c0,1.1,0.9,2,2,2s2-0.9,2-2s-0.9-2-2-2S0,7,0,8.1z"
-              />
-            </svg>
+            {{ $t("edit") }}
           </button>
           <div class="m_advancedMenu--menu" v-if="show_advanced_menu">
             <button
@@ -164,9 +147,22 @@
         />
 
         <div
-          class="m_fragmentContent--medias"
-          :tabindex="context === 'preview' ? '-1' : ''"
+          class="_fragmentPreview"
+          v-if="context === 'preview'"
+          tabindex="-1"
         >
+          <template v-if="preview_media">
+            <div class="_fragmentPreview--overlay" />
+            <FragmentMedia
+              class="_fragmentPreview--media"
+              :media="preview_media"
+              :slugFolderName="slugFolderName"
+              context="preview"
+            />
+          </template>
+        </div>
+
+        <div v-else class="m_fragmentContent--medias">
           <AddMedias
             v-if="context === 'edit'"
             :slugFolderName="slugFolderName"
@@ -281,6 +277,20 @@ export default {
       const fullPath = `/${this.slugFolderName}/${this.fragment.media_filename}`;
       return this.$root.fragments_read.includes(fullPath);
     },
+    preview_media() {
+      if (this.linked_medias.length === 0) return false;
+
+      let preview = undefined;
+
+      // find first image
+      preview = this.linked_medias.find((m) => m.type === "image");
+
+      // if none, get first text
+      if (!preview) preview = this.linked_medias.find((m) => m.type === "text");
+
+      // if none, then too bad
+      return preview;
+    },
     linked_medias() {
       if (
         typeof this.fragment.medias_slugs !== "object" ||
@@ -296,9 +306,6 @@ export default {
         return acc;
       }, []);
 
-      //
-
-      if (this.context === "preview") return fragment_medias.slice(0, 2);
       return fragment_medias;
     },
   },
@@ -505,9 +512,7 @@ export default {
     .m_fragmentContent--content--inner--top {
       ._title {
         height: 5em;
-        display: flex;
-        align-items: center;
-        justify-content: center;
+        min-height: 0;
       }
 
       h2 {
@@ -528,6 +533,9 @@ export default {
         // transform: translateY(calc(-1 * var(--slide_on_hover)))
         //   rotate(calc(var(--random_angle) * 1deg)) scale(1);
         color: var(--color-blue);
+      }
+
+      ._fragmentPreview {
       }
     }
   }
@@ -572,6 +580,10 @@ export default {
   ._title {
     margin: calc(var(--spacing) / 1) 0;
     padding: 0 calc(var(--spacing) / 2);
+    min-height: 10em;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 
     h2 {
       display: block;
@@ -584,8 +596,8 @@ export default {
     font-size: 0.6rem;
     text-transform: lowercase;
     text-align: left;
-    margin-left: calc(var(--spacing) / -2);
-    margin-right: calc(var(--spacing) / -2);
+    // margin-left: calc(var(--spacing) / -2);
+    // margin-right: calc(var(--spacing) / -2);
   }
 
   ._meta--oneLine {
@@ -669,5 +681,21 @@ export default {
   }
   .m_fragmentContent--open--alreadyVisited {
   }
+}
+
+._fragmentPreview {
+  // filter: brightness(80%) sepia(100%) hue-rotate(201deg) saturate(1260%);
+  position: relative;
+  ._fragmentPreview--media {
+    mix-blend-mode: luminosity;
+  }
+}
+._fragmentPreview--overlay {
+  background-color: var(--color-blue);
+  position: absolute;
+  top: 0;
+  width: calc(100% - var(--spacing) * 2);
+  height: 100%;
+  margin: calc(var(--spacing) / 2) calc(var(--spacing));
 }
 </style>

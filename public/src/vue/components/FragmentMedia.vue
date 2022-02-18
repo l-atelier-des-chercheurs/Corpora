@@ -38,7 +38,6 @@
           "
         />
       </template> -->
-
       <template
         v-else-if="
           (media.type === 'link' || media.type === 'embed') && is_being_edited
@@ -155,23 +154,7 @@
           }"
           v-if="is_touch || is_hovered"
         >
-          <svg
-            version="1.1"
-            xmlns="http://www.w3.org/2000/svg"
-            xmlns:xlink="http://www.w3.org/1999/xlink"
-            x="0px"
-            y="0px"
-            width="4px"
-            height="16.2px"
-            viewBox="0 0 4 16.2"
-            style="enable-background: new 0 0 4 16.2"
-            xml:space="preserve"
-          >
-            <path
-              d="M0,14.1c0,1.1,0.9,2,2,2s2-0.9,2-2s-0.9-2-2-2S0,13,0,14.1z M0,2c0,1.1,0.9,2,2,2s2-0.9,2-2S3.1,0,2,0
-	S0,0.9,0,2z M0,8.1c0,1.1,0.9,2,2,2s2-0.9,2-2s-0.9-2-2-2S0,7,0,8.1z"
-            />
-          </svg>
+          {{ $t("edit") }}
         </button>
         <div class="m_advancedMenu--menu" v-if="show_advanced_menu_for_media">
           <button
@@ -438,7 +421,10 @@ export default {
   },
   methods: {
     enableEdition(metaFileName) {
-      if (this.media.metaFileName === metaFileName) {
+      if (
+        this.media.metaFileName === metaFileName &&
+        this.context !== "preview"
+      ) {
         this.is_being_edited = true;
       }
     },

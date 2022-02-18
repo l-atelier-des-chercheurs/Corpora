@@ -22,6 +22,12 @@
           required
           autofocus
         />
+        <small
+          :class="{
+            'is--warning': fragmentdata.title.length > 80,
+          }"
+          >{{ fragmentdata.title.length }} ≤ 80 char</small
+        >
       </div>
 
       <!-- <div>
