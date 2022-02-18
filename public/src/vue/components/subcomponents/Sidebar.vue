@@ -127,11 +127,11 @@
       </div>
     </div>
 
-    <div class="_collections">
+    <div class="_collectionsList">
       <label for="fragments-search">{{ $t("collections") }} </label>
 
       <button type="button" @click="show_create_collection_modal = true">
-        {{ $t("create_your_collection") }}
+        + {{ $t("create_your_collection") }}
       </button>
 
       <CreateCollection
@@ -146,7 +146,6 @@
         type="button"
         v-for="collection in sorted_collections_subset"
         :key="collection.media_filename"
-        class="collList"
         :class="{
           'is--active': show_collection_meta === collection.media_filename,
         }"
@@ -155,17 +154,15 @@
         <div class="_title">
           {{ collection.title }}
         </div>
-
-        <template
+        (<template
           v-if="
             collection.fragments_slugs &&
             Array.isArray(collection.fragments_slugs)
           "
-        >
-          {{ collection.fragments_slugs.length }}
+          >{{ collection.fragments_slugs.length }}
         </template>
         <template v-else>0</template>
-        {{ $t("fragments") }}
+        {{ $t("fragments").toLowerCase() }})
       </button>
 
       <template
@@ -319,6 +316,7 @@ export default {
       this.$emit("update:tag_search", false);
       this.$emit("update:text_search", "");
       this.$emit("update:keyword_search", false);
+      this.$emit("update:show_collection_meta", false);
     },
     setKeywordFilter(kw) {
       this.setAllFiltersToZero();
@@ -337,9 +335,7 @@ export default {
     },
 
     openCollection(media_filename) {
-      this.tag_search = false;
-      this.keyword_search = false;
-      this.text_search = this.text_search_in_field = "";
+      this.setAllFiltersToZero();
 
       this.$emit(
         "update:show_collection_meta",

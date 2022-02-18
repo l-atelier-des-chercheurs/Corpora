@@ -56,7 +56,7 @@
               class="_fragmentListAndReactions--loader"
             />
             <div class="_fragmentListAndReactions--content" v-else>
-              <div class="_collections">
+              <div class="_collectionsList">
                 <h2>
                   {{ $t("collections") }}
 
@@ -488,18 +488,6 @@ export default {
 ._fragmentListAndReactions--loader {
   // max-height: 500px;
   align-items: flex-start;
-}
-
-._collections {
-  // background-color: var(--color-lightgray);
-  padding-bottom: calc(var(--spacing));
-  margin-bottom: calc(var(--spacing));
-
-  h2 {
-    margin-top: 0;
-    margin-bottom: 0;
-    color: inherit;
-  }
 }
 
 ._comments {

@@ -867,16 +867,18 @@ h1 {
   position: absolute;
   z-index: 10;
   bottom: 0;
+  left: 0;
   width: 100%;
   display: flex;
   justify-content: center;
   pointer-events: none;
 
   button {
-    width: 3em;
-    height: 3em;
+    width: 4em;
+    height: 4em;
     background-color: var(--color-lightgray);
     box-shadow: 0 0 1rem 1rem var(--color-lightgray);
+    // padding: calc(var(--spacing) * 1);
     border-radius: 100%;
     margin-bottom: calc(var(--spacing) * 2);
 

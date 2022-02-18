@@ -851,7 +851,6 @@ audio {
   }
 }
 
-
 .m_keywordField {
   display: flex;
   flex-flow: column nowrap;
@@ -893,6 +892,26 @@ audio {
       font-size: 0.7rem;
       border: none;
     }
+  }
+}
+
+._collectionsList {
+  display: flex;
+  flex-flow: column nowrap;
+  align-items: stretch;
+  justify-content: flex-start;
+  gap: calc(var(--spacing) / 3);
+
+  button {
+    display: block;
+    text-align: left;
+    border: 1px solid var(--color-black);
+    padding: calc(var(--spacing) / 2);
+    min-height: 4em;
+
+    display: flex;
+    flex-flow: column wrap;
+    align-items: flex-start;
   }
 }
 
