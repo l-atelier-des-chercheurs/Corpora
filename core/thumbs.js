@@ -1056,13 +1056,16 @@ module.exports = (function () {
                       url: results.image,
                       dest: siteimage_cache_fullpath,
                       extractFilename: false,
+                      rejectUnauthorized: false,
                     })
                     .then(() => {
                       results.local_image = siteimage_cache_path;
                       return resolve(results);
                     })
                     .catch((err) => {
-                      dev.error(`Couldn’t download site image : ${err}`);
+                      dev.error(
+                        `Couldn’t download site image ${results.image} to ${siteimage_cache_fullpath} : ${err}`
+                      );
                       return resolve(results);
                     });
                 } else return resolve(results);
