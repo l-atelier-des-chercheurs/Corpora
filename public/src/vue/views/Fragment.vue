@@ -1,6 +1,7 @@
 <template>
   <Modal
     @close="closeModal"
+    @click="closeModalOnClick"
     :read_only="false"
     :typeOfModal="'LargeAndScroll'"
     :is_loading="is_sending_content_to_server"
@@ -57,27 +58,42 @@
             />
             <div class="_fragmentListAndReactions--content" v-else>
               <div class="_collectionsList">
-                <h2>
-                  {{ $t("collections") }}
+                <label>{{ $t("part_of_collections") }} </label>
 
-                  <button
-                    type="button"
-                    @click="edit_coll = !edit_coll"
-                    :class="{
-                      'is--active': edit_coll,
-                    }"
-                  >
-                    {{ $t("edit") }}
-                  </button>
-                </h2>
-                <div
+                <!-- <div
                   v-if="collections_fragment_is_in.length > 0"
                   v-html="$t('fragment_included_in_collections')"
-                />
-                <div
-                  v-else-if="!edit_coll"
-                  v-html="$t('fragment_included_in_no_collections')"
-                />
+                /> -->
+
+                <button
+                  type="button"
+                  v-for="collection in collections_fragment_is_in"
+                  :key="collection.media_filename"
+                  :class="{
+                    'is--active':
+                      show_collection_meta === collection.media_filename,
+                  }"
+                  @click="$emit('openCollection', collection.media_filename)"
+                >
+                  <div class="_title">
+                    {{ collection.title }}
+                  </div>
+                  (<template
+                    v-if="
+                      collection.fragments_slugs &&
+                      Array.isArray(collection.fragments_slugs)
+                    "
+                    >{{ collection.fragments_slugs.length }}
+                  </template>
+                  <template v-else>0</template>
+                  {{ $t("fragments").toLowerCase() }})
+                </button>
+
+                <button type="button" @click="$emit('showCreateCollection')">
+                  + {{ $t("add_to_your_collection") }}
+                </button>
+
+                <hr />
 
                 <div class="">
                   <div
@@ -140,84 +156,33 @@
               </div>
 
               <template v-if="linked_fragments.length === 0">
-                <hr />
-                <h2>
+                <label>
                   {{ $t("no_with_similar_keywords") }}
-                </h2>
+                </label>
               </template>
               <template v-else>
-                <hr />
                 <h2>
                   {{
                     linked_fragments.length + " " + $t("with_similar_keywords")
                   }}
                 </h2>
 
-                <transition-group
-                  class="_fragmentListAndReactions--content--list"
-                  name="list-complete"
-                  tag="div"
-                >
-                  <FragmentContent
-                    v-for="(fragment, index) in linked_fragments"
-                    :key="fragment.metaFileName + '.' + index"
-                    class="_fragmentListAndReactions--content--list--item"
-                    :context="'preview'"
-                    :corpus="corpus"
-                    :all_keywords="all_keywords"
-                    :all_tags="all_tags"
-                    :medias="medias"
-                    :fragment="fragment"
-                    :fragment_width="300"
-                    :slugFolderName="corpus.slugFolderName"
-                  />
-                </transition-group>
-              </template>
-              <template
-                v-if="
-                  not_linked_fragments &&
-                  not_linked_fragments.length > 0 &&
-                  false
-                "
-              >
-                <hr />
-                <h2>
-                  {{
-                    not_linked_fragments.length + " " + $t("other_fragments")
-                  }}
-                </h2>
-
-                <button
-                  type="button"
-                  v-if="!show_not_linked_fragments"
-                  @click="show_not_linked_fragments = true"
-                >
-                  {{ $t("show") }}
-                </button>
-
-                <transition-group
-                  v-if="show_not_linked_fragments"
-                  class="_fragmentListAndReactions--content--list"
-                  name="list-complete"
-                  tag="div"
-                  :key="
-                    not_linked_fragments.map((f) => f.metaFileName).join(',')
-                  "
-                >
-                  <FragmentContent
-                    v-for="(fragment, index) in not_linked_fragments"
-                    class="_fragmentListAndReactions--content--list--item"
-                    :key="fragment.metaFileName + '_' + index"
-                    :context="'preview'"
-                    :corpus="corpus"
-                    :all_keywords="all_keywords"
-                    :all_tags="all_tags"
-                    :medias="medias"
-                    :fragment="fragment"
-                    :fragment_width="300"
-                    :slugFolderName="corpus.slugFolderName"
-                  />
-                </transition-group>
+                <ul>
+                  <li
+                    v-for="fragment in linked_fragments"
+                    :key="fragment.metaFileName"
+                  >
+                    <router-link
+                      :to="{
+                        name: 'Fragment',
+                        params: { fragmentId: fragment.media_filename },
+                        query: $route.query ? $route.query : {},
+                      }"
+                      class="button"
+                      v-html="fragment.title"
+                    />
+                  </li>
+                </ul>
               </template>
             </div>
           </transition>
@@ -343,6 +308,7 @@ export default {
         query: this.$route.query ? this.$route.query : {},
       });
     },
+    closeModalOnClick() {},
     escClose(e) {
       if (e.keyCode == 27) this.closeModal();
     },
@@ -413,9 +379,14 @@ export default {
 </script>
 <style lang="scss" scoped>
 ._sideBySide {
+  pointer-events: none;
   > * {
     padding-top: calc(var(--spacing) / 2);
     padding-bottom: calc(var(--spacing) / 2);
+
+    > * {
+      pointer-events: auto;
+    }
   }
   ._fragmentListAndReactions {
     // padding: calc(var(--spacing) / 2);
@@ -463,12 +434,12 @@ export default {
   }
 }
 
-._fragmentListAndReactions {
-}
-
 ._fragmentListAndReactions--content {
+  margin-top: calc(var(--spacing) * 1);
   margin-bottom: calc(var(--spacing) * 1);
   padding: calc(var(--spacing));
+  background: white;
+  border-top: 1px solid var(--color-blue);
 }
 ._fragmentListAndReactions--content:last-child {
   padding-bottom: calc(var(--spacing) * 4) !important;
@@ -513,6 +484,27 @@ export default {
     margin: 0 calc(var(--spacing) / 4);
     background-color: var(--color-blue);
     color: white;
+  }
+}
+
+ul {
+  list-style-type: none;
+  padding: 0;
+
+  li::before {
+    content: "";
+    display: none;
+  }
+  a {
+    display: block;
+    position: relative;
+    text-align: left;
+    margin-left: 2em;
+    &::before {
+      content: "→";
+      position: absolute;
+      right: 100%;
+    }
   }
 }
 </style>

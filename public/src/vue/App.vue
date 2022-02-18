@@ -54,7 +54,7 @@ body {
   background-color: var(--body-bg);
   color: var(--color-black);
   margin: 0;
-  font-family: var(--ff-body);
+  font-family: var(--ff-top-level);
 
   font-size: 90%;
   line-height: 1.25;
@@ -90,7 +90,7 @@ h1 {
 
 h2 {
   font-size: 1.4rem;
-  font-weight: 400;
+  font-weight: 300;
   line-height: 1.25;
 }
 
@@ -505,6 +505,8 @@ textarea {
 .input-addon {
   // font-size: 1.2em;
   // height: 100%;
+  display: flex;
+  align-items: center;
 
   > * {
     // padding: 0.5em;
@@ -517,6 +519,7 @@ textarea {
     border-bottom-left-radius: 0;
   }
 
+  span,
   svg {
     width: 2em;
     height: 2em;
@@ -794,7 +797,7 @@ audio {
 
   ._siteCard--image {
     position: relative;
-    flex: 1 0 25%;
+    flex: 1 0 50%;
     min-width: 200px;
     max-width: 260px;
     display: flex;
@@ -823,14 +826,21 @@ audio {
 
   ._siteCard--text,
   ._siteCard--embed {
-    flex: 1 1 100px;
+    flex: 1 1 50%;
     padding: calc(var(--spacing) / 2);
   }
   ._siteCard--text--title {
     font-family: var(--ff-top-level);
     font-weight: bold;
+
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
   ._siteCard--text--description {
+    font-size: 0.8rem;
   }
 }
 
@@ -838,17 +848,25 @@ audio {
   display: flex;
   justify-content: center;
   align-items: center;
-  background: transparent;
+
+  span {
+    background: var(--color-blue);
+    color: white;
+    padding-right: calc(var(--spacing) / 2);
+  }
 
   svg {
-    width: 24px;
-    height: 24px;
+    width: 38px;
+    height: 38px;
+    padding-right: 6px;
   }
   circle {
     fill: var(--color-blue);
   }
   polygon {
-    fill: white;
+    stroke: white;
+    stroke-width: 3px;
+    fill: transparent;
   }
 }
 
@@ -868,6 +886,9 @@ audio {
     display: inline-flex;
     padding: calc(var(--spacing) / 2) calc(var(--spacing) / 2);
     border: 1px solid currentColor;
+    align-items: flex-start;
+    justify-content: flex-start;
+    text-align: left;
 
     &.tag {
       background: var(--color-black);
@@ -901,7 +922,7 @@ audio {
   flex-flow: column nowrap;
   align-items: stretch;
   justify-content: flex-start;
-  gap: calc(var(--spacing) / 3);
+  // gap: calc(var(--spacing) / 3);
 
   button {
     display: block;
@@ -909,6 +930,7 @@ audio {
     border: 1px solid var(--color-black);
     padding: calc(var(--spacing) / 2);
     min-height: 4em;
+    margin-bottom: calc(var(--spacing) / 2);
 
     display: flex;
     flex-flow: column wrap;
@@ -1324,9 +1346,6 @@ audio {
     border-radius: 2px;
     // border: 1px solid #f4f4f2;
 
-    display: flex;
-    flex-flow: row wrap;
-
     transition: background-color 0.2s ease-out;
 
     > * {
@@ -1483,6 +1502,7 @@ audio {
   flex-flow: column nowrap;
   background: white;
   border-top: 1px solid var(--color-blue);
+  overflow: auto;
 
   // background-color: var(--color-black);
   // border-radius: 2px;
@@ -1844,6 +1864,7 @@ twitter-widget.twitter-tweet {
   position: relative;
   color: inherit;
   padding: ~"calc(var(--spacing) / 4)";
+  font-family: var(--ff-body);
 
   > * {
     &:first-child {

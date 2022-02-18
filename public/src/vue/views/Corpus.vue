@@ -10,16 +10,16 @@
           ref="fragmentPane"
           @scroll="onScroll"
         >
-          <!-- <div class="margin-vert-small" v-if="$root.can_admin_corpora">
+          <div class="_navPages">
             <router-link
+              v-if="$root.can_admin_corpora"
               :to="{
                 name: 'Corpora',
               }"
+              class="button"
               v-html="$t('all_corpus')"
             />
-          </div> -->
 
-          <div class="_navPages">
             <button
               v-if="$root.can_admin_corpora"
               type="button"
@@ -76,16 +76,15 @@
             </router-link>
           </h2>
 
-          <div class="m_corpus--description margin-bottom-small">
-            <p
-              v-if="['Corpus', 'Fragment'].includes($route.name)"
-              v-html="
-                $root.lang.current === 'fr'
-                  ? corpus.description
-                  : corpus.description_en
-              "
-            />
-          </div>
+          <div
+            class="m_corpus--description margin-bottom-small mediaTextContent"
+            v-if="['Corpus', 'Fragment'].includes($route.name)"
+            v-html="
+              $root.lang.current === 'fr'
+                ? corpus.description
+                : corpus.description_en
+            "
+          ></div>
           <div class="m_feedbacks">
             <a
               class="js--openInBrowser"
@@ -104,6 +103,7 @@
             :medias="medias"
             :opened_fragment="opened_fragment"
             :slugFolderName="corpus.slugFolderName"
+            @openCollection="openCollection"
           />
 
           <div
@@ -360,10 +360,12 @@ export default {
     if (this.$root.state.connected) this.loadCorpus();
     this.$eventHub.$on("socketio.authentificated", this.loadCorpus);
     this.$eventHub.$on("socketio.reconnect", this.loadCorpus);
+    this.$eventHub.$on("openCollection", this.openCollection);
   },
   beforeDestroy() {
     this.$eventHub.$off("socketio.authentificated", this.loadCorpus);
     this.$eventHub.$off("socketio.reconnect", this.loadCorpus);
+    this.$eventHub.$off("openCollection", this.openCollection);
   },
   destroyed() {},
   watch: {
@@ -641,7 +643,6 @@ export default {
     },
 
     openCollection(media_filename) {
-      debugger;
       this.resetFiltersAndScrollTop();
       this.show_collection_meta =
         this.show_collection_meta === media_filename ? false : media_filename;

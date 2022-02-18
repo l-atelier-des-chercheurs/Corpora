@@ -79,6 +79,10 @@ module.exports = (function () {
       fr: "créez votre collection",
       en: "create your collection",
     },
+    add_to_your_collection: {
+      fr: "ajouter à une collection",
+      en: "add to your collection",
+    },
     add_story_to_collection: {
       fr: "Ajouter ce récit à une collection",
       en: "Add this story to a collection",
@@ -253,6 +257,10 @@ module.exports = (function () {
     collections: {
       fr: "Collections",
       en: "Collections",
+    },
+    part_of_collections: {
+      fr: "Dans les collections",
+      en: "Part of collections",
     },
     collection: {
       fr: "Collection",

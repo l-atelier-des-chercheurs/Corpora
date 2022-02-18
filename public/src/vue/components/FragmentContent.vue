@@ -152,12 +152,16 @@
           tabindex="-1"
         >
           <template v-if="preview_media">
-            <div class="_fragmentPreview--overlay" />
+            <div
+              class="_fragmentPreview--overlay"
+              v-if="preview_media.type === 'image'"
+            />
             <FragmentMedia
               class="_fragmentPreview--media"
               :media="preview_media"
               :slugFolderName="slugFolderName"
               context="preview"
+              :data-mediatype="preview_media.type"
             />
           </template>
         </div>
@@ -210,7 +214,7 @@
             :to="{
               name: 'Fragment',
               params: { fragmentId: fragment.media_filename },
-              query: this.$route.query ? this.$route.query : {},
+              query: $route.query ? $route.query : {},
             }"
           >
             <span
@@ -687,7 +691,13 @@ export default {
   // filter: brightness(80%) sepia(100%) hue-rotate(201deg) saturate(1260%);
   position: relative;
   ._fragmentPreview--media {
-    mix-blend-mode: luminosity;
+    color: var(--color-blue);
+    &[data-mediatype="image"] {
+      mix-blend-mode: luminosity;
+    }
+    &[data-mediatype="text"] {
+      margin-top: calc(var(--spacing) / -4);
+    }
   }
 }
 ._fragmentPreview--overlay {

@@ -13,6 +13,21 @@
           :aria-label="$t('search_in_fragments')"
         />
 
+        <span
+          class="input-addon"
+          v-if="text_search.length > 0 && text_search === text_search_in_field"
+        >
+          <button
+            type="button"
+            @click="
+              text_search_in_field = '';
+              setTextFilter();
+            "
+            class="_emptySearch"
+          >
+            ×
+          </button>
+        </span>
         <span class="input-addon" v-if="text_search !== text_search_in_field">
           <button type="submit">
             <svg
@@ -348,11 +363,17 @@ export default {
       if (!this.show_collection_meta) delete query.collection;
       else query.collection = this.show_collection_meta;
 
-      this.$router.push({
+      const obj = {
         query,
-        name: "Corpus",
+        // name: "Corpus",
         params: { savePosition: true },
-      });
+      };
+
+      if (!["Corpus", "Fragment"].includes(this.$route.name)) {
+        obj.name = "Corpus";
+      }
+
+      this.$router.push(obj);
 
       this.$nextTick(() => {
         this.$emit("scrollTop");
@@ -363,7 +384,7 @@ export default {
 </script>
 <style lang="scss" scoped>
 ._sidebarContent {
-  padding: calc(var(--spacing) * 2);
+  padding: calc(var(--spacing) * 1.5);
   padding-bottom: 0;
   > * {
     margin-bottom: calc(var(--spacing) * 2);
@@ -390,5 +411,15 @@ export default {
   font-weight: bold;
   font-size: 80%;
   margin: 0 calc(var(--spacing) / 4);
+}
+
+._emptySearch {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 1em;
+  height: 1em;
+  font-size: 2em;
+  font-weight: 300;
 }
 </style>
