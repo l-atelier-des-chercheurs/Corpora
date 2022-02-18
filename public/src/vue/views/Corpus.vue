@@ -54,7 +54,7 @@
                 name: 'Corpus',
                 params: { slugFolderName: corpus.slugFolderName },
               }"
-              @click.native.prevent="resetFiltersAndScrollTop"
+              @click.native.prevent="resetFiltersAndScrollTop()"
               event
             >
               {{ corpus.name }}
@@ -119,6 +119,9 @@
               <div
                 v-else
                 class="m_corpus--fragments"
+                :class="{
+                  'in--collection': show_collection_meta,
+                }"
                 :key="show_collection_meta"
               >
                 <Collection
@@ -132,94 +135,58 @@
                   :collection_fragments="current_collection_fragments"
                 />
 
-                <div>
-                  <div class="">
-                    <div class="_indicator m_fragments">
-                      <div>
-                        {{ $t("stories") }}&nbsp;: {{ filtered_fragments.length
-                        }}<template
-                          v-if="
-                            filtered_fragments.length !==
-                            sorted_fragments.length
-                          "
-                          >&nbsp;/&nbsp;{{ sorted_fragments.length }}
-                        </template>
-                      </div>
-
-                      <div class="_sortMode">
-                        <button
-                          type="button"
-                          :class="{
-                            'is--active': sort_fragments_by === 'date_created',
-                          }"
-                          @click="sort_fragments_by = 'date_created'"
-                        >
-                          {{ $t("by_creation_date") }}
-                        </button>
-                        <button
-                          type="button"
-                          :class="{
-                            'is--active': sort_fragments_by === 'title',
-                          }"
-                          @click="sort_fragments_by = 'title'"
-                        >
-                          {{ $t("by_title") }}
-                        </button>
-                      </div>
-                      <div />
-                      <div />
-                      <div />
+                <div class="">
+                  <div class="_indicator m_fragments">
+                    <div @click="resetFiltersAndScrollTop">
+                      {{ $t("stories") }}&nbsp;: {{ filtered_fragments.length
+                      }}<template
+                        v-if="
+                          filtered_fragments.length !== sorted_fragments.length
+                        "
+                        >&nbsp;/&nbsp;{{ sorted_fragments.length }}
+                      </template>
                     </div>
-                    <!-- <div
-                  v-if="text_search || keyword_search || tag_search"
-                  class="m_corpus--fragments--sort--filterList"
-                >
-                  <div>
-                    <small>{{ $t("your_search") }}</small>
 
-                    <button
-                      type="button"
-                      v-if="text_search"
-                      @click="text_search = ''"
-                    >
-                      {{ $t("text") }} = {{ text_search }}
-                      ×
-                    </button>
-                    <button
-                      type="button"
-                      v-if="keyword_search"
-                      @click="keyword_search = ''"
-                    >
-                      {{ $t("keywords") }} = {{ keyword_search }}
-                      ×
-                    </button>
-                    <button
-                      type="button"
-                      v-if="tag_search"
-                      @click="tag_search = ''"
-                    >
-                      {{ $t("tags") }} = {{ tag_search }}
-                      ×
-                    </button>
-                  </div> 
-                </div> -->
+                    <div class="_sortMode">
+                      <button
+                        type="button"
+                        :class="{
+                          'is--active': sort_fragments_by === 'date_created',
+                        }"
+                        @click="sort_fragments_by = 'date_created'"
+                      >
+                        {{ $t("by_creation_date") }}
+                      </button>
+                      <button
+                        type="button"
+                        :class="{
+                          'is--active': sort_fragments_by === 'title',
+                        }"
+                        @click="sort_fragments_by = 'title'"
+                      >
+                        {{ $t("by_title") }}
+                      </button>
+                    </div>
+                    <div />
+                    <div />
+                    <div />
                   </div>
-                  <div
-                    v-if="text_search !== '' && filtered_fragments.length === 0"
-                    class="m_corpus--fragments--notice"
-                  >
-                    {{ $t("no_results") }}
-                  </div>
-
-                  <FragmentsList
-                    v-else
-                    :corpus="corpus"
-                    :all_keywords="all_keywords"
-                    :all_tags="all_tags"
-                    :medias="medias"
-                    :fragments="filtered_fragments"
-                  />
                 </div>
+                <div
+                  v-if="text_search !== '' && filtered_fragments.length === 0"
+                  class="m_corpus--fragments--notice"
+                >
+                  {{ $t("no_results") }}
+                </div>
+
+                <FragmentsList
+                  v-else
+                  :corpus="corpus"
+                  :all_keywords="all_keywords"
+                  :all_tags="all_tags"
+                  :medias="medias"
+                  :fragments="filtered_fragments"
+                />
               </div>
             </transition>
           </div>
@@ -717,6 +684,14 @@ export default {
   }
 }
 
+.m_corpus--fragments {
+  &.in--collection {
+    padding: calc(var(--spacing));
+    border: 1px solid var(--color-blue);
+    border-bottom: 0px solid #000;
+  }
+}
+
 .m_corpus--fragments--notice {
   padding: calc(var(--spacing) * 2);
   text-align: center;
@@ -907,5 +882,9 @@ h1 {
       transform: rotate(90deg);
     }
   }
+}
+
+.m_corpus--description {
+  padding-left: 0;
 }
 </style>

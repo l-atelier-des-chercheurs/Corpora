@@ -1,14 +1,14 @@
 <template>
   <Modal
     @close="closeModal"
-    @click="closeModalOnClick"
+    @click="closeModal"
     :read_only="false"
     :typeOfModal="'LargeAndScroll'"
     :is_loading="is_sending_content_to_server"
     ref="body"
   >
     <template slot="body">
-      <div class="_sideBySide">
+      <div class="_sideBySide" @click.self="closeModal">
         <div
           class="_singleFragment custom_scrollbar custom_scrollbar_dark"
           ref="singleFragmentContainer"
@@ -60,71 +60,66 @@
               <div class="_collectionsList">
                 <label>{{ $t("part_of_collections") }} </label>
 
-                <!-- <div
-                  v-if="collections_fragment_is_in.length > 0"
-                  v-html="$t('fragment_included_in_collections')"
-                /> -->
+                <transition-group tag="div" name="list-complete">
+                  <component
+                    :is="!edit_coll ? 'router-link' : 'span'"
+                    :to="{
+                      name: 'Corpus',
+                      query: {
+                        collection: collection.media_filename,
+                      },
+                    }"
+                    v-for="collection in collections_showed"
+                    :key="collection.metaFileName"
+                    class="collItem"
+                    :class="{
+                      'is--active':
+                        show_collection_meta === collection.metaFileName,
+                    }"
+                  >
+                    <div class="">
+                      <div class="_title">
+                        {{ collection.title }}
+                      </div>
+                      <div>
+                        (<template
+                          v-if="
+                            collection.fragments_slugs &&
+                            Array.isArray(collection.fragments_slugs)
+                          "
+                          >{{ collection.fragments_slugs.length }}
+                        </template>
+                        <template v-else>0</template>
+                        {{ $t("fragments").toLowerCase() }})
+                      </div>
+                    </div>
+                    <input
+                      type="checkbox"
+                      v-if="edit_coll"
+                      v-model="selected_collections"
+                      :value="collection.metaFileName"
+                    />
+                  </component>
+                </transition-group>
 
                 <button
                   type="button"
-                  v-for="collection in collections_fragment_is_in"
-                  :key="collection.media_filename"
-                  :class="{
-                    'is--active':
-                      show_collection_meta === collection.media_filename,
-                  }"
-                  @click="$emit('openCollection', collection.media_filename)"
+                  class="addRemoveBtn"
+                  v-if="!edit_coll"
+                  @click="edit_coll = true"
                 >
-                  <div class="_title">
-                    {{ collection.title }}
-                  </div>
-                  (<template
-                    v-if="
-                      collection.fragments_slugs &&
-                      Array.isArray(collection.fragments_slugs)
-                    "
-                    >{{ collection.fragments_slugs.length }}
-                  </template>
-                  <template v-else>0</template>
-                  {{ $t("fragments").toLowerCase() }})
+                  + {{ $t("edit_collection") }}
                 </button>
-
-                <button type="button" @click="$emit('showCreateCollection')">
-                  + {{ $t("add_to_your_collection") }}
-                </button>
-
-                <hr />
-
-                <div class="">
-                  <div
-                    v-for="collection in collections_fragment_is_in"
-                    :key="collection.metaFileName"
-                    class="collList"
-                  >
-                    <div class="_title">
-                      {{ collection.title }}
-                    </div>
-                    <template
-                      v-if="
-                        collection.fragments_slugs &&
-                        Array.isArray(collection.fragments_slugs)
-                      "
-                    >
-                      {{ collection.fragments_slugs.length }}
-                    </template>
-                    <template v-else>0</template>
-                    {{ $t("fragments") }}
-                    <button
-                      type="button"
-                      v-if="edit_coll"
-                      @click="removeFromColl(collection.metaFileName)"
-                    >
-                      {{ $t("remove_from_coll") }}
-                    </button>
-                  </div>
+                <div class="flex-nowrap justify-center" v-else>
+                  <button type="button" @click="edit_coll = false">
+                    {{ $t("cancel") }}
+                  </button>
+                  <button type="button" @click="saveCollList">
+                    {{ $t("save") }}
+                  </button>
                 </div>
 
-                <div v-if="edit_coll">
+                <!-- <div v-if="edit_coll">
                   <template v-if="sorted_collections.length === 0">
                     {{ $t("create_collection_first") }}
                   </template>
@@ -152,7 +147,7 @@
                       </button>
                     </div>
                   </template>
-                </div>
+                </div> -->
               </div>
 
               <template v-if="linked_fragments.length === 0">
@@ -214,8 +209,7 @@ export default {
       show_not_linked_fragments: false,
       new_lang: this.$root.lang.current,
       edit_coll: false,
-
-      collection_to_add_fragment_to: false,
+      selected_collections: [],
     };
   },
   created() {},
@@ -238,6 +232,13 @@ export default {
     },
     new_lang() {
       this.$root.updateLocalLang(this.new_lang);
+    },
+    edit_coll() {
+      if (this.edit_coll) {
+        this.selected_collections = this.collections_fragment_is_in.map(
+          (c) => c.metaFileName
+        );
+      }
     },
   },
 
@@ -262,8 +263,8 @@ export default {
       let collections = Object.values(this.corpus.medias).filter(
         (m) => m.type === "collection"
       );
-      collections = this.$_.sortBy(collections, "date_created");
-      collections.reverse();
+      // collections = this.$_.sortBy(collections, "date_created");
+      // collections.reverse();
 
       return collections;
     },
@@ -300,6 +301,10 @@ export default {
           )
       );
     },
+    collections_showed() {
+      if (!this.edit_coll) return this.collections_fragment_is_in;
+      return this.sorted_collections;
+    },
   },
   methods: {
     closeModal() {
@@ -308,17 +313,29 @@ export default {
         query: this.$route.query ? this.$route.query : {},
       });
     },
-    closeModalOnClick() {},
+    saveCollList() {
+      this.sorted_collections.map((c) => {
+        if (this.selected_collections.includes(c.metaFileName)) {
+          this.addFragmentToColl(c.metaFileName);
+        } else {
+          this.removeFromColl(c.metaFileName);
+        }
+        this.edit_coll = false;
+      });
+    },
     escClose(e) {
       if (e.keyCode == 27) this.closeModal();
     },
-    addFragmentToColl() {
-      if (!this.collection_to_add_fragment_to) return;
-
+    addFragmentToColl(metaFileName) {
       const coll = this.sorted_collections.find(
-        (c) => c.metaFileName === this.collection_to_add_fragment_to
+        (c) => c.metaFileName === metaFileName
       );
       let fs = coll.fragments_slugs || [];
+
+      if (
+        fs.find((_fs) => _fs.metaFileName === this.opened_fragment.metaFileName)
+      )
+        return;
 
       fs.push({
         metaFileName: this.opened_fragment.metaFileName,
@@ -362,7 +379,7 @@ export default {
       this.is_loading_fragment_sidebar = true;
       setTimeout(() => {
         this.is_loading_fragment_sidebar = false;
-      }, 600);
+      }, 250);
     },
     hasCommonKeywordWithOpened(f) {
       if (
@@ -379,33 +396,40 @@ export default {
 </script>
 <style lang="scss" scoped>
 ._sideBySide {
-  pointer-events: none;
   > * {
+    // pointer-events: none;
     padding-top: calc(var(--spacing) / 2);
     padding-bottom: calc(var(--spacing) / 2);
 
     > * {
-      pointer-events: auto;
     }
   }
   ._fragmentListAndReactions {
+    pointer-events: none;
     // padding: calc(var(--spacing) / 2);
+
+    ._fragmentListAndReactions--content {
+      pointer-events: auto;
+    }
+  }
+
+  .app.mobile_view & {
   }
 
   .app:not(.mobile_view) & {
     display: flex;
     flex-flow: row nowrap;
-    gap: calc(var(--spacing));
+    gap: calc(var(--spacing) / 2);
     > * {
       max-height: 100vh;
       overflow: auto;
+      padding-right: calc(var(--spacing));
       // padding: clamp(2vmin, 4vw, calc(var(--spacing) * 4));
       // padding: calc(var(--spacing));
     }
 
     ._singleFragment {
       flex: 1 1 auto;
-
       // padding-top: calc(var(--spacing)  1);
       // padding-bottom: calc(var(--spacing) * 1);
       // padding: calc(var(--spacing) * 2) 0;
@@ -440,10 +464,12 @@ export default {
   padding: calc(var(--spacing));
   background: white;
   border-top: 1px solid var(--color-blue);
+
+  ._collectionsList {
+    margin-bottom: calc(var(--spacing));
+  }
 }
-._fragmentListAndReactions--content:last-child {
-  padding-bottom: calc(var(--spacing) * 4) !important;
-}
+
 ._fragmentListAndReactions--content > h2 {
   margin: calc(var(--spacing) / 2) 0;
 }

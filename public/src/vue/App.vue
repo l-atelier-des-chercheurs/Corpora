@@ -441,11 +441,11 @@ input {
 
 input[type="checkbox"] {
   -webkit-appearance: none;
-  width: 12px;
-  height: 12px;
-  background: white;
+  width: 24px;
+  height: 24px;
+  background: var(--color-lightgray);
   // box-shadow: 0 1px 3px rgba(255, 255, 255, 2), 0 1px 2px rgba(0, 0, 0, 0.24);
-  border-radius: 2px;
+  border-radius: 4px;
   border: 0px !important;
   outline: 0 !important;
   margin-left: 0;
@@ -457,6 +457,7 @@ input[type="checkbox"] {
     // background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAG0lEQVQImWNgYGD4z4AK/qMz0BVgAgyVGGYCAJbgB/la+vz5AAAAAElFTkSuQmCC);
     background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAkAAAAJCAYAAADgkQYQAAAAKUlEQVQYlWNgYGD4z4Af/Mdg4FKASwCnDf8JKSBoAtEmEXQTQd8RDCcA6+4Q8DuoBAIAAAAASUVORK5CYII=);
     // background-size: 100% 100%;
+    background-position: center center;
     color: var(--color-purple);
     background-color: currentColor;
   }
@@ -634,6 +635,11 @@ select {
     margin-bottom: 0;
   }
 }
+
+.justify-center {
+  justify-content: center;
+}
+
 .align-items-stretch {
   align-items: stretch;
 }
@@ -920,21 +926,29 @@ audio {
 ._collectionsList {
   display: flex;
   flex-flow: column nowrap;
+  text-align: left;
   align-items: stretch;
   justify-content: flex-start;
   // gap: calc(var(--spacing) / 3);
 
-  button {
-    display: block;
+  .collItem {
     text-align: left;
     border: 1px solid var(--color-black);
     padding: calc(var(--spacing) / 2);
-    min-height: 4em;
+    min-height: 2em;
     margin-bottom: calc(var(--spacing) / 2);
 
     display: flex;
-    flex-flow: column wrap;
-    align-items: flex-start;
+    flex-flow: row wrap;
+    align-items: center;
+    justify-content: space-between;
+
+    &:last-of-type {
+      margin-bottom: 0;
+    }
+  }
+  .addRemoveBtn {
+    font-size: 0.8rem;
   }
 }
 
@@ -1273,6 +1287,7 @@ audio {
   top: 0;
   left: 0;
   width: 100%;
+  overflow: auto;
 
   -webkit-overflow-scrolling: touch;
   scroll-behavior: smooth;
@@ -1675,6 +1690,9 @@ twitter-widget.twitter-tweet {
   top: 0;
   right: 0;
   z-index: 1500;
+  line-height: 0;
+  padding: 0;
+  margin: calc(var(--spacing));
 
   line {
     fill: none;

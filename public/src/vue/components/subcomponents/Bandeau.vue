@@ -46,7 +46,7 @@ export default {
 .m_bandeau {
   position: fixed;
   display: flex;
-  align-items: center;
+  align-items: flex-end;
   justify-content: space-around;
   top: 0;
   left: 0;

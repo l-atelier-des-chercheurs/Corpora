@@ -83,6 +83,10 @@ module.exports = (function () {
       fr: "ajouter à une collection",
       en: "add to your collection",
     },
+    edit_collection: {
+      fr: "Ajouter/retirer d’une collection",
+      en: "Add/remove from a collection",
+    },
     add_story_to_collection: {
       fr: "Ajouter ce récit à une collection",
       en: "Add this story to a collection",

@@ -440,7 +440,6 @@ export default {
   right: 0;
   z-index: 1500;
   background-color: transparent;
-  padding: 1em;
 
   svg {
     width: 2em;

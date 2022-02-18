@@ -113,7 +113,6 @@
         class="button"
         v-html="$t('open')"
       />
-
       <button
         type="button"
         v-if="can_access_corpus"
@@ -286,7 +285,6 @@ export default {
 
 .m_corpusPreview--options {
   button {
-    vertical-align: middle;
   }
 }
 

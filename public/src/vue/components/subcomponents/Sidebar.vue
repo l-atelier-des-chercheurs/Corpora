@@ -1,6 +1,6 @@
 <template>
   <div class="_sidebarContent">
-    <div class="">
+    <div class="" v-if="!show_collection_meta">
       <label for="fragments-search">{{ $t("search_in_fragments") }}</label>
       <form
         class="flex-nowrap align-items-stretch"
@@ -62,7 +62,10 @@
       </form>
     </div>
 
-    <div class="_tags" v-if="all_tags && all_tags.length > 0">
+    <div
+      class="_tags"
+      v-if="!show_collection_meta && all_tags && all_tags.length > 0"
+    >
       <label>{{ $t("tags") }}</label>
       <div class="m_keywordField">
         <button
@@ -102,7 +105,11 @@
 
     <div
       class="_keywords"
-      v-if="all_keywords_with_counts && all_keywords_with_counts.length > 0"
+      v-if="
+        !show_collection_meta &&
+        all_keywords_with_counts &&
+        all_keywords_with_counts.length > 0
+      "
     >
       <label>{{ $t("keywords") }}</label>
 
@@ -145,31 +152,40 @@
     <div class="_collectionsList">
       <label for="fragments-search">{{ $t("collections") }} </label>
 
-      <button type="button" @click="$emit('showCreateCollection')">
+      <button
+        type="button"
+        class="addRemoveBtn"
+        @click="$emit('showCreateCollection')"
+      >
         + {{ $t("create_your_collection") }}
       </button>
 
       <button
         type="button"
         v-for="collection in sorted_collections_subset"
+        class="collItem"
         :key="collection.media_filename"
         :class="{
           'is--active': show_collection_meta === collection.media_filename,
         }"
         @click="openCollection(collection.media_filename)"
       >
-        <div class="_title">
-          {{ collection.title }}
+        <div>
+          <div class="_title">
+            {{ collection.title }}
+          </div>
+          <div>
+            (<template
+              v-if="
+                collection.fragments_slugs &&
+                Array.isArray(collection.fragments_slugs)
+              "
+              >{{ collection.fragments_slugs.length }}
+            </template>
+            <template v-else>0</template>
+            {{ $t("fragments").toLowerCase() }})
+          </div>
         </div>
-        (<template
-          v-if="
-            collection.fragments_slugs &&
-            Array.isArray(collection.fragments_slugs)
-          "
-          >{{ collection.fragments_slugs.length }}
-        </template>
-        <template v-else>0</template>
-        {{ $t("fragments").toLowerCase() }})
       </button>
 
       <template
