@@ -1370,7 +1370,7 @@ audio {
       &.m_modal--sidebar {
         flex: 0 1 var(--panel-width);
         max-height: 90vh;
-        width: 0px;
+        // width: 0px;
 
         // transition: all .8s ease-out;
 
