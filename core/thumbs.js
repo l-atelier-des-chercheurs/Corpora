@@ -1171,6 +1171,8 @@ module.exports = (function () {
 
     if ($('meta[property="og:image"]').attr("content")) {
       page_meta.image = $('meta[property="og:image"]').attr("content");
+    } else if ($('meta[name="og:image"]').attr("content")) {
+      page_meta.image = $('meta[name="og:image"]').attr("content");
     }
 
     // see https://gist.github.com/waltir/82c94c834de630f9030f95f1d8ba81cf#file-cheerio_meta-js
