@@ -31,7 +31,6 @@
       >
         se déconnecter
       </button>
-      {{ admin_pwd }}
     </div>
   </div>
 </template>

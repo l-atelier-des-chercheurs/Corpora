@@ -408,7 +408,7 @@ module.exports = (function () {
       en: "Sent",
     },
     comment: {
-      fr: "Commenter",
+      fr: "Commentaire",
       en: "Comment",
     },
     no_comment_yet: {

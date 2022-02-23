@@ -113,11 +113,14 @@
 
         <div
           class="m_advancedMenu"
-          v-if="context === 'edit' && $root.can_admin_corpora"
+          v-if="
+            context === 'edit' &&
+            ($root.can_admin_corpora || fragment_was_created_x_minutes_ago < 30)
+          "
         >
           <button
             type="button"
-            @click="edit_mode = !edit_mode"
+            @click="$emit('update:edit_mode', !edit_mode)"
             class="m_advancedMenu--toggleButton"
             :class="{ 'is--active': edit_mode }"
           >
@@ -126,6 +129,17 @@
             </template>
             <template v-else>×</template>
           </button>
+          <div
+            v-if="
+              !$root.can_admin_corpora &&
+              fragment_was_created_x_minutes_ago < 30
+            "
+          >
+            <small>
+              Disponible 30 minutes après la création (reste
+              {{ 30 - fragment_was_created_x_minutes_ago }})
+            </small>
+          </div>
         </div>
         <div class="_editFragmentOptions" v-if="edit_mode">
           <button
@@ -164,6 +178,7 @@
               class="_fragmentPreview--media"
               :media="preview_media"
               :slugFolderName="slugFolderName"
+              Z
               context="preview"
               :data-mediatype="preview_media.type"
             />
@@ -172,7 +187,7 @@
 
         <div v-else class="m_fragmentContent--medias">
           <AddMedias
-            v-if="context === 'edit'"
+            v-if="context === 'edit' && edit_mode"
             :slugFolderName="slugFolderName"
             :key="'addmedia_start'"
             :collapsed="linked_medias.length > 0"
@@ -190,13 +205,14 @@
                 :media="media"
                 :slugFolderName="slugFolderName"
                 :index="index"
+                :can_be_edited="edit_mode === true"
                 :linked_medias="linked_medias"
                 :context="context"
                 @removeMedia="(d) => removeMedia(d)"
                 @moveMedia="(d) => moveMedia(d)"
               />
               <AddMedias
-                v-if="context === 'edit'"
+                v-if="context === 'edit' && edit_mode"
                 :slugFolderName="slugFolderName"
                 :key="'addmedia_' + media.metaFileName"
                 :collapsed="index < linked_medias.length - 1"
@@ -259,6 +275,7 @@ export default {
     medias: Array,
     slugFolderName: String,
     fragment_width: Number,
+    edit_mode: Boolean,
   },
   components: {
     AddMedias,
@@ -268,7 +285,6 @@ export default {
   },
   data() {
     return {
-      edit_mode: false,
       show_advanced_meta: false,
       show_edit_fragment: false,
 
@@ -285,6 +301,19 @@ export default {
       const fullPath = `/${this.slugFolderName}/${this.fragment.media_filename}`;
       return this.$root.fragments_read.includes(fullPath);
     },
+
+    fragment_was_created_x_minutes_ago() {
+      const ellapsed = this.$moment
+        .duration(
+          this.$moment(this.$root.currentTime)
+            .utc()
+            .add(1, "hours")
+            .diff(this.$moment.utc(this.fragment.date_created))
+        )
+        .asMinutes();
+      return Math.floor(ellapsed);
+    },
+
     preview_media() {
       if (this.linked_medias.length === 0) return false;
 

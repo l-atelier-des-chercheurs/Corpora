@@ -165,25 +165,13 @@
         </div>
       </div>
     </div>
-    <small
-      v-if="
-        can_be_edited &&
-        media_was_created_x_hours_ago !== false &&
-        !$root.can_admin_corpora
-      "
-      class="ta-ce tt-lc padding-small font-verysmall"
-      style="width: 100%; display: block"
-    >
-      {{ $t("editable_for") }}
-      {{ editable_delay_in_hours - media_was_created_x_hours_ago }}
-      {{ $t("hours") }}
-    </small>
 
     <div
       class="m_advancedMenu"
       :class="{
         'is--open': show_advanced_menu_for_media,
       }"
+      v-if="can_be_edited"
     >
       <template v-if="!(is_being_edited && !is_saving_media)">
         <button
@@ -202,7 +190,7 @@
         <div class="m_advancedMenu--menu" v-if="show_advanced_menu_for_media">
           <button
             type="button"
-            v-if="can_be_edited && !is_being_edited"
+            v-if="!is_being_edited"
             @click="enableEdition(media.metaFileName)"
           >
             {{ $t("edit") }}
@@ -235,7 +223,6 @@
           >
           <button
             type="button"
-            v-if="can_be_edited || $root.can_admin_corpora"
             @click="
               $emit('removeMedia', { metaFileName: media.metaFileName });
               show_advanced_menu_for_media = false;
@@ -290,6 +277,7 @@ export default {
     index: Number,
     linked_medias: Array,
     context: String,
+    can_be_edited: Boolean,
   },
   components: {
     MediaContent,
@@ -311,8 +299,6 @@ export default {
       show_in_modal: false,
       expected_embed_format: "Vimeo",
 
-      editable_delay_in_hours: 24,
-
       mediaURL: `/${this.slugFolderName}/${this.media.media_filename}`,
 
       is_being_edited: false,
@@ -327,12 +313,6 @@ export default {
     this.$eventHub.$off("fragmentMedia.enableEdition", this.enableEdition);
   },
   watch: {
-    edit_mode: function () {
-      if (!this.edit_mode) {
-        this.is_being_edited = false;
-        this.is_saving_media = false;
-      }
-    },
     // "$root.settings.text_media_being_edited": function () {
     //   console.log(
     //     `FragmentMedia • WATCH: $root.settings.text_media_being_edited. Is self ? ${
@@ -363,18 +343,6 @@ export default {
     },
   },
   computed: {
-    media_was_created_x_hours_ago() {
-      if (this.media.hasOwnProperty("date_uploaded")) {
-        const media_uploaded_on = this.$moment(this.media.date_uploaded);
-        if (media_uploaded_on.isValid()) {
-          const ellapsed = this.$moment
-            .duration(media_uploaded_on.diff(this.$moment()))
-            .asHours();
-          return Math.floor(Math.abs(ellapsed));
-        }
-      }
-      return false;
-    },
     is_touch() {
       return Modernizr.touchevents;
     },
@@ -404,16 +372,6 @@ export default {
         }
       }
 
-      return false;
-    },
-    can_be_edited() {
-      if (this.$root.can_admin_corpora) return true;
-      if (
-        this.media_was_created_x_hours_ago !== false &&
-        this.media_was_created_x_hours_ago < this.editable_delay_in_hours
-      ) {
-        return true;
-      }
       return false;
     },
     media_context() {
@@ -513,7 +471,7 @@ export default {
     }
   }
 
-  box-shadow: 0px 0px 4px 0px rgba(204, 208, 218, 0);
+  // box-shadow: 0px 0px 4px 0px rgba(204, 208, 218, 0);
   transition: all 0.4s cubic-bezier(0.19, 1, 0.22, 1);
 
   &.is--beingEdited {

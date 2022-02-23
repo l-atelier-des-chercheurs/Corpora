@@ -1918,6 +1918,7 @@ twitter-widget.twitter-tweet {
     line-height: 1.27777778em;
     margin-top: 0.63888889em;
     margin-bottom: 0em;
+    font-family: inherit;
   }
   h2,
   .h2 {
@@ -1925,6 +1926,7 @@ twitter-widget.twitter-tweet {
     line-height: 1.7037037em;
     margin-top: 0.65185185em;
     margin-bottom: 0em;
+    font-family: inherit;
   }
   h3,
   .h3 {
@@ -1932,6 +1934,7 @@ twitter-widget.twitter-tweet {
     line-height: 1.4375em;
     margin-top: 1.4375em;
     margin-bottom: 0em;
+    font-family: inherit;
   }
   h4,
   .h4 {
@@ -1939,6 +1942,7 @@ twitter-widget.twitter-tweet {
     line-height: 1.4375em;
     margin-top: 1.4375em;
     margin-bottom: 0em;
+    font-family: inherit;
   }
   h5,
   .h5 {
@@ -1946,6 +1950,7 @@ twitter-widget.twitter-tweet {
     line-height: 1.4375em;
     margin-top: 1.4375em;
     margin-bottom: 0em;
+    font-family: inherit;
   }
   p,
   ul,

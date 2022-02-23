@@ -26,6 +26,7 @@
               :medias="medias"
               :fragment_width="800"
               :slugFolderName="slugFolderName"
+              :edit_mode.sync="edit_mode"
             />
           </transition>
 
@@ -36,14 +37,13 @@
               <small v-if="!opened_fragment.comments" class="text-gray">
                 {{ $t("no_comment_yet") }}
               </small>
-
               <TextField
                 :field_name="'comments'"
                 :content="opened_fragment.comments"
                 type2="media"
                 :metaFileName="opened_fragment.metaFileName"
                 :slugFolderName="corpus.slugFolderName"
-                :allow_editing="true"
+                :allow_editing="edit_mode"
               />
             </div>
           </div>
@@ -220,6 +220,7 @@ export default {
       show_not_linked_fragments: false,
       new_lang: this.$root.lang.current,
       edit_coll: false,
+      edit_mode: false,
       selected_collections: [],
     };
   },
@@ -500,6 +501,12 @@ export default {
 
 ._comments {
   background: white;
+  padding: calc(var(--spacing)) calc(var(--spacing));
+  border-bottom: 1px solid var(--color-blue);
+
+  ::v-deep .mediaTextContent {
+    padding-left: 0;
+  }
 }
 
 ._lang {
