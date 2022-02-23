@@ -64,12 +64,16 @@ module.exports = (function () {
       en: "This story is part of the following collections",
     },
     fragment_included_in_no_collections: {
-      fr: "Ce récit n’est présent dans aucune collection. Cliquez sur <i>éditer</i> pour l’ajouter.",
-      en: "This story isn’t part of any collections. Click <i>edit</i> to add to existing collections.",
+      fr: "Ce récit ne fait partie d’aucune collection.",
+      en: "This story isn’t part of any collections.",
     },
     fragment_in_all_collections_already: {
       fr: "Ce récit figure déjà dans toutes les collections",
       en: "This fragment is already included in all collections",
+    },
+    create_a_collection: {
+      fr: "Créer une collection",
+      en: "Create a collection",
     },
     create_collection_first: {
       fr: "Créez d’abord une collection en fermant cette page.",
@@ -115,6 +119,10 @@ module.exports = (function () {
       fr: "Afficher le lecteur",
       en: "Load player",
     },
+    hide_player: {
+      fr: "Masquer le lecteur",
+      en: "Hide player",
+    },
     file_max_size: {
       fr: "Taille max. des fichiers",
       en: "Max file size",
@@ -126,6 +134,10 @@ module.exports = (function () {
     personal_data_and_legal_notices: {
       fr: "Cookies, données personnelles et mentions légales",
       en: "Cookies, personal data and legal notices",
+    },
+    website_uses_cookies: {
+      fr: "Ce site utilise des cookies pour permettre la navigation.",
+      en: "This website uses cookies only to facilitate navigation.",
     },
     created_on: {
       fr: "Créé le",
@@ -154,6 +166,14 @@ module.exports = (function () {
     edit: {
       fr: "Éditer",
       en: "Edit",
+    },
+    modify: {
+      fr: "Modifier",
+      en: "Modify",
+    },
+    edit_mode: {
+      fr: "Mode édition",
+      en: "Edit mode",
     },
     edit_corpus: {
       fr: "Éditer le corpus",
@@ -372,12 +392,12 @@ module.exports = (function () {
       en: "None",
     },
     moveup: {
-      fr: "Déplacer ↑",
-      en: "Move up ↑",
+      fr: "Remonter",
+      en: "Move up",
     },
     movedown: {
-      fr: "Déplacer ↓",
-      en: "Move down ↓",
+      fr: "Descendre",
+      en: "Move down",
     },
     import_medias: {
       fr: "Importer des fichiers",
@@ -507,7 +527,7 @@ module.exports = (function () {
       en: "Your search",
     },
     no_with_similar_keywords: {
-      fr: "Aucuns récits avec des mots-clés similaires",
+      fr: "Aucun récit avec des mots-clés similaires",
       en: "No stories with similar keywords",
     },
     with_similar_keywords: {

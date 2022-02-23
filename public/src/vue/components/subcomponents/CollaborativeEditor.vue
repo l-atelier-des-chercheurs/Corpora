@@ -1697,7 +1697,7 @@ export default {
   color: #ccc;
   content: "\D7";
   font-size: 16px;
-  font-weight: bold;
+  font-weight: 500;
 }
 .ql-container.ql-bubble:not(.ql-disabled) a {
   position: relative;

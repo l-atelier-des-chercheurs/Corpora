@@ -79,34 +79,35 @@
               </div>
             </div>
           </div>
-
           <div class="_title">
             <h2>{{ fragment.title }}</h2>
           </div>
 
           <div
             class="m_keywordField m_keywordField--inline margin-bottom-verysmall"
-            v-if="context !== 'preview'"
+            v-if="
+              context !== 'preview' && fragment.tags && fragment.tags.length > 0
+            "
           >
-            <template v-if="fragment.tags && fragment.tags.length > 0">
-              <span v-for="tag in fragment.tags" :key="tag.title" class="tag">
-                {{ tag.title }}
-              </span>
-            </template>
+            <span v-for="tag in fragment.tags" :key="tag.title" class="tag">
+              {{ tag.title }}
+            </span>
           </div>
           <div
             class="m_keywordField m_keywordField--inline margin-bottom-verysmall"
-            v-if="context !== 'preview'"
+            v-if="
+              context !== 'preview' &&
+              fragment.keywords &&
+              fragment.keywords.length > 0
+            "
           >
-            <template v-if="fragment.keywords && fragment.keywords.length > 0">
-              <span
-                v-for="kw in fragment.keywords"
-                class="keyword"
-                :key="kw.title"
-              >
-                {{ kw.title }}
-              </span>
-            </template>
+            <span
+              v-for="kw in fragment.keywords"
+              class="keyword"
+              :key="kw.title"
+            >
+              {{ kw.title }}
+            </span>
           </div>
         </div>
 
@@ -116,25 +117,28 @@
         >
           <button
             type="button"
-            @click="show_advanced_menu = !show_advanced_menu"
+            @click="edit_mode = !edit_mode"
             class="m_advancedMenu--toggleButton"
-            :class="{ 'is--active': show_advanced_menu }"
+            :class="{ 'is--active': edit_mode }"
+          >
+            <template v-if="!edit_mode">
+              {{ $t("edit_mode") }}
+            </template>
+            <template v-else>×</template>
+          </button>
+        </div>
+        <div class="_editFragmentOptions" v-if="edit_mode">
+          <button
+            type="button"
+            class="button-small"
+            @click="show_edit_fragment = true"
           >
             {{ $t("edit") }}
           </button>
-          <div class="m_advancedMenu--menu" v-if="show_advanced_menu">
-            <button
-              type="button"
-              class="button-small"
-              @click="show_edit_fragment = true"
-            >
-              {{ $t("edit") }}
-            </button>
 
-            <button type="button" class="button-small" @click="removeFragment">
-              {{ $t("remove") }}
-            </button>
-          </div>
+          <button type="button" class="button-small" @click="removeFragment">
+            {{ $t("remove") }}
+          </button>
         </div>
 
         <EditFragment
@@ -264,7 +268,7 @@ export default {
   },
   data() {
     return {
-      show_advanced_menu: false,
+      edit_mode: false,
       show_advanced_meta: false,
       show_edit_fragment: false,
 
@@ -508,7 +512,8 @@ export default {
       margin: 0;
       box-shadow: 0 0 0.5rem 0rem var(--color-lightgray);
       pointer-events: auto;
-      min-height: 300px;
+      height: var(--preview_height);
+      overflow: hidden;
 
       transform-origin: 50% 100px;
     }
@@ -546,31 +551,12 @@ export default {
 
   .m_fragmentContent--content--inner {
     position: relative;
-    // margin-top: calc(var(--spacing) * 2);
-    // margin-bottom: 33vh;
-    // margin-right: 4px;
-    // margin-left: 4px;
-
     pointer-events: auto;
-    padding: calc(var(--spacing) / 2) 0;
-    margin: calc(var(--spacing) * 1) 0;
+    padding: calc(var(--spacing) / 2) 0 calc(var(--spacing));
+    margin: calc(var(--spacing) * 1) 0 0;
     border-top: 1px solid var(--color-blue);
-
-    // background-color: #fff;
-    // background-color: #f9f3db;
-    // background: linear-gradient(
-    //   180deg,
-    //   #fff 0%,
-    //   #f9f3db calc(100% - 1px),
-    //   var(--color-black) 100%
-    // );
-    // background: var(--color-lightgray);
-    // background: var(--body-bg);
+    border-bottom: 1px solid var(--color-blue);
     background: white;
-    // border: 2px solid black;
-    // border-radius: 10px;
-
-    // box-shadow: 0px 0px 4px 0px rgba(41, 41, 41, 0.8);
 
     transition: all 0.4s cubic-bezier(0.19, 1, 0.22, 1);
   }
@@ -707,5 +693,26 @@ export default {
   width: calc(100% - var(--spacing) * 2);
   height: 100%;
   margin: calc(var(--spacing) / 2) calc(var(--spacing));
+}
+
+.m_advancedMenu {
+  position: sticky;
+  top: 0;
+  margin: 0 auto;
+  z-index: 150;
+  background: transparent;
+  max-width: 230px;
+
+  justify-content: center;
+  text-align: center;
+
+  .m_advancedMenu--toggleButton {
+    position: relative;
+  }
+}
+
+._editFragmentOptions {
+  display: flex;
+  justify-content: center;
 }
 </style>

@@ -35,9 +35,9 @@ export default {
   --color-gray: #a297aa;
   --color-white: #fff;
   --color-lightgray: #ededed;
-  --active-color: var(--color-gray);
   --color-blue: #5444ff;
   --color-purple: #c53efe;
+  --active-color: var(--color-blue);
   --body-bg: var(--color-lightgray);
   --panel-width: 320px;
 
@@ -211,62 +211,50 @@ label:not(.no-style) {
 
 .m_advancedMenu {
   position: relative;
-  display: flex;
-  flex-flow: column wrap;
-  justify-content: flex-end;
-  align-items: flex-end;
-  align-content: flex-end;
   z-index: 10;
-  color: var(--color-black);
-  background-color: var(--light-gray);
 
   &.is--open {
     z-index: 11;
   }
 
-  // button,
-  // .button {
-  //   color: white;
-  //   background-color: var(--color-black);
-
-  //   &:hover,
-  //   &:focus,
-  //   &.is--active {
-  //     color: white;
-  //     background-color: var(--color-black);
-  //   }
-  // }
-
   .m_advancedMenu--toggleButton {
+    position: absolute;
+    top: 0;
+    right: 0;
+    z-index: 11;
     margin-bottom: 0;
-    // background-color: transparent;
-    line-height: 1;
-    // border-radius: 4px;
     margin: 0px;
-    padding: 2px;
-    margin-bottom: 1px;
+    padding: calc(var(--spacing) / 4) calc(var(--spacing) / 2);
+    margin: 1px;
 
     // background-color: rgba(0, 0, 0, 0.3);
-    // border: 1px solid currentColor;
-    color: var(--color-black);
-    background-color: rgba(226, 237, 239, 0.4);
+    // border: 1px solid black;
+    color: var(--color-blue);
+    background-color: white;
+
+    &:hover,
+    &:focus {
+      color: var(--color-blue);
+    }
+    // background-color: rgba(226, 237, 239, 1);
   }
 
   .m_advancedMenu--menu {
     position: relative;
     z-index: 2;
-    display: flex;
-    flex-flow: column nowrap;
-    justify-content: flex-end;
-    align-content: flex-end;
-    align-items: flex-end;
     margin: 0 0 0;
-    // padding: 2px;
+    padding: calc(var(--spacing) / 1.5) calc(var(--spacing) / 1.5);
+    min-width: 15ch;
+    line-height: 1;
+    border: 1px solid black;
+    background-color: var(--color-lightgray);
+    background: white;
 
     button,
     .button {
-      margin-bottom: 1px;
-      // box-shadow: 0px 0px 4px rgba(60, 53, 65, 0.4);
+      display: block;
+      margin: 0;
+      line-height: 1.11;
     }
 
     > * {
@@ -357,7 +345,7 @@ ol li:before {
 
 strong,
 b {
-  font-weight: bold;
+  font-weight: 500;
 }
 
 a,
@@ -413,6 +401,9 @@ code {
   font-size: 85%;
   padding: 2px 4px;
 }
+small {
+  font-size: 0.7rem;
+}
 
 textarea,
 input,
@@ -429,6 +420,7 @@ label {
 }
 
 input {
+  border: none;
   &[type="text"],
   &[type="url"] {
     &[readonly] {
@@ -495,7 +487,7 @@ textarea {
   &:active,
   &:focus {
     outline: 0px;
-    border-color: var(--color-purple);
+    border-color: var(--color-blue);
   }
 }
 
@@ -779,7 +771,7 @@ audio {
 
   &.type-link,
   &.type-embed {
-    background-color: rgba(141, 141, 141, 0.1);
+    // background-color: rgba(141, 141, 141, 0.1);
   }
 }
 
@@ -795,16 +787,14 @@ audio {
 ._siteCard {
   display: flex;
   flex-flow: row wrap;
-  // background-color: rgba(141, 141, 141, 0.1);
-  overflow: hidden;
   // padding: calc(var(--spacing) / 2);
 
   // font-size: 0.7em;
 
   ._siteCard--image {
     position: relative;
-    flex: 1 0 50%;
-    min-width: 200px;
+    flex: 1 0 33%;
+    min-width: 100px;
     max-width: 260px;
     display: flex;
     justify-content: center;
@@ -837,7 +827,7 @@ audio {
   }
   ._siteCard--text--title {
     font-family: var(--ff-top-level);
-    font-weight: bold;
+    font-weight: 500;
 
     display: -webkit-box;
     -webkit-line-clamp: 2;
@@ -864,15 +854,23 @@ audio {
   svg {
     width: 38px;
     height: 38px;
-    padding-right: 6px;
+    padding: 6px;
   }
   circle {
     fill: var(--color-blue);
   }
   polygon {
     stroke: white;
-    stroke-width: 3px;
+    stroke-width: 4px;
     fill: transparent;
+  }
+
+  &._playButton_hide {
+    font-size: 0.7rem;
+    svg {
+      width: 24px;
+      height: 24px;
+    }
   }
 }
 
@@ -901,6 +899,11 @@ audio {
       border-color: var(--color-black);
       color: white;
       font-weight: 300;
+    }
+
+    &.new-tag-input-wrapper {
+      border: none;
+      padding: 0;
     }
 
     &:hover,
@@ -996,7 +999,7 @@ audio {
 //     background-color: transparent !important;
 //     border: 2px solid #ccc;
 //     font-size: 80% !important;
-//     font-weight: bold;
+//     font-weight: 500;
 //     color: #999 !important;
 
 //     &::before {
@@ -1130,7 +1133,7 @@ audio {
 //     .tag,
 //     > button {
 //       // background-color: var(--body-bg) !important;
-//       // font-weight: bold;
+//       // font-weight: 500;
 //       border-radius: 1em;
 //       padding: 0.3em 0em;
 //       padding-right: 1em;
@@ -1531,7 +1534,7 @@ audio {
     top: calc(var(--spacing) * 0.6);
     right: 100%;
     padding: calc(var(--spacing) * 0.5);
-    font-weight: 700;
+    font-weight: 500;
     font-size: 2em;
     // background-color: var(--color-black);
     // color: white;
@@ -1768,7 +1771,7 @@ twitter-widget.twitter-tweet {
   // border-bottom: 2px solid #f4f4f2;
   h3 {
     margin: 0;
-    // font-weight: 700;
+    // font-weight: 500;
     // font-size: 2em;
   }
 }
@@ -1807,7 +1810,7 @@ twitter-widget.twitter-tweet {
 }
 
 .admin_cat {
-  border: 2px solid white;
+  border-left: 2px solid black;
   padding: 0 calc(var(--spacing) / 3);
 }
 
@@ -1883,6 +1886,7 @@ twitter-widget.twitter-tweet {
   color: inherit;
   padding: ~"calc(var(--spacing) / 4)";
   font-family: var(--ff-body);
+  font-weight: 400;
 
   > * {
     &:first-child {
@@ -2065,7 +2069,7 @@ twitter-widget.twitter-tweet {
     background-color: var(--color-black);
     color: white;
     border-radius: 3px;
-    font-weight: 500;
+    font-weight: 400;
   }
   pre {
     white-space: pre-wrap;

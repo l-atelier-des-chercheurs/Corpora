@@ -424,7 +424,7 @@ export default {
   display: flex;
   align-items: center;
   justify-content: center;
-  font-weight: bold;
+  font-weight: 500;
   font-size: 80%;
   margin: 0 calc(var(--spacing) / 4);
 }

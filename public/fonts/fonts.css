@@ -83,27 +83,34 @@
 
 /* O l d   S t a n d a r d   T T */
 
+/* old-standard-tt-regular - latin */
 @font-face {
   font-family: "Old Standard TT";
-  src: url("./oldstandardtt-regular-webfont.woff2"),
-    url("./oldstandardtt-regular-webfont.woff"),
-    url("./oldstandardtt-regular-webfont.eot"),
-    url("./oldstandardtt-regular-webfont.eot?#iefix")
-      format("embedded-opentype"),
-    url("./oldstandardtt-regular-webfont.ttf") format("truetype");
-  font-weight: normal;
   font-style: normal;
-  font-display: block;
+  font-weight: 400;
+  src: local(""),
+    url("./old-standard-tt-v17-latin-regular.woff2") format("woff2"),
+    /* Chrome 26+, Opera 23+, Firefox 39+ */
+      url("./old-standard-tt-v17-latin-regular.woff") format("woff"); /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
 }
 
+/* old-standard-tt-italic - latin */
 @font-face {
   font-family: "Old Standard TT";
-  src: url("./oldstandardtt-italic-webfont.woff2"),
-    url("./oldstandardtt-italic-webfont.woff")
-      url("./oldstandardtt-italic-webfont.eot"),
-    url("./oldstandardtt-italic-webfont.eot?#iefix") format("embedded-opentype"),
-    url("./oldstandardtt-italic-webfont.ttf") format("truetype");
-  font-weight: normal;
   font-style: italic;
-  font-display: block;
+  font-weight: 400;
+  src: local(""),
+    url("./old-standard-tt-v17-latin-italic.woff2") format("woff2"),
+    /* Chrome 26+, Opera 23+, Firefox 39+ */
+      url("./old-standard-tt-v17-latin-italic.woff") format("woff"); /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
+}
+
+/* old-standard-tt-700 - latin */
+@font-face {
+  font-family: "Old Standard TT";
+  font-style: normal;
+  font-weight: 700;
+  src: local(""), url("./old-standard-tt-v17-latin-700.woff2") format("woff2"),
+    /* Chrome 26+, Opera 23+, Firefox 39+ */
+      url("./old-standard-tt-v17-latin-700.woff") format("woff"); /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
 }

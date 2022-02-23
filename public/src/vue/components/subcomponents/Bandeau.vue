@@ -2,7 +2,7 @@
   <div class="m_bandeau">
     <div class="m_bandeau--content">
       <div>
-        This website uses cookies only to facilitate navigation.
+        {{ $t("personal_data_and_legal_notices") }}
         <router-link
           :to="{
             name: 'Mentions légales',

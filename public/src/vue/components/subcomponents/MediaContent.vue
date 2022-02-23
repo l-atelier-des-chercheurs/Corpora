@@ -238,6 +238,35 @@
             :id="embedURL.id"
             :options="{ cards: 'hidden', theme: 'light' }"
           />
+          <button
+            type="button"
+            class="_playButton _siteCard--image--playButton _playButton_hide"
+            @click="load_this_embed = false"
+          >
+            <span>
+              <svg
+                version="1.1"
+                xmlns="http://www.w3.org/2000/svg"
+                xmlns:xlink="http://www.w3.org/1999/xlink"
+                x="0px"
+                y="0px"
+                width="24px"
+                height="24px"
+                viewBox="0 0 24 24"
+                style="
+                  enable-background: new 0 0 24 24;
+                  transform: rotate(-45deg);
+                "
+                xml:space="preserve"
+              >
+                <path
+                  style="fill: currentColor"
+                  d="M0,10.5h10.5V0h2.9v10.5H24v2.9H13.5V24h-2.9V13.5H0V10.5z"
+                />
+              </svg>
+              {{ $t("hide_player") }}
+            </span>
+          </button>
         </template>
       </template>
     </template>

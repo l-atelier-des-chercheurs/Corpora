@@ -118,98 +118,6 @@
         {{ $t("load") }}
       </button> -->
     </div>
-    <div
-      class="m_advancedMenu"
-      :class="{
-        'is--open': show_advanced_menu_for_media,
-      }"
-    >
-      <div
-        class="m_advancedMenu--editingMenu"
-        v-if="is_being_edited && !is_saving_media"
-      >
-        <button type="button" class="button-small bg-orange" @click="saveMedia">
-          {{ $t("save") }}
-        </button>
-        <button
-          type="button"
-          class="button-small bg-orange"
-          v-if="is_empty"
-          @click="
-            $emit('removeMedia', { metaFileName: media.metaFileName });
-            show_advanced_menu_for_media = false;
-          "
-        >
-          {{ $t("remove") }}
-        </button>
-      </div>
-
-      <template v-else>
-        <button
-          type="button"
-          @click="show_advanced_menu_for_media = !show_advanced_menu_for_media"
-          class="button-small m_advancedMenu--toggleButton"
-          :class="{
-            'is--active': show_advanced_menu_for_media,
-          }"
-          v-if="is_touch || is_hovered"
-        >
-          {{ $t("edit") }}
-        </button>
-        <div class="m_advancedMenu--menu" v-if="show_advanced_menu_for_media">
-          <button
-            type="button"
-            class="button-small"
-            v-if="can_be_edited && !is_being_edited"
-            @click="enableEdition(media.metaFileName)"
-          >
-            {{ $t("edit") }}
-          </button>
-          <button
-            type="button"
-            class="button-small"
-            v-if="index > 0"
-            @click="
-              $emit('moveMedia', { metaFileName: media.metaFileName, dir: -1 });
-              show_advanced_menu_for_media = false;
-            "
-          >
-            {{ $t("moveup") }}
-          </button>
-          <button
-            type="button"
-            class="button-small"
-            v-if="index < linked_medias.length - 1"
-            @click="
-              $emit('moveMedia', { metaFileName: media.metaFileName, dir: +1 });
-              show_advanced_menu_for_media = false;
-            "
-          >
-            {{ $t("movedown") }}
-          </button>
-          <a
-            class="button button-small"
-            v-if="!['link', 'embed'].includes(media.type)"
-            :download="media.media_filename"
-            :href="mediaURL"
-            target="_blank"
-            >{{ $t("download") }}</a
-          >
-          <button
-            type="button"
-            class="button-small"
-            v-if="can_be_edited || $root.can_admin_corpora"
-            @click="
-              $emit('removeMedia', { metaFileName: media.metaFileName });
-              show_advanced_menu_for_media = false;
-            "
-          >
-            {{ $t("remove") }}
-          </button>
-        </div>
-      </template>
-    </div>
-
     <div class="m_fragmentMedia--infos">
       <div
         class="m_fragmentMedia--infos--caption"
@@ -270,6 +178,94 @@
       {{ editable_delay_in_hours - media_was_created_x_hours_ago }}
       {{ $t("hours") }}
     </small>
+
+    <div
+      class="m_advancedMenu"
+      :class="{
+        'is--open': show_advanced_menu_for_media,
+      }"
+    >
+      <template v-if="!(is_being_edited && !is_saving_media)">
+        <button
+          type="button"
+          @click="show_advanced_menu_for_media = !show_advanced_menu_for_media"
+          class="m_advancedMenu--toggleButton"
+          :class="{
+            'is--active': show_advanced_menu_for_media,
+          }"
+        >
+          <template v-if="!show_advanced_menu_for_media">
+            {{ $t("edit") }}
+          </template>
+          <template v-else>×</template>
+        </button>
+        <div class="m_advancedMenu--menu" v-if="show_advanced_menu_for_media">
+          <button
+            type="button"
+            v-if="can_be_edited && !is_being_edited"
+            @click="enableEdition(media.metaFileName)"
+          >
+            {{ $t("edit") }}
+          </button>
+          <button
+            type="button"
+            v-if="index > 0"
+            @click="
+              $emit('moveMedia', { metaFileName: media.metaFileName, dir: -1 })
+            "
+          >
+            {{ $t("moveup") }}
+          </button>
+          <button
+            type="button"
+            v-if="index < linked_medias.length - 1"
+            @click="
+              $emit('moveMedia', { metaFileName: media.metaFileName, dir: +1 })
+            "
+          >
+            {{ $t("movedown") }}
+          </button>
+          <a
+            class="button"
+            v-if="!['link', 'embed'].includes(media.type)"
+            :download="media.media_filename"
+            :href="mediaURL"
+            target="_blank"
+            >{{ $t("download") }}</a
+          >
+          <button
+            type="button"
+            v-if="can_be_edited || $root.can_admin_corpora"
+            @click="
+              $emit('removeMedia', { metaFileName: media.metaFileName });
+              show_advanced_menu_for_media = false;
+            "
+          >
+            {{ $t("remove") }}
+          </button>
+        </div>
+      </template>
+    </div>
+
+    <div class="_editingMenu" v-if="is_being_edited && !is_saving_media">
+      <button type="button" @click="saveMedia">
+        {{ $t("save") }}
+      </button>
+      <button type="button" @click="is_being_edited = false">
+        {{ $t("cancel") }}
+      </button>
+      <button
+        type="button"
+        v-if="is_empty"
+        @click="
+          $emit('removeMedia', { metaFileName: media.metaFileName });
+          show_advanced_menu_for_media = false;
+        "
+      >
+        {{ $t("remove") }}
+      </button>
+    </div>
+
     <ShowMedia
       v-if="show_in_modal"
       :media="media"
@@ -303,6 +299,7 @@ export default {
   data() {
     return {
       show_advanced_menu_for_media: false,
+
       mediadata: {
         caption: this.media.caption,
         source: this.media.source,
@@ -317,6 +314,7 @@ export default {
       editable_delay_in_hours: 24,
 
       mediaURL: `/${this.slugFolderName}/${this.media.media_filename}`,
+
       is_being_edited: false,
       is_saving_media: false,
     };
@@ -329,6 +327,12 @@ export default {
     this.$eventHub.$off("fragmentMedia.enableEdition", this.enableEdition);
   },
   watch: {
+    edit_mode: function () {
+      if (!this.edit_mode) {
+        this.is_being_edited = false;
+        this.is_saving_media = false;
+      }
+    },
     // "$root.settings.text_media_being_edited": function () {
     //   console.log(
     //     `FragmentMedia • WATCH: $root.settings.text_media_being_edited. Is self ? ${
@@ -350,12 +354,12 @@ export default {
     //   }
     // },
     is_touch: function () {
-      if (!this.is_touch && !this.is_hovered)
-        this.show_advanced_menu_for_media = false;
+      // if (!this.is_touch && !this.is_hovered)
+      //   this.show_advanced_menu_for_media = false;
     },
     is_hovered: function () {
-      if (!this.is_touch && !this.is_hovered)
-        this.show_advanced_menu_for_media = false;
+      // if (!this.is_touch && !this.is_hovered)
+      //   this.show_advanced_menu_for_media = false;
     },
   },
   computed: {
@@ -490,7 +494,7 @@ export default {
   &[data-type="text"] {
     .m_fragmentMedia--infos--caption,
     .m_fragmentMedia--infos--source {
-      padding: calc(var(--spacing) / 4);
+      padding: calc(var(--spacing) / 2) calc(var(--spacing) / 4);
     }
   }
   .m_fragmentMedia--content {
@@ -524,27 +528,28 @@ export default {
 }
 .m_advancedMenu {
   position: absolute;
-  top: -0.1em;
+  top: 0;
   right: 0;
-  // background: transparent;
-  font-size: 1.5em;
-  line-height: 1;
 
   // &:hover {
   //   background-color: #eee;
   // }
 }
-.m_advancedMenu--editingMenu {
-  position: absolute;
-  bottom: 100%;
+._editingMenu {
+  display: flex;
+  justify-content: center;
+  padding: calc(var(--spacing) / 2);
+  // position: absolute;
+  // bottom: 100%;
 }
 
 .m_fragmentMedia--infos {
-  display: flex;
-  flex-flow: row nowrap;
-  justify-content: center;
-  margin-left: -2px;
-  margin-right: -2px;
+  // display: flex;
+  // flex-flow: row nowrap;
+  // justify-content: center;
+  // margin-left: -2px;
+  // margin-right: -2px;
+  margin-top: calc(var(--spacing) / 2);
 
   > * {
     flex: 1 1 0;
@@ -553,10 +558,8 @@ export default {
 .m_fragmentMedia--infos--caption,
 .m_fragmentMedia--infos--source {
   margin-top: calc(var(--spacing) / 4);
-  // background-color: var(--active-color);
-  border-radius: 4px;
-  padding: 2px;
-  color: var(--color-gray);
+  font-size: 0.8rem;
+
   input {
     background-color: var(--body-bg);
     font-size: inherit;
@@ -566,6 +569,7 @@ export default {
 
   label {
     margin-bottom: 0;
+    font-size: 0.7rem;
   }
 
   a {
@@ -575,41 +579,45 @@ export default {
   span,
   a {
     /* These are technically the same, but use both */
-    overflow-wrap: break-word;
-    word-wrap: break-word;
+    // overflow-wrap: break-word;
+    // word-wrap: break-word;
 
-    -ms-word-break: break-all;
-    /* This is the dangerous one in WebKit, as it breaks things wherever */
-    word-break: break-all;
-    /* Instead use this non-standard one: */
-    word-break: break-word;
+    // -ms-word-break: break-all;
+    // /* This is the dangerous one in WebKit, as it breaks things wherever */
+    // word-break: break-all;
+    // /* Instead use this non-standard one: */
+    // word-break: break-word;
 
-    /* Adds a hyphen where the word breaks, if supported (No Blink) */
-    -ms-hyphens: auto;
-    -moz-hyphens: auto;
-    -webkit-hyphens: auto;
-    hyphens: auto;
+    // /* Adds a hyphen where the word breaks, if supported (No Blink) */
+    // -ms-hyphens: auto;
+    // -moz-hyphens: auto;
+    // -webkit-hyphens: auto;
+    // hyphens: auto;
 
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-}
-
-.m_fragmentMedia--infos--source {
-  a {
+    // display: -webkit-box;
+    // -webkit-line-clamp: 2;
+    // -webkit-box-orient: vertical;
     // overflow: hidden;
-    // white-space: nowrap;
     // text-overflow: ellipsis;
   }
 }
 
-.m_fragmentMedia--infos--type {
-  text-transform: uppercase;
-  font-size: 70%;
-  padding: 4px;
+.m_fragmentMedia--infos--source {
+  text-align: left;
+  margin: 0 auto;
+  margin-top: calc(var(--spacing) / 2);
+
+  a {
+    display: block;
+    margin-right: 0;
+    margin-left: auto;
+    text-align: right;
+    text-decoration: underline;
+    max-width: 50ch;
+    // overflow: hidden;
+    // white-space: nowrap;
+    // text-overflow: ellipsis;
+  }
 }
 
 ._open_fullscreen {
@@ -648,34 +656,17 @@ export default {
   }
 
   ._linkCaption {
-    // position: absolute;
-    // bottom: 0;
-    width: 100%;
-    padding: calc(var(--spacing) / 4);
-    text-align: left;
-    border-bottom: 2px solid rgba(141, 141, 141, 0.1);
+    font-size: 0.7rem;
+    max-width: 60ch;
+    text-decoration: underline;
+    padding-bottom: 4px;
 
     text-overflow: ellipsis;
     white-space: nowrap;
     overflow: hidden;
 
-    // background: linear-gradient(
-    //   to top,
-    //   white,
-    //   white 20%,
-    //   rgba(255, 255, 255, 0.1) 100%
-    // );
-
     a {
-      // display: inline-block;
-      color: var(--color-black);
-      font-size: 0.8em;
-      // padding: 0 calc(var(--spacing) / 2);
-
-      // --c-shadowOutline: rgba(0, 0, 0, 0.4);
-      // text-shadow: 1px 1px var(--c-shadowOutline),
-      //   -1px 1px var(--c-shadowOutline), -1px -1px var(--c-shadowOutline),
-      //   1px -1px var(--c-shadowOutline);
+      text-decoration: underline;
     }
   }
 }

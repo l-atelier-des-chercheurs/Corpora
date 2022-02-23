@@ -60,8 +60,15 @@
               <div class="_collectionsList">
                 <label>{{ $t("part_of_collections") }} </label>
 
-                <transition-group tag="div" name="list-complete">
+                <small
+                  v-if="collections_showed"
+                  v-html="$t('fragment_included_in_no_collections')"
+                />
+
+                <transition-group tag="div" name="list-complete" v-else>
                   <component
+                    v-for="collection in collections_showed"
+                    :key="collection.metaFileName"
                     :is="!edit_coll ? 'router-link' : 'span'"
                     :to="{
                       name: 'Corpus',
@@ -69,8 +76,6 @@
                         collection: collection.media_filename,
                       },
                     }"
-                    v-for="collection in collections_showed"
-                    :key="collection.metaFileName"
                     class="collItem"
                     :class="{
                       'is--active':
@@ -102,22 +107,28 @@
                   </component>
                 </transition-group>
 
-                <button
-                  type="button"
-                  class="addRemoveBtn"
-                  v-if="!edit_coll"
-                  @click="edit_coll = true"
-                >
-                  + {{ $t("edit_collection") }}
-                </button>
-                <div class="flex-nowrap justify-center" v-else>
-                  <button type="button" @click="edit_coll = false">
-                    {{ $t("cancel") }}
+                <small
+                  v-if="sorted_collections.length === 0"
+                  v-html="$t('create_collection_first')"
+                />
+                <template v-else>
+                  <button
+                    type="button"
+                    class="addRemoveBtn"
+                    v-if="!edit_coll"
+                    @click="edit_coll = true"
+                  >
+                    + {{ $t("edit_collection") }}
                   </button>
-                  <button type="button" @click="saveCollList">
-                    {{ $t("save") }}
-                  </button>
-                </div>
+                  <div class="flex-nowrap justify-center" v-else>
+                    <button type="button" @click="edit_coll = false">
+                      {{ $t("cancel") }}
+                    </button>
+                    <button type="button" @click="saveCollList">
+                      {{ $t("save") }}
+                    </button>
+                  </div>
+                </template>
 
                 <!-- <div v-if="edit_coll">
                   <template v-if="sorted_collections.length === 0">
@@ -398,8 +409,8 @@ export default {
 ._sideBySide {
   > * {
     // pointer-events: none;
-    padding-top: calc(var(--spacing) / 2);
-    padding-bottom: calc(var(--spacing) / 2);
+    padding-top: calc(var(--spacing));
+    padding-bottom: calc(var(--spacing));
 
     > * {
     }
