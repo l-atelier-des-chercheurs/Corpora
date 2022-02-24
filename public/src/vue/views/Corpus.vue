@@ -9,7 +9,6 @@
           ref="fragmentPane"
           @scroll="onScroll"
         >
-          fragments_read = {{ $root.fragments_read }}
           <div class="_navPages">
             <router-link
               v-if="$root.can_admin_corpora"
