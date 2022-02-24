@@ -127,10 +127,7 @@
           "source": {
             "type": "string"
           },
-          "reason_for_sharing": {
-            "type": "string"
-          },
-          "reason_for_sharing_en": {
+          "comments": {
             "type": "string"
           },
           "collection_description": {

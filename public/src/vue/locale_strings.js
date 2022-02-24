@@ -51,33 +51,53 @@ module.exports = (function () {
       fr: "Lien",
       en: "Link",
     },
+    learn_more: {
+      fr: "Plus d’informations",
+      en: "Learn more",
+    },
+    I_agree: {
+      fr: "OK",
+      en: "I agree",
+    },
     fragment_included_in_collections: {
       fr: "Ce récit est présent dans les collections suivantes",
       en: "This story is part of the following collections",
     },
     fragment_included_in_no_collections: {
-      fr: "Ce récit n’est présent dans aucune collection. Cliquez sur <i>éditer</i> pour l’ajouter.",
-      en: "This story isn’t part of any collections. Click <i>edit</i> to add to existing collections.",
+      fr: "Ce récit ne fait partie d’aucune collection.",
+      en: "This story isn’t part of any collections.",
     },
     fragment_in_all_collections_already: {
       fr: "Ce récit figure déjà dans toutes les collections",
       en: "This fragment is already included in all collections",
     },
+    create_a_collection: {
+      fr: "Créer une collection",
+      en: "Create a collection",
+    },
     create_collection_first: {
       fr: "Créez d’abord une collection en fermant cette page.",
       en: "Create a collection first by closing this page.",
+    },
+    create_your_collection: {
+      fr: "créez votre collection",
+      en: "create your collection",
+    },
+    add_to_your_collection: {
+      fr: "ajouter à une collection",
+      en: "add to your collection",
+    },
+    edit_collection: {
+      fr: "Ajouter/retirer d’une collection",
+      en: "Add/remove from a collection",
     },
     add_story_to_collection: {
       fr: "Ajouter ce récit à une collection",
       en: "Add this story to a collection",
     },
     search_in_fragments: {
-      fr: "Chercher dans les récits",
-      en: "Search in stories",
-    },
-    no_reason_yet: {
-      fr: "À renseigner",
-      en: "Unknown so far",
+      fr: "Rechercher",
+      en: "Search",
     },
     show_fragments: {
       fr: "Afficher les récits",
@@ -99,6 +119,10 @@ module.exports = (function () {
       fr: "Afficher le lecteur",
       en: "Load player",
     },
+    hide_player: {
+      fr: "Masquer le lecteur",
+      en: "Hide player",
+    },
     file_max_size: {
       fr: "Taille max. des fichiers",
       en: "Max file size",
@@ -111,9 +135,17 @@ module.exports = (function () {
       fr: "Cookies, données personnelles et mentions légales",
       en: "Cookies, personal data and legal notices",
     },
+    website_uses_cookies: {
+      fr: "Ce site utilise des cookies pour permettre la navigation.",
+      en: "This website uses cookies only to facilitate navigation.",
+    },
     created_on: {
       fr: "Créé le",
       en: "Created on",
+    },
+    already_read: {
+      fr: "Déjà consulté",
+      en: "Already read",
     },
     close: {
       fr: "Fermer",
@@ -138,6 +170,14 @@ module.exports = (function () {
     edit: {
       fr: "Éditer",
       en: "Edit",
+    },
+    modify: {
+      fr: "Modifier",
+      en: "Modify",
+    },
+    edit_mode: {
+      fr: "Mode édition",
+      en: "Edit mode",
     },
     edit_corpus: {
       fr: "Éditer le corpus",
@@ -246,6 +286,10 @@ module.exports = (function () {
       fr: "Collections",
       en: "Collections",
     },
+    part_of_collections: {
+      fr: "Dans les collections",
+      en: "Part of collections",
+    },
     collection: {
       fr: "Collection",
       en: "Collection",
@@ -352,12 +396,12 @@ module.exports = (function () {
       en: "None",
     },
     moveup: {
-      fr: "Déplacer ↑",
-      en: "Move up ↑",
+      fr: "Remonter",
+      en: "Move up",
     },
     movedown: {
-      fr: "Déplacer ↓",
-      en: "Move down ↓",
+      fr: "Descendre",
+      en: "Move down",
     },
     import_medias: {
       fr: "Importer des fichiers",
@@ -367,21 +411,26 @@ module.exports = (function () {
       fr: "Envoyé",
       en: "Sent",
     },
-    reason_for_sharing: {
-      fr: "Raisons du partage",
-      en: "Reasons for sharing",
+    comment: {
+      fr: "Commentaire",
+      en: "Comment",
     },
+    no_comment_yet: {
+      fr: "À renseigner",
+      en: "Empty for now",
+    },
+
     reactions: {
       fr: "Réactions",
       en: "Reactions",
     },
     by_creation_date: {
-      fr: "Par date de création",
-      en: "By creation date",
+      fr: "Trier par date de création",
+      en: "Sort by date",
     },
     by_title: {
-      fr: "Par titre",
-      en: "By title",
+      fr: "Trier par titre",
+      en: "Sort by title",
     },
     retry: {
       fr: "Réessayer",
@@ -392,9 +441,9 @@ module.exports = (function () {
       fr: "Enregistrer",
       en: "Save",
     },
-    more_infos: {
-      fr: "En savoir plus",
-      en: "More informations",
+    about: {
+      fr: "à propos",
+      en: "about",
     },
     add: {
       fr: "Ajouter",
@@ -426,8 +475,8 @@ module.exports = (function () {
       en: "Description, source…",
     },
     create_a_story: {
-      fr: "Ajouter un nouveau récit",
-      en: "Add a new story",
+      fr: "Ajouter un récit",
+      en: "Add a story",
     },
     stories: {
       fr: "Récits",
@@ -454,16 +503,20 @@ module.exports = (function () {
       en: "Tab(s)",
     },
     tags: {
-      fr: "Catégorie(s)",
-      en: "Categorie(s)",
+      fr: "Catégories",
+      en: "Categories",
     },
     keywords: {
-      fr: "Mot(s)-clé(s)",
-      en: "Keyword(s)",
+      fr: "Mots-clés",
+      en: "Keywords",
     },
     show_all_tags: {
       fr: "Afficher toutes les catégories",
       en: "Show all tags",
+    },
+    hide: {
+      fr: "Masquer",
+      en: "Hide",
     },
     show_all_keywords: {
       fr: "Afficher tous les mots-clés",
@@ -478,7 +531,7 @@ module.exports = (function () {
       en: "Your search",
     },
     no_with_similar_keywords: {
-      fr: "Aucuns récits avec des mots-clés similaires",
+      fr: "Aucun récit avec des mots-clés similaires",
       en: "No stories with similar keywords",
     },
     with_similar_keywords: {
@@ -612,10 +665,15 @@ module.exports = (function () {
       fr: "Aucun aperçu disponible pour ce site",
       en: "No preview available for this website",
     },
+    "available_30_minutes_after_creation,still": {
+      fr: "Disponible 30 minutes après la création (reste&nbsp;:",
+      en: "Available for 30 minutes after creation (remaining: ",
+    },
     failed_to_save_media: {
       fr: "Les modifications n’ont pas pu être enregistrées",
       en: "Failed to save changes",
     },
+
     adding_password_warning: {
       fr: "Attention ! Si vous ajoutez ou modifiez un mot de passe tous les utilisateurs qui y sont actuellement connectés devront le renseigner avant de pouvoir continuer à contribuer.",
       en: "Warning! Adding or changing the password will disconnect all users until they enter the new password.",
@@ -629,6 +687,10 @@ module.exports = (function () {
       nl: "Als u het wachtwoord verwijdert, kunnen alle gebruikers die toegang hebben tot do•doc het project wijzigen.",
       oc: "Si tiratz lo mot de Santa-Clara totes los utilizaires qu'an accès a do•doc poiràn modificar lo projècte.",
       de: "Wenn Sie das Passwort entfernen, können alle Benutzer, die Zugriff auf do•doc haben, das Projekt bearbeiten bzw. löschen.",
+    },
+    scroll_to_top: {
+      fr: "Remonter",
+      en: "Scroll to top",
     },
   };
 

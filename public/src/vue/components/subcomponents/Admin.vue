@@ -20,8 +20,8 @@
         />
       </div>
     </template>
-    <div class="_connected" v-else>
-      <p>Connected as admin</p>
+    <div class="_connected flex-wrap" v-else>
+      <p>(admin)</p>
       <button
         type="button"
         @click="
@@ -29,9 +29,8 @@
           show_admin_login = false;
         "
       >
-        disconnect
+        se déconnecter
       </button>
-      {{ admin_pwd }}
     </div>
   </div>
 </template>

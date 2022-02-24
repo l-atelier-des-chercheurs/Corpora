@@ -22,92 +22,152 @@
           `"
       >
         <div class="m_fragmentContent--content--inner--top">
-          <h2>{{ fragment.title }}</h2>
-
           <div class="_meta" @click="show_advanced_meta = !show_advanced_meta">
-            <template v-if="!show_advanced_meta">
-              {{ $t("created") }}&nbsp;•
-              {{ $root.formatDateToPrecise(fragment.date_created) }}
-            </template>
-            <template v-else>
-              <div>
-                {{ $t("created") }}&nbsp;•
-                {{ $root.formatDateToPrecise(fragment.date_created) }}
+            <div v-if="!show_advanced_meta" class="_meta--oneLine">
+              <div class="_date">
+                {{
+                  $root.formatDate({ date: fragment.date_created, format: "L" })
+                }}
               </div>
-              <div>
-                {{ $t("edited") }}&nbsp;•
-                {{ $root.formatDateToPrecise(fragment.date_modified) }}
+              <div
+                class="ta-ce"
+                v-if="
+                  $root.alreadyVisited({
+                    slugFolderName,
+                    fragmentId: fragment.media_filename,
+                  }) && context === 'preview'
+                "
+              >
+                {{ $t("already_read") }}
               </div>
-            </template>
+              <div class="_time">
+                {{
+                  $root.formatDate({
+                    date: fragment.date_created,
+                    format: "LT",
+                  })
+                }}
+              </div>
+            </div>
+            <div v-else>
+              {{ $t("created") }}
+              <div class="_meta--oneLine">
+                <div class="_date">
+                  {{
+                    $root.formatDate({
+                      date: fragment.date_created,
+                      format: "L",
+                    })
+                  }}
+                </div>
+                <div class="_time">
+                  {{
+                    $root.formatDate({
+                      date: fragment.date_created,
+                      format: "LT",
+                    })
+                  }}
+                </div>
+              </div>
+              {{ $t("edited") }}
+              <div class="_meta--oneLine">
+                <div class="_date">
+                  {{
+                    $root.formatDate({
+                      date: fragment.date_modified,
+                      format: "L",
+                    })
+                  }}
+                </div>
+                <div class="_time">
+                  {{
+                    $root.formatDate({
+                      date: fragment.date_modified,
+                      format: "LT",
+                    })
+                  }}
+                </div>
+              </div>
+            </div>
           </div>
-
-          <div class="motsclestags">
-            <template v-if="fragment.keywords && fragment.keywords.length > 0">
-              <span v-for="kw in fragment.keywords" :key="kw.title">
-                #&hairsp;{{ kw.title }}
-              </span>
-            </template>
-            <template v-if="fragment.tags && fragment.tags.length > 0">
-              <span v-for="tag in fragment.tags" :key="tag.title">
-                •&hairsp;{{ tag.title }}
-              </span>
-            </template>
+          <div class="_title">
+            <h2>{{ fragment.title }}</h2>
           </div>
         </div>
-
         <div
           class="m_advancedMenu"
-          v-if="context === 'edit' && $root.can_admin_corpora"
+          v-if="
+            context === 'edit' &&
+            ($root.can_admin_corpora || fragment_was_created_x_minutes_ago < 30)
+          "
         >
           <button
             type="button"
-            @click="show_advanced_menu = !show_advanced_menu"
+            @click="$emit('update:edit_mode', !edit_mode)"
             class="m_advancedMenu--toggleButton"
-            :class="{ 'is--active': show_advanced_menu }"
+            :class="{ 'is--active': edit_mode }"
           >
-            <!-- <svg class="svg-icon" viewBox="0 0 20 20">
-            <path
-              fill="none"
-              d="M3.936,7.979c-1.116,0-2.021,0.905-2.021,2.021s0.905,2.021,2.021,2.021S5.957,11.116,5.957,10
-                  S5.052,7.979,3.936,7.979z M3.936,11.011c-0.558,0-1.011-0.452-1.011-1.011s0.453-1.011,1.011-1.011S4.946,9.441,4.946,10
-                  S4.494,11.011,3.936,11.011z M16.064,7.979c-1.116,0-2.021,0.905-2.021,2.021s0.905,2.021,2.021,2.021s2.021-0.905,2.021-2.021
-                  S17.181,7.979,16.064,7.979z M16.064,11.011c-0.559,0-1.011-0.452-1.011-1.011s0.452-1.011,1.011-1.011S17.075,9.441,17.075,10
-                  S16.623,11.011,16.064,11.011z M10,7.979c-1.116,0-2.021,0.905-2.021,2.021S8.884,12.021,10,12.021s2.021-0.905,2.021-2.021
-                  S11.116,7.979,10,7.979z M10,11.011c-0.558,0-1.011-0.452-1.011-1.011S9.442,8.989,10,8.989S11.011,9.441,11.011,10
-                  S10.558,11.011,10,11.011z"
-            />
-          </svg>-->
-            <!-- Generator: Adobe Illustrator 24.1.0, SVG Export Plug-In  -->
-            <svg
-              version="1.1"
-              xmlns="http://www.w3.org/2000/svg"
-              xmlns:xlink="http://www.w3.org/1999/xlink"
-              x="0px"
-              y="0px"
-              width="4px"
-              height="16.2px"
-              viewBox="0 0 4 16.2"
-              style="enable-background: new 0 0 4 16.2"
-              xml:space="preserve"
-            >
-              <path
-                d="M0,14.1c0,1.1,0.9,2,2,2s2-0.9,2-2s-0.9-2-2-2S0,13,0,14.1z M0,2c0,1.1,0.9,2,2,2s2-0.9,2-2S3.1,0,2,0
-	S0,0.9,0,2z M0,8.1c0,1.1,0.9,2,2,2s2-0.9,2-2s-0.9-2-2-2S0,7,0,8.1z"
-              />
-            </svg>
+            <template v-if="!edit_mode">
+              {{ $t("edit_mode") }}
+            </template>
+            <template v-else>×</template>
           </button>
-          <div class="m_advancedMenu--menu" v-if="show_advanced_menu">
-            <button
-              type="button"
-              class="button-small"
-              @click="show_edit_fragment = true"
-            >
-              {{ $t("edit") }}
-            </button>
+          <div
+            v-if="
+              !$root.can_admin_corpora &&
+              fragment_was_created_x_minutes_ago < 30
+            "
+          >
+            <small
+              v-html="
+                $t('available_30_minutes_after_creation,still') +
+                ' ' +
+                (30 - fragment_was_created_x_minutes_ago) +
+                ')'
+              "
+            />
+          </div>
+        </div>
+        <div class="_editFragmentOptions" v-if="edit_mode">
+          <button
+            type="button"
+            class="button-small"
+            @click="show_edit_fragment = true"
+          >
+            {{ $t("edit") }}
+          </button>
 
-            <button type="button" class="button-small" @click="removeFragment">
-              {{ $t("remove") }}
-            </button>
+          <button type="button" class="button-small" @click="removeFragment">
+            {{ $t("remove") }}
+          </button>
+        </div>
+
+        <div class="m_fragmentContent--content--inner--kw">
+          <div
+            class="m_keywordField m_keywordField--inline margin-bottom-verysmall"
+            v-if="
+              context !== 'preview' && fragment.tags && fragment.tags.length > 0
+            "
+          >
+            <span v-for="tag in fragment.tags" :key="tag.title" class="tag">
+              {{ tag.title }}
+            </span>
+          </div>
+          <div
+            class="m_keywordField m_keywordField--inline margin-bottom-verysmall"
+            v-if="
+              context !== 'preview' &&
+              fragment.keywords &&
+              fragment.keywords.length > 0
+            "
+          >
+            <span
+              v-for="kw in fragment.keywords"
+              class="keyword"
+              :key="kw.title"
+            >
+              {{ kw.title }}
+            </span>
           </div>
         </div>
 
@@ -121,11 +181,29 @@
         />
 
         <div
-          class="m_fragmentContent--medias"
-          :tabindex="context === 'preview' ? '-1' : ''"
+          class="_fragmentPreview"
+          v-if="context === 'preview'"
+          tabindex="-1"
         >
+          <template v-if="preview_media">
+            <div
+              class="_fragmentPreview--overlay"
+              v-if="preview_media.type === 'image'"
+            />
+            <FragmentMedia
+              class="_fragmentPreview--media"
+              :media="preview_media"
+              :slugFolderName="slugFolderName"
+              Z
+              context="preview"
+              :data-mediatype="preview_media.type"
+            />
+          </template>
+        </div>
+
+        <div v-else class="m_fragmentContent--medias">
           <AddMedias
-            v-if="context === 'edit'"
+            v-if="context === 'edit' && edit_mode"
             :slugFolderName="slugFolderName"
             :key="'addmedia_start'"
             :collapsed="linked_medias.length > 0"
@@ -143,13 +221,14 @@
                 :media="media"
                 :slugFolderName="slugFolderName"
                 :index="index"
+                :can_be_edited="edit_mode === true"
                 :linked_medias="linked_medias"
                 :context="context"
                 @removeMedia="(d) => removeMedia(d)"
                 @moveMedia="(d) => moveMedia(d)"
               />
               <AddMedias
-                v-if="context === 'edit'"
+                v-if="context === 'edit' && edit_mode"
                 :slugFolderName="slugFolderName"
                 :key="'addmedia_' + media.metaFileName"
                 :collapsed="index < linked_medias.length - 1"
@@ -171,15 +250,15 @@
             :to="{
               name: 'Fragment',
               params: { fragmentId: fragment.media_filename },
-              query: this.$route.query ? this.$route.query : {},
+              query: $route.query ? $route.query : {},
             }"
           >
-            <span
+            <!-- <span
               v-if="already_visited"
               class="m_fragmentContent--open--alreadyVisited"
             >
               {{ $t("alreay_read") }}
-            </span>
+            </span> -->
             <!-- <span class="m_fragmentContent--open--open">
               {{ $t("open") }}
             </span> -->
@@ -212,6 +291,7 @@ export default {
     medias: Array,
     slugFolderName: String,
     fragment_width: Number,
+    edit_mode: Boolean,
   },
   components: {
     AddMedias,
@@ -221,7 +301,6 @@ export default {
   },
   data() {
     return {
-      show_advanced_menu: false,
       show_advanced_meta: false,
       show_edit_fragment: false,
 
@@ -234,9 +313,31 @@ export default {
   beforeDestroy() {},
   watch: {},
   computed: {
-    already_visited() {
-      const fullPath = `/${this.slugFolderName}/${this.fragment.media_filename}`;
-      return this.$root.fragments_read.includes(fullPath);
+    fragment_was_created_x_minutes_ago() {
+      const ellapsed = this.$moment
+        .duration(
+          this.$moment(this.$root.currentTime)
+            .utc()
+            .add(1, "hours")
+            .diff(this.$moment.utc(this.fragment.date_created))
+        )
+        .asMinutes();
+      return Math.floor(ellapsed);
+    },
+
+    preview_media() {
+      if (this.linked_medias.length === 0) return false;
+
+      let preview = undefined;
+
+      // find first image
+      preview = this.linked_medias.find((m) => m.type === "image");
+
+      // if none, get first text
+      if (!preview) preview = this.linked_medias.find((m) => m.type === "text");
+
+      // if none, then too bad
+      return preview;
     },
     linked_medias() {
       if (
@@ -253,15 +354,13 @@ export default {
         return acc;
       }, []);
 
-      if (this.context === "preview") return fragment_medias.slice(0, 2);
       return fragment_medias;
     },
   },
   methods: {
     updateMouseCoords(event) {
-      const percent_hover_x = event.offsetX / event.target.offsetWidth;
-      this.random_angle = (percent_hover_x - 0.5) * 6;
-
+      // const percent_hover_x = event.offsetX / event.target.offsetWidth;
+      // this.random_angle = (percent_hover_x - 0.5) * 6;
       // const percent_hover_y = event.offsetY / event.target.offsetHeight;
       // this.slide_on_hover = Math.min(1, percent_hover_y * 1);
     },
@@ -397,9 +496,9 @@ export default {
   }
 
   &.is--preview .m_fragmentContent--content {
-    --slide_on_hover: 5rem;
+    --slide_on_hover: 1rem;
     --move_top_for_slide: calc(-1.8 * var(--slide_on_hover));
-    --preview_height: 360px;
+    --preview_height: 260px;
 
     height: var(--preview_height);
     overflow: hidden;
@@ -453,69 +552,102 @@ export default {
       margin: 0;
       box-shadow: 0 0 0.5rem 0rem var(--color-lightgray);
       pointer-events: auto;
+      height: var(--preview_height);
+      overflow: hidden;
 
       transform-origin: 50% 100px;
     }
 
     .m_fragmentContent--content--inner--top {
-      margin-top: 0;
+      ._title {
+        height: 5em;
+        min-height: 0;
+      }
+
+      h2 {
+        display: -webkit-box;
+        -webkit-line-clamp: 3;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        text-overflow: ellipsis;
+
+        font-size: 1.3rem;
+      }
     }
 
     &:hover,
     &.is--opened {
       .m_fragmentContent--content--inner {
-        transform: translateY(calc(-1 * var(--slide_on_hover)))
-          rotate(calc(var(--random_angle) * 1deg)) scale(1.03);
+        transform: translateY(calc(-1 * var(--slide_on_hover))) scale(1);
+        // transform: translateY(calc(-1 * var(--slide_on_hover)))
+        //   rotate(calc(var(--random_angle) * 1deg)) scale(1);
         color: var(--color-blue);
+      }
+
+      ._fragmentPreview {
       }
     }
   }
 
   .m_fragmentContent--content--inner {
     position: relative;
-    // margin-top: calc(var(--spacing) * 2);
-    // margin-bottom: 33vh;
-    // margin-right: 4px;
-    // margin-left: 4px;
-
     pointer-events: auto;
-    padding: calc(var(--spacing) * 1) 0;
-    margin: calc(var(--spacing) * 1) 0;
-    border-top: 2px solid var(--color-blue);
-
-    // background-color: #fff;
-    // background-color: #f9f3db;
-    // background: linear-gradient(
-    //   180deg,
-    //   #fff 0%,
-    //   #f9f3db calc(100% - 1px),
-    //   var(--color-black) 100%
-    // );
-    // background: var(--color-lightgray);
-    // background: var(--body-bg);
+    padding: calc(var(--spacing) / 2) 0 calc(var(--spacing));
+    margin: calc(var(--spacing) * 1) 0 0;
+    border-top: 1px solid var(--color-blue);
+    border-bottom: 1px solid var(--color-blue);
     background: white;
-    // border: 2px solid black;
-    // border-radius: 10px;
-
-    // box-shadow: 0px 0px 4px 0px rgba(41, 41, 41, 0.8);
 
     transition: all 0.4s cubic-bezier(0.19, 1, 0.22, 1);
   }
 }
 
 .m_fragmentContent--content--inner--top {
-  margin: calc(var(--spacing)) 0;
-  padding: 0 var(--spacing);
+  margin: 0 0;
+  padding: 0 calc(var(--spacing));
   text-align: center;
-  h2 {
-    margin: 0;
-    margin-bottom: calc(var(--spacing) / 2);
+
+  ._title {
+    margin: calc(var(--spacing) / 1) 0;
+    padding: 0 calc(var(--spacing) / 2);
+    min-height: 10em;
+    display: flex;
+    flex-flow: column wrap;
+    align-items: center;
+    justify-content: center;
+
+    h2 {
+      display: block;
+      margin: 0;
+    }
   }
 
   ._meta {
-    font-size: 0.8rem;
+    font-family: var(--ff-top-level);
+    font-size: 0.6rem;
     text-transform: lowercase;
+    text-align: left;
+    // margin-left: calc(var(--spacing) / -2);
+    // margin-right: calc(var(--spacing) / -2);
   }
+
+  ._meta--oneLine {
+    display: flex;
+    justify-content: space-between;
+
+    > * {
+      flex: 1 1 50px;
+
+      &:last-child {
+        text-align: right;
+      }
+    }
+  }
+}
+
+.m_fragmentContent--content--inner--kw {
+  margin: 0 0;
+  padding: 0 calc(var(--spacing));
 }
 
 .m_fragmentContent--medias {
@@ -593,5 +725,48 @@ export default {
   }
   .m_fragmentContent--open--alreadyVisited {
   }
+}
+
+._fragmentPreview {
+  // filter: brightness(80%) sepia(100%) hue-rotate(201deg) saturate(1260%);
+  position: relative;
+  ._fragmentPreview--media {
+    color: var(--color-blue);
+    &[data-mediatype="image"] {
+      mix-blend-mode: luminosity;
+    }
+    &[data-mediatype="text"] {
+      margin-top: calc(var(--spacing) / -4);
+    }
+  }
+}
+._fragmentPreview--overlay {
+  background-color: var(--color-blue);
+  position: absolute;
+  top: 0;
+  width: calc(100% - var(--spacing) * 2);
+  height: 100%;
+  margin: calc(var(--spacing) / 2) calc(var(--spacing));
+}
+
+.m_advancedMenu {
+  position: sticky;
+  top: 0;
+  margin: 0 auto;
+  z-index: 150;
+  background: transparent;
+  max-width: 230px;
+
+  justify-content: center;
+  text-align: center;
+
+  .m_advancedMenu--toggleButton {
+    position: relative;
+  }
+}
+
+._editFragmentOptions {
+  display: flex;
+  justify-content: center;
 }
 </style>

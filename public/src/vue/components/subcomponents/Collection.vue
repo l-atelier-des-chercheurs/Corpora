@@ -21,6 +21,9 @@
           </h2>
 
           <div class="_buttonRow">
+            <button type="button" @click="$emit('close')">
+              {{ $t("close") }}
+            </button>
             <button type="button" @click="rename_coll = !rename_coll">
               {{ $t("rename") }}
             </button>
@@ -58,8 +61,6 @@
           :slugFolderName="corpus.slugFolderName"
           :allow_editing="true"
         />
-
-        <hr />
 
         <div class="_editFragmentsLabel">
           <label>
@@ -210,7 +211,7 @@ export default {
 </script>
 <style lang="scss" scoped>
 .m_collection--presentation {
-  padding: 0 calc(var(--spacing) * 2);
+  // padding: 0 calc(var(--spacing) * 2);
 }
 
 ._editFragmentsLabel {
@@ -227,7 +228,11 @@ export default {
 ._titleBar {
   display: flex;
   flex-flow: row nowrap;
-  align-items: center;
+  align-items: flex-start;
   justify-content: space-between;
+
+  h2 {
+    margin-top: 0;
+  }
 }
 </style>

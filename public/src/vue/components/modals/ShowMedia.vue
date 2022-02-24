@@ -5,7 +5,7 @@
     :read_only="false"
     :typeOfModal="'LargeAndNoScroll'"
   >
-    <template slot="header">{{ media.media_filename }}</template>
+    <!-- <template slot="header">{{ media.media_filename }}</template> -->
     <template slot="preview">
       <MediaContent
         :context="'full'"

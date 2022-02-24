@@ -74,12 +74,12 @@ Vue.component("tippy", TippyComponent);
 let lang_settings = {
   available: [
     {
-      key: "fr",
-      name: "Français",
-    },
-    {
       key: "en",
       name: "English",
+    },
+    {
+      key: "fr",
+      name: "Français",
     },
   ],
   default: "en",
@@ -244,9 +244,10 @@ let vm = new Vue({
         ? localstore.get("load_all_embeds_option") === true
         : false,
       unfold_legal_pane: false,
-      show_welcome_modal: localstore.get("remember_embeds_option_choice")
-        ? localstore.get("remember_embeds_option_choice") !== true
-        : true,
+      show_bandeau: true,
+      // localstore.get("remember_embeds_option_choice")
+      //   ? localstore.get("remember_embeds_option_choice") !== true
+      //   : true,
     },
     lang: {
       available: lang_settings.available,
@@ -348,9 +349,11 @@ let vm = new Vue({
     },
     $route: {
       handler(to) {
-        if (to.name === "Fragment")
-          if (!this.fragments_read.includes(to.fullPath))
-            this.fragments_read.push(to.fullPath);
+        if (to.name === "Fragment") {
+          const path = to.params.slugFolderName + "/" + to.params.fragmentId;
+          if (!this.fragments_read.includes(path))
+            this.fragments_read.push(path);
+        }
       },
       immediate: true,
     },
@@ -424,6 +427,10 @@ let vm = new Vue({
         a = (a << 5) - a + b.charCodeAt(0);
         return a & a;
       }, 0);
+    },
+    alreadyVisited({ slugFolderName, fragmentId }) {
+      const fullPath = `${slugFolderName}/${fragmentId}`;
+      return this.$root.fragments_read.includes(fullPath);
     },
 
     createFolder(fdata) {
@@ -639,6 +646,9 @@ let vm = new Vue({
     },
     formatDateToPrecise(date) {
       return this.$moment(date, "YYYY-MM-DD HH:mm:ss").format("LTS L");
+    },
+    formatDate({ date, format }) {
+      return this.$moment(date, "YYYY-MM-DD HH:mm:ss").format(format);
     },
     formatDurationToMinuteHours(date) {
       return this.$moment.utc(date).format("mm:ss");

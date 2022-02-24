@@ -4,6 +4,7 @@ import List from "../views/List.vue";
 import Corpus from "../views/Corpus.vue";
 import Fragment from "../views/Fragment.vue";
 import Informations from "../views/Informations.vue";
+import Mentions from "../views/Mentions.vue";
 
 Vue.use(VueRouter);
 
@@ -20,6 +21,12 @@ const routes = [
     title: "Corpora",
     component: Corpus,
     children: [
+      {
+        path: "mentions",
+        name: "Mentions légales",
+        title: "Cookies, données personnelles et mentions légales",
+        component: Mentions,
+      },
       {
         path: "informations",
         name: "Informations",

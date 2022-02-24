@@ -43,24 +43,7 @@
               class="m_fragments--createFragment--addFragmentButton"
               @click="show_create_fragment = !show_create_fragment"
             >
-              <svg
-                version="1.1"
-                xmlns="http://www.w3.org/2000/svg"
-                xmlns:xlink="http://www.w3.org/1999/xlink"
-                x="0px"
-                y="0px"
-                width="24px"
-                height="24px"
-                viewBox="0 0 24 24"
-                style="enable-background: new 0 0 24 24"
-                xml:space="preserve"
-              >
-                <path
-                  style="fill: currentColor"
-                  d="M0,10.5h10.5V0h2.9v10.5H24v2.9H13.5V24h-2.9V13.5H0V10.5z"
-                />
-              </svg>
-              <label>{{ $t("create_a_story") }}</label>
+              + {{ $t("create_a_story") }}
             </button>
             <CreateFragment
               v-if="show_create_fragment"

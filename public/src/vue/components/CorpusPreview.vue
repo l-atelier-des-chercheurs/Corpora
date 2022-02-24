@@ -113,7 +113,6 @@
         class="button"
         v-html="$t('open')"
       />
-
       <button
         type="button"
         v-if="can_access_corpus"
@@ -251,11 +250,10 @@ export default {
 </script>
 <style lang="scss" scoped>
 .m_corpusPreview {
-  border-top: 2px dotted var(--color-blue);
+  border-top: 1px solid var(--color-blue);
   // background: var(--active-color);
   // margin: var(--spacing);
   padding: calc(var(--spacing)) 0;
-  border-radius: 2px;
 
   > *:not(:last-child) {
     margin-bottom: calc(var(--spacing) / 2);
@@ -287,7 +285,6 @@ export default {
 
 .m_corpusPreview--options {
   button {
-    vertical-align: middle;
   }
 }
 

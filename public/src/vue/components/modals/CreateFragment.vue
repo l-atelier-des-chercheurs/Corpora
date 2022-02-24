@@ -22,6 +22,12 @@
           required
           autofocus
         />
+        <small
+          :class="{
+            'is--warning': fragmentdata.title.length > 80,
+          }"
+          >{{ fragmentdata.title.length }} ≤ 80 char</small
+        >
       </div>
 
       <!-- <div>
@@ -51,26 +57,7 @@
         />
       </div>
     </template>
-    <template slot="submit_button">
-      <svg
-        version="1.1"
-        xmlns="http://www.w3.org/2000/svg"
-        xmlns:xlink="http://www.w3.org/1999/xlink"
-        x="0px"
-        y="0px"
-        width="24px"
-        height="24px"
-        viewBox="0 0 24 24"
-        style="enable-background: new 0 0 24 24"
-        xml:space="preserve"
-      >
-        <path
-          style="fill: currentColor"
-          d="M0,10.5h10.5V0h2.9v10.5H24v2.9H13.5V24h-2.9V13.5H0V10.5z"
-        />
-      </svg>
-      <span>{{ $t("create") }}</span>
-    </template>
+    <template slot="submit_button">{{ $t("create") }} </template>
   </Modal>
 </template>
 <script>
