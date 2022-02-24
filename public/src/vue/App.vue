@@ -57,7 +57,7 @@ body {
   font-family: var(--ff-top-level);
 
   font-size: 90%;
-  line-height: 1.25;
+  line-height: 1.41;
 
   &.has_modal_opened {
     overflow-y: hidden;
@@ -65,7 +65,7 @@ body {
 }
 
 ::selection {
-  background-color: var(--active-color);
+  background-color: var(--color-gray);
 }
 
 * {
@@ -207,6 +207,9 @@ label:not(.no-style) {
 
 .text-gray {
   color: var(--color-gray);
+}
+.text-blue {
+  color: var(--color-blue);
 }
 
 .m_advancedMenu {
@@ -417,6 +420,30 @@ button,
 
 label {
   cursor: inherit;
+
+  &.is--active {
+    cursor: pointer;
+    &::after {
+      content: "×";
+      display: inline-block;
+      margin-left: calc(var(--spacing) / 2);
+      color: var(--color-blue);
+      transform: scale(1.4);
+      font-weight: 300;
+      line-height: 0.65;
+      padding: 2px;
+      border-radius: 4px;
+    }
+
+    &:hover,
+    &:active,
+    &:focus {
+      &::after {
+        background: var(--color-blue);
+        color: white;
+      }
+    }
+  }
 }
 
 input {
@@ -474,13 +501,16 @@ input[type="checkbox"] {
 input,
 textarea {
   font-size: 1.2em;
-  padding: 0.4em calc(0.4em - 2px) 0.4em 0.4em;
+  padding: calc(var(--spacing) / 4) calc(var(--spacing) / 2);
 
   width: 100%;
   max-width: 320px;
   -webkit-appearance: none;
 
-  border: 1px solid var(--color-black);
+  // border: 1px solid var(--color-black);
+  border: 1px solid var(--color-gray);
+  border: none;
+  background: var(--body-bg);
 
   transition: all 0.2s cubic-bezier(0.19, 1, 0.22, 1);
 
@@ -888,7 +918,7 @@ audio {
 
   > * {
     display: inline-flex;
-    padding: calc(var(--spacing) / 2) calc(var(--spacing) / 2);
+    padding: calc(var(--spacing) / 3) calc(var(--spacing) / 2);
     border: 1px solid currentColor;
     align-items: flex-start;
     justify-content: flex-start;
@@ -905,23 +935,37 @@ audio {
       border: none;
       padding: 0;
     }
-
-    &:hover,
-    &:active,
-    &:focus {
-      color: var(--color-blue);
-    }
-
-    &.is--active {
-      color: white;
-      background: var(--color-blue);
-      border: 1px solid var(--color-blue);
-    }
-
-    &.more {
-      padding: calc(var(--spacing) / 4) 0;
-      font-size: 0.7rem;
+    &.autocomplete {
+      display: block;
       border: none;
+      padding: 0;
+    }
+
+    &.button {
+      &:hover,
+      &:active,
+      &:focus {
+        color: var(--color-blue);
+      }
+      &.is--active {
+        color: white;
+        background: var(--color-blue);
+        border: 1px solid var(--color-blue);
+      }
+
+      &.more {
+        padding: calc(var(--spacing) / 4) 0;
+        font-size: 0.7rem;
+        border: none;
+      }
+
+      &.can_be_removed {
+        &::after {
+          content: "×";
+          margin-left: calc(var(--spacing) / 2);
+          transition: transform 0.15s ease;
+        }
+      }
     }
   }
 }
@@ -952,6 +996,11 @@ audio {
   }
   .addRemoveBtn {
     font-size: 0.8rem;
+  }
+  .more {
+    padding: calc(var(--spacing) / 4) 0;
+    font-size: 0.7rem;
+    border: none;
   }
 }
 
@@ -1108,21 +1157,6 @@ audio {
 //       transition: all 0.2s cubic-bezier(0.19, 1, 0.22, 1);
 //     }
 
-//     &.can_be_removed {
-//       &::before {
-//         content: "×";
-//         transform: scale(1.2);
-//         transition: transform 0.15s ease;
-//         padding-top: 0.1em;
-//       }
-//       &:hover {
-//         &::before {
-//           color: #000;
-//           // transform: scale(2);
-//         }
-//       }
-//     }
-
 //     .actions {
 //       margin-left: 4px;
 //       margin-right: 0;
@@ -1243,6 +1277,7 @@ audio {
 .list-complete-leave-active {
   position: absolute !important;
   z-index: -1;
+  opacity: 0;
   transition: none !important;
 }
 

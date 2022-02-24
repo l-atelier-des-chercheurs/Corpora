@@ -1,7 +1,15 @@
 <template>
   <div class="_sidebarContent">
     <div class="" v-if="!show_collection_meta">
-      <label for="fragments-search">{{ $t("search_in_fragments") }}</label>
+      <label
+        for="fragments-search"
+        :class="{
+          'is--active': text_search,
+        }"
+        @click="setAllFiltersToZero"
+      >
+        {{ $t("search_in_fragments") }}
+      </label>
       <form
         class="flex-nowrap align-items-stretch"
         @submit.prevent="setTextFilter"
@@ -66,11 +74,17 @@
       class="_tags"
       v-if="!show_collection_meta && all_tags && all_tags.length > 0"
     >
-      <label>{{ $t("tags") }}</label>
+      <label
+        :class="{
+          'is--active': tag_search,
+        }"
+        @click="setAllFiltersToZero"
+        >{{ $t("tags") }}</label
+      >
       <div class="m_keywordField">
         <button
           type="button"
-          class="tag"
+          class="button tag"
           v-for="[tag, count] in all_tags_subset"
           :key="tag"
           @click="setTagFilter(tag)"
@@ -89,7 +103,7 @@
         >
           <button
             type="button"
-            class="more"
+            class="button more"
             @click="show_all_tags = !show_all_tags"
           >
             <template v-if="!show_all_tags">
@@ -111,12 +125,18 @@
         all_keywords_with_counts.length > 0
       "
     >
-      <label>{{ $t("keywords") }}</label>
+      <label
+        :class="{
+          'is--active': keyword_search,
+        }"
+        @click="setAllFiltersToZero"
+        >{{ $t("keywords") }}</label
+      >
 
       <div class="m_keywordField">
         <button
           type="button"
-          class="keyword"
+          class="keyword button"
           v-for="[keyword, count] in keywords_subset"
           :key="keyword"
           @click="setKeywordFilter(keyword)"
@@ -135,7 +155,7 @@
         >
           <button
             type="button"
-            class="more"
+            class="button more"
             @click="show_all_keywords = !show_all_keywords"
           >
             <template v-if="!show_all_keywords">
@@ -150,7 +170,14 @@
     </div>
 
     <div class="_collectionsList">
-      <label for="fragments-search">{{ $t("collections") }} </label>
+      <label
+        for="fragments-search"
+        :class="{
+          'is--active': show_collection_meta,
+        }"
+        @click="setAllFiltersToZero"
+        >{{ $t("collections") }}
+      </label>
 
       <button
         type="button"
@@ -197,7 +224,7 @@
       >
         <button
           type="button"
-          class="more"
+          class="button more"
           @click="show_all_collections = !show_all_collections"
         >
           <template v-if="!show_all_collections">
@@ -231,6 +258,7 @@ export default {
     return {
       show_all_tags: false,
       show_all_keywords: false,
+      show_all_collections: false,
 
       text_search_in_field: "",
     };
@@ -327,7 +355,7 @@ export default {
 
     sorted_collections_subset() {
       if (!this.sorted_collections) return false;
-      if (!this.show_all_collections)
+      if (!this.show_all_collections && this.show_collection_meta === false)
         return this.sorted_collections.slice(0, 3);
       return this.sorted_collections;
     },
@@ -427,6 +455,10 @@ export default {
   font-weight: 500;
   font-size: 80%;
   margin: 0 calc(var(--spacing) / 4);
+}
+
+input {
+  background: white;
 }
 
 ._emptySearch {

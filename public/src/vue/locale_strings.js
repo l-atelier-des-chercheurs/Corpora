@@ -143,6 +143,10 @@ module.exports = (function () {
       fr: "Créé le",
       en: "Created on",
     },
+    already_read: {
+      fr: "Déjà consulté",
+      en: "Already read",
+    },
     close: {
       fr: "Fermer",
       en: "Close",
@@ -661,10 +665,15 @@ module.exports = (function () {
       fr: "Aucun aperçu disponible pour ce site",
       en: "No preview available for this website",
     },
+    "available_30_minutes_after_creation,still": {
+      fr: "Disponible 30 minutes après la création (reste&nbsp;:",
+      en: "Available for 30 minutes after creation (remaining: ",
+    },
     failed_to_save_media: {
       fr: "Les modifications n’ont pas pu être enregistrées",
       en: "Failed to save changes",
     },
+
     adding_password_warning: {
       fr: "Attention ! Si vous ajoutez ou modifiez un mot de passe tous les utilisateurs qui y sont actuellement connectés devront le renseigner avant de pouvoir continuer à contribuer.",
       en: "Warning! Adding or changing the password will disconnect all users until they enter the new password.",

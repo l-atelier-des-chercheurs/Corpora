@@ -2,7 +2,7 @@
   <div class="m_bandeau">
     <div class="m_bandeau--content">
       <div>
-        {{ $t("personal_data_and_legal_notices") }}
+        {{ $t("website_uses_cookies") }}
         <router-link
           :to="{
             name: 'Mentions légales',

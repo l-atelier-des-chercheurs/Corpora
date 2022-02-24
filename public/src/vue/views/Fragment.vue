@@ -185,6 +185,12 @@
                         query: $route.query ? $route.query : {},
                       }"
                       class="button"
+                      :class="{
+                        'was--visited': $root.alreadyVisited({
+                          slugFolderName,
+                          fragmentId: fragment.media_filename,
+                        }),
+                      }"
                       v-html="fragment.title"
                     />
                   </li>
@@ -505,7 +511,8 @@ export default {
   border-bottom: 1px solid var(--color-blue);
 
   ::v-deep .mediaTextContent {
-    padding-left: 0;
+    margin-left: calc(var(--spacing) / -4);
+    // padding-left: 0;
   }
 }
 
@@ -548,6 +555,10 @@ ul {
       content: "→";
       position: absolute;
       right: 100%;
+    }
+
+    &.was--visited {
+      color: var(--color-blue);
     }
   }
 }

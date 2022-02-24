@@ -21,6 +21,9 @@
           </h2>
 
           <div class="_buttonRow">
+            <button type="button" @click="$emit('close')">
+              {{ $t("close") }}
+            </button>
             <button type="button" @click="rename_coll = !rename_coll">
               {{ $t("rename") }}
             </button>

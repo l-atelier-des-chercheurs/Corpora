@@ -29,6 +29,17 @@
                   $root.formatDate({ date: fragment.date_created, format: "L" })
                 }}
               </div>
+              <div
+                class="ta-ce"
+                v-if="
+                  $root.alreadyVisited({
+                    slugFolderName,
+                    fragmentId: fragment.media_filename,
+                  }) && context === 'preview'
+                "
+              >
+                {{ $t("already_read") }}
+              </div>
               <div class="_time">
                 {{
                   $root.formatDate({
@@ -82,7 +93,56 @@
           <div class="_title">
             <h2>{{ fragment.title }}</h2>
           </div>
+        </div>
+        <div
+          class="m_advancedMenu"
+          v-if="
+            context === 'edit' &&
+            ($root.can_admin_corpora || fragment_was_created_x_minutes_ago < 30)
+          "
+        >
+          <button
+            type="button"
+            @click="$emit('update:edit_mode', !edit_mode)"
+            class="m_advancedMenu--toggleButton"
+            :class="{ 'is--active': edit_mode }"
+          >
+            <template v-if="!edit_mode">
+              {{ $t("edit_mode") }}
+            </template>
+            <template v-else>×</template>
+          </button>
+          <div
+            v-if="
+              !$root.can_admin_corpora &&
+              fragment_was_created_x_minutes_ago < 30
+            "
+          >
+            <small
+              v-html="
+                $t('available_30_minutes_after_creation,still') +
+                ' ' +
+                (30 - fragment_was_created_x_minutes_ago) +
+                ')'
+              "
+            />
+          </div>
+        </div>
+        <div class="_editFragmentOptions" v-if="edit_mode">
+          <button
+            type="button"
+            class="button-small"
+            @click="show_edit_fragment = true"
+          >
+            {{ $t("edit") }}
+          </button>
 
+          <button type="button" class="button-small" @click="removeFragment">
+            {{ $t("remove") }}
+          </button>
+        </div>
+
+        <div class="m_fragmentContent--content--inner--kw">
           <div
             class="m_keywordField m_keywordField--inline margin-bottom-verysmall"
             v-if="
@@ -109,50 +169,6 @@
               {{ kw.title }}
             </span>
           </div>
-        </div>
-
-        <div
-          class="m_advancedMenu"
-          v-if="
-            context === 'edit' &&
-            ($root.can_admin_corpora || fragment_was_created_x_minutes_ago < 30)
-          "
-        >
-          <button
-            type="button"
-            @click="$emit('update:edit_mode', !edit_mode)"
-            class="m_advancedMenu--toggleButton"
-            :class="{ 'is--active': edit_mode }"
-          >
-            <template v-if="!edit_mode">
-              {{ $t("edit_mode") }}
-            </template>
-            <template v-else>×</template>
-          </button>
-          <div
-            v-if="
-              !$root.can_admin_corpora &&
-              fragment_was_created_x_minutes_ago < 30
-            "
-          >
-            <small>
-              Disponible 30 minutes après la création (reste
-              {{ 30 - fragment_was_created_x_minutes_ago }})
-            </small>
-          </div>
-        </div>
-        <div class="_editFragmentOptions" v-if="edit_mode">
-          <button
-            type="button"
-            class="button-small"
-            @click="show_edit_fragment = true"
-          >
-            {{ $t("edit") }}
-          </button>
-
-          <button type="button" class="button-small" @click="removeFragment">
-            {{ $t("remove") }}
-          </button>
         </div>
 
         <EditFragment
@@ -237,12 +253,12 @@
               query: $route.query ? $route.query : {},
             }"
           >
-            <span
+            <!-- <span
               v-if="already_visited"
               class="m_fragmentContent--open--alreadyVisited"
             >
               {{ $t("alreay_read") }}
-            </span>
+            </span> -->
             <!-- <span class="m_fragmentContent--open--open">
               {{ $t("open") }}
             </span> -->
@@ -297,11 +313,6 @@ export default {
   beforeDestroy() {},
   watch: {},
   computed: {
-    already_visited() {
-      const fullPath = `/${this.slugFolderName}/${this.fragment.media_filename}`;
-      return this.$root.fragments_read.includes(fullPath);
-    },
-
     fragment_was_created_x_minutes_ago() {
       const ellapsed = this.$moment
         .duration(
@@ -601,6 +612,7 @@ export default {
     padding: 0 calc(var(--spacing) / 2);
     min-height: 10em;
     display: flex;
+    flex-flow: column wrap;
     align-items: center;
     justify-content: center;
 
@@ -622,7 +634,20 @@ export default {
   ._meta--oneLine {
     display: flex;
     justify-content: space-between;
+
+    > * {
+      flex: 1 1 50px;
+
+      &:last-child {
+        text-align: right;
+      }
+    }
   }
+}
+
+.m_fragmentContent--content--inner--kw {
+  margin: 0 0;
+  padding: 0 calc(var(--spacing));
 }
 
 .m_fragmentContent--medias {

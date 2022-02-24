@@ -8,6 +8,7 @@
     >
       <button
         type="button"
+        class="button"
         v-for="tag in tags"
         :key="tag.text"
         @click="removeTag(tag.text)"

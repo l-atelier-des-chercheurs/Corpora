@@ -3,13 +3,13 @@
     <CorpusPwd v-if="!can_access_corpus" :corpus="corpus" />
     <template v-else>
       <Bandeau v-if="$root.settings.show_bandeau" />
-
       <div class="_corpusContainer">
         <main
           class="_corpusContainer--leftCont"
           ref="fragmentPane"
           @scroll="onScroll"
         >
+          fragments_read = {{ $root.fragments_read }}
           <div class="_navPages">
             <router-link
               v-if="$root.can_admin_corpora"
@@ -133,11 +133,18 @@
                   :all_tags="all_tags"
                   :medias="medias"
                   :collection_fragments="current_collection_fragments"
+                  @close="show_collection_meta = false"
                 />
 
                 <div class="">
                   <div class="_indicator m_fragments">
-                    <div @click="resetFiltersAndScrollTop">
+                    <!-- @click="resetFiltersAndScrollTop" -->
+                    <div
+                      :class="{
+                        'text-blue':
+                          filtered_fragments.length !== sorted_fragments.length,
+                      }"
+                    >
                       {{ $t("stories") }}&nbsp;: {{ filtered_fragments.length
                       }}<template
                         v-if="

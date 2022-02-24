@@ -349,9 +349,11 @@ let vm = new Vue({
     },
     $route: {
       handler(to) {
-        if (to.name === "Fragment")
-          if (!this.fragments_read.includes(to.fullPath))
-            this.fragments_read.push(to.fullPath);
+        if (to.name === "Fragment") {
+          const path = to.params.slugFolderName + "/" + to.params.fragmentId;
+          if (!this.fragments_read.includes(path))
+            this.fragments_read.push(path);
+        }
       },
       immediate: true,
     },
@@ -425,6 +427,10 @@ let vm = new Vue({
         a = (a << 5) - a + b.charCodeAt(0);
         return a & a;
       }, 0);
+    },
+    alreadyVisited({ slugFolderName, fragmentId }) {
+      const fullPath = `${slugFolderName}/${fragmentId}`;
+      return this.$root.fragments_read.includes(fullPath);
     },
 
     createFolder(fdata) {
