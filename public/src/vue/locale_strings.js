@@ -43,10 +43,6 @@ module.exports = (function () {
       oc: "Durada",
       de: "Dauer",
     },
-    feedbacks: {
-      fr: "Retours/aide ✉️",
-      en: "Feedback ✉️",
-    },
     link: {
       fr: "Lien",
       en: "Link",
