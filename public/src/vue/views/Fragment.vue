@@ -8,7 +8,7 @@
     ref="body"
   >
     <template slot="body">
-      <div class="_sideBySide" @click.self="closeModal">
+      <div class="_sideBySide" @click.self="closeThisModal">
         <div
           class="_singleFragment custom_scrollbar custom_scrollbar_dark"
           ref="singleFragmentContainer"
@@ -338,6 +338,9 @@ export default {
         query: this.$route.query ? this.$route.query : {},
       });
     },
+    closeThisModal() {
+      this.$children[0].closeModal();
+    },
     saveCollList() {
       this.sorted_collections.map((c) => {
         if (this.selected_collections.includes(c.metaFileName)) {
@@ -448,7 +451,10 @@ export default {
     > * {
       max-height: 100vh;
       overflow: auto;
-      padding-right: calc(var(--spacing));
+
+      &:first-child {
+        padding-right: calc(var(--spacing));
+      }
       // padding: clamp(2vmin, 4vw, calc(var(--spacing) * 4));
       // padding: calc(var(--spacing));
     }
@@ -568,6 +574,12 @@ ul {
       color: var(--color-blue);
     }
   }
+}
+
+._closeModalButton {
+  position: absolute;
+  top: 0;
+  left: 100%;
 }
 </style>
 <style lang="scss"></style>

@@ -43,10 +43,6 @@ module.exports = (function () {
       oc: "Durada",
       de: "Dauer",
     },
-    feedbacks: {
-      fr: "Retours/aide ✉️",
-      en: "Feedback ✉️",
-    },
     link: {
       fr: "Lien",
       en: "Link",
@@ -314,10 +310,6 @@ module.exports = (function () {
       fr: "tous les corpus (admin)",
       en: "all corpus (admin)",
     },
-    source: {
-      fr: "Lien",
-      en: "link",
-    },
     open: {
       fr: "Ouvrir",
       en: "Open",
@@ -527,8 +519,8 @@ module.exports = (function () {
       en: "Show all collections",
     },
     your_search: {
-      fr: "Votre recherche",
-      en: "Your search",
+      fr: "Votre recherche :",
+      en: "Your search:",
     },
     no_with_similar_keywords: {
       fr: "Aucun récit avec des mots-clés similaires",

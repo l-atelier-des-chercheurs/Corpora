@@ -1790,9 +1790,8 @@ export default {
   }
 
   .ql-editor {
-    padding-left: 0;
-    padding-top: 0;
-    padding-bottom: 0;
+    padding: calc(var(--spacing) / 2) calc(var(--spacing) / 2)
+      calc(var(--spacing) / 4);
     overflow: visible;
 
     &::after {
@@ -1832,6 +1831,7 @@ export default {
     left: 0;
     color: currentColor;
     opacity: 0.4;
+    padding: calc(var(--spacing) / 8) calc(var(--spacing) / 4 * 3);
     font-style: normal;
   }
 }

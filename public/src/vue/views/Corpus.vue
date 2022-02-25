@@ -77,21 +77,16 @@
 
           <div
             class="m_corpus--description margin-bottom-small mediaTextContent"
-            v-if="['Corpus', 'Fragment'].includes($route.name)"
+            v-if="
+              ['Corpus', 'Fragment'].includes($route.name) &&
+              !show_collection_meta
+            "
             v-html="
               $root.lang.current === 'fr'
                 ? corpus.description
                 : corpus.description_en
             "
-          ></div>
-          <div class="m_feedbacks">
-            <a
-              class="js--openInBrowser"
-              target="_blank"
-              href="mailto:info@plurality-university.org?subject=feedbacks%20on%20Corpora"
-              >{{ $t("feedbacks") }}</a
-            >
-          </div>
+          />
 
           <router-view
             :fragments="sorted_fragments"
@@ -144,12 +139,19 @@
                           filtered_fragments.length !== sorted_fragments.length,
                       }"
                     >
-                      {{ $t("stories") }}&nbsp;: {{ filtered_fragments.length
-                      }}<template
+                      <template
                         v-if="
-                          filtered_fragments.length !== sorted_fragments.length
+                          filtered_fragments.length === sorted_fragments.length
                         "
-                        >&nbsp;/&nbsp;{{ sorted_fragments.length }}
+                      >
+                        {{ $t("stories") }}&nbsp;:
+                        {{ filtered_fragments.length }}
+                      </template>
+                      <template v-else>
+                        {{ $t("your_search") }}
+                        {{ filtered_fragments.length }}&nbsp;/&nbsp;{{
+                          sorted_fragments.length
+                        }}
                       </template>
                     </div>
 
@@ -632,6 +634,7 @@ export default {
       this.text_search = "";
       this.keyword_search = false;
       this.tag_search = false;
+      this.show_collection_meta = false;
       this.scrollToTop();
     },
     onScroll() {
@@ -738,22 +741,6 @@ export default {
 
 .m_corpus--fragments--collection {
   padding: calc(var(--spacing) * 2);
-}
-
-.m_feedbacks {
-  position: fixed;
-  bottom: calc(var(--spacing) * 3);
-  right: calc(var(--spacing) * 2);
-  background-color: var(--color-black);
-  color: white;
-  margin: 0;
-  padding: calc(var(--spacing) / 2) calc(var(--spacing));
-  border-radius: 24px;
-  z-index: 10000;
-
-  a {
-    color: inherit;
-  }
 }
 
 ._logo {
