@@ -139,12 +139,19 @@
                           filtered_fragments.length !== sorted_fragments.length,
                       }"
                     >
-                      {{ $t("stories") }}&nbsp;: {{ filtered_fragments.length
-                      }}<template
+                      <template
                         v-if="
-                          filtered_fragments.length !== sorted_fragments.length
+                          filtered_fragments.length === sorted_fragments.length
                         "
-                        >&nbsp;/&nbsp;{{ sorted_fragments.length }}
+                      >
+                        {{ $t("stories") }}&nbsp;:
+                        {{ filtered_fragments.length }}
+                      </template>
+                      <template v-else>
+                        {{ $t("your_search") }}
+                        {{ filtered_fragments.length }}&nbsp;/&nbsp;{{
+                          sorted_fragments.length
+                        }}
                       </template>
                     </div>
 

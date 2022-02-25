@@ -519,8 +519,8 @@ module.exports = (function () {
       en: "Show all collections",
     },
     your_search: {
-      fr: "Votre recherche",
-      en: "Your search",
+      fr: "Votre recherche :",
+      en: "Your search:",
     },
     no_with_similar_keywords: {
       fr: "Aucun récit avec des mots-clés similaires",
