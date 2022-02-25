@@ -282,9 +282,9 @@ module.exports = (function () {
       fr: "Description",
       en: "Description",
     },
-    collections: {
-      fr: "Collections",
-      en: "Collections",
+    your_collections: {
+      fr: "Vos collections",
+      en: "Your collections",
     },
     part_of_collections: {
       fr: "Dans les collections",
@@ -664,6 +664,10 @@ module.exports = (function () {
     no_preview_available: {
       fr: "Aucun aperçu disponible pour ce site",
       en: "No preview available for this website",
+    },
+    no_preview: {
+      fr: "Aucun aperçu",
+      en: "No preview",
     },
     "available_30_minutes_after_creation,still": {
       fr: "Disponible 30 minutes après la création (reste&nbsp;:",

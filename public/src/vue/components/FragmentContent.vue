@@ -199,6 +199,13 @@
               :data-mediatype="preview_media.type"
             />
           </template>
+          <template v-else>
+            <div class="_fragmentPreview--media ta-ce tt-lc">
+              <small
+                ><i>{{ $t("no_preview") }}</i></small
+              >
+            </div>
+          </template>
         </div>
 
         <div v-else class="m_fragmentContent--medias">

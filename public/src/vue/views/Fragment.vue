@@ -61,7 +61,7 @@
                 <label>{{ $t("part_of_collections") }} </label>
 
                 <small
-                  v-if="collections_showed"
+                  v-if="!collections_showed"
                   v-html="$t('fragment_included_in_no_collections')"
                 />
 

@@ -176,7 +176,7 @@
           'is--active': show_collection_meta,
         }"
         @click="setAllFiltersToZero"
-        >{{ $t("collections") }}
+        >{{ $t("your_collections") }}
       </label>
 
       <button
