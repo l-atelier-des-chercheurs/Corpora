@@ -534,7 +534,11 @@ module.exports = (function () {
       fr: "Aucun récit avec des mots-clés similaires",
       en: "No stories with similar keywords",
     },
-    with_similar_keywords: {
+    story_with_similar_keywords: {
+      fr: "Un récit avec des mots-clés similaires",
+      en: "One story with similar keywords",
+    },
+    stories_with_similar_keywords: {
       fr: "récits avec des mots-clés similaires",
       en: "stories with similar keywords",
     },
