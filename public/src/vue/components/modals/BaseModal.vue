@@ -22,6 +22,35 @@
         :data-originComponent="$parent.$options._componentTag"
       >
         <div class="m_modal--container--content" ref="modalContent">
+          <transition name="fade" :duration="600">
+            <button
+              class="button-round m_modal--close_button padding-verysmall"
+              @click="closeModal"
+              v-if="showModal && !is_minimized && !prevent_close"
+            >
+              <svg
+                version="1.1"
+                xmlns="http://www.w3.org/2000/svg"
+                xmlns:xlink="http://www.w3.org/1999/xlink"
+                x="0px"
+                y="0px"
+                width="24px"
+                height="24px"
+                viewBox="0 0 24 24"
+                style="
+                  enable-background: new 0 0 24 24;
+                  transform: rotate(-45deg);
+                "
+                xml:space="preserve"
+              >
+                <path
+                  style="fill: currentColor"
+                  d="M0,10.5h10.5V0h2.9v10.5H24v2.9H13.5V24h-2.9V13.5H0V10.5z"
+                />
+              </svg>
+            </button>
+          </transition>
+
           <div v-if="!!this.$slots['preview']" class="m_modal--preview">
             <!-- if there is no sidebar, output header here -->
             <template v-if="!$slots['sidebar'] && $slots['header']">
@@ -118,32 +147,6 @@
           </div>
         </div>
       </div>
-
-      <transition name="fade" :duration="600">
-        <button
-          class="button-round m_modal--close_button padding-verysmall"
-          @click="closeModal"
-          v-if="showModal && !is_minimized && !prevent_close"
-        >
-          <svg
-            version="1.1"
-            xmlns="http://www.w3.org/2000/svg"
-            xmlns:xlink="http://www.w3.org/1999/xlink"
-            x="0px"
-            y="0px"
-            width="24px"
-            height="24px"
-            viewBox="0 0 24 24"
-            style="enable-background: new 0 0 24 24; transform: rotate(-45deg)"
-            xml:space="preserve"
-          >
-            <path
-              style="fill: currentColor"
-              d="M0,10.5h10.5V0h2.9v10.5H24v2.9H13.5V24h-2.9V13.5H0V10.5z"
-            />
-          </svg>
-        </button>
-      </transition>
 
       <transition name="fade" :duration="600">
         <button
@@ -435,11 +438,18 @@ export default {
 }
 
 .m_modal--close_button {
-  position: fixed;
-  top: 0;
-  right: 0;
+  position: absolute;
+  top: -1em;
+  right: -1em;
   z-index: 1500;
-  background-color: transparent;
+  // background-color: transparent;
+
+  width: 4em;
+  height: 4em;
+  background-color: white;
+  box-shadow: 0 0 1rem 1rem white;
+  // padding: calc(var(--spacing) * 1);
+  border-radius: 100%;
 
   svg {
     width: 2em;

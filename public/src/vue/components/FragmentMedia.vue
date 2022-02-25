@@ -513,18 +513,15 @@ export default {
 .m_fragmentMedia--infos {
   display: flex;
   flex-flow: row nowrap;
-  // justify-content: center;
-  // margin-left: -2px;
-  // margin-right: -2px;
-  margin-top: calc(var(--spacing) / 2);
+  gap: calc(var(--spacing) / 2);
 
   > * {
-    flex: 1 1 0;
+    flex: 1 1 50%;
   }
 }
 .m_fragmentMedia--infos--caption,
 .m_fragmentMedia--infos--source {
-  margin-top: calc(var(--spacing) / 4);
+  margin-top: calc(var(--spacing) / 2);
   font-size: 0.8rem;
 
   input {
@@ -545,34 +542,13 @@ export default {
 
   span,
   a {
-    /* These are technically the same, but use both */
-    // overflow-wrap: break-word;
-    // word-wrap: break-word;
-
-    // -ms-word-break: break-all;
-    // /* This is the dangerous one in WebKit, as it breaks things wherever */
-    // word-break: break-all;
-    // /* Instead use this non-standard one: */
-    // word-break: break-word;
-
-    // /* Adds a hyphen where the word breaks, if supported (No Blink) */
-    // -ms-hyphens: auto;
-    // -moz-hyphens: auto;
-    // -webkit-hyphens: auto;
-    // hyphens: auto;
-
-    // display: -webkit-box;
-    // -webkit-line-clamp: 2;
-    // -webkit-box-orient: vertical;
-    // overflow: hidden;
-    // text-overflow: ellipsis;
   }
 }
 
 .m_fragmentMedia--infos--source {
   text-align: left;
-  margin: 0 auto;
-  margin-top: calc(var(--spacing) / 2);
+  // margin: 0 auto;
+  // margin-top: calc(var(--spacing) / 2);
   max-width: 50ch;
 
   &.is--beingEdited {
@@ -588,6 +564,27 @@ export default {
     // overflow: hidden;
     // white-space: nowrap;
     // text-overflow: ellipsis;
+    /* These are technically the same, but use both */
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+
+    -ms-word-break: break-all;
+    /* This is the dangerous one in WebKit, as it breaks things wherever */
+    word-break: break-all;
+    /* Instead use this non-standard one: */
+    word-break: break-word;
+
+    /* Adds a hyphen where the word breaks, if supported (No Blink) */
+    -ms-hyphens: auto;
+    -moz-hyphens: auto;
+    -webkit-hyphens: auto;
+    hyphens: auto;
+
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
   a {
     text-decoration: underline;
@@ -626,6 +623,12 @@ export default {
       .plyr__controls {
         padding-right: 35px;
       }
+    }
+  }
+
+  &[data-type="text"].is--beingEdited {
+    .ql-editor {
+      background-color: var(--color-lightgray);
     }
   }
 
