@@ -624,6 +624,7 @@ export default {
       this.text_search = "";
       this.keyword_search = false;
       this.tag_search = false;
+      this.show_collection_meta = false;
       this.scrollToTop();
     },
     onScroll() {
