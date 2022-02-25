@@ -21,7 +21,7 @@
       <input
         type="text"
         v-model="find_by_title"
-        placeholder="Chercher par titre"
+        placeholder="Chercher par titre de corpus"
       />
 
       <div class="m_list--corpuses">
@@ -92,5 +92,9 @@ export default {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
   gap: calc(var(--spacing));
+}
+
+input {
+  background: white;
 }
 </style>

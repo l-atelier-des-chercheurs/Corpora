@@ -153,7 +153,7 @@
                       </template>
                     </div>
 
-                    <div class="_sortMode">
+                    <div class="_sortMode" v-if="filtered_fragments.length > 1">
                       <button
                         type="button"
                         :class="{

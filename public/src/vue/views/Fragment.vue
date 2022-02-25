@@ -61,7 +61,7 @@
                 <label>{{ $t("part_of_collections") }} </label>
 
                 <small
-                  v-if="collections_showed"
+                  v-if="!collections_showed"
                   v-html="$t('fragment_included_in_no_collections')"
                 />
 
@@ -168,9 +168,16 @@
               </template>
               <template v-else>
                 <h2>
-                  {{
-                    linked_fragments.length + " " + $t("with_similar_keywords")
-                  }}
+                  <template v-if="linked_fragments.length === 1">
+                    {{ $t("story_with_similar_keywords") }}
+                  </template>
+                  <template v-else>
+                    {{
+                      linked_fragments.length +
+                      " " +
+                      $t("stories_with_similar_keywords")
+                    }}
+                  </template>
                 </h2>
 
                 <ul>

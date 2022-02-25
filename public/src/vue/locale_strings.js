@@ -180,8 +180,8 @@ module.exports = (function () {
       en: "Edit mode",
     },
     edit_corpus: {
-      fr: "Éditer le corpus",
-      en: "Edit corpus",
+      fr: "éditer le corpus",
+      en: "edit corpus",
     },
     edited: {
       fr: "Dernière modification",
@@ -282,9 +282,9 @@ module.exports = (function () {
       fr: "Description",
       en: "Description",
     },
-    collections: {
-      fr: "Collections",
-      en: "Collections",
+    your_collections: {
+      fr: "Vos collections",
+      en: "Your collections",
     },
     part_of_collections: {
       fr: "Dans les collections",
@@ -311,8 +311,8 @@ module.exports = (function () {
       en: "All stories",
     },
     all_corpus: {
-      fr: "Tous les corpus (admin)",
-      en: "All corpus (admin)",
+      fr: "tous les corpus (admin)",
+      en: "all corpus (admin)",
     },
     source: {
       fr: "Lien",
@@ -534,7 +534,11 @@ module.exports = (function () {
       fr: "Aucun récit avec des mots-clés similaires",
       en: "No stories with similar keywords",
     },
-    with_similar_keywords: {
+    story_with_similar_keywords: {
+      fr: "Un récit avec des mots-clés similaires",
+      en: "One story with similar keywords",
+    },
+    stories_with_similar_keywords: {
       fr: "récits avec des mots-clés similaires",
       en: "stories with similar keywords",
     },
@@ -664,6 +668,10 @@ module.exports = (function () {
     no_preview_available: {
       fr: "Aucun aperçu disponible pour ce site",
       en: "No preview available for this website",
+    },
+    no_preview: {
+      fr: "Aucun aperçu",
+      en: "No preview",
     },
     "available_30_minutes_after_creation,still": {
       fr: "Disponible 30 minutes après la création (reste&nbsp;:",

@@ -2164,8 +2164,6 @@ twitter-widget.twitter-tweet {
   bottom: 0;
   z-index: 10000;
 
-  // backdrop-filter: blur(4px);
-  // -webkit-backdrop-filter: blur(4px);
   // background-color: hsla(275, 10%, 63%, 0.5);
 
   display: flex;
