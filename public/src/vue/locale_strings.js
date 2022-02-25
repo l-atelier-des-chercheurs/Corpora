@@ -310,10 +310,6 @@ module.exports = (function () {
       fr: "tous les corpus (admin)",
       en: "all corpus (admin)",
     },
-    source: {
-      fr: "Lien",
-      en: "link",
-    },
     open: {
       fr: "Ouvrir",
       en: "Open",

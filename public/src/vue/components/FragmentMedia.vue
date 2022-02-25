@@ -151,7 +151,7 @@
           media.type !== 'embed'
         "
       >
-        <label v-if="is_being_edited">{{ $t("source") }}</label>
+        <label v-if="is_being_edited">{{ $t("link") }}</label>
         <div>
           <component
             v-if="!is_being_edited"
@@ -353,6 +353,7 @@ export default {
       return Modernizr.touchevents;
     },
     media_source_is_link() {
+      return true;
       return ["http", "www"].some((s) => this.media.source.startsWith(s));
     },
     should_be_embed() {
@@ -549,7 +550,7 @@ export default {
   text-align: left;
   // margin: 0 auto;
   // margin-top: calc(var(--spacing) / 2);
-  max-width: 50ch;
+  // max-width: 50ch;
 
   &.is--beingEdited {
     margin-left: 0;
