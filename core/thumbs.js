@@ -1002,64 +1002,7 @@ module.exports = (function () {
     let meta_cache_path = path.join(thumbFolderPath, meta_cache_filename);
     let meta_cache_fullpath = api.getFolderPath(meta_cache_path);
 
-    const exists = await fs.pathExists(meta_cache_fullpath);
-
-    if (!exists) {
-      const _metadata = await _getPageMetadata({ url }).catch((err) => {
-        throw err;
-      });
-
-      let results = {};
-      if (_metadata.hasOwnProperty("title")) results.title = _metadata.title;
-      if (_metadata.hasOwnProperty("description"))
-        results.description = _metadata.description;
-
-      if (_metadata.hasOwnProperty("image")) {
-        let image_url;
-        if (typeof _metadata.image === "string") image_url = _metadata.image;
-        else if (
-          typeof _metadata.image === "object" &&
-          _metadata.image.hasOwnProperty("name")
-        )
-          image_url = _metadata.image.name;
-
-        if (image_url) results.image = image_url;
-      }
-
-      if (!results.image) {
-        function endsWithAny(suffixes, string) {
-          return suffixes.some(function (suffix) {
-            return string.endsWith(suffix);
-          });
-        }
-
-        if (endsWithAny([".jpg", ".jpeg", ".png", ".gif"], url))
-          results.image = url;
-      }
-
-      if (results.image) {
-        try {
-          results.local_image = await _fetchImage({
-            thumbFolderPath,
-            url: results.image,
-          });
-        } catch (err) {
-          dev.error(
-            `Couldn’t download site image ${url} to ${thumbFolderPath} : ${err}`
-          );
-        }
-      }
-
-      await fs
-        .writeFileSync(meta_cache_fullpath, JSON.stringify(results))
-        .catch((error) => {
-          if (error) throw error;
-        });
-      dev.logverbose(
-        `THUMBS — _getLinkOpenGraph : stored meta at ${meta_cache_fullpath}`
-      );
-      return results;
-    } else {
+    if (await fs.pathExists(meta_cache_fullpath)) {
       dev.logverbose(
         `Site metadata already exist at path ${meta_cache_fullpath}`
       );
@@ -1072,8 +1015,68 @@ module.exports = (function () {
         return JSON.parse(results);
       } catch (err) {
         dev.error(`Err while reading stored opengraph meta: ${err}`);
-        return resolve({});
+        return {};
       }
+    }
+
+    const _metadata = await _getPageMetadata({ url }).catch((err) => {
+      throw err;
+    });
+
+    let results = {};
+    if (_metadata.hasOwnProperty("title")) results.title = _metadata.title;
+    if (_metadata.hasOwnProperty("description"))
+      results.description = _metadata.description;
+
+    if (_metadata.hasOwnProperty("image")) {
+      let image_url;
+      if (typeof _metadata.image === "string") image_url = _metadata.image;
+      else if (
+        typeof _metadata.image === "object" &&
+        _metadata.image.hasOwnProperty("name")
+      )
+        image_url = _metadata.image.name;
+
+      if (image_url) results.image = image_url;
+    }
+
+    if (!results.image) {
+      function endsWithAny(suffixes, string) {
+        return suffixes.some(function (suffix) {
+          return string.endsWith(suffix);
+        });
+      }
+
+      if (endsWithAny([".jpg", ".jpeg", ".png", ".gif"], url))
+        results.image = url;
+    }
+
+    if (results.image) {
+      try {
+        results.local_image = await _fetchImage({
+          thumbFolderPath,
+          url: results.image,
+        });
+      } catch (err) {
+        dev.error(
+          `Couldn’t download site image ${url} to ${thumbFolderPath} : ${err}`
+        );
+      }
+    }
+
+    try {
+      await fs.writeFileSync(meta_cache_fullpath, JSON.stringify(results));
+      dev.logverbose(
+        `THUMBS — _getLinkOpenGraph : stored meta ${JSON.stringify(
+          results
+        )} at ${meta_cache_fullpath}`
+      );
+      return results;
+    } catch (err) {
+      dev.error(
+        `THUMBS — _getLinkOpenGraph : failed storing meta at ${meta_cache_fullpath} : ${err}`
+      );
+      throw err;
     }
   }
 
@@ -1090,7 +1093,9 @@ module.exports = (function () {
       win.webContents.setAudioMuted(true);
 
       win.webContents.once("did-finish-load", () => {
-        dev.logverbose(`THUMBS — _getPageMetadata : finished loading page`);
+        dev.logverbose(
+          `THUMBS — _getPageMetadata : finished loading page ${url}`
+        );
 
         let code = `var promise = Promise.resolve(document.documentElement.innerHTML); 
                   promise.then(data => data)`;
@@ -1349,6 +1354,7 @@ module.exports = (function () {
         fullThumbPath: siteimage_cache_fullpath,
         thumbRes: 1400,
       });
+      dev.logverbose(`THUMBS — _fetchImage: image fetched`);
       return siteimage_cache_path;
     } catch (err) {
       dev.error(`THUMBS — _fetchImage: ${err}`);
