@@ -77,7 +77,10 @@
 
           <div
             class="m_corpus--description margin-bottom-small mediaTextContent"
-            v-if="['Corpus', 'Fragment'].includes($route.name)"
+            v-if="
+              ['Corpus', 'Fragment'].includes($route.name) &&
+              !show_collection_meta
+            "
             v-html="
               $root.lang.current === 'fr'
                 ? corpus.description
