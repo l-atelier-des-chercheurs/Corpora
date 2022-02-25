@@ -1724,24 +1724,43 @@ twitter-widget.twitter-tweet {
 }
 
 .m_modal--close_button {
-  position: fixed;
+  position: absolute;
   top: 0;
-  right: 0;
-  z-index: 1500;
-  line-height: 0;
+  left: 100%;
+  margin-left: calc(var(--spacing) * 1);
   padding: 0;
-  margin: calc(var(--spacing));
+  z-index: 1500;
+  // background-color: transparent;
+
+  // width: 4em;
+  // height: 4em;
+  // box-shadow: 0 0 1rem 1rem white;
+  // padding: calc(var(--spacing) * 1);
+  // border-radius: 100%;
+
+  svg {
+    width: 4em;
+    height: 4em;
+    padding: calc(var(--spacing) / 4);
+  }
 
   line {
     fill: none;
     stroke: #4d4d4d;
     stroke-miterlimit: 10;
-    stroke-width: 3px;
+    stroke-width: 1px;
   }
 
-  html.touchevents & {
+  html.touchevents &,
+  .app.mobile_view & {
+    position: fixed;
     top: 0;
     right: 0;
+    left: auto;
+  }
+
+  .app:not(.mobile_view) .m_modal--mask.typeOfModal-LargeAndScroll & {
+    margin-top: calc(var(--spacing) * 2);
   }
 }
 

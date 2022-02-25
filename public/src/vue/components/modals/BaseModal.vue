@@ -24,7 +24,7 @@
         <div class="m_modal--container--content" ref="modalContent">
           <transition name="fade" :duration="600">
             <button
-              class="button-round m_modal--close_button padding-verysmall"
+              class="m_modal--close_button"
               @click="closeModal"
               v-if="showModal && !is_minimized && !prevent_close"
             >
@@ -34,18 +34,30 @@
                 xmlns:xlink="http://www.w3.org/1999/xlink"
                 x="0px"
                 y="0px"
-                width="24px"
-                height="24px"
-                viewBox="0 0 24 24"
+                viewBox="0 0 50 50"
                 style="
-                  enable-background: new 0 0 24 24;
-                  transform: rotate(-45deg);
+                  enable-background: new 0 0 56.6 50.1;
+                  transform: rotate(45deg);
                 "
                 xml:space="preserve"
+                aria-hidden="true"
+                stroke="currentColor"
+                stroke-width="1px"
+                fill="transparent"
               >
-                <path
-                  style="fill: currentColor"
-                  d="M0,10.5h10.5V0h2.9v10.5H24v2.9H13.5V24h-2.9V13.5H0V10.5z"
+                <line
+                  vector-effect="non-scaling-stroke"
+                  x1="0"
+                  y1="25"
+                  x2="50"
+                  y2="25"
+                />
+                <line
+                  vector-effect="non-scaling-stroke"
+                  x1="25"
+                  y1="0"
+                  x2="25"
+                  y2="50"
                 />
               </svg>
             </button>
@@ -424,36 +436,5 @@ export default {
   // background: var(--body-bg);
   background: rgba(237, 237, 237, 0.95);
   padding: 0;
-
-  .m_modal--close_button {
-    color: var(--color-black);
-    background: var(--body-bg);
-    box-shadow: 0 0 0.5rem 0.75rem var(--body-bg);
-    border-radius: 50%;
-
-    svg {
-      // filter: drop-shadow(0px 0px 4px rgba(41, 41, 41, 0.8));
-    }
-  }
-}
-
-.m_modal--close_button {
-  position: absolute;
-  top: -1em;
-  right: -1em;
-  z-index: 1500;
-  // background-color: transparent;
-
-  width: 4em;
-  height: 4em;
-  background-color: white;
-  box-shadow: 0 0 1rem 1rem white;
-  // padding: calc(var(--spacing) * 1);
-  border-radius: 100%;
-
-  svg {
-    width: 2em;
-    height: 2em;
-  }
 }
 </style>
