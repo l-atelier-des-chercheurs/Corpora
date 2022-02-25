@@ -180,8 +180,8 @@ module.exports = (function () {
       en: "Edit mode",
     },
     edit_corpus: {
-      fr: "Éditer le corpus",
-      en: "Edit corpus",
+      fr: "éditer le corpus",
+      en: "edit corpus",
     },
     edited: {
       fr: "Dernière modification",
@@ -311,8 +311,8 @@ module.exports = (function () {
       en: "All stories",
     },
     all_corpus: {
-      fr: "Tous les corpus (admin)",
-      en: "All corpus (admin)",
+      fr: "tous les corpus (admin)",
+      en: "all corpus (admin)",
     },
     source: {
       fr: "Lien",

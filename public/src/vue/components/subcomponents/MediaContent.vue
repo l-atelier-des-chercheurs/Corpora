@@ -135,7 +135,6 @@
         :readonly="read_only"
       />
     </template>
-
     <template v-else-if="media.type === 'link' || media.type === 'embed'">
       <template v-if="!should_load_embed">
         <div class="_linkCaption">

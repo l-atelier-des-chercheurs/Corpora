@@ -142,6 +142,9 @@
       </div>
       <div
         class="m_fragmentMedia--infos--source"
+        :class="{
+          'is--beingEdited': is_being_edited,
+        }"
         v-if="
           (is_being_edited || media.source) &&
           media.type !== 'link' &&
@@ -150,18 +153,21 @@
       >
         <label v-if="is_being_edited">{{ $t("source") }}</label>
         <div>
-          <template v-if="!is_being_edited">
-            <a
-              target="_blank"
-              rel="noopener noreferrer"
-              :href="media.source"
-              :title="media.source"
-              >{{ media.source }}</a
-            >
-          </template>
-          <template v-else>
-            <input type="url" v-model="mediadata.source" placeholder="www." />
-          </template>
+          <component
+            v-if="!is_being_edited"
+            :is="media_source_is_link ? 'a' : 'span'"
+            target="_blank"
+            rel="noopener noreferrer"
+            :href="media.source"
+            :title="media.source"
+            v-html="media.source"
+          />
+          <input
+            v-else
+            type="url"
+            v-model="mediadata.source"
+            placeholder="www."
+          />
         </div>
       </div>
     </div>
@@ -235,12 +241,6 @@
     </div>
 
     <div class="_editingMenu" v-if="is_being_edited && !is_saving_media">
-      <button type="button" @click="saveMedia">
-        {{ $t("save") }}
-      </button>
-      <button type="button" @click="is_being_edited = false">
-        {{ $t("cancel") }}
-      </button>
       <button
         type="button"
         v-if="is_empty"
@@ -250,6 +250,12 @@
         "
       >
         {{ $t("remove") }}
+      </button>
+      <button type="button" v-else @click="is_being_edited = false">
+        {{ $t("cancel") }}
+      </button>
+      <button type="button" @click="saveMedia">
+        {{ $t("save") }}
       </button>
     </div>
 
@@ -345,6 +351,9 @@ export default {
   computed: {
     is_touch() {
       return Modernizr.touchevents;
+    },
+    media_source_is_link() {
+      return ["http", "www"].some((s) => this.media.source.startsWith(s));
     },
     should_be_embed() {
       if (
@@ -502,8 +511,8 @@ export default {
 }
 
 .m_fragmentMedia--infos {
-  // display: flex;
-  // flex-flow: row nowrap;
+  display: flex;
+  flex-flow: row nowrap;
   // justify-content: center;
   // margin-left: -2px;
   // margin-right: -2px;
@@ -564,17 +573,24 @@ export default {
   text-align: left;
   margin: 0 auto;
   margin-top: calc(var(--spacing) / 2);
+  max-width: 50ch;
 
-  a {
+  &.is--beingEdited {
+    margin-left: 0;
+  }
+
+  a,
+  span {
     display: block;
     margin-right: 0;
     margin-left: auto;
     text-align: right;
-    text-decoration: underline;
-    max-width: 50ch;
     // overflow: hidden;
     // white-space: nowrap;
     // text-overflow: ellipsis;
+  }
+  a {
+    text-decoration: underline;
   }
 }
 
@@ -611,6 +627,10 @@ export default {
         padding-right: 35px;
       }
     }
+  }
+
+  ._loader {
+    background: rgba(255, 255, 255, 0.9);
   }
 
   ._linkCaption {
