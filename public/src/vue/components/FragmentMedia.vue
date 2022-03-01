@@ -538,7 +538,7 @@ export default {
 
   label {
     margin-bottom: 0;
-    font-size: 0.7rem;
+    font-size: var(--font-size-small);
   }
 
   a {
@@ -642,7 +642,7 @@ export default {
   }
 
   ._linkCaption {
-    font-size: 0.7rem;
+    font-size: var(--font-size-small);
     max-width: 60ch;
     text-decoration: underline;
     padding-bottom: 4px;

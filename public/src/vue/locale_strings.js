@@ -72,11 +72,11 @@ module.exports = (function () {
       en: "Create a collection",
     },
     create_collection_first: {
-      fr: "Créez d’abord une collection en fermant cette page.",
+      fr: "Créer d’abord une collection en fermant cette page.",
       en: "Create a collection first by closing this page.",
     },
     create_your_collection: {
-      fr: "créez votre collection",
+      fr: "créer votre collection",
       en: "create your collection",
     },
     add_to_your_collection: {
@@ -371,6 +371,10 @@ module.exports = (function () {
       fr: "Supprimer",
       en: "Remove",
     },
+    remove_this_story: {
+      fr: "Supprimer ce récit",
+      en: "Remove this story",
+    },
     cancel: {
       fr: "Annuler",
       en: "Cancel",
@@ -442,7 +446,7 @@ module.exports = (function () {
       en: "Add",
     },
     enter_password_to_connect: {
-      fr: "Renseignez le mot de passe pour accéder au corpus",
+      fr: "Renseigner le mot de passe pour accéder au corpus",
       en: "Enter the password to access corpus",
     },
     create_a_corpus: {
@@ -583,11 +587,11 @@ module.exports = (function () {
       en: "Download",
     },
     embed_instructions: {
-      fr: "Placez ici l’URL vers une vidéo Vimeo, Youtube, Twitter ou SoundCloud",
+      fr: "Placer ici l’URL vers une vidéo Vimeo, Youtube, Twitter ou SoundCloud",
       en: "Add a URL to Vimeo, Youtube, Twitter or SoundCloud",
     },
     link_instructions: {
-      fr: "Renseignez une URL type <u>https://www.plurality-university.org/</u>",
+      fr: "Renseigner une URL type <u>https://www.plurality-university.org/</u>",
       en: "Paste a link to a URL such as <u>https://www.plurality-university.org/</u>",
     },
     full_url: {
@@ -612,7 +616,7 @@ module.exports = (function () {
     },
 
     drop_files_here: {
-      fr: "Déposez vos fichier(s) ici",
+      fr: "Déposer les fichier(s) ici",
       en: "Drop file(s) here",
     },
     files: {

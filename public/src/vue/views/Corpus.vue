@@ -240,22 +240,24 @@
           </div>
 
           <footer class="_bottomFooter">
-            <router-link
-              :to="{
-                name: 'Mentions légales',
-              }"
-              class="button"
-              v-html="$t('personal_data_and_legal_notices')"
-            />
-            <div>
-              <div class="margin-sides-medium">
-                <div class="flex-nowrap">
-                  Corpora v{{ $root.state.appVersion }}
-                  &nbsp;
-                  <Admin />
+            <small>
+              <router-link
+                :to="{
+                  name: 'Mentions légales',
+                }"
+                class="button"
+                v-html="$t('personal_data_and_legal_notices')"
+              />
+              <div>
+                <div class="margin-sides-medium">
+                  <div class="flex-nowrap">
+                    Corpora v{{ $root.state.appVersion }}
+                    &nbsp;
+                    <Admin />
+                  </div>
                 </div>
               </div>
-            </div>
+            </small>
           </footer>
         </main>
         <aside class="_corpusContainer--rightCont">
@@ -764,7 +766,9 @@ export default {
   gap: var(--spacing);
   justify-content: space-between;
 
-  .a {
+  .a,
+  .button {
+    padding-left: 0;
     text-transform: inherit;
   }
 
@@ -865,11 +869,12 @@ h1 {
     width: 4em;
     height: 4em;
     background-color: var(--color-lightgray);
-    box-shadow: 0 0 1rem 1rem var(--color-lightgray);
+
+    box-shadow: 0 0 1rem 1rem var(--color-lightgray),
+      0 0 1rem 1rem var(--color-lightgray) inset;
     // padding: calc(var(--spacing) * 1);
     border-radius: 100%;
-    margin-bottom: calc(var(--spacing) * 2);
-
+    margin-bottom: calc(var(--spacing) * 0.5);
     pointer-events: auto;
 
     svg {

@@ -169,7 +169,7 @@
       </div>
     </div>
 
-    <div class="_collectionsList">
+    <div class="">
       <label
         for="fragments-search"
         :class="{
@@ -179,62 +179,64 @@
         >{{ $t("your_collections") }}
       </label>
 
-      <button
-        type="button"
-        class="addRemoveBtn"
-        @click="$emit('showCreateCollection')"
-      >
-        + {{ $t("create_your_collection") }}
-      </button>
-
-      <button
-        type="button"
-        v-for="collection in sorted_collections_subset"
-        class="collItem"
-        :key="collection.media_filename"
-        :class="{
-          'is--active': show_collection_meta === collection.media_filename,
-        }"
-        @click="openCollection(collection.media_filename)"
-      >
-        <div>
-          <div class="_title">
-            {{ collection.title }}
-          </div>
-          <div>
-            (<template
-              v-if="
-                collection.fragments_slugs &&
-                Array.isArray(collection.fragments_slugs)
-              "
-              >{{ collection.fragments_slugs.length }}
-            </template>
-            <template v-else>0</template>
-            {{ $t("fragments").toLowerCase() }})
-          </div>
-        </div>
-      </button>
-
-      <template
-        v-if="
-          sorted_collections_subset.length &&
-          (sorted_collections_subset.length < sorted_collections.length ||
-            show_all_collections)
-        "
-      >
+      <div class="_collectionsList">
         <button
           type="button"
           class="button more"
-          @click="show_all_collections = !show_all_collections"
+          @click="$emit('showCreateCollection')"
         >
-          <template v-if="!show_all_collections">
-            {{ $t("show_all_collections") }}
-          </template>
-          <template v-else>
-            {{ $t("hide") }}
-          </template>
+          + {{ $t("create_your_collection") }}
         </button>
-      </template>
+
+        <button
+          type="button"
+          v-for="collection in sorted_collections_subset"
+          class="collItem"
+          :key="collection.media_filename"
+          :class="{
+            'is--active': show_collection_meta === collection.media_filename,
+          }"
+          @click="openCollection(collection.media_filename)"
+        >
+          <div>
+            <div class="_title">
+              {{ collection.title }}
+            </div>
+            <div>
+              (<template
+                v-if="
+                  collection.fragments_slugs &&
+                  Array.isArray(collection.fragments_slugs)
+                "
+                >{{ collection.fragments_slugs.length }}
+              </template>
+              <template v-else>0</template>
+              {{ $t("fragments").toLowerCase() }})
+            </div>
+          </div>
+        </button>
+
+        <template
+          v-if="
+            sorted_collections_subset.length &&
+            (sorted_collections_subset.length < sorted_collections.length ||
+              show_all_collections)
+          "
+        >
+          <button
+            type="button"
+            class="button more"
+            @click="show_all_collections = !show_all_collections"
+          >
+            <template v-if="!show_all_collections">
+              {{ $t("show_all_collections") }}
+            </template>
+            <template v-else>
+              {{ $t("hide") }}
+            </template>
+          </button>
+        </template>
+      </div>
     </div>
   </div>
 </template>
@@ -441,22 +443,6 @@ export default {
   }
 }
 
-._count {
-  background: var(--color-black);
-  background: rgba(60, 53, 65, 0.25);
-  // border: 2px solid var(--color-black);
-  width: 1rem;
-  height: 1rem;
-  // color: white;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: 500;
-  font-size: 80%;
-  margin: 0 calc(var(--spacing) / 4);
-}
-
 input {
   background: white;
 }
@@ -465,6 +451,15 @@ input {
   display: flex;
   align-items: center;
   justify-content: center;
+  width: 1em;
+  height: 1em;
+  font-size: 2em;
+  font-weight: 300;
+}
+
+._disableFilter {
+  position: absolute;
+  left: 100%;
   width: 1em;
   height: 1em;
   font-size: 2em;

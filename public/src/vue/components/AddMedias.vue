@@ -6,6 +6,55 @@
       :style="addMediaStyles"
       v-if="selected_files.length === 0"
     >
+      <button
+        type="button"
+        class="menu_encart--button"
+        :class="{
+          'is--active': show_addmedia_options,
+          'is--shown': show_addmedia_options,
+          'is--dragover': show_drop_container,
+        }"
+        :style="addMediaStyles"
+        @click="show_addmedia_options = !show_addmedia_options"
+        @drop="dropHandler($event)"
+      >
+        <span class="text_label always_show" v-if="show_drop_container">{{
+          $t("drop_files_here")
+        }}</span>
+        <!-- TODO scroll to now au click -->
+        <svg
+          version="1.1"
+          xmlns="http://www.w3.org/2000/svg"
+          xmlns:xlink="http://www.w3.org/1999/xlink"
+          x="0px"
+          y="0px"
+          width="25px"
+          height="25px"
+          viewBox="0 0 56.6 50.1"
+          style="enable-background: new 0 0 56.6 50.1"
+          xml:space="preserve"
+          aria-hidden="true"
+          stroke="currentColor"
+          stroke-width="2px"
+          fill="transparent"
+        >
+          <line
+            vector-effect="non-scaling-stroke"
+            x1="0"
+            y1="25"
+            x2="50"
+            y2="25"
+          />
+          <line
+            vector-effect="non-scaling-stroke"
+            x1="25"
+            y1="0"
+            x2="25"
+            y2="50"
+          />
+        </svg>
+      </button>
+
       <!-- <transition name="slide-fade"> -->
       <!-- @mouseenter="!is_touch && show_drop_container === false ? show_addmedia_options = true : ''" -->
       <transition name="slide-fade">
@@ -119,62 +168,12 @@
                 style="width: 1px; height: 1px; overflow: hidden"
               />
             </label>
-          </div>
-          <div>
             <small>{{ $t("file_max_size") }}: 20mo</small>
           </div>
+          <div></div>
         </div>
       </transition>
       <!-- </transition> -->
-
-      <button
-        type="button"
-        class="menu_encart--button"
-        :class="{
-          'is--active': show_addmedia_options,
-          'is--shown': show_addmedia_options,
-          'is--dragover': show_drop_container,
-        }"
-        :style="addMediaStyles"
-        @click="show_addmedia_options = !show_addmedia_options"
-        @drop="dropHandler($event)"
-      >
-        <span class="text_label always_show" v-if="show_drop_container">{{
-          $t("drop_files_here")
-        }}</span>
-        <!-- TODO scroll to now au click -->
-        <svg
-          version="1.1"
-          xmlns="http://www.w3.org/2000/svg"
-          xmlns:xlink="http://www.w3.org/1999/xlink"
-          x="0px"
-          y="0px"
-          width="25px"
-          height="25px"
-          viewBox="0 0 56.6 50.1"
-          style="enable-background: new 0 0 56.6 50.1"
-          xml:space="preserve"
-          aria-hidden="true"
-          stroke="currentColor"
-          stroke-width="2px"
-          fill="transparent"
-        >
-          <line
-            vector-effect="non-scaling-stroke"
-            x1="0"
-            y1="25"
-            x2="50"
-            y2="25"
-          />
-          <line
-            vector-effect="non-scaling-stroke"
-            x1="25"
-            y1="0"
-            x2="25"
-            y2="50"
-          />
-        </svg>
-      </button>
     </div>
     <UploadFile
       v-if="selected_files.length > 0"
@@ -393,7 +392,7 @@ export default {
   .menu_encart {
     display: flex;
     flex-flow: row wrap;
-    justify-content: space-between;
+    justify-content: flex-start;
 
     .menu_encart--options {
       // padding: calc(var(--spacing) / 4) calc(var(--spacing) / 2);
@@ -406,7 +405,7 @@ export default {
         align-items: center;
         justify-content: center;
         gap: calc(var(--spacing) / 2);
-        margin-bottom: calc(var(--spacing) / 4);
+        // margin-bottom: calc(var(--spacing) / 4);
 
         > button,
         > label {
@@ -485,6 +484,7 @@ export default {
       text-transform: initial;
       pointer-events: auto;
       margin-bottom: 0;
+      margin-right: calc(var(--spacing) / 1);
 
       line-height: 1;
 

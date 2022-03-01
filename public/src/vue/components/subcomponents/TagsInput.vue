@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="_tagsinput">
     <transition-group
       name="list-complete"
       tag="div"
@@ -21,48 +21,48 @@
       >
         {{ tag.text }}
       </button>
+    </transition-group>
 
-      <div
-        class="new-tag-input-wrapper"
-        :key="'new-tag-input'"
-        v-if="allow_new_terms"
+    <div
+      class="new-tag-input-wrapper"
+      :key="'new-tag-input'"
+      v-if="allow_new_terms"
+    >
+      <input
+        type="text"
+        class="new-tag-input"
+        v-model.trim="tag"
+        :placeholder="placeholder ? placeholder : $t('add_keyword')"
+        @keydown.enter.prevent="createTag"
+      />
+      <button
+        type="button"
+        @click="createTag"
+        :disabled="disableAddButton"
+        v-if="tag.length > 0"
       >
-        <input
-          type="text"
-          class="new-tag-input"
-          v-model.trim="tag"
-          :placeholder="placeholder ? placeholder : $t('add_keyword')"
-          @keydown.enter.prevent="createTag"
-        />
+        +
+      </button>
+    </div>
+
+    <div
+      v-if="matchingKeywords.length > 0"
+      class="autocomplete"
+      :key="'autocomplete'"
+    >
+      <label>{{ $t("suggestion") }}</label>
+      <div>
         <button
           type="button"
-          @click="createTag"
-          :disabled="disableAddButton"
-          v-if="tag.length > 0"
+          v-for="keyword in matchingKeywords"
+          :key="keyword.text"
+          class="tag"
+          @click="createTagFromAutocomplete(keyword.text)"
         >
-          +
+          {{ keyword.text }}
         </button>
       </div>
-
-      <div
-        v-if="matchingKeywords.length > 0"
-        class="autocomplete"
-        :key="'autocomplete'"
-      >
-        <label>{{ $t("suggestion") }}</label>
-        <div>
-          <button
-            type="button"
-            v-for="keyword in matchingKeywords"
-            :key="keyword.text"
-            class="tag"
-            @click="createTagFromAutocomplete(keyword.text)"
-          >
-            {{ keyword.text }}
-          </button>
-        </div>
-      </div>
-    </transition-group>
+    </div>
 
     <div
       class="m_keywordField"
@@ -80,7 +80,7 @@
           :class="{ 'is--active': show_existing }"
           @click="show_existing = !show_existing"
         >
-          {{ $t("existing") }}
+          {{ $t("existing").toLowerCase() }}
         </button>
 
         <div v-if="show_existing">
@@ -222,4 +222,10 @@ export default {
   },
 };
 </script>
-<style></style>
+<style lang="scss" scoped>
+._tagsinput {
+  display: flex;
+  flex-flow: column wrap;
+  gap: calc(var(--spacing) / 2);
+}
+</style>

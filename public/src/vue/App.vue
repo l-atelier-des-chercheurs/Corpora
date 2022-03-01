@@ -47,6 +47,7 @@ export default {
   --ff-body: "Old Standard TT", "Times", "Times New Roman", serif;
   --ff-top-level: "Open Sauce", "Helvetica", "Arial", sans-serif;
 
+  --font-size-small: 0.7rem;
   // --body-bg: var(--color-lightgray);
 }
 
@@ -405,7 +406,7 @@ code {
   padding: 2px 4px;
 }
 small {
-  font-size: 0.7rem;
+  font-size: var(--font-size-small);
 }
 
 textarea,
@@ -427,7 +428,6 @@ label {
       content: "×";
       display: inline-block;
       margin-left: calc(var(--spacing) / 2);
-      color: var(--color-blue);
       transform: scale(1.4);
       font-weight: 300;
       line-height: 0.65;
@@ -439,8 +439,7 @@ label {
     &:active,
     &:focus {
       &::after {
-        background: var(--color-blue);
-        color: white;
+        color: var(--color-blue);
       }
     }
   }
@@ -866,7 +865,7 @@ audio {
     text-overflow: ellipsis;
   }
   ._siteCard--text--description {
-    font-size: 0.8rem;
+    font-size: var(--font-size-small);
   }
 }
 
@@ -896,7 +895,7 @@ audio {
   }
 
   &._playButton_hide {
-    font-size: 0.7rem;
+    font-size: var(--font-size-small);
     svg {
       width: 24px;
       height: 24px;
@@ -955,7 +954,7 @@ audio {
 
       &.more {
         padding: calc(var(--spacing) / 4) 0;
-        font-size: 0.7rem;
+        font-size: var(--font-size-small);
         border: none;
       }
 
@@ -976,14 +975,14 @@ audio {
   text-align: left;
   align-items: stretch;
   justify-content: flex-start;
-  // gap: calc(var(--spacing) / 3);
+  gap: calc(var(--spacing) / 3);
 
   .collItem {
     text-align: left;
     border: 1px solid var(--color-black);
     padding: calc(var(--spacing) / 2);
     min-height: 2em;
-    margin-bottom: calc(var(--spacing) / 2);
+    // margin-bottom: calc(var(--spacing) / 2);
 
     display: flex;
     flex-flow: row wrap;
@@ -994,13 +993,12 @@ audio {
       margin-bottom: 0;
     }
   }
-  .addRemoveBtn {
-    font-size: 0.8rem;
-  }
-  .more {
+  .more,
+  .create {
     padding: calc(var(--spacing) / 4) 0;
-    font-size: 0.7rem;
+    font-size: var(--font-size-small);
     border: none;
+    text-align: left;
   }
 }
 
@@ -1593,7 +1591,7 @@ audio {
         #app:not(.is--wide) & {
           > a,
           > button {
-            font-size: 0.7rem;
+            font-size: var(--font-size-small);
             padding: 0;
           }
         }
@@ -1863,10 +1861,10 @@ twitter-widget.twitter-tweet {
   }
 }
 
-.admin_cat {
-  border-left: 2px solid black;
-  padding: 0 calc(var(--spacing) / 3);
-}
+// .admin_cat {
+//   border-left: 2px solid black;
+//   padding: 0 calc(var(--spacing) / 3);
+// }
 
 .plyr {
   width: 100%;

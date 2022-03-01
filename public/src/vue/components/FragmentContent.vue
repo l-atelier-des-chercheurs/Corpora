@@ -112,20 +112,6 @@
             />
           </div>
         </div>
-        <div class="_editFragmentOptions" v-if="fragment_can_be_edited">
-          <button
-            type="button"
-            class="button-small"
-            @click="show_edit_fragment = true"
-          >
-            {{ $t("edit") }}
-          </button>
-
-          <button type="button" class="button-small" @click="removeFragment">
-            {{ $t("remove") }}
-          </button>
-        </div>
-
         <div class="m_fragmentContent--content--inner--kw">
           <div
             class="m_keywordField m_keywordField--inline margin-bottom-verysmall"
@@ -256,6 +242,37 @@
             </span> -->
           </router-link>
         </template>
+      </div>
+
+      <div class="_editFragmentOptions" v-if="fragment_can_be_edited">
+        <button
+          type="button"
+          class="button-small"
+          @click="show_edit_fragment = true"
+        >
+          {{ $t("edit") }}
+        </button>
+
+        <button type="button" class="button-small" @click="removeFragment">
+          {{ $t("remove_this_story") }}
+        </button>
+      </div>
+
+      <div class="_comments">
+        {{ $t("comment") }}
+        <div>
+          <small v-if="!fragment.comments" class="text-gray">
+            {{ $t("no_comment_yet") }}
+          </small>
+          <TextField
+            :field_name="'comments'"
+            :content="fragment.comments"
+            type2="media"
+            :metaFileName="fragment.metaFileName"
+            :slugFolderName="slugFolderName"
+            :allow_editing="true"
+          />
+        </div>
       </div>
     </div>
   </div>
@@ -558,7 +575,7 @@ export default {
 
     .m_fragmentContent--content--inner--top {
       ._title {
-        height: 5em;
+        height: 5.5em;
         min-height: 0;
       }
 
@@ -766,8 +783,23 @@ export default {
 }
 
 ._editFragmentOptions {
-  display: flex;
-  justify-content: center;
+  background: white;
+  border-bottom: 1px solid var(--color-blue);
+  padding: calc(var(--spacing) * 1);
+  margin-left: calc(var(--spacing) / -4);
+}
+
+._comments {
+  margin-top: calc(var(--spacing) * 2);
+  background: white;
+  padding: calc(var(--spacing)) calc(var(--spacing));
+  border-top: 1px solid var(--color-blue);
+  border-bottom: 1px solid var(--color-blue);
+
+  ::v-deep .mediaTextContent {
+    margin-left: calc(var(--spacing) / -4);
+    // padding-left: 0;
+  }
 }
 </style>
 <style lang="scss">

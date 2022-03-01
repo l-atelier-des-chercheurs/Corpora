@@ -244,7 +244,7 @@ let vm = new Vue({
         ? localstore.get("load_all_embeds_option") === true
         : false,
       unfold_legal_pane: false,
-      show_bandeau: true,
+      show_bandeau: localstore.get("show_bandeau"),
       // localstore.get("remember_embeds_option_choice")
       //   ? localstore.get("remember_embeds_option_choice") !== true
       //   : true,
@@ -359,6 +359,9 @@ let vm = new Vue({
     },
     admin_pwd() {
       localstore.set("admin_pwd", this.admin_pwd);
+    },
+    "settings.show_bandeau"() {
+      localstore.set("show_bandeau", false);
     },
   },
   computed: {
