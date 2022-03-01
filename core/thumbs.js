@@ -1092,10 +1092,17 @@ module.exports = (function () {
       win.loadURL(url);
       win.webContents.setAudioMuted(true);
 
+      let page_timeout = setTimeout(() => {
+        page_timeout = null;
+        return reject();
+      }, 5000);
+
       win.webContents.once("did-finish-load", () => {
         dev.logverbose(
           `THUMBS — _getPageMetadata : finished loading page ${url}`
         );
+
+        page_timeout = null;
 
         let code = `var promise = Promise.resolve(document.documentElement.innerHTML); 
                   promise.then(data => data)`;
@@ -1116,6 +1123,7 @@ module.exports = (function () {
           dev.error(
             `THUMBS — _getPageMetadata / Failed to load link page for ${url}`
           );
+          page_timeout = null;
           dev.error("did-fail-load: ", event, code, desc, url, isMainFrame);
           win.close();
           return reject();
@@ -1150,8 +1158,11 @@ module.exports = (function () {
       page_meta.image = $('meta[property="og:image"]').attr("content");
     } else if ($('meta[name="og:image"]').attr("content")) {
       page_meta.image = $('meta[name="og:image"]').attr("content");
+    } else if ($('link[rel="shortcut icon"]').attr("href")) {
+      page_meta.image = $('link[rel="shortcut icon"][type="image/png"]').attr(
+        "href"
+      );
     }
-
     // see https://gist.github.com/waltir/82c94c834de630f9030f95f1d8ba81cf#file-cheerio_meta-js
     //   let post = {
     //     title: $('h1').text(),
