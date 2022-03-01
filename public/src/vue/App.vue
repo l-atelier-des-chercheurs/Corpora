@@ -1962,7 +1962,7 @@ twitter-widget.twitter-tweet {
   // lh : 1.41
   // scale : 1.31
 
-  font-size: 1em;
+  font-size: 1.15em;
   line-height: 1.2375;
   // max-width: 773px;
 

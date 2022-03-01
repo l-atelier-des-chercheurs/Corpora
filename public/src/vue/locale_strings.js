@@ -574,6 +574,10 @@ module.exports = (function () {
       fr: "Logos",
       en: "Logos",
     },
+    logout: {
+      fr: "se déconnecter",
+      en: "logout",
+    },
     download: {
       fr: "Télécharger",
       en: "Download",

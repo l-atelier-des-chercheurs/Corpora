@@ -368,7 +368,7 @@ let vm = new Vue({
     can_admin_corpora() {
       // todo actual admin checks
       return (
-        this.$root.state.is_electron ||
+        // this.$root.state.is_electron ||
         this.hashCode(this.$root.admin_pwd.toLowerCase()) === 3670
       );
     },

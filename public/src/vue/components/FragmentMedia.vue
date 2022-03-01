@@ -171,7 +171,6 @@
         </div>
       </div>
     </div>
-
     <div
       class="m_advancedMenu"
       :class="{
@@ -179,7 +178,7 @@
       }"
       v-if="can_be_edited"
     >
-      <template v-if="!(is_being_edited && !is_saving_media)">
+      <template v-if="!(is_being_edited && !is_saving_media) && is_hovered">
         <button
           type="button"
           @click="show_advanced_menu_for_media = !show_advanced_menu_for_media"
@@ -340,12 +339,12 @@ export default {
     //   }
     // },
     is_touch: function () {
-      // if (!this.is_touch && !this.is_hovered)
-      //   this.show_advanced_menu_for_media = false;
+      if (!this.is_touch && !this.is_hovered)
+        this.show_advanced_menu_for_media = false;
     },
     is_hovered: function () {
-      // if (!this.is_touch && !this.is_hovered)
-      //   this.show_advanced_menu_for_media = false;
+      if (!this.is_touch && !this.is_hovered)
+        this.show_advanced_menu_for_media = false;
     },
   },
   computed: {
@@ -419,14 +418,14 @@ export default {
           data: this.mediadata,
         })
         .then(() => {
-          setTimeout(() => {
-            this.is_being_edited = false;
-            this.is_saving_media = false;
-            // this.$alertify
-            //   .closeLogOnClick(true)
-            //   .delay(4000)
-            //   .success(this.$t("saved_media"));
-          }, 250);
+          // setTimeout(() => {
+          this.is_being_edited = false;
+          this.is_saving_media = false;
+          // this.$alertify
+          //   .closeLogOnClick(true)
+          //   .delay(4000)
+          //   .success(this.$t("saved_media"));
+          // }, 250);
         })
         .catch(() => {
           this.$alertify
@@ -515,9 +514,14 @@ export default {
   display: flex;
   flex-flow: row nowrap;
   gap: calc(var(--spacing) / 2);
+  max-height: 100vh;
 
   > * {
     flex: 1 1 50%;
+  }
+
+  &:empty {
+    background: blue;
   }
 }
 .m_fragmentMedia--infos--caption,
