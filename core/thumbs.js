@@ -1019,16 +1019,18 @@ module.exports = (function () {
       }
     }
 
+    let results = {};
+
     const _metadata = await _getPageMetadata({ url }).catch((err) => {
-      throw err;
+      dev.error(`THUMBS — _getLinkOpenGraph / failed loading meta ${err}`);
     });
 
-    let results = {};
-    if (_metadata.hasOwnProperty("title")) results.title = _metadata.title;
-    if (_metadata.hasOwnProperty("description"))
+    if (_metadata && _metadata.hasOwnProperty("title"))
+      results.title = _metadata.title;
+    if (_metadata && _metadata.hasOwnProperty("description"))
       results.description = _metadata.description;
 
-    if (_metadata.hasOwnProperty("image")) {
+    if (_metadata && _metadata.hasOwnProperty("image")) {
       let image_url;
       if (typeof _metadata.image === "string") image_url = _metadata.image;
       else if (
@@ -1055,7 +1057,8 @@ module.exports = (function () {
       try {
         results.local_image = await _fetchImage({
           thumbFolderPath,
-          url: results.image,
+          site_url: url,
+          image_url: results.image,
         });
       } catch (err) {
         dev.error(
@@ -1082,7 +1085,7 @@ module.exports = (function () {
 
   function _getPageMetadata({ url }) {
     return new Promise((resolve, reject) => {
-      dev.logfunction(`THUMBS — _getPageMetadata: ${url}`);
+      dev.logfunction(`THUMBS — _getPageMetadata : ${url}`);
 
       const { BrowserWindow } = require("electron");
       let win = new BrowserWindow({
@@ -1093,16 +1096,18 @@ module.exports = (function () {
       win.webContents.setAudioMuted(true);
 
       let page_timeout = setTimeout(() => {
-        page_timeout = null;
+        clearTimeout(page_timeout);
+        dev.error(`THUMBS — _getPageMetadata : page timeout for ${url}`);
+        win.close();
         return reject();
-      }, 5000);
+      }, 10_000);
 
       win.webContents.once("did-finish-load", () => {
         dev.logverbose(
           `THUMBS — _getPageMetadata : finished loading page ${url}`
         );
 
-        page_timeout = null;
+        clearTimeout(page_timeout);
 
         let code = `var promise = Promise.resolve(document.documentElement.innerHTML); 
                   promise.then(data => data)`;
@@ -1123,7 +1128,7 @@ module.exports = (function () {
           dev.error(
             `THUMBS — _getPageMetadata / Failed to load link page for ${url}`
           );
-          page_timeout = null;
+          clearTimeout(page_timeout);
           dev.error("did-fail-load: ", event, code, desc, url, isMainFrame);
           win.close();
           return reject();
@@ -1339,8 +1344,11 @@ module.exports = (function () {
     });
   }
 
-  async function _fetchImage({ thumbFolderPath, url }) {
-    dev.logfunction(`THUMBS — _fetchImage: ${thumbFolderPath} to ${url}`);
+  async function _fetchImage({ thumbFolderPath, site_url, image_url }) {
+    dev.logfunction(`THUMBS — _fetchImage: ${thumbFolderPath} to ${image_url}`);
+
+    const url = new URL(image_url, site_url).href;
+
     const image_ext = url.split(".").pop();
     const image_filename = "preview." + image_ext;
 
