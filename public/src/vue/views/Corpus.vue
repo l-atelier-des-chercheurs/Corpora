@@ -194,6 +194,7 @@
                   :all_tags="all_tags"
                   :medias="medias"
                   :fragments="filtered_fragments"
+                  :show_create_button="!shown_collection"
                 />
               </div>
             </transition>
