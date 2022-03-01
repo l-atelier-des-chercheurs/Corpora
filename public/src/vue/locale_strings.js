@@ -76,8 +76,8 @@ module.exports = (function () {
       en: "Create a collection first by closing this page.",
     },
     create_your_collection: {
-      fr: "créer votre collection",
-      en: "create your collection",
+      fr: "Créer votre collection",
+      en: "Create your collection",
     },
     add_to_your_collection: {
       fr: "ajouter à une collection",
@@ -94,6 +94,14 @@ module.exports = (function () {
     search_in_fragments: {
       fr: "Rechercher",
       en: "Search",
+    },
+    titles_only: {
+      fr: "Dans les titres",
+      en: "In titles",
+    },
+    titles_and_contents: {
+      fr: "Titres + contenus",
+      en: "Titles + contents",
     },
     show_fragments: {
       fr: "Afficher les récits",
@@ -474,6 +482,10 @@ module.exports = (function () {
       fr: "Ajouter un récit",
       en: "Add a story",
     },
+    fragment: {
+      fr: "Récit",
+      en: "Story",
+    },
     stories: {
       fr: "Récits",
       en: "Stories",
@@ -508,7 +520,7 @@ module.exports = (function () {
     },
     show_all_tags: {
       fr: "Afficher toutes les catégories",
-      en: "Show all tags",
+      en: "Show all categories",
     },
     hide: {
       fr: "Masquer",
@@ -559,8 +571,8 @@ module.exports = (function () {
       en: "Link to a tag",
     },
     suggestion: {
-      fr: "Suggestion",
-      en: "Suggestion",
+      fr: "Suggestions",
+      en: "Suggestions",
     },
     existing: {
       fr: "Déjà créés",
@@ -573,6 +585,10 @@ module.exports = (function () {
     tag_already_exists: {
       fr: "Ce mot-clé existe déjà",
       en: "This tag already exists",
+    },
+    tag_too_long: {
+      fr: "Ce mot-clé est trop long",
+      en: "This keyword is too long",
     },
     cover_image: {
       fr: "Logos",

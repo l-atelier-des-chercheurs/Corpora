@@ -1,7 +1,7 @@
 <template>
   <div class="app">
     <transition-page>
-      <router-view />
+      <router-view :key="$root.lang.current" />
     </transition-page>
 
     <portal-target name="modal_container" multiple />
@@ -110,6 +110,9 @@ label:not(.no-style) {
   font-size: 1rem;
 }
 
+.margin-bottom-large {
+  margin-bottom: calc(var(--spacing) * 2);
+}
 .margin-bottom-small {
   margin-bottom: var(--spacing);
 }
@@ -402,7 +405,7 @@ pre {
   padding: var(--spacing) calc(var(--spacing) * 1);
 }
 code {
-  font-size: 85%;
+  font-size: var(--font-size-small);
   padding: 2px 4px;
 }
 small {
@@ -447,13 +450,19 @@ label {
 
 input {
   border: none;
+
+  &[type="search"],
   &[type="text"],
   &[type="url"] {
+    min-height: 2.2rem;
     &[readonly] {
       cursor: not-allowed;
       border-color: var(--color-lightgray);
       // background-color: rgb(226, 226, 226) !important;
     }
+  }
+  &[type="file"] {
+    min-height: 0;
   }
 }
 
@@ -499,7 +508,7 @@ input[type="checkbox"] {
 
 input,
 textarea {
-  font-size: 1.2em;
+  font-size: 1em;
   padding: calc(var(--spacing) / 4) calc(var(--spacing) / 2);
 
   width: 100%;
@@ -550,6 +559,8 @@ textarea {
 }
 
 input[type="radio"] {
+  width: 2em;
+  height: 2em;
 }
 
 textarea {
@@ -562,17 +573,22 @@ select::-ms-expand {
 }
 
 .custom-select {
-  max-width: 120px;
+  max-width: 320px;
   margin: 4px 0;
   position: relative;
-  color: var(--color-black);
+  color: white;
+  &:hover,
+  &:active,
+  &:focus {
+    color: var(--active-color);
+  }
 }
 
 .custom-select_xs {
 }
 
 .custom-select::after {
-  content: "<>";
+  content: "+";
   -webkit-transform: rotate(90deg);
   -moz-transform: rotate(90deg);
   -ms-transform: rotate(90deg);
@@ -597,14 +613,15 @@ select::-ms-expand {
   /* Add some styling */
 
   display: block;
-  height: 2em;
+  height: 2.2rem;
   padding: 0px 12px 0 24px;
   font-size: 1rem;
   line-height: 1.75;
-  max-width: 220px;
-  border: 1px solid var(--active-color);
+  max-width: 320px;
+  border: 0px solid var(--active-color);
 
-  background-color: var(--body-bg);
+  background: var(--color-black);
+  color: currentColor;
   background-image: none;
   // border: 1px solid #cccccc;
   -ms-word-break: normal;
@@ -614,7 +631,10 @@ select::-ms-expand {
   &:active,
   &:focus {
     outline: 0;
-    background-color: var(--active-color);
+  }
+
+  .fullWidth & {
+    width: 100%;
   }
 }
 
@@ -930,10 +950,6 @@ audio {
       font-weight: 300;
     }
 
-    &.new-tag-input-wrapper {
-      border: none;
-      padding: 0;
-    }
     &.autocomplete {
       display: block;
       border: none;
@@ -972,34 +988,7 @@ audio {
 ._collectionsList {
   display: flex;
   flex-flow: column nowrap;
-  text-align: left;
   align-items: stretch;
-  justify-content: flex-start;
-  gap: calc(var(--spacing) / 3);
-
-  .collItem {
-    text-align: left;
-    border: 1px solid var(--color-black);
-    padding: calc(var(--spacing) / 2);
-    min-height: 2em;
-    // margin-bottom: calc(var(--spacing) / 2);
-
-    display: flex;
-    flex-flow: row wrap;
-    align-items: center;
-    justify-content: space-between;
-
-    &:last-of-type {
-      margin-bottom: 0;
-    }
-  }
-  .more,
-  .create {
-    padding: calc(var(--spacing) / 4) 0;
-    font-size: var(--font-size-small);
-    border: none;
-    text-align: left;
-  }
 }
 
 // .m_keywordField,
@@ -1316,6 +1305,10 @@ audio {
   z-index: 20000;
 }
 
+.fullWidth {
+  width: 100%;
+}
+
 .m_modal--mask {
   position: fixed;
   z-index: 10000;
@@ -1328,12 +1321,14 @@ audio {
   -webkit-overflow-scrolling: touch;
   scroll-behavior: smooth;
 
-  background-color: rgba(255, 255, 255, 0.9);
+  background: rgba(237, 237, 237, 0.95);
   // cursor: pointer;
 
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: center;
+
+  padding-top: calc(var(--spacing) * 2);
 
   transition: all 0.5s cubic-bezier(0.19, 1, 0.22, 1);
 
@@ -1744,7 +1739,7 @@ twitter-widget.twitter-tweet {
 
   line {
     fill: none;
-    stroke: #4d4d4d;
+    stroke: currentColor;
     stroke-miterlimit: 10;
     stroke-width: 1px;
   }
@@ -1759,6 +1754,12 @@ twitter-widget.twitter-tweet {
 
   .app:not(.mobile_view) .m_modal--mask.typeOfModal-LargeAndScroll & {
     margin-top: calc(var(--spacing) * 2);
+  }
+
+  &:hover,
+  &:focus,
+  &:active {
+    color: var(--active-color);
   }
 }
 

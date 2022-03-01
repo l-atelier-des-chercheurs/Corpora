@@ -20,8 +20,7 @@
           v-model="text_search_in_field"
           :aria-label="$t('search_in_fragments')"
         />
-
-        <span
+        <!-- <span
           class="input-addon"
           v-if="text_search.length > 0 && text_search === text_search_in_field"
         >
@@ -35,7 +34,7 @@
           >
             ×
           </button>
-        </span>
+        </span> -->
         <span class="input-addon" v-if="text_search !== text_search_in_field">
           <button type="submit">
             <svg
@@ -68,6 +67,28 @@
           </button>
         </span>
       </form>
+      <div>
+        <small>
+          <button
+            type="button"
+            :class="{
+              'is--active': text_search_mode === 'titles_only',
+            }"
+            @click="$emit('update:text_search_mode', 'titles_only')"
+          >
+            {{ $t("titles_only") }}
+          </button>
+          <button
+            type="button"
+            :class="{
+              'is--active': text_search_mode === 'titles_and_contents',
+            }"
+            @click="$emit('update:text_search_mode', 'titles_and_contents')"
+          >
+            {{ $t("titles_and_contents") }}
+          </button>
+        </small>
+      </div>
     </div>
 
     <div
@@ -179,7 +200,7 @@
         >{{ $t("your_collections") }}
       </label>
 
-      <div class="_collectionsList">
+      <div class="_collectionsList m_keywordField">
         <button
           type="button"
           class="button more"
@@ -191,7 +212,7 @@
         <button
           type="button"
           v-for="collection in sorted_collections_subset"
-          class="collItem"
+          class="button"
           :key="collection.media_filename"
           :class="{
             'is--active': show_collection_meta === collection.media_filename,
@@ -209,9 +230,14 @@
                   Array.isArray(collection.fragments_slugs)
                 "
                 >{{ collection.fragments_slugs.length }}
+                <template v-if="collection.fragments_slugs.length === 1">
+                  {{ $t("fragment").toLowerCase() }})
+                </template>
+                <template v-else>
+                  {{ $t("fragments").toLowerCase() }})
+                </template>
               </template>
-              <template v-else>0</template>
-              {{ $t("fragments").toLowerCase() }})
+              <template v-else>0 {{ $t("fragment").toLowerCase() }})</template>
             </div>
           </div>
         </button>
@@ -250,6 +276,7 @@ export default {
     keyword_search: [Boolean, String],
     tag_search: [Boolean, String],
     text_search: [String],
+    text_search_mode: [String],
 
     sorted_collections: [Boolean, Array],
 
@@ -430,7 +457,7 @@ export default {
 </script>
 <style lang="scss" scoped>
 ._sidebarContent {
-  padding: calc(var(--spacing) * 1.5);
+  padding: calc(var(--spacing) * 2);
   padding-bottom: 0;
   > * {
     margin-bottom: calc(var(--spacing) * 2);

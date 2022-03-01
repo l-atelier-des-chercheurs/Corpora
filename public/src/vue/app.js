@@ -244,7 +244,7 @@ let vm = new Vue({
         ? localstore.get("load_all_embeds_option") === true
         : false,
       unfold_legal_pane: false,
-      show_bandeau: localstore.get("show_bandeau"),
+      show_bandeau: localstore.get("show_bandeau") !== false,
       // localstore.get("remember_embeds_option_choice")
       //   ? localstore.get("remember_embeds_option_choice") !== true
       //   : true,

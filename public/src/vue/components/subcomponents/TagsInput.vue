@@ -1,9 +1,10 @@
 <template>
   <div class="_tagsinput">
     <transition-group
+      v-if="tags.length > 0"
       name="list-complete"
       tag="div"
-      class="m_keywordField"
+      class="m_keywordField m_keywordField--inline"
       :class="[!!type ? 'm_keywordField_' + type : '']"
     >
       <button
@@ -41,22 +42,29 @@
         :disabled="disableAddButton"
         v-if="tag.length > 0"
       >
-        +
+        + {{ $t("add") }}
       </button>
     </div>
+    <small
+      v-if="tag"
+      :class="{
+        'is--warning': tag.length > 20,
+      }"
+      >{{ tag.length }} ≤ 20 char</small
+    >
 
     <div
       v-if="matchingKeywords.length > 0"
       class="autocomplete"
       :key="'autocomplete'"
     >
-      <label>{{ $t("suggestion") }}</label>
-      <div>
+      <label>{{ $t("suggestions") }}</label>
+      <div class="m_keywordField m_keywordField--inline">
         <button
           type="button"
           v-for="keyword in matchingKeywords"
           :key="keyword.text"
-          class="tag"
+          class="keyword"
           @click="createTagFromAutocomplete(keyword.text)"
         >
           {{ keyword.text }}
@@ -70,25 +78,29 @@
     >
       <div
         v-if="
-          allKeywordsExceptCurrent.length > 0 && matchingKeywords.length === 0
+          tag.length === 0 &&
+          allKeywordsExceptCurrent.length > 0 &&
+          matchingKeywords.length === 0
         "
         class="autocomplete"
       >
-        <button
-          type="button"
-          class="button-small _existing_button"
-          :class="{ 'is--active': show_existing }"
-          @click="show_existing = !show_existing"
-        >
-          {{ $t("existing").toLowerCase() }}
-        </button>
+        <small>
+          <button
+            type="button"
+            class="button-small _existing_button"
+            :class="{ 'is--active': show_existing }"
+            @click="show_existing = !show_existing"
+          >
+            {{ $t("existing").toLowerCase() }}
+          </button>
+        </small>
 
-        <div v-if="show_existing">
+        <div v-if="show_existing" class="m_keywordField m_keywordField--inline">
           <button
             type="button"
             v-for="keyword in allKeywordsExceptCurrent"
             :key="keyword.text"
-            class="tag"
+            class="keyword"
             @click="createTagFromAutocomplete(keyword.text)"
           >
             {{ keyword.text }}
@@ -172,7 +184,12 @@ export default {
       this.createTag();
     },
     createTag: function () {
-      if (this.tag.trim().length === 0) {
+      if (this.tag.trim().length === 0) return;
+      if (this.tag.length > 20) {
+        this.$alertify
+          .closeLogOnClick(true)
+          .delay(4000)
+          .error(this.$t("tag_too_long"));
         return;
       }
       if (
@@ -226,6 +243,17 @@ export default {
 ._tagsinput {
   display: flex;
   flex-flow: column wrap;
-  gap: calc(var(--spacing) / 2);
+  gap: calc(var(--spacing) / 3);
+}
+
+.new-tag-input-wrapper {
+  border: none;
+  padding: 0;
+  // display: flex;
+  // flex-flow: row nowrap;
+
+  button {
+    // font-size: 2em;
+  }
 }
 </style>

@@ -527,7 +527,7 @@ export default {
 .m_fragmentMedia--infos--caption,
 .m_fragmentMedia--infos--source {
   margin-top: calc(var(--spacing) / 2);
-  font-size: 0.8rem;
+  font-size: var(--font-size-small);
 
   input {
     background-color: var(--body-bg);

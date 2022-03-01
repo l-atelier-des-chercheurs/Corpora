@@ -144,7 +144,7 @@
                           filtered_fragments.length === sorted_fragments.length
                         "
                       >
-                        {{ $t("stories") }}&nbsp;:
+                        {{ $t("fragments") }}&nbsp;:
                         {{ filtered_fragments.length }}
                       </template>
                       <template v-else>
@@ -261,25 +261,28 @@
           </footer>
         </main>
         <aside class="_corpusContainer--rightCont">
-          <Sidebar
-            :fragments="fragments"
-            :all_keywords="all_keywords"
-            :all_tags="all_tags"
-            :sorted_collections="sorted_collections"
-            :keyword_search.sync="keyword_search"
-            :tag_search.sync="tag_search"
-            :text_search.sync="text_search"
-            :show_collection_meta.sync="show_collection_meta"
-            @scrollTop="scrollToTop"
-            @showCreateCollection="show_create_collection_modal = true"
-          />
-          <CreateCollection
-            v-if="show_create_collection_modal"
-            :collections="sorted_collections"
-            :slugFolderName="corpus.slugFolderName"
-            @close="show_create_collection_modal = false"
-            @openCollection="openCollection"
-          />
+          <div class="_corpusContainer--rightCont--container">
+            <Sidebar
+              :fragments="fragments"
+              :all_keywords="all_keywords"
+              :all_tags="all_tags"
+              :sorted_collections="sorted_collections"
+              :keyword_search.sync="keyword_search"
+              :tag_search.sync="tag_search"
+              :text_search.sync="text_search"
+              :text_search_mode.sync="text_search_mode"
+              :show_collection_meta.sync="show_collection_meta"
+              @scrollTop="scrollToTop"
+              @showCreateCollection="show_create_collection_modal = true"
+            />
+            <CreateCollection
+              v-if="show_create_collection_modal"
+              :collections="sorted_collections"
+              :slugFolderName="corpus.slugFolderName"
+              @close="show_create_collection_modal = false"
+              @openCollection="openCollection"
+            />
+          </div>
         </aside>
       </div>
     </template>
@@ -325,6 +328,7 @@ export default {
       fragments_pane_scrolled: 0,
 
       text_search: "",
+      text_search_mode: "titles_only",
       keyword_search: false,
       tag_search: false,
 
@@ -481,16 +485,22 @@ export default {
     filtered_fragments() {
       if (!this.sorted_fragments) return false;
 
+      const searchIsInTitle = (title) =>
+        title.toLowerCase().includes(this.text_search.toLowerCase());
+      const searchIsInMedias = (f) =>
+        this.doFragmentMediasIncludeText({
+          fragment_media: f,
+          text: this.text_search.toLowerCase(),
+        });
+
       return this.sorted_fragments.filter((f) => {
-        if (
-          this.text_search &&
-          !f.title.toLowerCase().includes(this.text_search.toLowerCase()) &&
-          !this.doFragmentMediasIncludeText({
-            fragment_media: f,
-            text: this.text_search.toLowerCase(),
-          })
-        )
-          return false;
+        if (this.text_search) {
+          if (this.text_search_mode === "titles_only")
+            if (!searchIsInTitle(f.title)) return false;
+          if (this.text_search_mode === "titles_and_contents") {
+            if (!searchIsInTitle(f.title) && !searchIsInMedias(f)) return false;
+          }
+        }
 
         // if has has keywords search, but no keywords or no keywords match
         if (
@@ -682,6 +692,8 @@ export default {
 
   display: flex;
   flex-flow: row nowrap;
+  min-height: 50vh;
+
   > * {
     flex: 0 0 auto;
 
@@ -802,7 +814,16 @@ export default {
 
   ._corpusContainer--rightCont {
     flex: 0 0 260px;
-    border-left: 1px solid var(--color-blue);
+    background: var(--body-bg);
+
+    ._corpusContainer--rightCont--container {
+      border-left: 1px solid var(--color-blue);
+    }
+
+    .app.mobile_view & {
+      position: absolute;
+      z-index: 10000;
+    }
   }
 }
 

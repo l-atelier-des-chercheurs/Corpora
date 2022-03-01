@@ -593,7 +593,7 @@ export default {
     &:hover,
     &.is--opened {
       .m_fragmentContent--content--inner {
-        transform: translateY(calc(-1 * var(--slide_on_hover))) scale(1);
+        transform: translateY(calc(-1 * var(--slide_on_hover)));
         // transform: translateY(calc(-1 * var(--slide_on_hover)))
         //   rotate(calc(var(--random_angle) * 1deg)) scale(1);
         color: var(--color-blue);
@@ -639,7 +639,8 @@ export default {
 
   ._meta {
     font-family: var(--ff-top-level);
-    font-size: 0.6rem;
+    font-size: var(--font-size-small);
+
     text-transform: lowercase;
     text-align: left;
     // margin-left: calc(var(--spacing) / -2);
