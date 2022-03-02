@@ -21,7 +21,6 @@
       </div>
     </template>
     <div class="_connected flex-wrap" v-else>
-      <p>(admin)</p>
       <button
         type="button"
         @click="
@@ -29,7 +28,7 @@
           show_admin_login = false;
         "
       >
-        se déconnecter
+        (admin) {{ $t("logout") }}
       </button>
     </div>
   </div>

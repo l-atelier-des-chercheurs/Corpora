@@ -1,7 +1,7 @@
 <template>
   <div class="app">
     <transition-page>
-      <router-view />
+      <router-view :key="$root.lang.current" />
     </transition-page>
 
     <portal-target name="modal_container" multiple />
@@ -47,6 +47,7 @@ export default {
   --ff-body: "Old Standard TT", "Times", "Times New Roman", serif;
   --ff-top-level: "Open Sauce", "Helvetica", "Arial", sans-serif;
 
+  --font-size-small: 0.7rem;
   // --body-bg: var(--color-lightgray);
 }
 
@@ -109,6 +110,9 @@ label:not(.no-style) {
   font-size: 1rem;
 }
 
+.margin-bottom-large {
+  margin-bottom: calc(var(--spacing) * 2);
+}
 .margin-bottom-small {
   margin-bottom: var(--spacing);
 }
@@ -401,11 +405,11 @@ pre {
   padding: var(--spacing) calc(var(--spacing) * 1);
 }
 code {
-  font-size: 85%;
+  font-size: var(--font-size-small);
   padding: 2px 4px;
 }
 small {
-  font-size: 0.7rem;
+  font-size: var(--font-size-small);
 }
 
 textarea,
@@ -427,7 +431,6 @@ label {
       content: "×";
       display: inline-block;
       margin-left: calc(var(--spacing) / 2);
-      color: var(--color-blue);
       transform: scale(1.4);
       font-weight: 300;
       line-height: 0.65;
@@ -439,8 +442,7 @@ label {
     &:active,
     &:focus {
       &::after {
-        background: var(--color-blue);
-        color: white;
+        color: var(--color-blue);
       }
     }
   }
@@ -448,13 +450,19 @@ label {
 
 input {
   border: none;
+
+  &[type="search"],
   &[type="text"],
   &[type="url"] {
+    min-height: 2.2rem;
     &[readonly] {
       cursor: not-allowed;
       border-color: var(--color-lightgray);
       // background-color: rgb(226, 226, 226) !important;
     }
+  }
+  &[type="file"] {
+    min-height: 0;
   }
 }
 
@@ -500,11 +508,11 @@ input[type="checkbox"] {
 
 input,
 textarea {
-  font-size: 1.2em;
+  font-size: 1em;
   padding: calc(var(--spacing) / 4) calc(var(--spacing) / 2);
 
   width: 100%;
-  max-width: 320px;
+  max-width: 360px;
   -webkit-appearance: none;
 
   // border: 1px solid var(--color-black);
@@ -551,6 +559,8 @@ textarea {
 }
 
 input[type="radio"] {
+  width: 2em;
+  height: 2em;
 }
 
 textarea {
@@ -563,17 +573,22 @@ select::-ms-expand {
 }
 
 .custom-select {
-  max-width: 120px;
+  max-width: 320px;
   margin: 4px 0;
   position: relative;
-  color: var(--color-black);
+  color: white;
+  &:hover,
+  &:active,
+  &:focus {
+    color: var(--active-color);
+  }
 }
 
 .custom-select_xs {
 }
 
 .custom-select::after {
-  content: "<>";
+  content: "+";
   -webkit-transform: rotate(90deg);
   -moz-transform: rotate(90deg);
   -ms-transform: rotate(90deg);
@@ -598,14 +613,15 @@ select::-ms-expand {
   /* Add some styling */
 
   display: block;
-  height: 2em;
+  height: 2.2rem;
   padding: 0px 12px 0 24px;
   font-size: 1rem;
   line-height: 1.75;
-  max-width: 220px;
-  border: 1px solid var(--active-color);
+  max-width: 320px;
+  border: 0px solid var(--active-color);
 
-  background-color: var(--body-bg);
+  background: var(--color-black);
+  color: currentColor;
   background-image: none;
   // border: 1px solid #cccccc;
   -ms-word-break: normal;
@@ -615,7 +631,10 @@ select::-ms-expand {
   &:active,
   &:focus {
     outline: 0;
-    background-color: var(--active-color);
+  }
+
+  .fullWidth & {
+    width: 100%;
   }
 }
 
@@ -866,7 +885,7 @@ audio {
     text-overflow: ellipsis;
   }
   ._siteCard--text--description {
-    font-size: 0.8rem;
+    font-size: var(--font-size-small);
   }
 }
 
@@ -896,7 +915,7 @@ audio {
   }
 
   &._playButton_hide {
-    font-size: 0.7rem;
+    font-size: var(--font-size-small);
     svg {
       width: 24px;
       height: 24px;
@@ -931,10 +950,6 @@ audio {
       font-weight: 300;
     }
 
-    &.new-tag-input-wrapper {
-      border: none;
-      padding: 0;
-    }
     &.autocomplete {
       display: block;
       border: none;
@@ -955,7 +970,7 @@ audio {
 
       &.more {
         padding: calc(var(--spacing) / 4) 0;
-        font-size: 0.7rem;
+        font-size: var(--font-size-small);
         border: none;
       }
 
@@ -973,35 +988,7 @@ audio {
 ._collectionsList {
   display: flex;
   flex-flow: column nowrap;
-  text-align: left;
   align-items: stretch;
-  justify-content: flex-start;
-  // gap: calc(var(--spacing) / 3);
-
-  .collItem {
-    text-align: left;
-    border: 1px solid var(--color-black);
-    padding: calc(var(--spacing) / 2);
-    min-height: 2em;
-    margin-bottom: calc(var(--spacing) / 2);
-
-    display: flex;
-    flex-flow: row wrap;
-    align-items: center;
-    justify-content: space-between;
-
-    &:last-of-type {
-      margin-bottom: 0;
-    }
-  }
-  .addRemoveBtn {
-    font-size: 0.8rem;
-  }
-  .more {
-    padding: calc(var(--spacing) / 4) 0;
-    font-size: 0.7rem;
-    border: none;
-  }
 }
 
 // .m_keywordField,
@@ -1318,6 +1305,10 @@ audio {
   z-index: 20000;
 }
 
+.fullWidth {
+  width: 100%;
+}
+
 .m_modal--mask {
   position: fixed;
   z-index: 10000;
@@ -1330,12 +1321,14 @@ audio {
   -webkit-overflow-scrolling: touch;
   scroll-behavior: smooth;
 
-  background-color: rgba(255, 255, 255, 0.9);
+  background: rgba(237, 237, 237, 0.95);
   // cursor: pointer;
 
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: center;
+
+  padding-top: calc(var(--spacing) * 2);
 
   transition: all 0.5s cubic-bezier(0.19, 1, 0.22, 1);
 
@@ -1593,7 +1586,7 @@ audio {
         #app:not(.is--wide) & {
           > a,
           > button {
-            font-size: 0.7rem;
+            font-size: var(--font-size-small);
             padding: 0;
           }
         }
@@ -1746,7 +1739,7 @@ twitter-widget.twitter-tweet {
 
   line {
     fill: none;
-    stroke: #4d4d4d;
+    stroke: currentColor;
     stroke-miterlimit: 10;
     stroke-width: 1px;
   }
@@ -1761,6 +1754,12 @@ twitter-widget.twitter-tweet {
 
   .app:not(.mobile_view) .m_modal--mask.typeOfModal-LargeAndScroll & {
     margin-top: calc(var(--spacing) * 2);
+  }
+
+  &:hover,
+  &:focus,
+  &:active {
+    color: var(--active-color);
   }
 }
 
@@ -1863,10 +1862,10 @@ twitter-widget.twitter-tweet {
   }
 }
 
-.admin_cat {
-  border-left: 2px solid black;
-  padding: 0 calc(var(--spacing) / 3);
-}
+// .admin_cat {
+//   border-left: 2px solid black;
+//   padding: 0 calc(var(--spacing) / 3);
+// }
 
 .plyr {
   width: 100%;
@@ -1962,7 +1961,7 @@ twitter-widget.twitter-tweet {
   // lh : 1.41
   // scale : 1.31
 
-  font-size: 1em;
+  font-size: 1.15em;
   line-height: 1.2375;
   // max-width: 773px;
 

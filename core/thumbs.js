@@ -1077,16 +1077,18 @@ module.exports = (function () {
       }
     }
 
+    let results = {};
+
     const _metadata = await _getPageMetadata({ url }).catch((err) => {
-      throw err;
+      dev.error(`THUMBS — _getLinkOpenGraph / failed loading meta ${err}`);
     });
 
-    let results = {};
-    if (_metadata.hasOwnProperty("title")) results.title = _metadata.title;
-    if (_metadata.hasOwnProperty("description"))
+    if (_metadata && _metadata.hasOwnProperty("title"))
+      results.title = _metadata.title;
+    if (_metadata && _metadata.hasOwnProperty("description"))
       results.description = _metadata.description;
 
-    if (_metadata.hasOwnProperty("image")) {
+    if (_metadata && _metadata.hasOwnProperty("image")) {
       let image_url;
       if (typeof _metadata.image === "string") image_url = _metadata.image;
       else if (
@@ -1113,7 +1115,8 @@ module.exports = (function () {
       try {
         results.local_image = await _fetchImage({
           thumbFolderPath,
-          url: results.image,
+          site_url: url,
+          image_url: results.image,
         });
       } catch (err) {
         dev.error(
@@ -1140,6 +1143,7 @@ module.exports = (function () {
 
   function _getPageMetadata({ url }) {
     return new Promise((resolve, reject) => {
+      dev.logfunction(`THUMBS — _getPageMetadata : ${url}`);
       let browser;
 
       puppeteer
@@ -1161,19 +1165,27 @@ module.exports = (function () {
 
           dev.logverbose(`THUMBS — _getPageMetadata : loading URL ${url}`);
 
+          let page_timeout = setTimeout(() => {
+            clearTimeout(page_timeout);
+            dev.error(`THUMBS — _getPageMetadata : page timeout for ${url}`);
+            win.close();
+            return reject();
+          }, 10_000);
+
           page
             .goto(url, {
               waitUntil: "domcontentloaded",
             })
             .then(async () => {
+              clearTimeout(page_timeout);
+              dev.logverbose(
+                `THUMBS — _getPageMetadata : finished loading page ${url}`
+              );
+
               let html = await page.evaluate(
                 () => document.documentElement.innerHTML
               );
               browser.close();
-
-              dev.logverbose(
-                `THUMBS — _getPageMetadata : finished loading page`
-              );
 
               // console.log(html); // will be your innherhtml
               const parsed_meta = _parseHTMLMetaTags({ html });
@@ -1184,6 +1196,7 @@ module.exports = (function () {
               dev.error(
                 `THUMBS — _getPageMetadata / Failed to load link page with error ${err.message}`
               );
+              clearTimeout(page_timeout);
               return reject(err.message);
             });
         });
@@ -1216,8 +1229,11 @@ module.exports = (function () {
       page_meta.image = $('meta[property="og:image"]').attr("content");
     } else if ($('meta[name="og:image"]').attr("content")) {
       page_meta.image = $('meta[name="og:image"]').attr("content");
+    } else if ($('link[rel="shortcut icon"]').attr("href")) {
+      page_meta.image = $('link[rel="shortcut icon"][type="image/png"]').attr(
+        "href"
+      );
     }
-
     // see https://gist.github.com/waltir/82c94c834de630f9030f95f1d8ba81cf#file-cheerio_meta-js
     //   let post = {
     //     title: $('h1').text(),
@@ -1402,8 +1418,11 @@ module.exports = (function () {
     });
   }
 
-  async function _fetchImage({ thumbFolderPath, url }) {
-    dev.logfunction(`THUMBS — _fetchImage: ${thumbFolderPath} to ${url}`);
+  async function _fetchImage({ thumbFolderPath, site_url, image_url }) {
+    dev.logfunction(`THUMBS — _fetchImage: ${thumbFolderPath} to ${image_url}`);
+
+    const url = new URL(image_url, site_url).href;
+
     const image_ext = url.split(".").pop();
     const image_filename = "preview." + image_ext;
 

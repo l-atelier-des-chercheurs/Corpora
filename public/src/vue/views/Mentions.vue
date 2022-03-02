@@ -92,19 +92,19 @@ export default {
 };
 </script>
 <style lang="scss">
-.m_informations {
+.m_mentions {
   padding: 0 calc(var(--spacing) * 2) calc(var(--spacing) * 2);
-}
 
-._description {
-  max-width: 99ch;
+  ._description {
+    max-width: 99ch;
 
-  .ql-editor {
-    max-width: none;
-  }
+    .ql-editor {
+      max-width: none;
+    }
 
-  @media (min-width: 480px) {
-    margin-left: 33%;
+    .app:not(.mobile_view) & {
+      // margin-left: 33%;
+    }
   }
 }
 </style>

@@ -55,13 +55,12 @@ export default {
   height: 100%;
   z-index: 99999;
   pointer-events: none;
+  padding: 1rem;
 }
 .m_bandeau--content {
-  width: calc(100% - 1.5rem * 4);
+  width: 100%;
   pointer-events: auto;
   padding: 1rem;
-  padding-top: 1rem;
-  padding-bottom: 1rem;
   padding-top: 0.5rem;
   padding-bottom: 0.5rem;
 

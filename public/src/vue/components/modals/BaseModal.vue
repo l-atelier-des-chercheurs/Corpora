@@ -434,7 +434,6 @@ export default {
 .m_modal--mask.typeOfModal-LargeAndScroll {
   // background: rgba(60, 53, 65, 1);
   // background: var(--body-bg);
-  background: rgba(237, 237, 237, 0.95);
   padding: 0;
 }
 </style>

@@ -26,27 +26,8 @@
               :medias="medias"
               :fragment_width="800"
               :slugFolderName="slugFolderName"
-              :edit_mode.sync="edit_mode"
             />
           </transition>
-
-          <div class="_comments">
-            {{ $t("comment") }}
-
-            <div>
-              <small v-if="!opened_fragment.comments" class="text-gray">
-                {{ $t("no_comment_yet") }}
-              </small>
-              <TextField
-                :field_name="'comments'"
-                :content="opened_fragment.comments"
-                type2="media"
-                :metaFileName="opened_fragment.metaFileName"
-                :slugFolderName="corpus.slugFolderName"
-                :allow_editing="edit_mode"
-              />
-            </div>
-          </div>
         </div>
         <aside
           class="_fragmentListAndReactions custom_scrollbar custom_scrollbar_dark"
@@ -114,7 +95,6 @@
                 <template v-else>
                   <button
                     type="button"
-                    class="addRemoveBtn"
                     v-if="!edit_coll"
                     @click="edit_coll = true"
                   >
@@ -233,7 +213,6 @@ export default {
       show_not_linked_fragments: false,
       new_lang: this.$root.lang.current,
       edit_coll: false,
-      edit_mode: false,
       selected_collections: [],
     };
   },
@@ -516,17 +495,6 @@ export default {
 ._fragmentListAndReactions--loader {
   // max-height: 500px;
   align-items: flex-start;
-}
-
-._comments {
-  background: white;
-  padding: calc(var(--spacing)) calc(var(--spacing));
-  border-bottom: 1px solid var(--color-blue);
-
-  ::v-deep .mediaTextContent {
-    margin-left: calc(var(--spacing) / -4);
-    // padding-left: 0;
-  }
 }
 
 ._lang {

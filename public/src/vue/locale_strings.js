@@ -72,12 +72,12 @@ module.exports = (function () {
       en: "Create a collection",
     },
     create_collection_first: {
-      fr: "Créez d’abord une collection en fermant cette page.",
+      fr: "Créer d’abord une collection en fermant cette page.",
       en: "Create a collection first by closing this page.",
     },
     create_your_collection: {
-      fr: "créez votre collection",
-      en: "create your collection",
+      fr: "Créer votre collection",
+      en: "Create your collection",
     },
     add_to_your_collection: {
       fr: "ajouter à une collection",
@@ -94,6 +94,14 @@ module.exports = (function () {
     search_in_fragments: {
       fr: "Rechercher",
       en: "Search",
+    },
+    titles_only: {
+      fr: "Dans les titres",
+      en: "In titles",
+    },
+    titles_and_contents: {
+      fr: "Titres + contenus",
+      en: "Titles + contents",
     },
     show_fragments: {
       fr: "Afficher les récits",
@@ -166,6 +174,10 @@ module.exports = (function () {
     edit: {
       fr: "Éditer",
       en: "Edit",
+    },
+    edit_text: {
+      fr: "Modifier ce texte",
+      en: "Edit this text",
     },
     modify: {
       fr: "Modifier",
@@ -371,6 +383,10 @@ module.exports = (function () {
       fr: "Supprimer",
       en: "Remove",
     },
+    remove_this_story: {
+      fr: "Supprimer ce récit",
+      en: "Remove this story",
+    },
     cancel: {
       fr: "Annuler",
       en: "Cancel",
@@ -442,7 +458,7 @@ module.exports = (function () {
       en: "Add",
     },
     enter_password_to_connect: {
-      fr: "Renseignez le mot de passe pour accéder au corpus",
+      fr: "Renseigner le mot de passe pour accéder au corpus",
       en: "Enter the password to access corpus",
     },
     create_a_corpus: {
@@ -469,6 +485,10 @@ module.exports = (function () {
     create_a_story: {
       fr: "Ajouter un récit",
       en: "Add a story",
+    },
+    fragment: {
+      fr: "Récit",
+      en: "Story",
     },
     stories: {
       fr: "Récits",
@@ -498,13 +518,21 @@ module.exports = (function () {
       fr: "Catégories",
       en: "Categories",
     },
+    new_cat_name: {
+      fr: "Nom de la nouvelle catégorie",
+      en: "Name of the new category",
+    },
+    new_cat: {
+      fr: "→ nouvelle catégorie",
+      en: "→ nouvelle catégorie",
+    },
     keywords: {
       fr: "Mots-clés",
       en: "Keywords",
     },
     show_all_tags: {
       fr: "Afficher toutes les catégories",
-      en: "Show all tags",
+      en: "Show all categories",
     },
     hide: {
       fr: "Masquer",
@@ -555,8 +583,8 @@ module.exports = (function () {
       en: "Link to a tag",
     },
     suggestion: {
-      fr: "Suggestion",
-      en: "Suggestion",
+      fr: "Suggestions",
+      en: "Suggestions",
     },
     existing: {
       fr: "Déjà créés",
@@ -570,21 +598,29 @@ module.exports = (function () {
       fr: "Ce mot-clé existe déjà",
       en: "This tag already exists",
     },
+    tag_too_long: {
+      fr: "Ce mot-clé est trop long",
+      en: "This keyword is too long",
+    },
     cover_image: {
       fr: "Logos",
       en: "Logos",
+    },
+    logout: {
+      fr: "se déconnecter",
+      en: "logout",
     },
     download: {
       fr: "Télécharger",
       en: "Download",
     },
     embed_instructions: {
-      fr: "Placez ici l’URL vers une vidéo Vimeo, Youtube, Twitter ou SoundCloud",
+      fr: "Placer ici l’URL vers une vidéo Vimeo, Youtube, Twitter ou SoundCloud",
       en: "Add a URL to Vimeo, Youtube, Twitter or SoundCloud",
     },
     link_instructions: {
-      fr: "Renseignez une URL type <u>https://www.plurality-university.org/</u>",
-      en: "Paste a link to a URL such as <u>https://www.plurality-university.org/</u>",
+      fr: "Renseigner une URL type <u>https://www.plurality-university.org/</u>",
+      en: "Write or paste a URL such as <u>https://www.plurality-university.org/</u>",
     },
     full_url: {
       fr: "URL complète",
@@ -608,7 +644,7 @@ module.exports = (function () {
     },
 
     drop_files_here: {
-      fr: "Déposez vos fichier(s) ici",
+      fr: "Déposer les fichier(s) ici",
       en: "Drop file(s) here",
     },
     files: {

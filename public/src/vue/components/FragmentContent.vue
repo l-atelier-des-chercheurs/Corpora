@@ -94,24 +94,8 @@
             <h2>{{ fragment.title }}</h2>
           </div>
         </div>
-        <div
-          class="m_advancedMenu"
-          v-if="
-            context === 'edit' &&
-            ($root.can_admin_corpora || fragment_was_created_x_minutes_ago < 30)
-          "
-        >
-          <button
-            type="button"
-            @click="$emit('update:edit_mode', !edit_mode)"
-            class="m_advancedMenu--toggleButton"
-            :class="{ 'is--active': edit_mode }"
-          >
-            <template v-if="!edit_mode">
-              {{ $t("edit_mode") }}
-            </template>
-            <template v-else>×</template>
-          </button>
+
+        <div class="m_advancedMenu" v-if="fragment_can_be_edited">
           <div
             v-if="
               !$root.can_admin_corpora &&
@@ -128,20 +112,6 @@
             />
           </div>
         </div>
-        <div class="_editFragmentOptions" v-if="edit_mode">
-          <button
-            type="button"
-            class="button-small"
-            @click="show_edit_fragment = true"
-          >
-            {{ $t("edit") }}
-          </button>
-
-          <button type="button" class="button-small" @click="removeFragment">
-            {{ $t("remove") }}
-          </button>
-        </div>
-
         <div class="m_fragmentContent--content--inner--kw">
           <div
             class="m_keywordField m_keywordField--inline margin-bottom-verysmall"
@@ -186,17 +156,16 @@
           tabindex="-1"
         >
           <template v-if="preview_media">
-            <div
-              class="_fragmentPreview--overlay"
-              v-if="preview_media.type === 'image'"
-            />
             <FragmentMedia
               class="_fragmentPreview--media"
               :media="preview_media"
               :slugFolderName="slugFolderName"
-              Z
               context="preview"
               :data-mediatype="preview_media.type"
+            />
+            <div
+              class="_fragmentPreview--overlay"
+              v-if="preview_media.type === 'image'"
             />
           </template>
           <template v-else>
@@ -209,18 +178,6 @@
         </div>
 
         <div v-else class="m_fragmentContent--medias">
-          <AddMedias
-            v-if="context === 'edit' && edit_mode"
-            :slugFolderName="slugFolderName"
-            :key="'addmedia_start'"
-            :collapsed="linked_medias.length > 0"
-            @addMediasToFragment="
-              (metaFileNames) =>
-                addMediasToFragment({
-                  metaFileNames,
-                })
-            "
-          />
           <transition-group name="module-switch" :duration="1000">
             <template v-for="(media, index) in linked_medias">
               <FragmentMedia
@@ -228,14 +185,16 @@
                 :media="media"
                 :slugFolderName="slugFolderName"
                 :index="index"
-                :can_be_edited="edit_mode === true"
+                :can_be_edited="fragment_can_be_edited"
                 :linked_medias="linked_medias"
                 :context="context"
                 @removeMedia="(d) => removeMedia(d)"
                 @moveMedia="(d) => moveMedia(d)"
               />
-              <AddMedias
-                v-if="context === 'edit' && edit_mode"
+              <!-- <AddMedias
+                v-if="
+                  fragment_can_be_edited && index === linked_medias.length - 1
+                "
                 :slugFolderName="slugFolderName"
                 :key="'addmedia_' + media.metaFileName"
                 :collapsed="index < linked_medias.length - 1"
@@ -246,9 +205,21 @@
                       after_metaFileName: media.metaFileName,
                     })
                 "
-              />
+              /> -->
             </template>
           </transition-group>
+          <AddMedias
+            v-if="fragment_can_be_edited"
+            :slugFolderName="slugFolderName"
+            :key="'addmedia_start'"
+            @addMediasToFragment="
+              (metaFileNames) =>
+                addMediasToFragment({
+                  metaFileNames,
+                  index: linked_medias.length,
+                })
+            "
+          />
         </div>
 
         <template v-if="context === 'preview'">
@@ -271,6 +242,37 @@
             </span> -->
           </router-link>
         </template>
+      </div>
+
+      <div class="_editFragmentOptions" v-if="fragment_can_be_edited">
+        <button
+          type="button"
+          class="button-small"
+          @click="show_edit_fragment = true"
+        >
+          {{ $t("edit") }}
+        </button>
+
+        <button type="button" class="button-small" @click="removeFragment">
+          {{ $t("remove_this_story") }}
+        </button>
+      </div>
+
+      <div class="_comments">
+        {{ $t("comment") }}
+        <div>
+          <small v-if="!fragment.comments" class="text-gray">
+            {{ $t("no_comment_yet") }}
+          </small>
+          <TextField
+            :field_name="'comments'"
+            :content="fragment.comments"
+            type2="media"
+            :metaFileName="fragment.metaFileName"
+            :slugFolderName="slugFolderName"
+            :allow_editing="true"
+          />
+        </div>
       </div>
     </div>
   </div>
@@ -298,7 +300,6 @@ export default {
     medias: Array,
     slugFolderName: String,
     fragment_width: Number,
-    edit_mode: Boolean,
   },
   components: {
     AddMedias,
@@ -320,6 +321,13 @@ export default {
   beforeDestroy() {},
   watch: {},
   computed: {
+    fragment_can_be_edited() {
+      return (
+        this.context === "edit" &&
+        (this.$root.can_admin_corpora ||
+          this.fragment_was_created_x_minutes_ago < 30)
+      );
+    },
     fragment_was_created_x_minutes_ago() {
       const ellapsed = this.$moment
         .duration(
@@ -567,7 +575,7 @@ export default {
 
     .m_fragmentContent--content--inner--top {
       ._title {
-        height: 5em;
+        height: 5.5em;
         min-height: 0;
       }
 
@@ -585,7 +593,7 @@ export default {
     &:hover,
     &.is--opened {
       .m_fragmentContent--content--inner {
-        transform: translateY(calc(-1 * var(--slide_on_hover))) scale(1);
+        transform: translateY(calc(-1 * var(--slide_on_hover)));
         // transform: translateY(calc(-1 * var(--slide_on_hover)))
         //   rotate(calc(var(--random_angle) * 1deg)) scale(1);
         color: var(--color-blue);
@@ -631,7 +639,8 @@ export default {
 
   ._meta {
     font-family: var(--ff-top-level);
-    font-size: 0.6rem;
+    font-size: var(--font-size-small);
+
     text-transform: lowercase;
     text-align: left;
     // margin-left: calc(var(--spacing) / -2);
@@ -739,8 +748,9 @@ export default {
   position: relative;
   ._fragmentPreview--media {
     color: var(--color-blue);
+
     &[data-mediatype="image"] {
-      mix-blend-mode: luminosity;
+      filter: grayscale(100%) brightness(125%) contrast(100%);
     }
     &[data-mediatype="text"] {
       margin-top: calc(var(--spacing) / -4);
@@ -748,7 +758,8 @@ export default {
   }
 }
 ._fragmentPreview--overlay {
-  background-color: var(--color-blue);
+  background-color: rgba(84, 68, 255, 0.9);
+  mix-blend-mode: multiply;
   position: absolute;
   top: 0;
   width: calc(100% - var(--spacing) * 2);
@@ -773,7 +784,29 @@ export default {
 }
 
 ._editFragmentOptions {
-  display: flex;
-  justify-content: center;
+  background: white;
+  border-bottom: 1px solid var(--color-blue);
+  padding: calc(var(--spacing) * 1);
+  margin-left: calc(var(--spacing) / -4);
+}
+
+._comments {
+  margin-top: calc(var(--spacing) * 2);
+  background: white;
+  padding: calc(var(--spacing)) calc(var(--spacing));
+  border-top: 1px solid var(--color-blue);
+  border-bottom: 1px solid var(--color-blue);
+
+  ::v-deep .mediaTextContent {
+    margin-left: calc(var(--spacing) / -4);
+    // padding-left: 0;
+  }
+}
+</style>
+<style lang="scss">
+._fragmentPreview--media {
+  .mediaTextContent {
+    font-size: 1em;
+  }
 }
 </style>

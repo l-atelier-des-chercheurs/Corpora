@@ -20,8 +20,7 @@
           v-model="text_search_in_field"
           :aria-label="$t('search_in_fragments')"
         />
-
-        <span
+        <!-- <span
           class="input-addon"
           v-if="text_search.length > 0 && text_search === text_search_in_field"
         >
@@ -35,7 +34,7 @@
           >
             ×
           </button>
-        </span>
+        </span> -->
         <span class="input-addon" v-if="text_search !== text_search_in_field">
           <button type="submit">
             <svg
@@ -68,6 +67,28 @@
           </button>
         </span>
       </form>
+      <div>
+        <small>
+          <button
+            type="button"
+            :class="{
+              'is--active': text_search_mode === 'titles_only',
+            }"
+            @click="$emit('update:text_search_mode', 'titles_only')"
+          >
+            {{ $t("titles_only") }}
+          </button>
+          <button
+            type="button"
+            :class="{
+              'is--active': text_search_mode === 'titles_and_contents',
+            }"
+            @click="$emit('update:text_search_mode', 'titles_and_contents')"
+          >
+            {{ $t("titles_and_contents") }}
+          </button>
+        </small>
+      </div>
     </div>
 
     <div
@@ -169,7 +190,7 @@
       </div>
     </div>
 
-    <div class="_collectionsList">
+    <div class="">
       <label
         for="fragments-search"
         :class="{
@@ -179,62 +200,69 @@
         >{{ $t("your_collections") }}
       </label>
 
-      <button
-        type="button"
-        class="addRemoveBtn"
-        @click="$emit('showCreateCollection')"
-      >
-        + {{ $t("create_your_collection") }}
-      </button>
-
-      <button
-        type="button"
-        v-for="collection in sorted_collections_subset"
-        class="collItem"
-        :key="collection.media_filename"
-        :class="{
-          'is--active': show_collection_meta === collection.media_filename,
-        }"
-        @click="openCollection(collection.media_filename)"
-      >
-        <div>
-          <div class="_title">
-            {{ collection.title }}
-          </div>
-          <div>
-            (<template
-              v-if="
-                collection.fragments_slugs &&
-                Array.isArray(collection.fragments_slugs)
-              "
-              >{{ collection.fragments_slugs.length }}
-            </template>
-            <template v-else>0</template>
-            {{ $t("fragments").toLowerCase() }})
-          </div>
-        </div>
-      </button>
-
-      <template
-        v-if="
-          sorted_collections_subset.length &&
-          (sorted_collections_subset.length < sorted_collections.length ||
-            show_all_collections)
-        "
-      >
+      <div class="_collectionsList m_keywordField">
         <button
           type="button"
           class="button more"
-          @click="show_all_collections = !show_all_collections"
+          @click="$emit('showCreateCollection')"
         >
-          <template v-if="!show_all_collections">
-            {{ $t("show_all_collections") }}
-          </template>
-          <template v-else>
-            {{ $t("hide") }}
-          </template>
+          + {{ $t("create_your_collection") }}
         </button>
-      </template>
+
+        <button
+          type="button"
+          v-for="collection in sorted_collections_subset"
+          class="button"
+          :key="collection.media_filename"
+          :class="{
+            'is--active': show_collection_meta === collection.media_filename,
+          }"
+          @click="openCollection(collection.media_filename)"
+        >
+          <div>
+            <div class="_title">
+              {{ collection.title }}
+            </div>
+            <div>
+              (<template
+                v-if="
+                  collection.fragments_slugs &&
+                  Array.isArray(collection.fragments_slugs)
+                "
+                >{{ collection.fragments_slugs.length }}
+                <template v-if="collection.fragments_slugs.length === 1">
+                  {{ $t("fragment").toLowerCase() }})
+                </template>
+                <template v-else>
+                  {{ $t("fragments").toLowerCase() }})
+                </template>
+              </template>
+              <template v-else>0 {{ $t("fragment").toLowerCase() }})</template>
+            </div>
+          </div>
+        </button>
+
+        <template
+          v-if="
+            sorted_collections_subset.length &&
+            (sorted_collections_subset.length < sorted_collections.length ||
+              show_all_collections)
+          "
+        >
+          <button
+            type="button"
+            class="button more"
+            @click="show_all_collections = !show_all_collections"
+          >
+            <template v-if="!show_all_collections">
+              {{ $t("show_all_collections") }}
+            </template>
+            <template v-else>
+              {{ $t("hide") }}
+            </template>
+          </button>
+        </template>
+      </div>
     </div>
   </div>
 </template>
@@ -248,6 +276,7 @@ export default {
     keyword_search: [Boolean, String],
     tag_search: [Boolean, String],
     text_search: [String],
+    text_search_mode: [String],
 
     sorted_collections: [Boolean, Array],
 
@@ -428,10 +457,14 @@ export default {
 </script>
 <style lang="scss" scoped>
 ._sidebarContent {
-  padding: calc(var(--spacing) * 1.5);
+  padding: calc(var(--spacing) * 2);
   padding-bottom: 0;
+  overflow: auto;
+  height: 100%;
+
   > * {
-    margin-bottom: calc(var(--spacing) * 2);
+    padding-bottom: calc(var(--spacing) * 2);
+    max-width: 320px;
   }
 }
 
@@ -439,22 +472,6 @@ export default {
   button {
     display: flex;
   }
-}
-
-._count {
-  background: var(--color-black);
-  background: rgba(60, 53, 65, 0.25);
-  // border: 2px solid var(--color-black);
-  width: 1rem;
-  height: 1rem;
-  // color: white;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: 500;
-  font-size: 80%;
-  margin: 0 calc(var(--spacing) / 4);
 }
 
 input {
@@ -465,6 +482,15 @@ input {
   display: flex;
   align-items: center;
   justify-content: center;
+  width: 1em;
+  height: 1em;
+  font-size: 2em;
+  font-weight: 300;
+}
+
+._disableFilter {
+  position: absolute;
+  left: 100%;
   width: 1em;
   height: 1em;
   font-size: 2em;

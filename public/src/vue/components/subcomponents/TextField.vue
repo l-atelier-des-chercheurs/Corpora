@@ -3,15 +3,17 @@
     <label v-if="title">{{ $t(title) }}</label>
 
     <div v-if="!edit_mode" v-html="content" class="mediaTextContent" />
-    <CollaborativeEditor v-else v-model="new_content" />
+    <CollaborativeEditor class="_editor" v-else v-model="new_content" />
 
-    <button
-      type="button"
-      v-if="allow_editing && !edit_mode"
-      @click="edit_mode = true"
-    >
-      {{ $t("edit") }}
-    </button>
+    <div class="_editText">
+      <button
+        type="button"
+        v-if="allow_editing && !edit_mode"
+        @click="edit_mode = true"
+      >
+        {{ $t("edit_text") }}
+      </button>
+    </div>
 
     <div class="margin-vert-verysmall ta-ri">
       <button type="button" v-if="edit_mode" @click="edit_mode = false">
@@ -113,4 +115,12 @@ export default {
   },
 };
 </script>
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+._editor {
+  background: white;
+}
+._editText {
+  text-align: right;
+  font-size: var(--font-size-small);
+}
+</style>
