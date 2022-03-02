@@ -23,19 +23,12 @@
             </router-link>
           </h1>
           <h2>
-            <router-link
-              :to="{
-                name: 'Corpus',
-                params: { slugFolderName: corpus.slugFolderName },
-              }"
-            >
-              <template v-if="$root.lang.current === 'fr'">
-                {{ corpus.subtitle }}
-              </template>
-              <template v-else-if="$root.lang.current === 'en'">
-                {{ corpus.subtitle_en }}
-              </template>
-            </router-link>
+            <template v-if="$root.lang.current === 'fr'">
+              {{ corpus.subtitle }}
+            </template>
+            <template v-else-if="$root.lang.current === 'en'">
+              {{ corpus.subtitle_en }}
+            </template>
           </h2>
 
           <div
