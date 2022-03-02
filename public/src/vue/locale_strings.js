@@ -175,6 +175,10 @@ module.exports = (function () {
       fr: "Éditer",
       en: "Edit",
     },
+    edit_text: {
+      fr: "Modifier ce texte",
+      en: "Edit this text",
+    },
     modify: {
       fr: "Modifier",
       en: "Modify",
@@ -514,6 +518,14 @@ module.exports = (function () {
       fr: "Catégories",
       en: "Categories",
     },
+    new_cat_name: {
+      fr: "Nom de la nouvelle catégorie",
+      en: "Name of the new category",
+    },
+    new_cat: {
+      fr: "→ nouvelle catégorie",
+      en: "→ nouvelle catégorie",
+    },
     keywords: {
       fr: "Mots-clés",
       en: "Keywords",
@@ -608,7 +620,7 @@ module.exports = (function () {
     },
     link_instructions: {
       fr: "Renseigner une URL type <u>https://www.plurality-university.org/</u>",
-      en: "Paste a link to a URL such as <u>https://www.plurality-university.org/</u>",
+      en: "Write or paste a URL such as <u>https://www.plurality-university.org/</u>",
     },
     full_url: {
       fr: "URL complète",

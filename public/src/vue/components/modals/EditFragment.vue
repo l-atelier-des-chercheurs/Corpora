@@ -48,8 +48,14 @@
               :key="index"
               v-html="tag.text"
             />
+            <option v-html="$t('new_cat')" value="new" />
           </select>
         </div>
+
+        <template v-if="fragmentdata.category === 'new'">
+          <label>{{ $t("new_cat_name") }}</label>
+          <input type="text" v-model="new_cat_name" />
+        </template>
         <!-- 
         <TagsInput
           :allKeywords="all_tags_rightly_formatted"
@@ -98,6 +104,8 @@ export default {
             ? this.fragment.tags[0].title
             : "",
       },
+
+      new_cat_name: "",
     };
   },
   created() {},
@@ -143,9 +151,13 @@ export default {
         }
       }
 
-      let tags = this.fragmentdata.category
-        ? [{ title: this.fragmentdata.category }]
-        : "";
+      let tags = [];
+      if (this.fragmentdata.category) {
+        if (this.fragmentdata.category === "new" && !!this.new_cat_name)
+          tags = [{ title: this.new_cat_name }];
+        else tags = [{ title: this.fragmentdata.category }];
+      }
+
       const keywords = this.fragmentdata.keywords;
       const contribution_moment = this.fragmentdata.contribution_moment;
 

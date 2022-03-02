@@ -459,8 +459,12 @@ export default {
 ._sidebarContent {
   padding: calc(var(--spacing) * 2);
   padding-bottom: 0;
+  overflow: auto;
+  height: 100%;
+
   > * {
-    margin-bottom: calc(var(--spacing) * 2);
+    padding-bottom: calc(var(--spacing) * 2);
+    max-width: 320px;
   }
 }
 

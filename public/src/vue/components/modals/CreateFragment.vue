@@ -48,8 +48,14 @@
               :key="index"
               v-html="tag.text"
             />
+            <option v-html="$t('new_cat')" value="new" />
           </select>
         </div>
+
+        <template v-if="fragmentdata.category === 'new'">
+          <label>{{ $t("new_cat_name") }}</label>
+          <input type="text" v-model="new_cat_name" />
+        </template>
         <!-- <TagsInput
           :allKeywords="all_tags_rightly_formatted"
           :allow_new_terms="$root.can_admin_corpora"
@@ -59,8 +65,6 @@
           @tagsChanged="(newTags) => (fragmentdata.tags = newTags)"
         /> -->
       </div>
-
-      {{ fragmentdata.tags }}
 
       <div class="margin-bottom-small">
         <label>{{ $t("keywords") }}</label>
@@ -143,8 +147,14 @@ export default {
 
       additionalMeta.title = title;
 
-      if (this.fragmentdata.category)
-        additionalMeta.tags = [{ title: this.fragmentdata.category }];
+      if (this.fragmentdata.category) {
+        if (this.fragmentdata.category) {
+          if (this.fragmentdata.category === "new" && !!this.new_cat_name)
+            additionalMeta.tags = [{ title: this.new_cat_name }];
+          else additionalMeta.tags = [{ title: this.fragmentdata.category }];
+        }
+      }
+
       if (this.fragmentdata.keywords)
         additionalMeta.keywords = this.fragmentdata.keywords;
       if (this.fragmentdata.contribution_moment)

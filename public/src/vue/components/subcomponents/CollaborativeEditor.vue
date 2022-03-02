@@ -1790,8 +1790,7 @@ export default {
   }
 
   .ql-editor {
-    padding: calc(var(--spacing) / 2) calc(var(--spacing) / 2)
-      calc(var(--spacing) / 4);
+    padding: calc(var(--spacing) / 4) calc(var(--spacing) / 4);
     overflow: visible;
 
     &::after {

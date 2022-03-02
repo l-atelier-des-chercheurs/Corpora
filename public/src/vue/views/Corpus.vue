@@ -9,44 +9,7 @@
           ref="fragmentPane"
           @scroll="onScroll"
         >
-          <div class="_navPages">
-            <router-link
-              v-if="$root.can_admin_corpora"
-              :to="{
-                name: 'Corpora',
-              }"
-              class="button"
-              v-html="$t('all_corpus')"
-            />
-
-            <button
-              v-if="$root.can_admin_corpora"
-              type="button"
-              class="button-small"
-              @click="show_edit_corpus_for = true"
-            >
-              {{ $t("edit_corpus") }} (admin)
-            </button>
-
-            <EditCorpus
-              v-if="show_edit_corpus_for"
-              :corpus="corpus"
-              :corpus_password="corpus_password"
-              :slugCorpusName="corpus.slugFolderName"
-              @close="show_edit_corpus_for = false"
-            />
-
-            <router-link
-              :to="{
-                name: 'Informations',
-              }"
-              class="button"
-              v-html="$t('about')"
-            />
-
-            <LangSwitch />
-          </div>
-
+          <NavMenu :corpus="corpus" />
           <h1 v-if="!!corpus.name">
             <router-link
               :to="{
@@ -260,8 +223,74 @@
             </small>
           </footer>
         </main>
-        <aside class="_corpusContainer--rightCont">
+        <aside
+          class="_corpusContainer--rightCont"
+          @click.self="sidebar_is_collapsed = false"
+          :class="{
+            'is--collapsed': sidebar_is_collapsed && $root.mobile_view,
+          }"
+        >
+          <button
+            type="button"
+            class="_uncollapseButton"
+            v-if="$root.mobile_view"
+            @click="sidebar_is_collapsed = !sidebar_is_collapsed"
+          >
+            <svg
+              width="50"
+              height="50"
+              xmlns="http://www.w3.org/2000/svg"
+              stroke="currentColor"
+              fill="none"
+              stroke-linecap="square"
+            >
+              <line x1="0" y1="50%" x2="100%" y2="50%" />
+              <line x1="75%" y1="25%" x2="100%" y2="50%" />
+              <line x1="75%" y1="75%" x2="100%" y2="50%" />
+            </svg>
+          </button>
+
           <div class="_corpusContainer--rightCont--container">
+            <button
+              type="button"
+              class="_collapseButton"
+              v-if="$root.mobile_view"
+              @click="sidebar_is_collapsed = !sidebar_is_collapsed"
+            >
+              <svg
+                version="1.1"
+                xmlns="http://www.w3.org/2000/svg"
+                xmlns:xlink="http://www.w3.org/1999/xlink"
+                x="0px"
+                y="0px"
+                width="35"
+                height="35"
+                style="
+                  enable-background: new 0 0 56.6 50.1;
+                  transform: rotate(45deg);
+                "
+                xml:space="preserve"
+                aria-hidden="true"
+                stroke="currentColor"
+                stroke-width="1px"
+                fill="transparent"
+              >
+                <line
+                  vector-effect="non-scaling-stroke"
+                  x1="0"
+                  y1="50%"
+                  x2="100%"
+                  y2="50%"
+                />
+                <line
+                  vector-effect="non-scaling-stroke"
+                  x1="50%"
+                  y1="0"
+                  x2="50%"
+                  y2="100%"
+                />
+              </svg>
+            </button>
             <Sidebar
               :fragments="fragments"
               :all_keywords="all_keywords"
@@ -292,11 +321,10 @@
 import CorpusPwd from "../components/modals/CorpusPwd.vue";
 import Bandeau from "../components/subcomponents/Bandeau.vue";
 import CollectMode from "../components/subcomponents/CollectMode.vue";
-import EditCorpus from "../components/modals/EditCorpus.vue";
 import FragmentsList from "../components/subcomponents/FragmentsList.vue";
 import Collection from "../components/subcomponents/Collection.vue";
 import CSS from "../components/subcomponents/CSS.vue";
-import LangSwitch from "../components/subcomponents/LangSwitch.vue";
+import NavMenu from "../components/subcomponents/NavMenu.vue";
 import Sidebar from "../components/subcomponents/Sidebar.vue";
 import CreateCollection from "../components/modals/CreateCollection.vue";
 
@@ -306,13 +334,12 @@ export default {
     CorpusPwd,
     Bandeau,
     CollectMode,
-    EditCorpus,
     FragmentsList,
     Collection,
     CSS,
-    LangSwitch,
     Sidebar,
     CreateCollection,
+    NavMenu,
   },
   data() {
     return {
@@ -323,7 +350,6 @@ export default {
 
       is_loading_medias: false,
 
-      show_edit_corpus_for: false,
       show_create_collection_modal: false,
       fragments_pane_scrolled: 0,
 
@@ -331,6 +357,8 @@ export default {
       text_search_mode: "titles_only",
       keyword_search: false,
       tag_search: false,
+
+      sidebar_is_collapsed: true,
 
       show_collection_meta: false,
 
@@ -801,28 +829,52 @@ export default {
 
   display: flex;
   flex-flow: row nowrap;
+  align-content: stretch;
 
   > * {
-    overflow-y: auto;
+    height: 100%;
   }
 
   ._corpusContainer--leftCont {
     flex: 1 1 auto;
-
     padding: calc(var(--spacing) * 1) calc(var(--spacing) * 2);
+    overflow-y: auto;
+
+    .app.mobile_view & {
+      padding-right: calc(var(--spacing) * 3);
+    }
   }
 
   ._corpusContainer--rightCont {
     flex: 0 0 260px;
-    background: var(--body-bg);
+    transition: all 0.8s cubic-bezier(0.19, 1, 0.22, 1);
+
+    &.is--collapsed {
+      transform: translateX(calc(100% - calc(var(--spacing) * 3.5)));
+    }
 
     ._corpusContainer--rightCont--container {
+      height: 100%;
+      background: var(--body-bg);
       border-left: 1px solid var(--color-blue);
     }
 
     .app.mobile_view & {
       position: absolute;
       z-index: 10000;
+      right: 0;
+      width: 100%;
+      padding-left: calc(var(--spacing) * 2);
+      // padding-top: calc(var(--spacing) * 2);
+      // padding-bottom: calc(var(--spacing) * 2);
+
+      ._corpusContainer--rightCont--container {
+        // padding-top: 0;
+
+        > * {
+          // margin-top: calc(var(--spacing) * -2);
+        }
+      }
     }
   }
 }
@@ -833,14 +885,6 @@ export default {
   justify-content: space-between;
   align-items: flex-start;
   overflow: visible;
-}
-
-._navPages {
-  float: right;
-  display: flex;
-  align-items: center;
-  gap: calc(var(--spacing));
-  margin-top: calc(var(--spacing) / 2);
 }
 
 h1,
@@ -906,5 +950,17 @@ h1 {
 
 .m_corpus--description {
   padding-left: 0;
+}
+
+._uncollapseButton {
+  position: absolute;
+  right: 100%;
+  top: calc(var(--spacing) * 2);
+  color: var(--active-color);
+}
+._collapseButton {
+  position: absolute;
+  right: calc(var(--spacing) * 1);
+  top: calc(var(--spacing) * 1);
 }
 </style>

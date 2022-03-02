@@ -512,7 +512,7 @@ textarea {
   padding: calc(var(--spacing) / 4) calc(var(--spacing) / 2);
 
   width: 100%;
-  max-width: 320px;
+  max-width: 360px;
   -webkit-appearance: none;
 
   // border: 1px solid var(--color-black);

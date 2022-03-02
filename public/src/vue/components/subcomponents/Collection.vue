@@ -2,38 +2,66 @@
   <div>
     <div class="m_collection">
       <div class="m_collection--presentation">
+        <button type="button" class="_closeButton" @click="$emit('close')">
+          <svg
+            version="1.1"
+            xmlns="http://www.w3.org/2000/svg"
+            xmlns:xlink="http://www.w3.org/1999/xlink"
+            x="0px"
+            y="0px"
+            width="25"
+            height="25"
+            style="
+              enable-background: new 0 0 56.6 50.1;
+              transform: rotate(45deg);
+            "
+            xml:space="preserve"
+            aria-hidden="true"
+            stroke="currentColor"
+            stroke-width="1px"
+            fill="transparent"
+          >
+            <line
+              vector-effect="non-scaling-stroke"
+              x1="0"
+              y1="50%"
+              x2="100%"
+              y2="50%"
+            />
+            <line
+              vector-effect="non-scaling-stroke"
+              x1="50%"
+              y1="0"
+              x2="50%"
+              y2="100%"
+            />
+          </svg>
+        </button>
+
         <div class="_titleBar">
           <h2>
             <template v-if="!rename_coll">
               {{ collection.title }}
             </template>
-            <form v-else @submit.prevent="submitNewCollName">
-              <input type="text" v-model="new_coll_name" />
-              <div>
-                <button type="button" @click="rename_coll = false">
-                  {{ $t("cancel") }}
-                </button>
-                <button type="submit">
-                  {{ $t("valider") }}
-                </button>
-              </div>
-            </form>
           </h2>
-
-          <div class="_buttonRow">
-            <button type="button" @click="$emit('close')">
-              {{ $t("close") }}
-            </button>
-            <button type="button" @click="rename_coll = !rename_coll">
-              {{ $t("rename") }}
-            </button>
-            <button type="button" @click="removeCollection">
-              {{ $t("remove") }}
-            </button>
-          </div>
+          <form v-if="rename_coll" @submit.prevent="submitNewCollName">
+            <input type="text" v-model="new_coll_name" />
+            <div>
+              <button type="button" @click="rename_coll = false">
+                {{ $t("cancel") }}
+              </button>
+              <button type="submit">
+                {{ $t("save") }}
+              </button>
+            </div>
+          </form>
         </div>
         <div>
-          <div class="_meta" @click="show_advanced_meta = !show_advanced_meta">
+          <div
+            class="_meta"
+            v-if="false"
+            @click="show_advanced_meta = !show_advanced_meta"
+          >
             <template v-if="!show_advanced_meta">
               {{ $t("created") }}&nbsp;•
               {{ $root.formatDateToPrecise(collection.date_created) }}
@@ -51,10 +79,9 @@
           </div>
         </div>
 
-        <br />
-
         <TextField
           :field_name="'collection_description'"
+          class="_description"
           :content="collection.collection_description"
           type2="media"
           :metaFileName="collection.metaFileName"
@@ -62,6 +89,21 @@
           :allow_editing="true"
         />
 
+        <div class="_buttonRow">
+          <button type="button" @click="edit_coll = !edit_coll">
+            {{ $t("edit") }}
+          </button>
+          <template v-if="edit_coll">
+            <button type="button" @click="rename_coll = !rename_coll">
+              {{ $t("rename") }}
+            </button>
+            <button type="button" @click="removeCollection">
+              {{ $t("remove") }}
+            </button>
+          </template>
+        </div>
+
+        <hr />
         <div class="_editFragmentsLabel">
           <label>
             {{ $t("fragments_in_collection") }}
@@ -115,6 +157,7 @@ export default {
       show_advanced_meta: false,
       rename_coll: false,
       new_coll_name: "",
+      edit_coll: false,
     };
   },
   created() {},
@@ -211,6 +254,7 @@ export default {
 </script>
 <style lang="scss" scoped>
 .m_collection--presentation {
+  position: relative;
   // padding: 0 calc(var(--spacing) * 2);
 }
 
@@ -226,13 +270,27 @@ export default {
 }
 
 ._titleBar {
-  display: flex;
-  flex-flow: row nowrap;
-  align-items: flex-start;
-  justify-content: space-between;
+  // display: flex;
+  // flex-flow: row nowrap;
+  // align-items: flex-start;
+  // justify-content: space-between;
 
   h2 {
     margin-top: 0;
   }
+}
+
+._closeButton {
+  position: absolute;
+  right: 0;
+  top: 0;
+}
+
+input {
+  background: white;
+}
+
+._description {
+  margin-left: calc(var(--spacing) / -4);
 }
 </style>
