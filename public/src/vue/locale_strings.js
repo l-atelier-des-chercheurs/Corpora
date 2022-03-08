@@ -343,7 +343,7 @@ module.exports = (function () {
       en: "Do you really want to remove this story from this collection?",
     },
     fragments_in_collection: {
-      fr: "Récits appartenants à cette collection",
+      fr: "Récits appartenant à cette collection",
       en: "Stories in this collection",
     },
     rename_tag: {
