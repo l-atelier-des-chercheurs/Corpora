@@ -67,7 +67,7 @@
           </button>
         </span>
       </form>
-      <div>
+      <div class="_searchOptions">
         <small>
           <button
             type="button"
@@ -495,5 +495,9 @@ input {
   height: 1em;
   font-size: 2em;
   font-weight: 300;
+}
+
+._searchOptions {
+  margin-left: calc(var(--spacing) / -4);
 }
 </style>
