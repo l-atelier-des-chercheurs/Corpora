@@ -62,6 +62,45 @@
             v-for="(fragment, index) in collection_fragments"
             :key="fragment.metaFileName"
           >
+            <button
+              type="button"
+              class="_removeFromColl"
+              @click="removeColl(fragment.metaFileName)"
+            >
+              <svg
+                version="1.1"
+                xmlns="http://www.w3.org/2000/svg"
+                xmlns:xlink="http://www.w3.org/1999/xlink"
+                x="0px"
+                y="0px"
+                viewBox="0 0 50 50"
+                style="
+                  enable-background: new 0 0 56.6 50.1;
+                  transform: rotate(45deg);
+                "
+                xml:space="preserve"
+                aria-hidden="true"
+                stroke="currentColor"
+                stroke-width="1px"
+                fill="transparent"
+              >
+                <line
+                  vector-effect="non-scaling-stroke"
+                  x1="0"
+                  y1="25"
+                  x2="50"
+                  y2="25"
+                />
+                <line
+                  vector-effect="non-scaling-stroke"
+                  x1="25"
+                  y1="0"
+                  x2="25"
+                  y2="50"
+                />
+              </svg>
+            </button>
+
             <FragmentContent
               :context="'preview'"
               :corpus="corpus"
@@ -75,32 +114,30 @@
 
             <div class="_buttonRow">
               <div class="_pos">
-                {{ $t("position") }}
-                <select
-                  :value="index + 1"
-                  @change="
-                    $emit('changePos', {
-                      metaFileName: fragment.metaFileName,
-                      $event,
-                    })
-                  "
-                >
-                  <option
-                    v-for="index in collection_fragments.length"
-                    :key="index"
-                    :value="index"
-                    v-html="index"
-                  />
-                </select>
+                <transition name="fade" duration="200" mode="out-in">
+                  <div
+                    class="custom-select custom-select_xs custom-select_pos"
+                    :key="index + 1"
+                  >
+                    <select
+                      :value="index + 1"
+                      @change="
+                        $emit('changePos', {
+                          metaFileName: fragment.metaFileName,
+                          $event,
+                        })
+                      "
+                    >
+                      <option
+                        v-for="index in collection_fragments.length"
+                        :key="index"
+                        :value="index"
+                        v-html="index"
+                      />
+                    </select>
+                  </div>
+                </transition>
               </div>
-
-              <button
-                type="button"
-                class="_removeFromColl"
-                @click="removeColl(fragment.metaFileName)"
-              >
-                {{ $t("remove") }}
-              </button>
             </div>
           </div>
           <div v-for="index in 3" :key="index" />
@@ -204,21 +241,26 @@ h2,
 small,
 label {
   // color: var(--color-lightgray);
-  padding: 0 calc(var(--spacing) * 2);
+  // padding: 0 calc(var(--spacing) * 2);
   margin: 0;
 }
 
 ._buttonRow {
+  position: absolute;
+  z-index: 100;
+  bottom: calc(var(--spacing) * 2);
   width: 100%;
   display: flex;
   flex-flow: row wrap;
   justify-content: space-around;
   align-items: center;
   gap: calc(var(--spacing) / 2);
+
+  // pointer-events: none;
 }
 
 ._pos {
-  color: var(--color-lightgray);
+  pointer-events: auto;
 }
 
 ._fsLoader {
@@ -227,5 +269,14 @@ label {
   left: 0;
   right: 0;
   bottom: 0;
+}
+
+._removeFromColl {
+  width: 2.5em;
+  height: 2.5em;
+  margin-left: auto;
+
+  padding: 0.5em;
+  margin-right: -0.5em;
 }
 </style>

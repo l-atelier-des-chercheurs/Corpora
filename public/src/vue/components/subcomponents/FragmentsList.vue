@@ -33,16 +33,6 @@
           class="m_fragments--fragment"
           :key="fragment.metaFileName"
         >
-          <FragmentContent
-            :context="'preview'"
-            :corpus="corpus"
-            :all_keywords="all_keywords"
-            :all_tags="all_tags"
-            :medias="medias"
-            :fragment="fragment"
-            :fragment_width="fragment_width"
-            :slugFolderName="corpus.slugFolderName"
-          />
           <button
             v-if="show_add_button"
             type="button"
@@ -53,8 +43,50 @@
               })
             "
           >
-            {{ $t("add") }}
+            <svg
+              version="1.1"
+              xmlns="http://www.w3.org/2000/svg"
+              xmlns:xlink="http://www.w3.org/1999/xlink"
+              x="0px"
+              y="0px"
+              viewBox="0 0 50 50"
+              style="
+                enable-background: new 0 0 56.6 50.1;
+                transform: rotate(0deg);
+              "
+              xml:space="preserve"
+              aria-hidden="true"
+              stroke="currentColor"
+              stroke-width="1px"
+              fill="transparent"
+            >
+              <line
+                vector-effect="non-scaling-stroke"
+                x1="0"
+                y1="25"
+                x2="50"
+                y2="25"
+              />
+              <line
+                vector-effect="non-scaling-stroke"
+                x1="25"
+                y1="0"
+                x2="25"
+                y2="50"
+              />
+            </svg>
           </button>
+
+          <FragmentContent
+            :context="'preview'"
+            :corpus="corpus"
+            :all_keywords="all_keywords"
+            :all_tags="all_tags"
+            :medias="medias"
+            :fragment="fragment"
+            :fragment_width="fragment_width"
+            :slugFolderName="corpus.slugFolderName"
+          />
         </div>
       </template>
       <div v-for="index in 3" :key="index" />
@@ -116,5 +148,13 @@ export default {
     // opacity: 0;
     transform: scale(1.1);
   }
+}
+
+._addToColl {
+  width: 2.5em;
+  height: 2.5em;
+  margin-left: auto;
+  padding: 0.5em;
+  margin-right: -0.5em;
 }
 </style>

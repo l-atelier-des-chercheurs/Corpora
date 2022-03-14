@@ -3,6 +3,7 @@
     class="m_fragmentContent custom_scrollbar"
     :class="{
       'is--preview': context === 'preview',
+      'was--read': already_read,
     }"
   >
     <div
@@ -29,17 +30,9 @@
                   $root.formatDate({ date: fragment.date_created, format: "L" })
                 }}
               </div>
-              <div
-                class="ta-ce"
-                v-if="
-                  $root.alreadyVisited({
-                    slugFolderName,
-                    fragmentId: fragment.media_filename,
-                  }) && context === 'preview'
-                "
-              >
+              <!-- <div class="ta-ce" v-if="already_read">
                 {{ $t("already_read") }}
-              </div>
+              </div> -->
               <div class="_time">
                 {{
                   $root.formatDate({
@@ -231,15 +224,6 @@
               query: $route.query ? $route.query : {},
             }"
           >
-            <!-- <span
-              v-if="already_visited"
-              class="m_fragmentContent--open--alreadyVisited"
-            >
-              {{ $t("alreay_read") }}
-            </span> -->
-            <!-- <span class="m_fragmentContent--open--open">
-              {{ $t("open") }}
-            </span> -->
           </router-link>
         </template>
       </div>
@@ -338,6 +322,14 @@ export default {
         )
         .asMinutes();
       return Math.floor(ellapsed);
+    },
+    already_read() {
+      return (
+        this.$root.alreadyVisited({
+          slugFolderName: this.slugFolderName,
+          fragmentId: this.fragment.media_filename,
+        }) && this.context === "preview"
+      );
     },
 
     preview_media() {
@@ -604,6 +596,12 @@ export default {
     }
   }
 
+  &.is--preview.was--read {
+    .m_fragmentContent--content--inner--top {
+      color: var(--color-blue);
+    }
+  }
+
   .m_fragmentContent--content--inner {
     position: relative;
     pointer-events: auto;
@@ -717,10 +715,6 @@ export default {
   .m_fragmentContent--open--open {
     transform: translateY(50px);
   }
-  .m_fragmentContent--open--alreadyVisited {
-    background-color: var(--color-gray);
-    // background-color: var(--color-blue);
-  }
 
   // &:visited {
   //   color: blue;
@@ -735,11 +729,6 @@ export default {
     .m_fragmentContent--open--open {
       transform: translateY(0px);
     }
-    .m_fragmentContent--open--alreadyVisited {
-      opacity: 0;
-    }
-  }
-  .m_fragmentContent--open--alreadyVisited {
   }
 }
 

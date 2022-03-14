@@ -577,6 +577,7 @@ select::-ms-expand {
   margin: 4px 0;
   position: relative;
   color: white;
+  cursor: pointer;
   &:hover,
   &:active,
   &:focus {
@@ -584,15 +585,12 @@ select::-ms-expand {
   }
 }
 
-.custom-select_xs {
-}
-
 .custom-select::after {
   content: "+";
-  -webkit-transform: rotate(90deg);
-  -moz-transform: rotate(90deg);
-  -ms-transform: rotate(90deg);
-  transform: rotate(90deg);
+  // -webkit-transform: rotate(90deg);
+  // -moz-transform: rotate(90deg);
+  // -ms-transform: rotate(90deg);
+  // transform: rotate(90deg);
   left: 5px;
   /*Adjust for position however you want*/
 
@@ -635,6 +633,26 @@ select::-ms-expand {
 
   .fullWidth & {
     width: 100%;
+  }
+}
+
+.custom-select_xs {
+  select {
+    height: 1.6rem;
+    padding: 0px 12px 0 24px;
+    font-size: 0.8rem;
+  }
+  &::after {
+    top: 1px;
+  }
+}
+.custom-select_pos {
+  // color: black;
+  select {
+    // background: transparent;
+  }
+  &::after {
+    content: "→";
   }
 }
 
@@ -1303,6 +1321,16 @@ audio {
 .alertify,
 .alertify-logs {
   z-index: 20000;
+}
+
+.alertify {
+  background: rgba(237, 237, 237, 0.95);
+}
+
+.alertify .alert > *,
+.alertify .dialog > * {
+  box-shadow: none;
+  border-top: 1px solid var(--color-blue);
 }
 
 .fullWidth {
