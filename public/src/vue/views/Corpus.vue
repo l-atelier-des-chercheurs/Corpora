@@ -22,7 +22,7 @@
               {{ corpus.name }}
             </router-link>
           </h1>
-          <h2>
+          <h2 v-if="!show_collection_meta">
             <template v-if="$root.lang.current === 'fr'">
               {{ corpus.subtitle }}
             </template>
