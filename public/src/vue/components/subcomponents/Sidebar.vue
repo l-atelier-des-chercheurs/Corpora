@@ -203,10 +203,11 @@
       <div class="_collectionsList m_keywordField">
         <button
           type="button"
-          class="button more"
+          class="button _create"
           @click="$emit('showCreateCollection')"
         >
-          + {{ $t("create_your_collection") }}
+          +
+          {{ $t("create_your_collection") }}
         </button>
 
         <button

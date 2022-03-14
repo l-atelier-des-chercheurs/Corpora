@@ -162,7 +162,7 @@
             />
           </template>
           <template v-else>
-            <div class="_fragmentPreview--media ta-ce tt-lc">
+            <div class="_fragmentPreview--media ta-ce lowerc">
               <small
                 ><i>{{ $t("no_preview") }}</i></small
               >

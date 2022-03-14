@@ -462,20 +462,15 @@ export default {
   position: relative;
   // border-radius: 8px;
   padding: calc(var(--spacing) / 2) calc(var(--spacing));
+  margin-bottom: calc(var(--spacing) / 2);
 
   &[data-type="text"] {
-    padding: calc(var(--spacing) / 2) calc(var(--spacing) / 4 * 3);
-  }
-  &:not([data-type="text"]) {
-    .m_fragmentMedia--infos--caption,
-    .m_fragmentMedia--infos--source {
-      // padding: 0 calc(var(--spacing));
-    }
+    padding: 0 calc(var(--spacing) / 4 * 3);
   }
   &[data-type="text"] {
     .m_fragmentMedia--infos--caption,
     .m_fragmentMedia--infos--source {
-      padding: calc(var(--spacing) / 2) calc(var(--spacing) / 4);
+      padding: 0 calc(var(--spacing) / 4);
     }
   }
   .m_fragmentMedia--content {
@@ -525,13 +520,13 @@ export default {
 }
 
 .m_fragmentMedia--infos {
-  display: flex;
-  flex-flow: row nowrap;
+  // display: flex;
+  // flex-flow: row nowrap;
   gap: calc(var(--spacing) / 2);
   max-height: 100vh;
 
   > * {
-    flex: 1 1 50%;
+    // flex: 1 1 50%;
   }
 
   &:empty {
@@ -548,6 +543,7 @@ export default {
     font-size: inherit;
     padding: 0.2em 0.4em;
     // width: 260px;
+    max-width: none;
   }
 
   label {
@@ -565,21 +561,12 @@ export default {
 }
 
 .m_fragmentMedia--infos--source {
-  text-align: left;
-  // margin: 0 auto;
-  // margin-top: calc(var(--spacing) / 2);
-  // max-width: 50ch;
-
-  &.is--beingEdited {
-    margin-left: 0;
-  }
-
   a,
   span {
     display: block;
     margin-right: 0;
     margin-left: auto;
-    text-align: right;
+    // text-align: right;
     // overflow: hidden;
     // white-space: nowrap;
     // text-overflow: ellipsis;
@@ -663,7 +650,7 @@ export default {
 
   ._linkCaption {
     font-size: var(--font-size-small);
-    max-width: 60ch;
+    // max-width: 60ch;
     text-decoration: underline;
     padding-bottom: 4px;
 

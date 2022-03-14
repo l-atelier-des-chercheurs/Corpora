@@ -48,6 +48,7 @@ export default {
   --ff-top-level: "Open Sauce", "Helvetica", "Arial", sans-serif;
 
   --font-size-small: 0.7rem;
+  --font-size-large: 1.25rem;
   // --body-bg: var(--color-lightgray);
 }
 
@@ -97,7 +98,7 @@ h2 {
 
 h3 {
   font-weight: normal;
-  font-size: 1.25rem;
+  font-size: var(--font-size-large);
   line-height: 1.15;
 }
 
@@ -378,7 +379,7 @@ h2 {
 .ta-ri {
   text-align: right;
 }
-.tt-lc {
+.lowerc {
   text-transform: lowercase;
 }
 
@@ -410,6 +411,10 @@ code {
 }
 small {
   font-size: var(--font-size-small);
+}
+
+button,
+.button {
 }
 
 textarea,
@@ -1007,6 +1012,10 @@ audio {
   display: flex;
   flex-flow: column nowrap;
   align-items: stretch;
+
+  ._create {
+    min-height: 3.5em;
+  }
 }
 
 // .m_keywordField,
