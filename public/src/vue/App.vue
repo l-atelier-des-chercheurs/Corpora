@@ -1781,8 +1781,12 @@ twitter-widget.twitter-tweet {
     left: auto;
   }
 
+  .app:not(.mobile_view) .m_modal--mask.typeOfModal-EditMeta & {
+    margin-top: calc(var(--spacing) / -1.5);
+  }
+
   .app:not(.mobile_view) .m_modal--mask.typeOfModal-LargeAndScroll & {
-    margin-top: calc(var(--spacing) * 2);
+    margin-top: calc(var(--spacing) * 1.5);
   }
 
   &:hover,
