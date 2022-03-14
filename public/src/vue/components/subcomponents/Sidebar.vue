@@ -197,7 +197,7 @@
           'is--active': show_collection_meta,
         }"
         @click="setAllFiltersToZero"
-        >{{ $t("your_collections") }}
+        >{{ $t("collections") }}
       </label>
 
       <div class="_collectionsList m_keywordField">

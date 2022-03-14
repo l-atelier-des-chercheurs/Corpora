@@ -294,9 +294,9 @@ module.exports = (function () {
       fr: "Description",
       en: "Description",
     },
-    your_collections: {
-      fr: "Vos collections",
-      en: "Your collections",
+    collections: {
+      fr: "Collections",
+      en: "Collections",
     },
     part_of_collections: {
       fr: "Dans les collections",
