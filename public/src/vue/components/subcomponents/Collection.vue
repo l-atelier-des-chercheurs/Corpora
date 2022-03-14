@@ -1,55 +1,76 @@
 <template>
   <div class="m_collection">
     <div class="m_collection--presentation">
-      <button type="button" class="_closeButton" @click="$emit('close')">
-        <svg
-          version="1.1"
-          xmlns="http://www.w3.org/2000/svg"
-          xmlns:xlink="http://www.w3.org/1999/xlink"
-          x="0px"
-          y="0px"
-          width="25"
-          height="25"
-          style="enable-background: new 0 0 56.6 50.1; transform: rotate(45deg)"
-          xml:space="preserve"
-          aria-hidden="true"
-          stroke="currentColor"
-          stroke-width="1px"
-          fill="transparent"
-        >
-          <line
-            vector-effect="non-scaling-stroke"
-            x1="0"
-            y1="50%"
-            x2="100%"
-            y2="50%"
-          />
-          <line
-            vector-effect="non-scaling-stroke"
-            x1="50%"
-            y1="0"
-            x2="50%"
-            y2="100%"
-          />
-        </svg>
-      </button>
+      <div class="_buttonRow">
+        <template v-if="rename_coll">
+          <button type="button" @click="rename_coll = false">
+            {{ $t("cancel") }}
+          </button>
+          <button @click="submitNewCollName">
+            {{ $t("save") }}
+          </button>
+          <button type="button" @click="removeCollection">
+            {{ $t("remove") }}
+          </button>
+        </template>
+        <template v-else>
+          <button type="button" @click="rename_coll = !rename_coll">
+            {{ $t("rename") }}
+          </button>
+          <button type="button" @click="removeCollection">
+            {{ $t("remove") }}
+          </button>
+        </template>
+
+        <button type="button" class="_closeButton" @click="$emit('close')">
+          <svg
+            version="1.1"
+            xmlns="http://www.w3.org/2000/svg"
+            xmlns:xlink="http://www.w3.org/1999/xlink"
+            x="0px"
+            y="0px"
+            width="20"
+            height="20"
+            style="
+              enable-background: new 0 0 56.6 50.1;
+              transform: rotate(45deg);
+            "
+            xml:space="preserve"
+            aria-hidden="true"
+            stroke="currentColor"
+            stroke-width="1px"
+            fill="transparent"
+          >
+            <line
+              vector-effect="non-scaling-stroke"
+              x1="0"
+              y1="50%"
+              x2="100%"
+              y2="50%"
+            />
+            <line
+              vector-effect="non-scaling-stroke"
+              x1="50%"
+              y1="0"
+              x2="50%"
+              y2="100%"
+            />
+          </svg>
+        </button>
+      </div>
 
       <div class="_titleBar">
-        <h2>
+        <h2 v-if="!rename_coll">
           <template v-if="!rename_coll">
             {{ collection.title }}
           </template>
         </h2>
-        <form v-if="rename_coll" @submit.prevent="submitNewCollName">
-          <input type="text" v-model="new_coll_name" />
-          <div>
-            <button type="button" @click="rename_coll = false">
-              {{ $t("cancel") }}
-            </button>
-            <button type="submit">
-              {{ $t("save") }}
-            </button>
-          </div>
+        <form v-else @submit.prevent="submitNewCollName">
+          <h2>
+            <input type="text" v-model="new_coll_name" />
+            <input type="submit" style="display: none" />
+          </h2>
+          <div></div>
         </form>
       </div>
       <div>
@@ -84,20 +105,6 @@
         :slugFolderName="corpus.slugFolderName"
         :allow_editing="true"
       />
-
-      <div class="_buttonRow">
-        <button type="button" @click="edit_coll = !edit_coll">
-          {{ $t("edit") }}
-        </button>
-        <template v-if="edit_coll">
-          <button type="button" @click="rename_coll = !rename_coll">
-            {{ $t("rename") }}
-          </button>
-          <button type="button" @click="removeCollection">
-            {{ $t("remove") }}
-          </button>
-        </template>
-      </div>
     </div>
     <SelectFragments
       :collection="collection"
@@ -138,7 +145,6 @@ export default {
       show_advanced_meta: false,
       rename_coll: false,
       new_coll_name: "",
-      edit_coll: false,
     };
   },
   created() {},
@@ -264,9 +270,10 @@ export default {
 }
 
 ._closeButton {
-  position: absolute;
-  right: 0;
-  top: 0;
+  // position: absolute;
+  // right: 0;
+  // top: 0;
+  line-height: 0;
 }
 
 input {
@@ -275,5 +282,19 @@ input {
 
 ._description {
   margin-left: calc(var(--spacing) / -4);
+}
+
+._buttonRow {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  align-content: center;
+  line-height: 0;
+
+  font-size: var(--font-size-small);
+
+  button {
+    text-transform: lowercase;
+  }
 }
 </style>

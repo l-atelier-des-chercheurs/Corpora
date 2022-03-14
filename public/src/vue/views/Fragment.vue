@@ -98,7 +98,7 @@
                     v-if="!edit_coll"
                     @click="edit_coll = true"
                   >
-                    + {{ $t("edit_collection") }}
+                    + {{ $t("edit_inside_collection") }}
                   </button>
                   <div class="flex-nowrap justify-center" v-else>
                     <button type="button" @click="edit_coll = false">

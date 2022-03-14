@@ -142,25 +142,23 @@
       </transition-group>
     </div>
 
-    <div class="_notInCollection">
-      <template v-if="edit_fragments_list">
-        <h3>{{ $t("add_stories_to") }}&#32;{{ collection.title }}</h3>
+    <div class="_notInCollection" v-if="edit_fragments_list">
+      <h3>{{ $t("add_stories_to") }}&#32;{{ collection.title }}</h3>
 
-        <div v-if="!other_fragments || other_fragments.length === 0">
-          <small>{{ $t("none") }}</small>
-        </div>
-        <FragmentsList
-          v-else
-          :corpus="corpus"
-          :all_keywords="all_keywords"
-          :all_tags="all_tags"
-          :medias="medias"
-          :fragments="other_fragments"
-          :show_create_button="false"
-          :show_add_button="true"
-          @addToCollection="$emit('addToCollection', $event)"
-        />
-      </template>
+      <div v-if="!other_fragments || other_fragments.length === 0">
+        <small>{{ $t("none") }}</small>
+      </div>
+      <FragmentsList
+        v-else
+        :corpus="corpus"
+        :all_keywords="all_keywords"
+        :all_tags="all_tags"
+        :medias="medias"
+        :fragments="other_fragments"
+        :show_create_button="false"
+        :show_add_button="true"
+        @addToCollection="$emit('addToCollection', $event)"
+      />
     </div>
     <Loader v-if="is_sending_content_to_server" class="_fsLoader" />
   </section>

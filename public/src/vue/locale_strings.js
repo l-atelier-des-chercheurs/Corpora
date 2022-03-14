@@ -84,6 +84,10 @@ module.exports = (function () {
       en: "add to your collection",
     },
     edit_collection: {
+      fr: "éditer la collection",
+      en: "edit collection",
+    },
+    edit_inside_collection: {
       fr: "Ajouter/retirer d’une collection",
       en: "Add/remove from a collection",
     },
@@ -386,6 +390,10 @@ module.exports = (function () {
     remove: {
       fr: "Supprimer",
       en: "Remove",
+    },
+    remove_collection: {
+      fr: "delete collection",
+      en: "remove collection",
     },
     remove_this_story: {
       fr: "Supprimer ce récit",
