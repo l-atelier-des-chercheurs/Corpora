@@ -1492,6 +1492,7 @@ audio {
 
   &.typeOfModal-LargeAndNoScroll {
     overflow: hidden;
+    padding-top: 0;
 
     .m_modal--container {
       margin: 0;
