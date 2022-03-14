@@ -84,25 +84,39 @@
       />
       <button
         type="button"
-        class="plyr__controls__item plyr__control _open_fullscreen"
+        class="_open_fullscreen"
         @click="openMedia"
         v-if="
           media_context !== 'preview' &&
           (media.type === 'image' || media.type === 'document')
         "
       >
-        <svg class="icon--pressed" role="presentation" focusable="false">
-          <use
-            xmlns:xlink="http://www.w3.org/1999/xlink"
-            xlink:href="/images/plyr.svg#plyr-exit-fullscreen"
-          />
+        <svg
+          version="1.1"
+          id="Layer_1"
+          xmlns="http://www.w3.org/2000/svg"
+          xmlns:xlink="http://www.w3.org/1999/xlink"
+          x="0px"
+          y="0px"
+          viewBox="0 0 512 512"
+          style="enable-background: new 0 0 512 512"
+          xml:space="preserve"
+          vector-effect="non-scaling-stroke"
+        >
+          <g>
+            <rect x="16" y="16" class="st0" width="480" height="480" />
+            <g>
+              <polyline class="st0" points="323.1,56 456,56 456,188.9 		" />
+              <line class="st0" x1="281.1" y1="230.9" x2="456" y2="56.1" />
+            </g>
+            <g>
+              <polyline class="st0" points="188.9,455.5 56,455.5 56,322.6 		" />
+              <line class="st0" x1="230.9" y1="280.5" x2="56" y2="455.4" />
+            </g>
+          </g>
+          <circle class="st1" cx="-107" cy="87" r="0" />
         </svg>
-        <svg class="icon--not-pressed" role="presentation" focusable="false">
-          <use
-            xmlns:xlink="http://www.w3.org/1999/xlink"
-            xlink:href="/images/plyr.svg#plyr-enter-fullscreen"
-          />
-        </svg>
+
         <span class="label--pressed plyr__sr-only">Exit fullscreen</span>
         <span class="label--not-pressed plyr__sr-only">Enter fullscreen</span>
       </button>
@@ -601,22 +615,28 @@ export default {
   bottom: 0;
   right: 0;
   background-color: rgba(226, 237, 239, 0.4);
-  margin: 4px;
+  // margin: 4px;
 
   svg {
-    // width: 16px;
-    // height: 16px;
+    display: block;
+    width: 2em;
+    height: 2em;
     // padding: 4px;
-    fill: var(--color-black);
+    fill: none;
+    stroke: var(--color-blue);
+    stroke-miterlimit: 10;
+    stroke-width: 5px;
+
     // filter: drop-shadow(0px 0px 2px rgba(226, 237, 239, 0.8));
     // filter: drop-shadow(0px 0px 3px rgba(110, 110, 110, 0.4));
   }
 
   &:hover {
-    background: var(--color-black);
+    background-color: rgba(226, 237, 239, 1);
+    // background: var(--color-black);
 
     svg {
-      fill: white;
+      // fill: white;
     }
   }
 }
