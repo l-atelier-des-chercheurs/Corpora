@@ -147,7 +147,7 @@ label:not(.no-style) {
   grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
   grid-gap: calc(var(--spacing)) calc(var(--spacing) * 1);
 
-  padding: calc(var(--spacing) * 1) 0;
+  // padding: calc(var(--spacing) * 1) 0;
 
   > * {
     display: flex;

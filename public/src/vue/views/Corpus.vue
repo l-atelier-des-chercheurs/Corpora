@@ -22,28 +22,6 @@
               {{ corpus.name }}
             </router-link>
           </h1>
-          <h2 v-if="!show_collection_meta">
-            <template v-if="$root.lang.current === 'fr'">
-              {{ corpus.subtitle }}
-            </template>
-            <template v-else-if="$root.lang.current === 'en'">
-              {{ corpus.subtitle_en }}
-            </template>
-          </h2>
-
-          <div
-            class="m_corpus--description margin-bottom-small mediaTextContent"
-            v-if="
-              ['Corpus', 'Fragment'].includes($route.name) &&
-              !show_collection_meta
-            "
-            v-html="
-              $root.lang.current === 'fr'
-                ? corpus.description
-                : corpus.description_en
-            "
-          />
-
           <router-view
             :fragments="sorted_fragments"
             :context="'edit'"
@@ -61,30 +39,54 @@
             ref="corpus"
             v-if="['Corpus', 'Fragment'].includes($route.name)"
           >
-            <transition name="fade" :duration="200" mode="out-in">
+            <transition-group name="fade" mode="out-in">
               <Loader
                 v-if="is_loading_medias"
+                key="loader"
                 class="m_corpus--fragments _localLoader"
               />
+
+              <Collection
+                v-else-if="shown_collection"
+                :key="'collection-' + show_collection_meta"
+                :corpus="corpus"
+                :collection="shown_collection"
+                :fragments="sorted_fragments"
+                :all_keywords="all_keywords"
+                :all_tags="all_tags"
+                :medias="medias"
+                :collection_fragments="current_collection_fragments"
+                @close="show_collection_meta = false"
+              />
+
               <div
                 v-else
                 class="m_corpus--fragments"
+                key="fragments"
                 :class="{
                   'in--collection': show_collection_meta,
                 }"
-                :key="show_collection_meta"
               >
-                <Collection
-                  v-if="shown_collection"
-                  :corpus="corpus"
-                  :collection="shown_collection"
-                  :fragments="sorted_fragments"
-                  :all_keywords="all_keywords"
-                  :all_tags="all_tags"
-                  :medias="medias"
-                  :collection_fragments="current_collection_fragments"
-                  @close="show_collection_meta = false"
-                />
+                <template v-if="!show_collection_meta">
+                  <h2>
+                    <template v-if="$root.lang.current === 'fr'">
+                      {{ corpus.subtitle }}
+                    </template>
+                    <template v-else-if="$root.lang.current === 'en'">
+                      {{ corpus.subtitle_en }}
+                    </template>
+                  </h2>
+
+                  <div
+                    class="m_corpus--description margin-bottom-small mediaTextContent"
+                    v-if="['Corpus', 'Fragment'].includes($route.name)"
+                    v-html="
+                      $root.lang.current === 'fr'
+                        ? corpus.description
+                        : corpus.description_en
+                    "
+                  />
+                </template>
 
                 <div class="">
                   <div class="_indicator m_fragments">
@@ -136,6 +138,7 @@
                     <div />
                   </div>
                 </div>
+
                 <div
                   v-if="text_search !== '' && filtered_fragments.length === 0"
                   class="m_corpus--fragments--notice"
@@ -144,7 +147,6 @@
                 </div>
 
                 <FragmentsList
-                  v-else
                   :corpus="corpus"
                   :all_keywords="all_keywords"
                   :all_tags="all_tags"
@@ -153,7 +155,7 @@
                   :show_create_button="!shown_collection"
                 />
               </div>
-            </transition>
+            </transition-group>
           </div>
 
           <div class="_scrollTop">
@@ -710,9 +712,6 @@ export default {
 <style lang="scss" scoped>
 .m_corpus {
   scroll-behavior: smooth;
-
-  display: flex;
-  flex-flow: row nowrap;
   min-height: 50vh;
 
   > * {
@@ -730,11 +729,6 @@ export default {
 }
 
 .m_corpus--fragments {
-  &.in--collection {
-    padding: calc(var(--spacing));
-    border: 1px solid var(--color-blue);
-    border-bottom: 0px solid #000;
-  }
 }
 
 .m_corpus--fragments--notice {

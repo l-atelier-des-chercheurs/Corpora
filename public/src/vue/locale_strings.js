@@ -307,16 +307,20 @@ module.exports = (function () {
       en: "Stories in fragment",
     },
     add_remove_fragments: {
-      fr: "Ajouter ou retirer des récits existants",
-      en: "Add or remove stories from this list",
+      fr: "ajouter/retirer des récits",
+      en: "add/delete stories",
+    },
+    remove_stories: {
+      fr: "Enlever des récits",
+      en: "Remove stories",
     },
     create_add_remove_fragments: {
       fr: "Créer de nouveaux récits, et ajouter ou retirer des récits existants à la collection.",
       en: "Create new stories, and add or remove existing stories from the collection.",
     },
-    fragments_not_in_collection: {
-      fr: "Tous les récits",
-      en: "All stories",
+    add_stories_to: {
+      fr: "Ajouter des récits à :",
+      en: "Add stories:",
     },
     all_corpus: {
       fr: "tous les corpus (admin)",
