@@ -167,55 +167,39 @@
                 v-if="fragments_pane_scrolled > 150"
               >
                 <svg
-                  version="1.1"
+                  width="40"
+                  height="40"
                   xmlns="http://www.w3.org/2000/svg"
-                  xmlns:xlink="http://www.w3.org/1999/xlink"
-                  x="0px"
-                  y="0px"
-                  viewBox="0 0 56.6 50.1"
-                  style="enable-background: new 0 0 56.6 50.1"
-                  xml:space="preserve"
-                  aria-hidden="true"
                   stroke="currentColor"
-                  fill="transparent"
+                  fill="none"
+                  stroke-linecap="square"
+                  style="transform: rotate(-90deg)"
                 >
-                  <g>
-                    <path
-                      vector-effect="non-scaling-stroke"
-                      d="M24.8,49c0,0,5-23.9-22.7-23.9V25C29.9,25,24.8,1.1,24.8,1.1"
-                    ></path>
-                    <line
-                      vector-effect="non-scaling-stroke"
-                      x1="1.3"
-                      y1="25.1"
-                      x2="55.3"
-                      y2="25.1"
-                    ></line>
-                  </g>
+                  <line x1="0" y1="50%" x2="100%" y2="50%" />
+                  <line x1="75%" y1="25%" x2="100%" y2="50%" />
+                  <line x1="75%" y1="75%" x2="100%" y2="50%" />
                 </svg>
               </button>
             </transition>
           </div>
 
           <footer class="_bottomFooter">
-            <small>
-              <router-link
-                :to="{
-                  name: 'Mentions légales',
-                }"
-                class="button"
-                v-html="$t('personal_data_and_legal_notices')"
-              />
-              <div>
-                <div class="margin-sides-medium">
-                  <div class="flex-nowrap">
-                    Corpora v{{ $root.state.appVersion }}
-                    &nbsp;
-                    <Admin />
-                  </div>
+            <router-link
+              :to="{
+                name: 'Mentions légales',
+              }"
+              class="button"
+              v-html="$t('personal_data_and_legal_notices')"
+            />
+            <div>
+              <div class="margin-sides-medium">
+                <div class="flex-nowrap">
+                  Corpora v{{ $root.state.appVersion }}
+                  &nbsp;/
+                  <Admin />
                 </div>
               </div>
-            </small>
+            </div>
           </footer>
         </main>
         <aside
@@ -785,18 +769,23 @@ export default {
 
 ._bottomFooter {
   border-top: 1px solid var(--color-blue);
-  padding: calc(var(--spacing)) 0;
+  padding: calc(var(--spacing)) 0 0;
+  font-size: var(--font-size-small);
+
   // margin: 0 calc(var(--spacing));
 
   display: flex;
   flex-flow: row wrap;
-  gap: var(--spacing);
   justify-content: space-between;
 
   .a,
   .button {
     padding-left: 0;
     text-transform: inherit;
+  }
+
+  > a {
+    text-decoration: underline;
   }
 
   img {
@@ -918,8 +907,8 @@ h1 {
   pointer-events: none;
 
   button {
-    width: 4em;
-    height: 4em;
+    // width: 4em;
+    // height: 4em;
     background-color: var(--color-lightgray);
 
     box-shadow: 0 0 1rem 1rem var(--color-lightgray),
@@ -930,7 +919,7 @@ h1 {
     pointer-events: auto;
 
     svg {
-      transform: rotate(90deg);
+      // transform: rotate(90deg);
     }
   }
 }
