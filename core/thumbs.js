@@ -1155,11 +1155,11 @@ module.exports = (function () {
           ignoreHTTPSErrors: true,
           args: ["--no-sandbox", "--font-render-hinting=none"],
         })
-        .then((_browser) => {
+        .then(async (_browser) => {
           browser = _browser;
-          return browser.newPage();
-        })
-        .then(async (page) => {
+
+          const page = await browser.newPage();
+          await page.setUserAgent("facebookexternalhit/1.1");
           page.setViewport({
             width: 1800,
             height: 1800,
