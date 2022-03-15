@@ -166,6 +166,7 @@ label:not(.no-style) {
   padding: calc(var(--spacing) / 2) 0;
   justify-content: flex-start;
   align-items: flex-start;
+  min-height: 100px;
   border-top: 1px solid var(--color-blue);
 
   .m_fragments--createFragment--addFragmentButton {
