@@ -14,6 +14,7 @@
             <router-link
               :to="{
                 name: 'Corpus',
+                query: $route.query ? $route.query : {},
                 params: { slugFolderName: corpus.slugFolderName },
               }"
               @click.native.prevent="resetFiltersAndScrollTop()"
@@ -35,24 +36,26 @@
             </template>
           </transition>
 
-          <router-view
-            :fragments="sorted_fragments"
-            :context="'edit'"
-            :corpus="corpus"
-            :all_keywords="all_keywords"
-            :all_tags="all_tags"
-            :medias="medias"
-            :opened_fragment="opened_fragment"
-            :slugFolderName="corpus.slugFolderName"
-            @openCollection="openCollection"
-          />
+          <transition-page>
+            <router-view
+              :fragments="sorted_fragments"
+              :context="'edit'"
+              :corpus="corpus"
+              :all_keywords="all_keywords"
+              :all_tags="all_tags"
+              :medias="medias"
+              :opened_fragment="opened_fragment"
+              :slugFolderName="corpus.slugFolderName"
+              @openCollection="openCollection"
+            />
+          </transition-page>
 
           <div
             class="m_corpus"
             ref="corpus"
             v-if="['Corpus', 'Fragment'].includes($route.name)"
           >
-            <transition name="fade" mode="out-in">
+            <transition name="pagetransition" mode="out-in">
               <Loader
                 v-if="is_loading_medias"
                 key="loader"
@@ -301,6 +304,8 @@
   </div>
 </template>
 <script>
+import TransitionPage from "../transitions/TransitionPage.vue";
+
 import CorpusPwd from "../components/modals/CorpusPwd.vue";
 import Bandeau from "../components/subcomponents/Bandeau.vue";
 import CollectMode from "../components/subcomponents/CollectMode.vue";
@@ -314,6 +319,7 @@ import CreateCollection from "../components/modals/CreateCollection.vue";
 export default {
   props: {},
   components: {
+    TransitionPage,
     CorpusPwd,
     Bandeau,
     CollectMode,
@@ -655,6 +661,13 @@ export default {
       });
     },
     resetFiltersAndScrollTop() {
+      if (this.$route.name === "Informations") {
+        this.$router.push({
+          name: "Corpus",
+          query: this.$route.query ? this.$route.query : {},
+        });
+      }
+
       this.text_search = "";
       this.keyword_search = false;
       this.tag_search = false;

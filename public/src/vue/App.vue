@@ -1537,6 +1537,11 @@ audio {
         }
       }
 
+      .m_modal--close_button {
+        left: auto;
+        right: 0;
+      }
+
       #app.is--wide & {
         width: 90vw;
         margin-bottom: 20px;

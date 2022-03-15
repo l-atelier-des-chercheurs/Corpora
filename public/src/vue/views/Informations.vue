@@ -4,7 +4,7 @@
       <router-link
         :to="{
           name: 'Corpus',
-          params: { slugFolderName: corpus.slugFolderName },
+          query: $route.query ? $route.query : {},
         }"
         class="button"
         v-html="'← ' + $t('show_fragments')"

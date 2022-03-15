@@ -93,19 +93,6 @@ export default {
 </script>
 
 <style lang="scss">
-.fade-enter-active,
-.fade-leave-active {
-  transition-duration: 0.5s;
-  transition-property: height, opacity;
-  transition-timing-function: cubic-bezier(0.19, 1, 0.22, 1);
-  // overflow: hidden;
-}
-
-.fade-enter,
-.fade-leave-active {
-  opacity: 0;
-}
-
 .pagetransition-enter-active,
 .pagetransition-leave-active {
   transition-duration: 0.25s;

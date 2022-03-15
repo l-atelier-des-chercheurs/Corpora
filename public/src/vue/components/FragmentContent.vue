@@ -88,12 +88,24 @@
           </div>
         </div>
 
-        <div class="m_advancedMenu" v-if="fragment_can_be_edited">
+        <div class="_editFragmentOptions" v-if="fragment_can_be_edited">
+          <button
+            type="button"
+            class="button-small"
+            @click="show_edit_fragment = true"
+          >
+            {{ $t("edit") }}
+          </button>
+          <button type="button" class="button-small" @click="removeFragment">
+            {{ $t("remove_this_story") }}
+          </button>
+
           <div
             v-if="
               !$root.can_admin_corpora &&
               fragment_was_created_x_minutes_ago < 30
             "
+            class="_editingNotice"
           >
             <small
               v-html="
@@ -105,6 +117,7 @@
             />
           </div>
         </div>
+
         <div class="m_fragmentContent--content--inner--kw">
           <div
             class="m_keywordField m_keywordField--inline margin-bottom-verysmall"
@@ -227,21 +240,6 @@
           </router-link>
         </template>
       </div>
-
-      <div class="_editFragmentOptions" v-if="fragment_can_be_edited">
-        <button
-          type="button"
-          class="button-small"
-          @click="show_edit_fragment = true"
-        >
-          {{ $t("edit") }}
-        </button>
-
-        <button type="button" class="button-small" @click="removeFragment">
-          {{ $t("remove_this_story") }}
-        </button>
-      </div>
-
       <div class="_comments">
         {{ $t("comment") }}
         <div>
@@ -665,6 +663,7 @@ export default {
 }
 
 .m_fragmentContent--medias {
+  margin-top: calc(var(--spacing) * 1);
   // display: grid;
   // grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
   // grid-gap: var(--spacing);
@@ -774,9 +773,12 @@ export default {
 
 ._editFragmentOptions {
   background: white;
-  border-bottom: 1px solid var(--color-blue);
-  padding: calc(var(--spacing) * 1);
+  padding: 0 calc(var(--spacing) * 1);
   margin-left: calc(var(--spacing) / -4);
+
+  ._editingNotice {
+    margin-left: calc(var(--spacing) / 4);
+  }
 }
 
 ._comments {

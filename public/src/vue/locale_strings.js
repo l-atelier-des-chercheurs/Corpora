@@ -223,10 +223,6 @@ module.exports = (function () {
       fr: "Guide d’utilisation",
       en: "How to use",
     },
-    about_corpus: {
-      fr: "À propos de ce corpus",
-      en: "About this corpus",
-    },
     corpus_default_view: {
       fr: "Mode d’affichage du Corpus",
       en: "Corpus default view",

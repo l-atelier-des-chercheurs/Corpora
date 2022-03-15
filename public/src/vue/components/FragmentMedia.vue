@@ -626,10 +626,11 @@ export default {
   }
 
   &:hover {
-    background-color: rgba(226, 237, 239, 1);
+    background-color: var(--color-blue);
     // background: var(--color-black);
 
     svg {
+      stroke: white;
       // fill: white;
     }
   }
