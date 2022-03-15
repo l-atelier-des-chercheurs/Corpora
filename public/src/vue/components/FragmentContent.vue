@@ -3,6 +3,7 @@
     class="m_fragmentContent custom_scrollbar"
     :class="{
       'is--preview': context === 'preview',
+      'was--read': already_read,
     }"
   >
     <div
@@ -29,17 +30,9 @@
                   $root.formatDate({ date: fragment.date_created, format: "L" })
                 }}
               </div>
-              <div
-                class="ta-ce"
-                v-if="
-                  $root.alreadyVisited({
-                    slugFolderName,
-                    fragmentId: fragment.media_filename,
-                  }) && context === 'preview'
-                "
-              >
+              <!-- <div class="ta-ce" v-if="already_read">
                 {{ $t("already_read") }}
-              </div>
+              </div> -->
               <div class="_time">
                 {{
                   $root.formatDate({
@@ -95,12 +88,24 @@
           </div>
         </div>
 
-        <div class="m_advancedMenu" v-if="fragment_can_be_edited">
+        <div class="_editFragmentOptions" v-if="fragment_can_be_edited">
+          <button
+            type="button"
+            class="button-small"
+            @click="show_edit_fragment = true"
+          >
+            {{ $t("edit") }}
+          </button>
+          <button type="button" class="button-small" @click="removeFragment">
+            {{ $t("remove_this_story") }}
+          </button>
+
           <div
             v-if="
               !$root.can_admin_corpora &&
               fragment_was_created_x_minutes_ago < 30
             "
+            class="_editingNotice"
           >
             <small
               v-html="
@@ -112,6 +117,7 @@
             />
           </div>
         </div>
+
         <div class="m_fragmentContent--content--inner--kw">
           <div
             class="m_keywordField m_keywordField--inline margin-bottom-verysmall"
@@ -169,7 +175,7 @@
             />
           </template>
           <template v-else>
-            <div class="_fragmentPreview--media ta-ce tt-lc">
+            <div class="_fragmentPreview--media ta-ce lowerc">
               <small
                 ><i>{{ $t("no_preview") }}</i></small
               >
@@ -231,33 +237,9 @@
               query: $route.query ? $route.query : {},
             }"
           >
-            <!-- <span
-              v-if="already_visited"
-              class="m_fragmentContent--open--alreadyVisited"
-            >
-              {{ $t("alreay_read") }}
-            </span> -->
-            <!-- <span class="m_fragmentContent--open--open">
-              {{ $t("open") }}
-            </span> -->
           </router-link>
         </template>
       </div>
-
-      <div class="_editFragmentOptions" v-if="fragment_can_be_edited">
-        <button
-          type="button"
-          class="button-small"
-          @click="show_edit_fragment = true"
-        >
-          {{ $t("edit") }}
-        </button>
-
-        <button type="button" class="button-small" @click="removeFragment">
-          {{ $t("remove_this_story") }}
-        </button>
-      </div>
-
       <div class="_comments">
         {{ $t("comment") }}
         <div>
@@ -338,6 +320,14 @@ export default {
         )
         .asMinutes();
       return Math.floor(ellapsed);
+    },
+    already_read() {
+      return (
+        this.$root.alreadyVisited({
+          slugFolderName: this.slugFolderName,
+          fragmentId: this.fragment.media_filename,
+        }) && this.context === "preview"
+      );
     },
 
     preview_media() {
@@ -604,6 +594,12 @@ export default {
     }
   }
 
+  &.is--preview.was--read {
+    .m_fragmentContent--content--inner--top {
+      color: var(--color-blue);
+    }
+  }
+
   .m_fragmentContent--content--inner {
     position: relative;
     pointer-events: auto;
@@ -667,6 +663,7 @@ export default {
 }
 
 .m_fragmentContent--medias {
+  margin-top: calc(var(--spacing) * 1);
   // display: grid;
   // grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
   // grid-gap: var(--spacing);
@@ -717,10 +714,6 @@ export default {
   .m_fragmentContent--open--open {
     transform: translateY(50px);
   }
-  .m_fragmentContent--open--alreadyVisited {
-    background-color: var(--color-gray);
-    // background-color: var(--color-blue);
-  }
 
   // &:visited {
   //   color: blue;
@@ -735,11 +728,6 @@ export default {
     .m_fragmentContent--open--open {
       transform: translateY(0px);
     }
-    .m_fragmentContent--open--alreadyVisited {
-      opacity: 0;
-    }
-  }
-  .m_fragmentContent--open--alreadyVisited {
   }
 }
 
@@ -785,9 +773,12 @@ export default {
 
 ._editFragmentOptions {
   background: white;
-  border-bottom: 1px solid var(--color-blue);
-  padding: calc(var(--spacing) * 1);
+  padding: 0 calc(var(--spacing) * 1);
   margin-left: calc(var(--spacing) / -4);
+
+  ._editingNotice {
+    margin-left: calc(var(--spacing) / 4);
+  }
 }
 
 ._comments {

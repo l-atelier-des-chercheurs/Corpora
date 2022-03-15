@@ -48,6 +48,7 @@ export default {
   --ff-top-level: "Open Sauce", "Helvetica", "Arial", sans-serif;
 
   --font-size-small: 0.7rem;
+  --font-size-large: 1.25rem;
   // --body-bg: var(--color-lightgray);
 }
 
@@ -97,7 +98,7 @@ h2 {
 
 h3 {
   font-weight: normal;
-  font-size: 1.25rem;
+  font-size: var(--font-size-large);
   line-height: 1.15;
 }
 
@@ -147,7 +148,7 @@ label:not(.no-style) {
   grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
   grid-gap: calc(var(--spacing)) calc(var(--spacing) * 1);
 
-  padding: calc(var(--spacing) * 1) 0;
+  // padding: calc(var(--spacing) * 1) 0;
 
   > * {
     display: flex;
@@ -378,7 +379,7 @@ h2 {
 .ta-ri {
   text-align: right;
 }
-.tt-lc {
+.lowerc {
   text-transform: lowercase;
 }
 
@@ -410,6 +411,10 @@ code {
 }
 small {
   font-size: var(--font-size-small);
+}
+
+button,
+.button {
 }
 
 textarea,
@@ -577,6 +582,7 @@ select::-ms-expand {
   margin: 4px 0;
   position: relative;
   color: white;
+  cursor: pointer;
   &:hover,
   &:active,
   &:focus {
@@ -584,15 +590,12 @@ select::-ms-expand {
   }
 }
 
-.custom-select_xs {
-}
-
 .custom-select::after {
   content: "+";
-  -webkit-transform: rotate(90deg);
-  -moz-transform: rotate(90deg);
-  -ms-transform: rotate(90deg);
-  transform: rotate(90deg);
+  // -webkit-transform: rotate(90deg);
+  // -moz-transform: rotate(90deg);
+  // -ms-transform: rotate(90deg);
+  // transform: rotate(90deg);
   left: 5px;
   /*Adjust for position however you want*/
 
@@ -638,6 +641,26 @@ select::-ms-expand {
   }
 }
 
+.custom-select_xs {
+  select {
+    height: 1.6rem;
+    padding: 0px 12px 0 24px;
+    font-size: 0.8rem;
+  }
+  &::after {
+    top: 1px;
+  }
+}
+.custom-select_pos {
+  // color: black;
+  select {
+    // background: transparent;
+  }
+  &::after {
+    content: "→";
+  }
+}
+
 select {
   &:focus,
   &:active {
@@ -675,6 +698,12 @@ select {
   > label {
     margin-bottom: 0;
   }
+}
+.flex-wrap {
+  display: flex;
+  flex-flow: row wrap;
+  align-items: flex-start;
+  justify-content: space-between;
 }
 
 .justify-center {
@@ -916,6 +945,8 @@ audio {
 
   &._playButton_hide {
     font-size: var(--font-size-small);
+    margin: 0;
+    padding: 0;
     svg {
       width: 24px;
       height: 24px;
@@ -989,6 +1020,10 @@ audio {
   display: flex;
   flex-flow: column nowrap;
   align-items: stretch;
+
+  ._create {
+    min-height: 3.5em;
+  }
 }
 
 // .m_keywordField,
@@ -1233,7 +1268,7 @@ audio {
 .slide-up {
   &-enter-active,
   &-leave-active {
-    transition: all 0.5s cubic-bezier(0.19, 1, 0.22, 1);
+    transition: all 0.25s cubic-bezier(0.19, 1, 0.22, 1);
     transform-origin: center bottom;
   }
   &-enter,
@@ -1243,12 +1278,15 @@ audio {
   }
 }
 
-.fade-enter-active,
-.fade-leave-active {
-  transition: opacity 0.5s;
-}
-.fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
-  opacity: 0;
+.fade {
+  &-enter-active,
+  &-leave-active {
+    transition: opacity 0.25s cubic-bezier(0.19, 1, 0.22, 1);
+  }
+  &-enter,
+  &-leave-active {
+    opacity: 0;
+  }
 }
 
 .list-complete-move {
@@ -1303,6 +1341,16 @@ audio {
 .alertify,
 .alertify-logs {
   z-index: 20000;
+}
+
+.alertify {
+  background: rgba(237, 237, 237, 0.95);
+}
+
+.alertify .alert > *,
+.alertify .dialog > * {
+  box-shadow: none;
+  border-top: 1px solid var(--color-blue);
 }
 
 .fullWidth {
@@ -1464,6 +1512,7 @@ audio {
 
   &.typeOfModal-LargeAndNoScroll {
     overflow: hidden;
+    padding-top: 0;
 
     .m_modal--container {
       margin: 0;
@@ -1486,6 +1535,11 @@ audio {
           margin-top: 50vh;
           margin-bottom: 3em;
         }
+      }
+
+      .m_modal--close_button {
+        left: auto;
+        right: 0;
       }
 
       #app.is--wide & {
@@ -1752,8 +1806,12 @@ twitter-widget.twitter-tweet {
     left: auto;
   }
 
+  .app:not(.mobile_view) .m_modal--mask.typeOfModal-EditMeta & {
+    margin-top: calc(var(--spacing) / -1.5);
+  }
+
   .app:not(.mobile_view) .m_modal--mask.typeOfModal-LargeAndScroll & {
-    margin-top: calc(var(--spacing) * 2);
+    margin-top: calc(var(--spacing) * 1.5);
   }
 
   &:hover,

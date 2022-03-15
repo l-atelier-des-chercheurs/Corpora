@@ -84,25 +84,39 @@
       />
       <button
         type="button"
-        class="plyr__controls__item plyr__control _open_fullscreen"
+        class="_open_fullscreen"
         @click="openMedia"
         v-if="
           media_context !== 'preview' &&
           (media.type === 'image' || media.type === 'document')
         "
       >
-        <svg class="icon--pressed" role="presentation" focusable="false">
-          <use
-            xmlns:xlink="http://www.w3.org/1999/xlink"
-            xlink:href="/images/plyr.svg#plyr-exit-fullscreen"
-          />
+        <svg
+          version="1.1"
+          id="Layer_1"
+          xmlns="http://www.w3.org/2000/svg"
+          xmlns:xlink="http://www.w3.org/1999/xlink"
+          x="0px"
+          y="0px"
+          viewBox="0 0 512 512"
+          style="enable-background: new 0 0 512 512"
+          xml:space="preserve"
+          vector-effect="non-scaling-stroke"
+        >
+          <g>
+            <rect x="16" y="16" class="st0" width="480" height="480" />
+            <g>
+              <polyline class="st0" points="323.1,56 456,56 456,188.9 		" />
+              <line class="st0" x1="281.1" y1="230.9" x2="456" y2="56.1" />
+            </g>
+            <g>
+              <polyline class="st0" points="188.9,455.5 56,455.5 56,322.6 		" />
+              <line class="st0" x1="230.9" y1="280.5" x2="56" y2="455.4" />
+            </g>
+          </g>
+          <circle class="st1" cx="-107" cy="87" r="0" />
         </svg>
-        <svg class="icon--not-pressed" role="presentation" focusable="false">
-          <use
-            xmlns:xlink="http://www.w3.org/1999/xlink"
-            xlink:href="/images/plyr.svg#plyr-enter-fullscreen"
-          />
-        </svg>
+
         <span class="label--pressed plyr__sr-only">Exit fullscreen</span>
         <span class="label--not-pressed plyr__sr-only">Enter fullscreen</span>
       </button>
@@ -448,20 +462,15 @@ export default {
   position: relative;
   // border-radius: 8px;
   padding: calc(var(--spacing) / 2) calc(var(--spacing));
+  margin-bottom: calc(var(--spacing));
 
   &[data-type="text"] {
-    padding: calc(var(--spacing) / 2) calc(var(--spacing) / 4 * 3);
-  }
-  &:not([data-type="text"]) {
-    .m_fragmentMedia--infos--caption,
-    .m_fragmentMedia--infos--source {
-      // padding: 0 calc(var(--spacing));
-    }
+    padding: 0 calc(var(--spacing) / 4 * 3);
   }
   &[data-type="text"] {
     .m_fragmentMedia--infos--caption,
     .m_fragmentMedia--infos--source {
-      padding: calc(var(--spacing) / 2) calc(var(--spacing) / 4);
+      padding: 0 calc(var(--spacing) / 4);
     }
   }
   .m_fragmentMedia--content {
@@ -477,6 +486,14 @@ export default {
     .m_fragmentMedia--content {
       // border-radius: 8px;
       overflow: hidden;
+    }
+  }
+
+  &[data-type="link"] {
+    .m_fragmentMedia--content {
+      input {
+        max-width: none;
+      }
     }
   }
 
@@ -511,13 +528,13 @@ export default {
 }
 
 .m_fragmentMedia--infos {
-  display: flex;
-  flex-flow: row nowrap;
+  // display: flex;
+  // flex-flow: row nowrap;
   gap: calc(var(--spacing) / 2);
   max-height: 100vh;
 
   > * {
-    flex: 1 1 50%;
+    // flex: 1 1 50%;
   }
 
   &:empty {
@@ -534,6 +551,7 @@ export default {
     font-size: inherit;
     padding: 0.2em 0.4em;
     // width: 260px;
+    max-width: none;
   }
 
   label {
@@ -551,21 +569,12 @@ export default {
 }
 
 .m_fragmentMedia--infos--source {
-  text-align: left;
-  // margin: 0 auto;
-  // margin-top: calc(var(--spacing) / 2);
-  // max-width: 50ch;
-
-  &.is--beingEdited {
-    margin-left: 0;
-  }
-
   a,
   span {
     display: block;
     margin-right: 0;
     margin-left: auto;
-    text-align: right;
+    // text-align: right;
     // overflow: hidden;
     // white-space: nowrap;
     // text-overflow: ellipsis;
@@ -600,23 +609,29 @@ export default {
   position: absolute;
   bottom: 0;
   right: 0;
-  background-color: rgba(226, 237, 239, 0.4);
-  margin: 4px;
-
+  background-color: white;
+  // margin: 4px;
   svg {
-    // width: 16px;
-    // height: 16px;
+    display: block;
+    width: 2em;
+    height: 2em;
     // padding: 4px;
-    fill: var(--color-black);
+    fill: none;
+    stroke: var(--color-blue);
+    stroke-miterlimit: 10;
+    stroke-width: 20px;
+
     // filter: drop-shadow(0px 0px 2px rgba(226, 237, 239, 0.8));
     // filter: drop-shadow(0px 0px 3px rgba(110, 110, 110, 0.4));
   }
 
   &:hover {
-    background: var(--color-black);
+    background-color: var(--color-blue);
+    // background: var(--color-black);
 
     svg {
-      fill: white;
+      stroke: white;
+      // fill: white;
     }
   }
 }
@@ -643,7 +658,7 @@ export default {
 
   ._linkCaption {
     font-size: var(--font-size-small);
-    max-width: 60ch;
+    // max-width: 60ch;
     text-decoration: underline;
     padding-bottom: 4px;
 

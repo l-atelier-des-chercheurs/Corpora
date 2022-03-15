@@ -137,11 +137,6 @@
     </template>
     <template v-else-if="media.type === 'link' || media.type === 'embed'">
       <template v-if="!should_load_embed">
-        <div class="_linkCaption">
-          <a :href="link_url" target="_blank">
-            {{ link_url }}
-          </a>
-        </div>
         <div class="_siteCard">
           <template
             v-if="
@@ -222,6 +217,11 @@
               </button>
             </div>
           </template>
+        </div>
+        <div class="_linkCaption">
+          <a :href="link_url" target="_blank">
+            {{ link_url }}
+          </a>
         </div>
       </template>
       <template v-else>

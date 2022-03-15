@@ -27,7 +27,8 @@
 
     <router-link
       :to="{
-        name: 'Informations',
+        name: $route.name !== 'Informations' ? 'Informations' : 'Corpus',
+        query: $route.query ? $route.query : {},
       }"
       class="button"
       v-html="$t('about')"

@@ -14,6 +14,7 @@
             <router-link
               :to="{
                 name: 'Corpus',
+                query: $route.query ? $route.query : {},
                 params: { slugFolderName: corpus.slugFolderName },
               }"
               @click.native.prevent="resetFiltersAndScrollTop()"
@@ -22,69 +23,77 @@
               {{ corpus.name }}
             </router-link>
           </h1>
-          <h2>
-            <template v-if="$root.lang.current === 'fr'">
-              {{ corpus.subtitle }}
+          <transition name="fade">
+            <template v-if="!show_collection_meta">
+              <h2>
+                <template v-if="$root.lang.current === 'fr'">
+                  {{ corpus.subtitle }}
+                </template>
+                <template v-else-if="$root.lang.current === 'en'">
+                  {{ corpus.subtitle_en }}
+                </template>
+              </h2>
             </template>
-            <template v-else-if="$root.lang.current === 'en'">
-              {{ corpus.subtitle_en }}
-            </template>
-          </h2>
+          </transition>
 
-          <div
-            class="m_corpus--description margin-bottom-small mediaTextContent"
-            v-if="
-              ['Corpus', 'Fragment'].includes($route.name) &&
-              !show_collection_meta
-            "
-            v-html="
-              $root.lang.current === 'fr'
-                ? corpus.description
-                : corpus.description_en
-            "
-          />
-
-          <router-view
-            :fragments="sorted_fragments"
-            :context="'edit'"
-            :corpus="corpus"
-            :all_keywords="all_keywords"
-            :all_tags="all_tags"
-            :medias="medias"
-            :opened_fragment="opened_fragment"
-            :slugFolderName="corpus.slugFolderName"
-            @openCollection="openCollection"
-          />
+          <transition-page>
+            <router-view
+              :fragments="sorted_fragments"
+              :context="'edit'"
+              :corpus="corpus"
+              :all_keywords="all_keywords"
+              :all_tags="all_tags"
+              :medias="medias"
+              :opened_fragment="opened_fragment"
+              :slugFolderName="corpus.slugFolderName"
+              @openCollection="openCollection"
+            />
+          </transition-page>
 
           <div
             class="m_corpus"
             ref="corpus"
             v-if="['Corpus', 'Fragment'].includes($route.name)"
           >
-            <transition name="fade" :duration="200" mode="out-in">
+            <transition name="pagetransition" mode="out-in">
               <Loader
                 v-if="is_loading_medias"
+                key="loader"
                 class="m_corpus--fragments _localLoader"
               />
+
+              <Collection
+                v-else-if="shown_collection"
+                :key="'collection-' + show_collection_meta"
+                :corpus="corpus"
+                :collection="shown_collection"
+                :fragments="sorted_fragments"
+                :all_keywords="all_keywords"
+                :all_tags="all_tags"
+                :medias="medias"
+                :collection_fragments="current_collection_fragments"
+                @close="show_collection_meta = false"
+              />
+
               <div
                 v-else
                 class="m_corpus--fragments"
+                key="fragments"
                 :class="{
                   'in--collection': show_collection_meta,
                 }"
-                :key="show_collection_meta"
               >
-                <Collection
-                  v-if="shown_collection"
-                  :corpus="corpus"
-                  :collection="shown_collection"
-                  :fragments="sorted_fragments"
-                  :all_keywords="all_keywords"
-                  :all_tags="all_tags"
-                  :medias="medias"
-                  :collection_fragments="current_collection_fragments"
-                  @close="show_collection_meta = false"
-                />
+                <template v-if="!show_collection_meta">
+                  <div
+                    class="m_corpus--description margin-bottom-small mediaTextContent"
+                    v-if="['Corpus', 'Fragment'].includes($route.name)"
+                    v-html="
+                      $root.lang.current === 'fr'
+                        ? corpus.description
+                        : corpus.description_en
+                    "
+                  />
+                </template>
 
                 <div class="">
                   <div class="_indicator m_fragments">
@@ -136,6 +145,7 @@
                     <div />
                   </div>
                 </div>
+
                 <div
                   v-if="text_search !== '' && filtered_fragments.length === 0"
                   class="m_corpus--fragments--notice"
@@ -144,7 +154,6 @@
                 </div>
 
                 <FragmentsList
-                  v-else
                   :corpus="corpus"
                   :all_keywords="all_keywords"
                   :all_tags="all_tags"
@@ -165,55 +174,39 @@
                 v-if="fragments_pane_scrolled > 150"
               >
                 <svg
-                  version="1.1"
+                  width="40"
+                  height="40"
                   xmlns="http://www.w3.org/2000/svg"
-                  xmlns:xlink="http://www.w3.org/1999/xlink"
-                  x="0px"
-                  y="0px"
-                  viewBox="0 0 56.6 50.1"
-                  style="enable-background: new 0 0 56.6 50.1"
-                  xml:space="preserve"
-                  aria-hidden="true"
                   stroke="currentColor"
-                  fill="transparent"
+                  fill="none"
+                  stroke-linecap="square"
+                  style="transform: rotate(-90deg)"
                 >
-                  <g>
-                    <path
-                      vector-effect="non-scaling-stroke"
-                      d="M24.8,49c0,0,5-23.9-22.7-23.9V25C29.9,25,24.8,1.1,24.8,1.1"
-                    ></path>
-                    <line
-                      vector-effect="non-scaling-stroke"
-                      x1="1.3"
-                      y1="25.1"
-                      x2="55.3"
-                      y2="25.1"
-                    ></line>
-                  </g>
+                  <line x1="0" y1="50%" x2="100%" y2="50%" />
+                  <line x1="75%" y1="25%" x2="100%" y2="50%" />
+                  <line x1="75%" y1="75%" x2="100%" y2="50%" />
                 </svg>
               </button>
             </transition>
           </div>
 
           <footer class="_bottomFooter">
-            <small>
-              <router-link
-                :to="{
-                  name: 'Mentions légales',
-                }"
-                class="button"
-                v-html="$t('personal_data_and_legal_notices')"
-              />
-              <div>
-                <div class="margin-sides-medium">
-                  <div class="flex-nowrap">
-                    Corpora v{{ $root.state.appVersion }}
-                    &nbsp;
-                    <Admin />
-                  </div>
+            <router-link
+              :to="{
+                name: 'Mentions légales',
+              }"
+              class="button"
+              v-html="$t('personal_data_and_legal_notices')"
+            />
+            <div>
+              <div class="margin-sides-medium">
+                <div class="flex-nowrap">
+                  Corpora v{{ $root.state.appVersion }}
+                  &nbsp;/
+                  <Admin />
                 </div>
               </div>
-            </small>
+            </div>
           </footer>
         </main>
         <aside
@@ -311,6 +304,8 @@
   </div>
 </template>
 <script>
+import TransitionPage from "../transitions/TransitionPage.vue";
+
 import CorpusPwd from "../components/modals/CorpusPwd.vue";
 import Bandeau from "../components/subcomponents/Bandeau.vue";
 import CollectMode from "../components/subcomponents/CollectMode.vue";
@@ -324,6 +319,7 @@ import CreateCollection from "../components/modals/CreateCollection.vue";
 export default {
   props: {},
   components: {
+    TransitionPage,
     CorpusPwd,
     Bandeau,
     CollectMode,
@@ -422,13 +418,13 @@ export default {
       );
     },
     current_collection_fragments() {
-      if (!this.show_collection_meta) return false;
+      if (!this.show_collection_meta) return [];
       if (
         !this.shown_collection ||
         !this.shown_collection.fragments_slugs ||
         !Array.isArray(this.shown_collection.fragments_slugs)
       )
-        return false;
+        return [];
 
       return this.shown_collection.fragments_slugs.reduce((acc, fs) => {
         const metaFileName = fs.metaFileName;
@@ -539,7 +535,7 @@ export default {
 
         if (
           this.show_collection_meta &&
-          (!this.current_collection_fragments ||
+          (this.current_collection_fragments.length === 0 ||
             !this.current_collection_fragments
               .map((_f) => _f.metaFileName)
               .includes(f.metaFileName))
@@ -665,6 +661,13 @@ export default {
       });
     },
     resetFiltersAndScrollTop() {
+      if (this.$route.name === "Informations") {
+        this.$router.push({
+          name: "Corpus",
+          query: this.$route.query ? this.$route.query : {},
+        });
+      }
+
       this.text_search = "";
       this.keyword_search = false;
       this.tag_search = false;
@@ -710,10 +713,7 @@ export default {
 <style lang="scss" scoped>
 .m_corpus {
   scroll-behavior: smooth;
-
-  display: flex;
-  flex-flow: row nowrap;
-  min-height: 50vh;
+  // min-height: 50vh;
 
   > * {
     flex: 0 0 auto;
@@ -730,11 +730,6 @@ export default {
 }
 
 .m_corpus--fragments {
-  &.in--collection {
-    padding: calc(var(--spacing));
-    border: 1px solid var(--color-blue);
-    border-bottom: 0px solid #000;
-  }
 }
 
 .m_corpus--fragments--notice {
@@ -791,18 +786,23 @@ export default {
 
 ._bottomFooter {
   border-top: 1px solid var(--color-blue);
-  padding: calc(var(--spacing)) 0;
+  padding: calc(var(--spacing)) 0 0;
+  font-size: var(--font-size-small);
+
   // margin: 0 calc(var(--spacing));
 
   display: flex;
   flex-flow: row wrap;
-  gap: var(--spacing);
   justify-content: space-between;
 
   .a,
   .button {
     padding-left: 0;
     text-transform: inherit;
+  }
+
+  > a {
+    text-decoration: underline;
   }
 
   img {
@@ -834,7 +834,8 @@ export default {
     overflow-y: auto;
 
     .app.mobile_view & {
-      padding-right: calc(var(--spacing) * 3);
+      padding: calc(var(--spacing) * 1) calc(var(--spacing) * 2)
+        calc(var(--spacing) * 1) calc(var(--spacing) * 1);
     }
   }
 
@@ -924,8 +925,8 @@ h1 {
   pointer-events: none;
 
   button {
-    width: 4em;
-    height: 4em;
+    // width: 4em;
+    // height: 4em;
     background-color: var(--color-lightgray);
 
     box-shadow: 0 0 1rem 1rem var(--color-lightgray),
@@ -936,7 +937,7 @@ h1 {
     pointer-events: auto;
 
     svg {
-      transform: rotate(90deg);
+      // transform: rotate(90deg);
     }
   }
 }

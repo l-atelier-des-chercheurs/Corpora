@@ -38,15 +38,15 @@
               class="_fragmentListAndReactions--loader"
             />
             <div class="_fragmentListAndReactions--content" v-else>
-              <div class="_collectionsList">
-                <label>{{ $t("part_of_collections") }} </label>
+              <div class="">
+                <h3>{{ $t("part_of_collections") }}</h3>
 
                 <small
                   v-if="!collections_showed"
                   v-html="$t('fragment_included_in_no_collections')"
                 />
 
-                <transition-group tag="div" name="list-complete" v-else>
+                <div v-else class="_collectionsList m_keywordField">
                   <component
                     v-for="collection in collections_showed"
                     :key="collection.metaFileName"
@@ -86,25 +86,29 @@
                       :value="collection.metaFileName"
                     />
                   </component>
-                </transition-group>
+                  <button
+                    type="button"
+                    v-if="!edit_coll"
+                    @click="edit_coll = true"
+                  >
+                    + {{ $t("edit_inside_collection") }}
+                  </button>
+                </div>
 
                 <small
                   v-if="sorted_collections.length === 0"
                   v-html="$t('create_collection_first')"
                 />
                 <template v-else>
-                  <button
-                    type="button"
-                    v-if="!edit_coll"
-                    @click="edit_coll = true"
-                  >
-                    + {{ $t("edit_collection") }}
-                  </button>
-                  <div class="flex-nowrap justify-center" v-else>
-                    <button type="button" @click="edit_coll = false">
+                  <div class="flex-nowrap justify-center" v-if="edit_coll">
+                    <button
+                      type="button"
+                      @click="edit_coll = false"
+                      class="lowerc"
+                    >
                       {{ $t("cancel") }}
                     </button>
-                    <button type="button" @click="saveCollList">
+                    <button type="button" @click="saveCollList" class="lowerc">
                       {{ $t("save") }}
                     </button>
                   </div>
@@ -141,48 +145,50 @@
                 </div> -->
               </div>
 
-              <template v-if="linked_fragments.length === 0">
-                <label>
-                  {{ $t("no_with_similar_keywords") }}
-                </label>
-              </template>
-              <template v-else>
-                <h2>
-                  <template v-if="linked_fragments.length === 1">
-                    {{ $t("story_with_similar_keywords") }}
-                  </template>
-                  <template v-else>
-                    {{
-                      linked_fragments.length +
-                      " " +
-                      $t("stories_with_similar_keywords")
-                    }}
-                  </template>
-                </h2>
+              <div>
+                <template v-if="linked_fragments.length === 0">
+                  <h3>
+                    {{ $t("no_with_similar_keywords") }}
+                  </h3>
+                </template>
+                <template v-else>
+                  <h3>
+                    <template v-if="linked_fragments.length === 1">
+                      {{ $t("story_with_similar_keywords") }}
+                    </template>
+                    <template v-else>
+                      {{
+                        linked_fragments.length +
+                        " " +
+                        $t("stories_with_similar_keywords")
+                      }}
+                    </template>
+                  </h3>
 
-                <ul>
-                  <li
-                    v-for="fragment in linked_fragments"
-                    :key="fragment.metaFileName"
-                  >
-                    <router-link
-                      :to="{
-                        name: 'Fragment',
-                        params: { fragmentId: fragment.media_filename },
-                        query: $route.query ? $route.query : {},
-                      }"
-                      class="button"
-                      :class="{
-                        'was--visited': $root.alreadyVisited({
-                          slugFolderName,
-                          fragmentId: fragment.media_filename,
-                        }),
-                      }"
-                      v-html="fragment.title"
-                    />
-                  </li>
-                </ul>
-              </template>
+                  <ul>
+                    <li
+                      v-for="fragment in linked_fragments"
+                      :key="fragment.metaFileName"
+                    >
+                      <router-link
+                        :to="{
+                          name: 'Fragment',
+                          params: { fragmentId: fragment.media_filename },
+                          query: $route.query ? $route.query : {},
+                        }"
+                        class="button"
+                        :class="{
+                          'was--visited': $root.alreadyVisited({
+                            slugFolderName,
+                            fragmentId: fragment.media_filename,
+                          }),
+                        }"
+                        v-html="fragment.title"
+                      />
+                    </li>
+                  </ul>
+                </template>
+              </div>
             </div>
           </transition>
         </aside>
@@ -480,8 +486,25 @@ export default {
   }
 }
 
-._fragmentListAndReactions--content > h2 {
-  margin: calc(var(--spacing) / 2) 0;
+._collectionsList {
+  > * {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+}
+
+._fragmentListAndReactions--content > * {
+  margin-top: 0;
+
+  &:not(:first-child) {
+    margin-top: calc(var(--spacing) * 2);
+  }
+
+  h3 {
+    margin: calc(var(--spacing) / 1.5) 0;
+    margin-top: 0;
+  }
 }
 ._fragmentListAndReactions--content--list {
   display: grid;
@@ -522,6 +545,7 @@ export default {
 ul {
   list-style-type: none;
   padding: 0;
+  line-height: 1.41;
 
   li::before {
     content: "";
@@ -531,11 +555,15 @@ ul {
     display: block;
     position: relative;
     text-align: left;
-    margin-left: 2em;
+    margin-left: calc(var(--spacing) * 2);
+    padding-top: 0;
+    padding-bottom: 0;
+    line-height: inherit;
     &::before {
       content: "→";
       position: absolute;
       right: 100%;
+      margin-right: calc(var(--spacing) / 1);
     }
 
     &.was--visited {
@@ -548,6 +576,11 @@ ul {
   position: absolute;
   top: 0;
   left: 100%;
+}
+
+h3 {
+  margin-top: 0;
+  font-weight: 300;
 }
 </style>
 <style lang="scss"></style>

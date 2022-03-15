@@ -67,7 +67,7 @@
           </button>
         </span>
       </form>
-      <div>
+      <div class="_searchOptions">
         <small>
           <button
             type="button"
@@ -197,16 +197,17 @@
           'is--active': show_collection_meta,
         }"
         @click="setAllFiltersToZero"
-        >{{ $t("your_collections") }}
+        >{{ $t("collections") }}
       </label>
 
       <div class="_collectionsList m_keywordField">
         <button
           type="button"
-          class="button more"
+          class="button _create"
           @click="$emit('showCreateCollection')"
         >
-          + {{ $t("create_your_collection") }}
+          +
+          {{ $t("create_your_collection") }}
         </button>
 
         <button
@@ -495,5 +496,9 @@ input {
   height: 1em;
   font-size: 2em;
   font-weight: 300;
+}
+
+._searchOptions {
+  margin-left: calc(var(--spacing) / -4);
 }
 </style>

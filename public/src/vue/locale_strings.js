@@ -84,6 +84,10 @@ module.exports = (function () {
       en: "add to your collection",
     },
     edit_collection: {
+      fr: "éditer la collection",
+      en: "edit collection",
+    },
+    edit_inside_collection: {
       fr: "Ajouter/retirer d’une collection",
       en: "Add/remove from a collection",
     },
@@ -179,6 +183,10 @@ module.exports = (function () {
       fr: "Modifier ce texte",
       en: "Edit this text",
     },
+    edit_collection_text: {
+      fr: "éditer la description",
+      en: "edit description",
+    },
     modify: {
       fr: "Modifier",
       en: "Modify",
@@ -214,10 +222,6 @@ module.exports = (function () {
     guide: {
       fr: "Guide d’utilisation",
       en: "How to use",
-    },
-    about_corpus: {
-      fr: "À propos de ce corpus",
-      en: "About this corpus",
     },
     corpus_default_view: {
       fr: "Mode d’affichage du Corpus",
@@ -290,9 +294,9 @@ module.exports = (function () {
       fr: "Description",
       en: "Description",
     },
-    your_collections: {
-      fr: "Vos collections",
-      en: "Your collections",
+    collections: {
+      fr: "Collections",
+      en: "Collections",
     },
     part_of_collections: {
       fr: "Dans les collections",
@@ -307,16 +311,20 @@ module.exports = (function () {
       en: "Stories in fragment",
     },
     add_remove_fragments: {
-      fr: "Ajouter ou retirer des récits existants",
-      en: "Add or remove stories from this list",
+      fr: "ajouter/retirer des récits",
+      en: "add/delete stories",
+    },
+    remove_stories: {
+      fr: "Enlever des récits",
+      en: "Remove stories",
     },
     create_add_remove_fragments: {
       fr: "Créer de nouveaux récits, et ajouter ou retirer des récits existants à la collection.",
       en: "Create new stories, and add or remove existing stories from the collection.",
     },
-    fragments_not_in_collection: {
-      fr: "Tous les récits",
-      en: "All stories",
+    add_stories_to: {
+      fr: "Ajouter des récits à :",
+      en: "Add stories:",
     },
     all_corpus: {
       fr: "tous les corpus (admin)",
@@ -351,8 +359,8 @@ module.exports = (function () {
       en: "Rename tag",
     },
     rename: {
-      fr: "Renommer",
-      en: "Rename",
+      fr: "Renommer cette collection",
+      en: "Rename this collection",
     },
     current_tag_name: {
       fr: "Nom actuel",
@@ -382,6 +390,10 @@ module.exports = (function () {
     remove: {
       fr: "Supprimer",
       en: "Remove",
+    },
+    remove_collection: {
+      fr: "delete collection",
+      en: "remove collection",
     },
     remove_this_story: {
       fr: "Supprimer ce récit",
