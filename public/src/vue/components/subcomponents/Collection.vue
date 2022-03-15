@@ -104,6 +104,7 @@
         :metaFileName="collection.metaFileName"
         :slugFolderName="corpus.slugFolderName"
         :allow_editing="true"
+        edit_text_btn="edit_collection_text"
       />
     </div>
     <SelectFragments
@@ -133,7 +134,7 @@ export default {
     all_tags: Array,
     all_keywords: Array,
     medias: [Boolean, Array],
-    collection_fragments: [Boolean, Array],
+    collection_fragments: [Array],
   },
   components: {
     FragmentContent,
@@ -290,6 +291,9 @@ input {
   align-items: center;
   align-content: center;
   line-height: 0;
+  float: right;
+
+  gap: calc(var(--spacing) / 2);
 
   font-size: var(--font-size-small);
 

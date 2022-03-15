@@ -57,7 +57,7 @@ export default {
 </script>
 <style lang="scss">
 .m_informations {
-  padding: 0 calc(var(--spacing) * 2) calc(var(--spacing) * 2);
+  padding: 0;
 
   ._description {
     max-width: 99ch;

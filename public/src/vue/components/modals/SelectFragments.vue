@@ -1,27 +1,32 @@
 <template>
-  <section>
-    <div class="_inCollection">
-      <div class="_addRemoveBtn">
-        <button
-          type="button"
-          @click="edit_fragments_list = !edit_fragments_list"
-        >
-          {{ $t("add_remove_fragments") }}
-        </button>
+  <section class="m_selectFragments">
+    <div
+      class="_inCollection"
+      :class="{
+        'has--nostories': collection_fragments.length === 0,
+      }"
+    >
+      <div class="flex-wrap">
+        <div :class="{}">
+          {{ $t("fragments") }}&nbsp;:
+          {{ collection_fragments.length }}
+        </div>
+        <div class="_addRemoveBtn">
+          <button
+            type="button"
+            @click="edit_fragments_list = !edit_fragments_list"
+          >
+            {{ $t("add_remove_fragments") }}
+          </button>
+        </div>
       </div>
-
-      <div :class="{}">
-        {{ $t("fragments") }}&nbsp;:
-        {{ collection_fragments.length }}
-      </div>
-
       <br />
 
       <div v-if="edit_fragments_list">
         {{ $t("remove_stories") }}
       </div>
 
-      <div v-if="!collection_fragments">
+      <div v-if="!collection_fragments.length === 0" class="_emptyStories">
         <small>{{ $t("none") }}</small>
       </div>
 
@@ -175,7 +180,7 @@ export default {
     all_tags: Array,
     all_keywords: Array,
     medias: [Boolean, Array],
-    collection_fragments: [Boolean, Array],
+    collection_fragments: [Array],
     fragments: [Boolean, Array],
   },
   components: {
@@ -200,7 +205,7 @@ export default {
       return Math.min(325, this.$root.settings.windowWidth * 0.9);
     },
     other_fragments() {
-      if (!this.collection_fragments) return this.fragments;
+      if (this.collection_fragments.length === 0) return this.fragments;
       const fss = this.collection.fragments_slugs.map((fs) => fs.metaFileName);
       return this.fragments.filter((f) => !fss.includes(f.metaFileName));
     },
@@ -284,5 +289,8 @@ label {
   button {
     font-size: var(--font-size-small);
   }
+}
+._emptyStories {
+  padding-bottom: calc(var(--spacing) * 1);
 }
 </style>

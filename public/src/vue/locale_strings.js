@@ -183,6 +183,10 @@ module.exports = (function () {
       fr: "Modifier ce texte",
       en: "Edit this text",
     },
+    edit_collection_text: {
+      fr: "éditer la description",
+      en: "edit description",
+    },
     modify: {
       fr: "Modifier",
       en: "Modify",
@@ -359,8 +363,8 @@ module.exports = (function () {
       en: "Rename tag",
     },
     rename: {
-      fr: "Renommer",
-      en: "Rename",
+      fr: "Renommer cette collection",
+      en: "Rename this collection",
     },
     current_tag_name: {
       fr: "Nom actuel",

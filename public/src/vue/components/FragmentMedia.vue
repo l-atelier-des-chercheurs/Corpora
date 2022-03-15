@@ -462,7 +462,7 @@ export default {
   position: relative;
   // border-radius: 8px;
   padding: calc(var(--spacing) / 2) calc(var(--spacing));
-  margin-bottom: calc(var(--spacing) / 2);
+  margin-bottom: calc(var(--spacing));
 
   &[data-type="text"] {
     padding: 0 calc(var(--spacing) / 4 * 3);
@@ -486,6 +486,14 @@ export default {
     .m_fragmentMedia--content {
       // border-radius: 8px;
       overflow: hidden;
+    }
+  }
+
+  &[data-type="link"] {
+    .m_fragmentMedia--content {
+      input {
+        max-width: none;
+      }
     }
   }
 
@@ -601,9 +609,8 @@ export default {
   position: absolute;
   bottom: 0;
   right: 0;
-  background-color: rgba(226, 237, 239, 0.4);
+  background-color: white;
   // margin: 4px;
-
   svg {
     display: block;
     width: 2em;
@@ -612,7 +619,7 @@ export default {
     fill: none;
     stroke: var(--color-blue);
     stroke-miterlimit: 10;
-    stroke-width: 5px;
+    stroke-width: 20px;
 
     // filter: drop-shadow(0px 0px 2px rgba(226, 237, 239, 0.8));
     // filter: drop-shadow(0px 0px 3px rgba(110, 110, 110, 0.4));

@@ -11,7 +11,7 @@
         v-if="allow_editing && !edit_mode"
         @click="edit_mode = true"
       >
-        {{ $t("edit_text") }}
+        {{ $t(edit_text_btn) }}
       </button>
     </div>
 
@@ -48,6 +48,10 @@ export default {
     allow_editing: {
       type: Boolean,
       default: true,
+    },
+    edit_text_btn: {
+      type: String,
+      default: "edit_text",
     },
   },
   components: {

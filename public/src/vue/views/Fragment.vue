@@ -502,7 +502,7 @@ export default {
   }
 
   h3 {
-    margin: calc(var(--spacing) / 1) 0;
+    margin: calc(var(--spacing) / 1.5) 0;
     margin-top: 0;
   }
 }
@@ -555,7 +555,7 @@ ul {
     display: block;
     position: relative;
     text-align: left;
-    margin-left: 1em;
+    margin-left: calc(var(--spacing) * 2);
     padding-top: 0;
     padding-bottom: 0;
     line-height: inherit;
@@ -563,6 +563,7 @@ ul {
       content: "→";
       position: absolute;
       right: 100%;
+      margin-right: calc(var(--spacing) / 1);
     }
 
     &.was--visited {

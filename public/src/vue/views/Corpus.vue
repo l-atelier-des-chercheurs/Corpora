@@ -22,6 +22,19 @@
               {{ corpus.name }}
             </router-link>
           </h1>
+          <transition name="fade">
+            <template v-if="!show_collection_meta">
+              <h2>
+                <template v-if="$root.lang.current === 'fr'">
+                  {{ corpus.subtitle }}
+                </template>
+                <template v-else-if="$root.lang.current === 'en'">
+                  {{ corpus.subtitle_en }}
+                </template>
+              </h2>
+            </template>
+          </transition>
+
           <router-view
             :fragments="sorted_fragments"
             :context="'edit'"
@@ -39,7 +52,7 @@
             ref="corpus"
             v-if="['Corpus', 'Fragment'].includes($route.name)"
           >
-            <transition-group name="fade" mode="out-in">
+            <transition name="fade" mode="out-in">
               <Loader
                 v-if="is_loading_medias"
                 key="loader"
@@ -68,15 +81,6 @@
                 }"
               >
                 <template v-if="!show_collection_meta">
-                  <h2>
-                    <template v-if="$root.lang.current === 'fr'">
-                      {{ corpus.subtitle }}
-                    </template>
-                    <template v-else-if="$root.lang.current === 'en'">
-                      {{ corpus.subtitle_en }}
-                    </template>
-                  </h2>
-
                   <div
                     class="m_corpus--description margin-bottom-small mediaTextContent"
                     v-if="['Corpus', 'Fragment'].includes($route.name)"
@@ -155,7 +159,7 @@
                   :show_create_button="!shown_collection"
                 />
               </div>
-            </transition-group>
+            </transition>
           </div>
 
           <div class="_scrollTop">
@@ -408,13 +412,13 @@ export default {
       );
     },
     current_collection_fragments() {
-      if (!this.show_collection_meta) return false;
+      if (!this.show_collection_meta) return [];
       if (
         !this.shown_collection ||
         !this.shown_collection.fragments_slugs ||
         !Array.isArray(this.shown_collection.fragments_slugs)
       )
-        return false;
+        return [];
 
       return this.shown_collection.fragments_slugs.reduce((acc, fs) => {
         const metaFileName = fs.metaFileName;
@@ -525,7 +529,7 @@ export default {
 
         if (
           this.show_collection_meta &&
-          (!this.current_collection_fragments ||
+          (this.current_collection_fragments.length === 0 ||
             !this.current_collection_fragments
               .map((_f) => _f.metaFileName)
               .includes(f.metaFileName))
@@ -696,7 +700,7 @@ export default {
 <style lang="scss" scoped>
 .m_corpus {
   scroll-behavior: smooth;
-  min-height: 50vh;
+  // min-height: 50vh;
 
   > * {
     flex: 0 0 auto;
@@ -817,7 +821,8 @@ export default {
     overflow-y: auto;
 
     .app.mobile_view & {
-      padding-right: calc(var(--spacing) * 3);
+      padding: calc(var(--spacing) * 1) calc(var(--spacing) * 2)
+        calc(var(--spacing) * 1) calc(var(--spacing) * 1);
     }
   }
 

@@ -699,6 +699,12 @@ select {
     margin-bottom: 0;
   }
 }
+.flex-wrap {
+  display: flex;
+  flex-flow: row wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+}
 
 .justify-center {
   justify-content: center;
@@ -939,6 +945,8 @@ audio {
 
   &._playButton_hide {
     font-size: var(--font-size-small);
+    margin: 0;
+    padding: 0;
     svg {
       width: 24px;
       height: 24px;
@@ -1260,7 +1268,7 @@ audio {
 .slide-up {
   &-enter-active,
   &-leave-active {
-    transition: all 0.5s cubic-bezier(0.19, 1, 0.22, 1);
+    transition: all 0.25s cubic-bezier(0.19, 1, 0.22, 1);
     transform-origin: center bottom;
   }
   &-enter,
@@ -1270,12 +1278,15 @@ audio {
   }
 }
 
-.fade-enter-active,
-.fade-leave-active {
-  transition: opacity 0.5s;
-}
-.fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
-  opacity: 0;
+.fade {
+  &-enter-active,
+  &-leave-active {
+    transition: opacity 0.25s cubic-bezier(0.19, 1, 0.22, 1);
+  }
+  &-enter,
+  &-leave-active {
+    opacity: 0;
+  }
 }
 
 .list-complete-move {
