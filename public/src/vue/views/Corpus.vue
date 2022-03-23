@@ -277,19 +277,28 @@
                 />
               </svg>
             </button>
-            <Sidebar
-              :fragments="fragments"
-              :all_keywords="all_keywords"
-              :all_tags="all_tags"
-              :sorted_collections="sorted_collections"
-              :keyword_search.sync="keyword_search"
-              :tag_search.sync="tag_search"
-              :text_search.sync="text_search"
-              :text_search_mode.sync="text_search_mode"
-              :show_collection_meta.sync="show_collection_meta"
-              @scrollTop="scrollToTop"
-              @showCreateCollection="show_create_collection_modal = true"
-            />
+
+            <transition name="pagetransition" mode="out-in">
+              <Loader
+                v-if="is_loading_medias"
+                key="loader"
+                class="_localLoader"
+              />
+              <Sidebar
+                v-else
+                :fragments="fragments"
+                :all_keywords="all_keywords"
+                :all_tags="all_tags"
+                :sorted_collections="sorted_collections"
+                :keyword_search.sync="keyword_search"
+                :tag_search.sync="tag_search"
+                :text_search.sync="text_search"
+                :text_search_mode.sync="text_search_mode"
+                :show_collection_meta.sync="show_collection_meta"
+                @scrollTop="scrollToTop"
+                @showCreateCollection="show_create_collection_modal = true"
+              />
+            </transition>
             <CreateCollection
               v-if="show_create_collection_modal"
               :collections="sorted_collections"
@@ -337,7 +346,7 @@ export default {
       show_create_time_modal: false,
       new_source_name: "",
 
-      is_loading_medias: false,
+      is_loading_medias: true,
 
       show_create_collection_modal: false,
       fragments_pane_scrolled: 0,
