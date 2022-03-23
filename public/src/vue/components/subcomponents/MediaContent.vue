@@ -187,35 +187,32 @@
             </div>
           </template>
           <template v-else>
-            <div class="padding-verysmall">
-              {{ $t("no_preview_available") }}
-              <button
-                v-if="!should_load_embed && embedURL && context !== 'preview'"
-                type="button"
-                class="_playButton"
-                @click="load_this_embed = true"
-              >
-                <span>
-                  <svg
-                    version="1.1"
-                    xmlns="http://www.w3.org/2000/svg"
-                    xmlns:xlink="http://www.w3.org/1999/xlink"
-                    x="0px"
-                    y="0px"
-                    viewBox="0 0 168 168"
-                    style="enable-background: new 0 0 168 168"
-                    xml:space="preserve"
-                  >
-                    <circle style="" cx="84" cy="84" r="84" />
-                    <polygon
-                      fill="currentColor"
-                      points="57.3,39.4 136.8,85.8 57.3,132.2 		"
-                    />
-                  </svg>
-                  {{ $t("load_player") }}
-                </span>
-              </button>
-            </div>
+            <button
+              v-if="!should_load_embed && embedURL && context !== 'preview'"
+              type="button"
+              class="_playButton"
+              @click="load_this_embed = true"
+            >
+              <span>
+                <svg
+                  version="1.1"
+                  xmlns="http://www.w3.org/2000/svg"
+                  xmlns:xlink="http://www.w3.org/1999/xlink"
+                  x="0px"
+                  y="0px"
+                  viewBox="0 0 168 168"
+                  style="enable-background: new 0 0 168 168"
+                  xml:space="preserve"
+                >
+                  <circle style="" cx="84" cy="84" r="84" />
+                  <polygon
+                    fill="currentColor"
+                    points="57.3,39.4 136.8,85.8 57.3,132.2 		"
+                  />
+                </svg>
+                {{ $t("load_player") }}
+              </span>
+            </button>
           </template>
         </div>
         <div class="_linkCaption">

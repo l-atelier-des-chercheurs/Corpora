@@ -140,14 +140,7 @@
         <label v-if="is_being_edited">{{ $t("description_source") }}</label>
         <div>
           <template v-if="!is_being_edited">
-            <span
-              :content="$t('caption')"
-              v-tippy="{
-                placement: 'bottom',
-                delay: [600, 0],
-              }"
-              >{{ media.caption }}</span
-            >
+            <span>{{ media.caption }}</span>
           </template>
           <template v-else>
             <input type="text" v-model="mediadata.caption" placeholder="…" />
@@ -465,7 +458,7 @@ export default {
   margin-bottom: calc(var(--spacing));
 
   &[data-type="text"] {
-    padding: 0 calc(var(--spacing) / 4 * 3);
+    padding-inline: calc(var(--spacing) / 4 * 3);
   }
   &[data-type="text"] {
     .m_fragmentMedia--infos--caption,
@@ -543,7 +536,7 @@ export default {
 }
 .m_fragmentMedia--infos--caption,
 .m_fragmentMedia--infos--source {
-  margin-top: calc(var(--spacing) / 2);
+  margin-top: calc(var(--spacing) / 4);
   font-size: var(--font-size-small);
 
   input {
@@ -648,6 +641,10 @@ export default {
     }
   }
 
+  .mediaTextContent {
+    padding-bottom: 0;
+  }
+
   ._loader {
     background: rgba(255, 255, 255, 0.9);
   }
@@ -656,7 +653,8 @@ export default {
     font-size: var(--font-size-small);
     // max-width: 60ch;
     text-decoration: underline;
-    padding-bottom: 4px;
+
+    margin-top: calc(var(--spacing) / 4);
 
     text-overflow: ellipsis;
     white-space: nowrap;

@@ -85,7 +85,7 @@
               >
                 <template v-if="!show_collection_meta">
                   <div
-                    class="m_corpus--description margin-bottom-small mediaTextContent"
+                    class="m_corpus--description mediaTextContent"
                     v-if="['Corpus', 'Fragment'].includes($route.name)"
                     v-html="
                       $root.lang.current === 'fr'
@@ -95,54 +95,49 @@
                   />
                 </template>
 
-                <div class="">
-                  <div class="_indicator m_fragments">
-                    <!-- @click="resetFiltersAndScrollTop" -->
-                    <div
-                      :class="{
-                        'text-blue':
-                          filtered_fragments.length !== sorted_fragments.length,
-                      }"
+                <div class="_indicator m_fragments">
+                  <!-- @click="resetFiltersAndScrollTop" -->
+                  <div
+                    :class="{
+                      'text-blue':
+                        filtered_fragments.length !== sorted_fragments.length,
+                    }"
+                  >
+                    <template
+                      v-if="
+                        filtered_fragments.length === sorted_fragments.length
+                      "
                     >
-                      <template
-                        v-if="
-                          filtered_fragments.length === sorted_fragments.length
-                        "
-                      >
-                        {{ $t("fragments") }}&nbsp;:
-                        {{ filtered_fragments.length }}
-                      </template>
-                      <template v-else>
-                        {{ $t("your_search") }}
-                        {{ filtered_fragments.length }}&nbsp;/&nbsp;{{
-                          sorted_fragments.length
-                        }}
-                      </template>
-                    </div>
+                      {{ $t("fragments") }}&nbsp;:
+                      {{ filtered_fragments.length }}
+                    </template>
+                    <template v-else>
+                      {{ $t("your_search") }}
+                      {{ filtered_fragments.length }}&nbsp;/&nbsp;{{
+                        sorted_fragments.length
+                      }}
+                    </template>
+                  </div>
 
-                    <div class="_sortMode" v-if="filtered_fragments.length > 1">
-                      <button
-                        type="button"
-                        :class="{
-                          'is--active': sort_fragments_by === 'date_created',
-                        }"
-                        @click="sort_fragments_by = 'date_created'"
-                      >
-                        {{ $t("by_creation_date") }}
-                      </button>
-                      <button
-                        type="button"
-                        :class="{
-                          'is--active': sort_fragments_by === 'title',
-                        }"
-                        @click="sort_fragments_by = 'title'"
-                      >
-                        {{ $t("by_title") }}
-                      </button>
-                    </div>
-                    <div />
-                    <div />
-                    <div />
+                  <div class="_sortMode" v-if="filtered_fragments.length > 1">
+                    <button
+                      type="button"
+                      :class="{
+                        'is--active': sort_fragments_by === 'date_created',
+                      }"
+                      @click="sort_fragments_by = 'date_created'"
+                    >
+                      {{ $t("by_creation_date") }}
+                    </button>
+                    <button
+                      type="button"
+                      :class="{
+                        'is--active': sort_fragments_by === 'title',
+                      }"
+                      @click="sort_fragments_by = 'title'"
+                    >
+                      {{ $t("by_title") }}
+                    </button>
                   </div>
                 </div>
 
@@ -909,8 +904,7 @@ h1 {
 
 ._indicator {
   font-family: var(--ff-top-level);
-
-  text-align: left;
+  margin-bottom: calc(var(--spacing) * 2);
 
   > * {
     display: block;
@@ -953,6 +947,7 @@ h1 {
 
 .m_corpus--description {
   padding-left: 0;
+  margin-bottom: calc(var(--spacing) * 2);
 }
 
 ._uncollapseButton {

@@ -358,7 +358,7 @@ module.exports = (function () {
       fr: "Renommer l’onglet",
       en: "Rename tag",
     },
-    rename: {
+    rename_collection: {
       fr: "Renommer cette collection",
       en: "Rename this collection",
     },
@@ -392,8 +392,8 @@ module.exports = (function () {
       en: "Remove",
     },
     remove_collection: {
-      fr: "delete collection",
-      en: "remove collection",
+      fr: "supprimer la collection",
+      en: "delete collection",
     },
     remove_this_story: {
       fr: "Supprimer ce récit",

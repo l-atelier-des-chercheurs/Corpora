@@ -1,24 +1,26 @@
 <template>
-  <div class="m_collection">
+  <div
+    class="m_collection"
+    :class="{
+      'is--editing': edit_collection,
+    }"
+  >
     <div class="m_collection--presentation">
       <div class="_buttonRow">
-        <template v-if="rename_coll">
-          <button type="button" @click="rename_coll = false">
+        <template v-if="!edit_collection">
+          <button type="button" @click="edit_collection = !edit_collection">
+            {{ $t("edit_collection") }}
+          </button>
+          <button type="button" @click="removeCollection">
+            {{ $t("remove_collection") }}
+          </button>
+        </template>
+        <template v-else>
+          <button type="button" @click="edit_collection = false">
             {{ $t("cancel") }}
           </button>
           <button @click="submitNewCollName">
             {{ $t("save") }}
-          </button>
-          <button type="button" @click="removeCollection">
-            {{ $t("remove") }}
-          </button>
-        </template>
-        <template v-else>
-          <button type="button" @click="rename_coll = !rename_coll">
-            {{ $t("rename") }}
-          </button>
-          <button type="button" @click="removeCollection">
-            {{ $t("remove") }}
           </button>
         </template>
 
@@ -60,8 +62,8 @@
       </div>
 
       <div class="_titleBar">
-        <h2 v-if="!rename_coll">
-          <template v-if="!rename_coll">
+        <h2 v-if="!edit_collection">
+          <template v-if="!edit_collection">
             {{ collection.title }}
           </template>
         </h2>
@@ -70,7 +72,6 @@
             <input type="text" v-model="new_coll_name" />
             <input type="submit" style="display: none" />
           </h2>
-          <div></div>
         </form>
       </div>
       <div>
@@ -101,6 +102,7 @@
         class="_description"
         :content="collection.collection_description"
         type2="media"
+        ref="description_field"
         :metaFileName="collection.metaFileName"
         :slugFolderName="corpus.slugFolderName"
         :allow_editing="true"
@@ -144,7 +146,7 @@ export default {
   data() {
     return {
       show_advanced_meta: false,
-      rename_coll: false,
+      edit_collection: false,
       new_coll_name: "",
     };
   },
@@ -152,8 +154,13 @@ export default {
   mounted() {},
   beforeDestroy() {},
   watch: {
-    rename_coll() {
-      if (this.rename_coll) this.new_coll_name = this.collection.title;
+    edit_collection() {
+      if (this.edit_collection) {
+        this.new_coll_name = this.collection.title;
+        this.$refs.description_field.edit_mode = true;
+      } else {
+        this.$refs.description_field.edit_mode = false;
+      }
     },
   },
   computed: {},
@@ -224,7 +231,11 @@ export default {
           .then((mdata) => {
             // setTimeout(() => {
             this.is_sending_content_to_server = false;
+            return resolve();
             // }, 300);
+          })
+          .catch(() => {
+            return reject();
           });
       });
     },
@@ -233,9 +244,10 @@ export default {
         data: {
           title: this.new_coll_name,
         },
+      }).then(() => {
+        this.$refs.description_field.save();
+        this.edit_collection = false;
       });
-
-      this.rename_coll = false;
     },
   },
 };
@@ -264,9 +276,11 @@ export default {
   // flex-flow: row nowrap;
   // align-items: flex-start;
   // justify-content: space-between;
+  margin-bottom: calc(var(--spacing) * 2);
 
   h2 {
     margin-top: 0;
+    margin-bottom: 0;
   }
 }
 
@@ -282,7 +296,10 @@ input {
 }
 
 ._description {
-  margin-left: calc(var(--spacing) / -4);
+  .m_collection:not(.is--editing) & {
+    margin-left: calc(var(--spacing) / -4);
+  }
+  margin-bottom: calc(var(--spacing) * 2);
 }
 
 ._buttonRow {
@@ -299,6 +316,14 @@ input {
 
   button {
     text-transform: lowercase;
+  }
+}
+</style>
+<style lang="scss">
+._description {
+  ._editText button,
+  ._btns {
+    display: none;
   }
 }
 </style>
