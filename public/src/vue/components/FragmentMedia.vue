@@ -617,20 +617,16 @@ export default {
     height: 2em;
     // padding: 4px;
     fill: none;
-    stroke: var(--color-blue);
+    stroke: black;
     stroke-miterlimit: 10;
     stroke-width: 20px;
 
     // filter: drop-shadow(0px 0px 2px rgba(226, 237, 239, 0.8));
     // filter: drop-shadow(0px 0px 3px rgba(110, 110, 110, 0.4));
   }
-
   &:hover {
-    background-color: var(--color-blue);
-    // background: var(--color-black);
-
     svg {
-      stroke: white;
+      stroke: var(--color-blue);
       // fill: white;
     }
   }
