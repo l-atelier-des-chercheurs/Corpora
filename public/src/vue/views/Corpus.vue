@@ -665,7 +665,10 @@ export default {
       });
     },
     resetFiltersAndScrollTop() {
-      if (this.$route.name === "Informations") {
+      if (
+        this.$route.name === "Informations" ||
+        this.$route.name === "Mentions légales"
+      ) {
         this.$router.push({
           name: "Corpus",
           query: this.$route.query ? this.$route.query : {},
