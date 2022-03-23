@@ -435,7 +435,9 @@ let vm = new Vue({
       const fullPath = `${slugFolderName}/${fragmentId}`;
       return this.$root.fragments_read.includes(fullPath);
     },
-
+    replaceNtoBR(str) {
+      return str.replace(/(\\r)*\\n/g, "<br>");
+    },
     createFolder(fdata) {
       return new Promise((resolve, reject) => {
         if (window.state.dev_mode === "debug") {

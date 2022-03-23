@@ -46,6 +46,11 @@
                   v-html="$t('fragment_included_in_no_collections')"
                 />
 
+                <Loader
+                  v-else-if="is_saving_coll_list"
+                  class="_collSaveLoader"
+                />
+
                 <div v-else class="_collectionsList m_keywordField">
                   <component
                     v-for="collection in collections_showed"
@@ -73,10 +78,23 @@
                             collection.fragments_slugs &&
                             Array.isArray(collection.fragments_slugs)
                           "
-                          >{{ collection.fragments_slugs.length }}
+                        >
+                          {{ collection.fragments_slugs.length }}
                         </template>
                         <template v-else>0</template>
-                        {{ $t("fragments").toLowerCase() }})
+
+                        <template
+                          v-if="
+                            collection.fragments_slugs &&
+                            Array.isArray(collection.fragments_slugs) &&
+                            collection.fragments_slugs.length > 1
+                          "
+                        >
+                          {{ $t("fragments").toLowerCase() }})
+                        </template>
+                        <template v-else>
+                          {{ $t("fragment").toLowerCase() }})
+                        </template>
                       </div>
                     </div>
                     <input
@@ -216,6 +234,7 @@ export default {
   data() {
     return {
       is_loading_fragment_sidebar: true,
+      is_saving_coll_list: false,
       show_not_linked_fragments: false,
       new_lang: this.$root.lang.current,
       edit_coll: false,
@@ -327,6 +346,11 @@ export default {
       this.$children[0].closeModal();
     },
     saveCollList() {
+      this.is_saving_coll_list = true;
+
+      setTimeout(() => {
+        this.is_saving_coll_list = false;
+      }, 1500);
       this.sorted_collections.map((c) => {
         if (this.selected_collections.includes(c.metaFileName)) {
           this.addFragmentToColl(c.metaFileName);
@@ -581,6 +605,9 @@ ul {
 h3 {
   margin-top: 0;
   font-weight: 300;
+}
+._collSaveLoader {
+  position: relative;
 }
 </style>
 <style lang="scss"></style>

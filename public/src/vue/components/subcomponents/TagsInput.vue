@@ -84,7 +84,7 @@
         "
         class="autocomplete"
       >
-        <small>
+        <small v-if="allow_new_terms">
           <button
             type="button"
             class="button-small _existing_button"
@@ -94,6 +94,7 @@
             {{ $t("existing").toLowerCase() }}
           </button>
         </small>
+        <hr v-else />
 
         <div v-if="show_existing" class="m_keywordField m_keywordField--inline">
           <button
@@ -138,7 +139,7 @@ export default {
       tag: "",
       new_tag: "",
 
-      show_existing: this.show_existing_by_default,
+      show_existing: this.show_existing_by_default || !this.allow_new_terms,
     };
   },
 

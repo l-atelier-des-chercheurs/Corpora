@@ -15,7 +15,7 @@
       </button>
     </div>
 
-    <div class="margin-vert-verysmall ta-ri">
+    <div class="_btns margin-vert-verysmall ta-ri">
       <button type="button" v-if="edit_mode" @click="edit_mode = false">
         {{ $t("cancel") }}
       </button>

@@ -6,24 +6,24 @@
         'has--nostories': collection_fragments.length === 0,
       }"
     >
-      <div class="flex-wrap">
-        <div :class="{}">
-          {{ $t("fragments") }}&nbsp;:
-          {{ collection_fragments.length }}
+      <div class="">
+        <div class="flex-wrap _txt">
+          <div :class="{}">
+            {{ $t("fragments") }}&nbsp;:
+            {{ collection_fragments.length }}
+          </div>
+          <div class="_addRemoveBtn">
+            <button
+              type="button"
+              @click="edit_fragments_list = !edit_fragments_list"
+            >
+              {{ $t("add_remove_fragments") }}
+            </button>
+          </div>
         </div>
-        <div class="_addRemoveBtn">
-          <button
-            type="button"
-            @click="edit_fragments_list = !edit_fragments_list"
-          >
-            {{ $t("add_remove_fragments") }}
-          </button>
+        <div v-if="edit_fragments_list">
+          {{ $t("remove_stories") }}
         </div>
-      </div>
-      <br />
-
-      <div v-if="edit_fragments_list">
-        {{ $t("remove_stories") }}
       </div>
 
       <div v-if="!collection_fragments.length === 0" class="_emptyStories">
@@ -76,11 +76,8 @@
               xmlns:xlink="http://www.w3.org/1999/xlink"
               x="0px"
               y="0px"
-              viewBox="0 0 50 50"
-              style="
-                enable-background: new 0 0 56.6 50.1;
-                transform: rotate(45deg);
-              "
+              width="20"
+              height="20"
               xml:space="preserve"
               aria-hidden="true"
               stroke="currentColor"
@@ -88,18 +85,12 @@
               fill="transparent"
             >
               <line
+                data-v-873482ca=""
                 vector-effect="non-scaling-stroke"
                 x1="0"
-                y1="25"
-                x2="50"
-                y2="25"
-              />
-              <line
-                vector-effect="non-scaling-stroke"
-                x1="25"
-                y1="0"
-                x2="25"
-                y2="50"
+                y1="50%"
+                x2="100%"
+                y2="50%"
               />
             </svg>
           </button>
@@ -148,7 +139,7 @@
     </div>
 
     <div class="_notInCollection" v-if="edit_fragments_list">
-      <h3>{{ $t("add_stories_to") }}&#32;{{ collection.title }}</h3>
+      <div>{{ $t("add_stories_to") }}&#32;{{ collection.title }}</div>
 
       <div v-if="!other_fragments || other_fragments.length === 0">
         <small>{{ $t("none") }}</small>
@@ -275,12 +266,14 @@ label {
 }
 
 ._removeFromColl {
-  width: 2.5em;
-  height: 2.5em;
+  // width: 2em;
+  // height: 2em;
   margin-left: auto;
-
-  padding: 0.5em;
-  margin-right: -0.75em;
+  padding: calc(var(--spacing) / 2);
+  margin-right: calc(var(--spacing) / -2);
+  margin-bottom: calc(var(--spacing) / -2);
+  // padding: 0.5em;
+  // margin-right: -0.75em;
 }
 
 ._addRemoveBtn {
@@ -292,5 +285,9 @@ label {
 }
 ._emptyStories {
   padding-bottom: calc(var(--spacing) * 1);
+}
+
+._txt {
+  margin-bottom: calc(var(--spacing) * 2);
 }
 </style>

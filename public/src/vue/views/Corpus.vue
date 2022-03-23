@@ -85,7 +85,7 @@
               >
                 <template v-if="!show_collection_meta">
                   <div
-                    class="m_corpus--description margin-bottom-small mediaTextContent"
+                    class="m_corpus--description mediaTextContent"
                     v-if="['Corpus', 'Fragment'].includes($route.name)"
                     v-html="
                       $root.lang.current === 'fr'
@@ -95,54 +95,49 @@
                   />
                 </template>
 
-                <div class="">
-                  <div class="_indicator m_fragments">
-                    <!-- @click="resetFiltersAndScrollTop" -->
-                    <div
-                      :class="{
-                        'text-blue':
-                          filtered_fragments.length !== sorted_fragments.length,
-                      }"
+                <div class="_indicator m_fragments">
+                  <!-- @click="resetFiltersAndScrollTop" -->
+                  <div
+                    :class="{
+                      'text-blue':
+                        filtered_fragments.length !== sorted_fragments.length,
+                    }"
+                  >
+                    <template
+                      v-if="
+                        filtered_fragments.length === sorted_fragments.length
+                      "
                     >
-                      <template
-                        v-if="
-                          filtered_fragments.length === sorted_fragments.length
-                        "
-                      >
-                        {{ $t("fragments") }}&nbsp;:
-                        {{ filtered_fragments.length }}
-                      </template>
-                      <template v-else>
-                        {{ $t("your_search") }}
-                        {{ filtered_fragments.length }}&nbsp;/&nbsp;{{
-                          sorted_fragments.length
-                        }}
-                      </template>
-                    </div>
+                      {{ $t("fragments") }}&nbsp;:
+                      {{ filtered_fragments.length }}
+                    </template>
+                    <template v-else>
+                      {{ $t("your_search") }}
+                      {{ filtered_fragments.length }}&nbsp;/&nbsp;{{
+                        sorted_fragments.length
+                      }}
+                    </template>
+                  </div>
 
-                    <div class="_sortMode" v-if="filtered_fragments.length > 1">
-                      <button
-                        type="button"
-                        :class="{
-                          'is--active': sort_fragments_by === 'date_created',
-                        }"
-                        @click="sort_fragments_by = 'date_created'"
-                      >
-                        {{ $t("by_creation_date") }}
-                      </button>
-                      <button
-                        type="button"
-                        :class="{
-                          'is--active': sort_fragments_by === 'title',
-                        }"
-                        @click="sort_fragments_by = 'title'"
-                      >
-                        {{ $t("by_title") }}
-                      </button>
-                    </div>
-                    <div />
-                    <div />
-                    <div />
+                  <div class="_sortMode" v-if="filtered_fragments.length > 1">
+                    <button
+                      type="button"
+                      :class="{
+                        'is--active': sort_fragments_by === 'date_created',
+                      }"
+                      @click="sort_fragments_by = 'date_created'"
+                    >
+                      {{ $t("by_creation_date") }}
+                    </button>
+                    <button
+                      type="button"
+                      :class="{
+                        'is--active': sort_fragments_by === 'title',
+                      }"
+                      @click="sort_fragments_by = 'title'"
+                    >
+                      {{ $t("by_title") }}
+                    </button>
                   </div>
                 </div>
 
@@ -277,19 +272,28 @@
                 />
               </svg>
             </button>
-            <Sidebar
-              :fragments="fragments"
-              :all_keywords="all_keywords"
-              :all_tags="all_tags"
-              :sorted_collections="sorted_collections"
-              :keyword_search.sync="keyword_search"
-              :tag_search.sync="tag_search"
-              :text_search.sync="text_search"
-              :text_search_mode.sync="text_search_mode"
-              :show_collection_meta.sync="show_collection_meta"
-              @scrollTop="scrollToTop"
-              @showCreateCollection="show_create_collection_modal = true"
-            />
+
+            <transition name="pagetransition" mode="out-in">
+              <Loader
+                v-if="is_loading_medias"
+                key="loader"
+                class="_localLoader"
+              />
+              <Sidebar
+                v-else
+                :fragments="fragments"
+                :all_keywords="all_keywords"
+                :all_tags="all_tags"
+                :sorted_collections="sorted_collections"
+                :keyword_search.sync="keyword_search"
+                :tag_search.sync="tag_search"
+                :text_search.sync="text_search"
+                :text_search_mode.sync="text_search_mode"
+                :show_collection_meta.sync="show_collection_meta"
+                @scrollTop="scrollToTop"
+                @showCreateCollection="show_create_collection_modal = true"
+              />
+            </transition>
             <CreateCollection
               v-if="show_create_collection_modal"
               :collections="sorted_collections"
@@ -337,7 +341,7 @@ export default {
       show_create_time_modal: false,
       new_source_name: "",
 
-      is_loading_medias: false,
+      is_loading_medias: true,
 
       show_create_collection_modal: false,
       fragments_pane_scrolled: 0,
@@ -661,7 +665,10 @@ export default {
       });
     },
     resetFiltersAndScrollTop() {
-      if (this.$route.name === "Informations") {
+      if (
+        this.$route.name === "Informations" ||
+        this.$route.name === "Mentions légales"
+      ) {
         this.$router.push({
           name: "Corpus",
           query: this.$route.query ? this.$route.query : {},
@@ -900,8 +907,7 @@ h1 {
 
 ._indicator {
   font-family: var(--ff-top-level);
-
-  text-align: left;
+  margin-bottom: calc(var(--spacing) * 2);
 
   > * {
     display: block;
@@ -944,6 +950,7 @@ h1 {
 
 .m_corpus--description {
   padding-left: 0;
+  margin-bottom: calc(var(--spacing) * 2);
 }
 
 ._uncollapseButton {
