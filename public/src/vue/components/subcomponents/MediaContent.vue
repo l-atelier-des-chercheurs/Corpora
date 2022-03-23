@@ -181,9 +181,8 @@
               <div
                 v-if="siteOG.description"
                 class="_siteCard--text--description"
-              >
-                {{ siteOG.description }}
-              </div>
+                v-html="siteOG.description"
+              />
             </div>
           </template>
           <template v-else>
@@ -223,17 +222,7 @@
       </template>
       <template v-else>
         <template>
-          <iframe
-            v-if="embedURL.type !== 'tweet'"
-            :src="embedURL.src"
-            frameborder="0"
-            allowfullscreen
-          />
-          <Tweet
-            v-else
-            :id="embedURL.id"
-            :options="{ cards: 'hidden', theme: 'light' }"
-          />
+          <iframe :src="embedURL.src" frameborder="0" allowfullscreen />
           <button
             type="button"
             class="_playButton _siteCard--image--playButton _playButton_hide"
@@ -286,7 +275,6 @@
 </template>
 <script>
 import CollaborativeEditor from "./CollaborativeEditor.vue";
-import { Tweet } from "vue-tweet-embed";
 
 export default {
   props: {
@@ -333,7 +321,6 @@ export default {
   },
   components: {
     CollaborativeEditor,
-    Tweet,
   },
   data() {
     return {
@@ -408,12 +395,7 @@ export default {
     },
     embedURL: function () {
       if (!this.media.content) return false;
-      if (this.media.content.includes("twitter.com"))
-        return {
-          type: "tweet",
-          id: this.getTweetIdFromURL(this.media.content),
-        };
-      else if (
+      if (
         this.media.content.includes("youtube.com") ||
         this.media.content.includes("youtu.be")
       )

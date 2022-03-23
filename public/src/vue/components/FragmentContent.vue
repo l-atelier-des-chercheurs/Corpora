@@ -775,9 +775,12 @@ export default {
   background: white;
   padding: 0 calc(var(--spacing) * 1);
   margin-left: calc(var(--spacing) / -4);
+  margin-bottom: calc(var(--spacing));
+  text-align: center;
 
   ._editingNotice {
     margin-left: calc(var(--spacing) / 4);
+    margin-bottom: calc(var(--spacing) / 2);
   }
 }
 

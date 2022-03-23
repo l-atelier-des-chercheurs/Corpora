@@ -900,10 +900,9 @@ audio {
     }
   }
 
-  ._siteCard--text,
-  ._siteCard--embed {
+  ._siteCard--text {
     flex: 1 1 50%;
-    padding: calc(var(--spacing) / 2);
+    padding: 0 calc(var(--spacing) / 2);
   }
   ._siteCard--text--title {
     font-family: var(--ff-top-level);
@@ -917,6 +916,7 @@ audio {
   }
   ._siteCard--text--description {
     font-size: var(--font-size-small);
+    white-space: pre-wrap;
   }
 }
 
