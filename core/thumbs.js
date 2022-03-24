@@ -1169,9 +1169,9 @@ module.exports = (function () {
           dev.logverbose(`THUMBS — _getPageMetadata : loading URL ${url}`);
 
           let page_timeout = setTimeout(() => {
-            clearTimeout(page_timeout);
             dev.error(`THUMBS — _getPageMetadata : page timeout for ${url}`);
-            win.close();
+            clearTimeout(page_timeout);
+            browser.close();
             return reject();
           }, 10_000);
 
@@ -1180,7 +1180,6 @@ module.exports = (function () {
               waitUntil: "domcontentloaded",
             })
             .then(async () => {
-              clearTimeout(page_timeout);
               dev.logverbose(
                 `THUMBS — _getPageMetadata : finished loading page ${url}`
               );
@@ -1188,6 +1187,8 @@ module.exports = (function () {
               let html = await page.evaluate(
                 () => document.documentElement.innerHTML
               );
+
+              clearTimeout(page_timeout);
               browser.close();
 
               // console.log(html); // will be your innherhtml
@@ -1195,11 +1196,11 @@ module.exports = (function () {
               return resolve(parsed_meta);
             })
             .catch((err) => {
+              clearTimeout(page_timeout);
               browser.close();
               dev.error(
                 `THUMBS — _getPageMetadata / Failed to load link page with error ${err.message}`
               );
-              clearTimeout(page_timeout);
               return reject(err.message);
             });
         });
