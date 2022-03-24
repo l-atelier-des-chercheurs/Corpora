@@ -985,55 +985,6 @@ module.exports = (function () {
     });
   }
 
-  function _makePDFScreenshot({
-    slugFolderName,
-    thumbFolderPath,
-    filename,
-    page,
-  }) {
-    return new Promise(function (resolve, reject) {
-      dev.logfunction(
-        `THUMBS — _makePDFScreenshot: ${slugFolderName}/${filename}`
-      );
-
-      // todo : use page to get screenshots of each page
-      let screenshotName = `${filename}.${page}.png`;
-      let screenshotPath = path.join(thumbFolderPath, screenshotName);
-      let fullScreenshotPath = api.getFolderPath(screenshotPath);
-
-      // check first if it exists, resolve if it does
-      fs.pathExists(fullScreenshotPath).then((exists) => {
-        if (!exists) {
-          const url = `${global.appInfos.homeURL}/${slugFolderName}/${filename}`;
-
-          screenshotWebsite({
-            url,
-          })
-            .then((image) => {
-              fs.writeFile(fullScreenshotPath, image.toPNG(1.0), (error) => {
-                if (error) throw error;
-                dev.logverbose(
-                  `THUMBS — _makePDFScreenshot : created image at ${fullScreenshotPath}`
-                );
-                return resolve({ screenshotPath, screenshotName });
-              });
-            })
-            .catch((err) => {
-              dev.error(
-                `THUMBS — _makePDFScreenshot / Failed to make stl thumbs with error ${err}`
-              );
-              return reject();
-            });
-        } else {
-          dev.logverbose(
-            `Screenshots already exist at path ${fullScreenshotPath}`
-          );
-          return resolve({ screenshotPath, screenshotName });
-        }
-      });
-    });
-  }
-
   async function _getLinkOpenGraph({
     slugFolderName,
     thumbFolderPath,
