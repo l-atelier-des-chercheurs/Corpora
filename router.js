@@ -143,6 +143,7 @@ module.exports = function (app) {
   async function postFile(req, res) {
     let type = req.params.type;
     let slugFolderName = req.params.slugFolderName;
+    dev.log(`••• postFile for ${type}/${slugFolderName} •••`);
 
     importer
       .handleForm({ req, type, slugFolderName })
@@ -154,7 +155,7 @@ module.exports = function (app) {
         });
         res.end(JSON.stringify(msg));
       })
-      .catch(({ err }) => {
+      .catch((err) => {
         sockets.notify({
           socketid: req.query.socketid,
           localized_string: `action_not_allowed`,
