@@ -1519,7 +1519,8 @@ audio {
 
     .m_modal--container {
       margin: 0;
-      max-width: calc(var(--panel-width) * 4);
+      max-width: none;
+      // max-width: calc(var(--panel-width) * 4);
       // align-self: flex-start;
       .m_modal--preview {
         #app.is--wide & {
@@ -1694,7 +1695,7 @@ audio {
       right: 0;
       height: 100%;
       width: 100%;
-      object-fit: contain;
+      object-fit: scale-down;
       object-position: center;
     }
 

@@ -268,6 +268,8 @@ export default {
   mounted: function () {
     console.log(`MOUNTED • BaseModal`);
 
+    this.$root.modal_opened_uids.push(this._uid);
+
     setTimeout(() => {
       this.showModal = true;
 
@@ -301,9 +303,17 @@ export default {
         console.log("METHODS • BaseModal: modalKeyListener");
       }
 
+      if (
+        this.$root.modal_opened_uids[
+          this.$root.modal_opened_uids.length - 1
+        ] !== this._uid
+      )
+        return;
+
       if (event.key === "Escape") {
         event.stopPropagation();
         if (!this.has_confirm_close_modal_open) {
+          this.$root.modal_opened_uids.pop();
           this.closeModal();
         }
         return false;
@@ -419,14 +429,14 @@ export default {
   },
   created: function () {
     // TODO : buggy with multiple modals
-    // document.addEventListener("keyup", this.modalKeyListener);
-    document.body.classList.add("has_modal_opened");
-    this.$root.settings.has_modal_opened = true;
+    document.addEventListener("keyup", this.modalKeyListener);
+    // document.body.classList.add("has_modal_opened");
+    // this.$root.settings.has_modal_opened = true;
   },
   destroyed: function () {
-    // document.removeEventListener("keyup", this.modalKeyListener);
-    document.body.classList.remove("has_modal_opened");
-    this.$root.settings.has_modal_opened = false;
+    document.removeEventListener("keyup", this.modalKeyListener);
+    // document.body.classList.remove("has_modal_opened");
+    // this.$root.settings.has_modal_opened = false;
   },
 };
 </script>

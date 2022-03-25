@@ -229,6 +229,8 @@ let vm = new Vue({
 
     justCreatedMediaID: false,
 
+    modal_opened_uids: [],
+
     currentTime: "",
     app_is_fullscreen: false,
     admin_pwd: localstore.get("admin_pwd") ? localstore.get("admin_pwd") : "",
