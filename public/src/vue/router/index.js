@@ -14,11 +14,14 @@ const routes = [
     name: "Corpora",
     title: "Corpora",
     component: List,
+    meta: {
+      title: "Corpora",
+    },
   },
   {
     path: "/:slugFolderName",
     name: "Corpus",
-    title: "Corpora",
+    title: "Corpus",
     component: Corpus,
     children: [
       {

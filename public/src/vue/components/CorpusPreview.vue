@@ -254,6 +254,7 @@ export default {
   // background: var(--active-color);
   // margin: var(--spacing);
   padding: calc(var(--spacing)) 0;
+  // background: white;
 
   > *:not(:last-child) {
     margin-bottom: calc(var(--spacing) / 2);
@@ -264,11 +265,15 @@ export default {
   h2 {
     margin-top: 0;
     margin: 0;
+    font-size: 1.4rem;
+    font-weight: 300;
   }
 }
 .m_corpusPreview--subtitle {
   h3 {
     margin: 0;
+    font-size: 1rem;
+    font-weight: 400;
   }
 }
 
@@ -289,7 +294,8 @@ export default {
 }
 
 .m_corpusPreview--time {
-  font-style: italic;
+  // font-style: italic;
+  font-size: var(--font-size-small);
 }
 
 .m_corpusPreview--open {

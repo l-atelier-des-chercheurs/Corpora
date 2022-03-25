@@ -10,7 +10,7 @@
         v-html="'← ' + $t('show_fragments')"
       />
     </div>
-    <div class="margin-vert-small _description">
+    <div class="margin-vert-small _description mediaTextContent">
       <h2>Informations légales et protection des données personnelles</h2>
       <h3>Informations éditeur</h3>
       <p>
@@ -23,17 +23,11 @@
       </p>
       <h3>Hébergeur</h3>
       <ul>
-        <li style="font-weight: 400">Société : DigitalOcean</li>
-        <li style="font-weight: 400">Adresse web : www.digitalocean.com</li>
-        <li style="font-weight: 400">
-          Adresse postale : 101 Avenue of the Americas, New York 10013
-        </li>
-        <li style="font-weight: 400">
-          Adresse électronique (Email) : contact@digitalocean.com
-        </li>
-        <li style="font-weight: 400">
-          Serveur situé &agrave; Francfort, Allemagne.
-        </li>
+        <li>Société : DigitalOcean</li>
+        <li>Adresse web : www.digitalocean.com</li>
+        <li>Adresse postale : 101 Avenue of the Americas, New York 10013</li>
+        <li>Adresse électronique (Email) : contact@digitalocean.com</li>
+        <li>Serveur situé &agrave; Francfort, Allemagne.</li>
       </ul>
       <h3>Vos données personnelles</h3>
       <p>
@@ -62,10 +56,8 @@
         données personnelles gérés par le site, vous pouvez nous contacter
       </p>
       <ul>
-        <li style="font-weight: 400">
-          Par mail : info@plurality-university.org
-        </li>
-        <li style="font-weight: 400">
+        <li>Par mail : info@plurality-university.org</li>
+        <li>
           Par courrier : Réseau Université de la Pluralité (Plurality University
           Network) &ndash; 5 rue de la Véga, 75012 Paris - France
         </li>
@@ -97,6 +89,16 @@ export default {
 
   ._description {
     max-width: 99ch;
+    font-family: inherit;
+    font-weight: 300;
+
+    h2 {
+      font-weight: 300;
+    }
+    h3,
+    h4 {
+      font-weight: 500;
+    }
 
     .ql-editor {
       max-width: none;

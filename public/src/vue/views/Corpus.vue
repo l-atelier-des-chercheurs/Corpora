@@ -381,6 +381,12 @@ export default {
       },
       deep: true,
     },
+    corpus: {
+      handler() {
+        if (this.corpus) this.setPageTitle();
+      },
+      immediate: true,
+    },
   },
   computed: {
     corpus() {
@@ -586,6 +592,7 @@ export default {
   methods: {
     loadCorpus() {
       this.is_loading_medias = true;
+
       this.$nextTick(() => {
         this.$socketio.listMedias({
           type: "corpus",
@@ -603,6 +610,9 @@ export default {
           this.is_loading_medias = false;
         });
       });
+    },
+    setPageTitle() {
+      if (this.corpus.name) document.title = this.corpus.name;
     },
 
     doFragmentMediasIncludeText({ fragment_media, text }) {

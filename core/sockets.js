@@ -247,7 +247,7 @@ module.exports = (function () {
           dev.error(`Failed to edit folder: ${err}`);
           notify({
             socket,
-            socketid: socket ? socket.id : undefined,
+            socketid: socket?.id,
             localized_string: `action_not_allowed`,
             not_localized_string: `Error: folder can’t be edited ${slugFolderName} ${err}`,
             type: "error",

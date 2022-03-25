@@ -6,6 +6,7 @@
   "userDirPath": "documents",
   "userDirname": "corpora",
   "cache_content": true,
+  "removePermanently": false,
 
   "contentDirname": "user",
   "cacheDirname": "corpora_cache",
@@ -17,6 +18,11 @@
   "textEncoding": "UTF-8",
   "thumbFolderName": "_thumbs",
   "deletedFolderName": "_bin",
+
+  "ffmpeg_options": {
+    "priority": 0,
+    "timeout": 600
+  },
 
   "mediaThumbQuality": 70,
   "maxFileSizeForUpload": 20000,

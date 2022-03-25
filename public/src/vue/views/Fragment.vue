@@ -361,7 +361,8 @@ export default {
       });
     },
     escClose(e) {
-      if (e.keyCode == 27) this.closeModal();
+      // check if something is fullscreen
+      // if (e.keyCode == 27) this.closeModal();
     },
     addFragmentToColl(metaFileName) {
       const coll = this.sorted_collections.find(
@@ -437,6 +438,8 @@ export default {
     // pointer-events: none;
     padding-top: calc(var(--spacing));
     padding-bottom: calc(var(--spacing));
+    max-width: 500px;
+    margin-inline: auto;
 
     > * {
     }
