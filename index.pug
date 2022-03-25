@@ -1,3 +1,5 @@
+- var path_prefix = mode !== "export_publication" ? "/" : "./_";
+
 doctype html
 html
   head
@@ -12,12 +14,8 @@ html
     link(rel="shortcut icon" type="image/png" href="/favicon.png")
     link(rel="manifest" href="/site.webmanifest")
 
-    - if(mode !== 'export_publication')
-      style.
-        @import "/fonts/fonts.css";
-    - else
-      style.
-        @import "./_fonts/fonts.css";
+    style.
+      @import "!{path_prefix}fonts/fonts.css";
 
     script.
       /*! modernizr 3.5.0 (Custom Build) | MIT *
