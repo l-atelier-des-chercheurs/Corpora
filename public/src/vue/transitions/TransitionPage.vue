@@ -67,7 +67,7 @@ export default {
 
     this.$router.afterEach((to) => {
       this.$nextTick(() => {
-        document.title = to.meta.title ? to.meta.title : "Corpora";
+        if (to.meta.title) document.title = to.meta.title;
       });
     });
   },
