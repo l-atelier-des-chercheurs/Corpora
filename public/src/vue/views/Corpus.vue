@@ -835,6 +835,7 @@ export default {
 
 ._corpusContainer {
   height: 100vh;
+  height: -webkit-fill-available;
   width: 100%;
 
   display: flex;
