@@ -374,7 +374,7 @@ let vm = new Vue({
       // todo actual admin checks
       return (
         // this.$root.state.is_electron ||
-        this.hashCode(this.$root.admin_pwd.toLowerCase()) === 3670
+        auth.hashCode(this.$root.admin_pwd.toLowerCase()) + "" === this.state.ap
       );
     },
 
@@ -427,12 +427,6 @@ let vm = new Vue({
     },
   },
   methods: {
-    hashCode(s) {
-      return s.split("").reduce(function (a, b) {
-        a = (a << 5) - a + b.charCodeAt(0);
-        return a & a;
-      }, 0);
-    },
     setWindowSize() {
       this.settings.windowWidth = window.innerWidth;
       this.settings.windowHeight = window.innerHeight;

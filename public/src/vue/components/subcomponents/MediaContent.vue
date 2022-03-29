@@ -215,7 +215,7 @@
           </template>
         </div>
         <div class="_linkCaption">
-          <a :href="link_url" target="_blank">
+          <a :href="link_url" class="js--openInBrowser" target="_blank">
             {{ link_url }}
           </a>
         </div>
@@ -257,7 +257,11 @@
     </template>
     <template v-else-if="media.type === 'document'">
       <div v-if="context !== 'full'" class="padding-vert-small font-verysmall">
-        <a :href="mediaURL" :download="media.media_filename">
+        <a
+          :href="mediaURL"
+          class="js--openInNativeApp"
+          :download="media.media_filename"
+        >
           <pre>{{ media.media_filename }}</pre>
         </a>
       </div>
@@ -266,7 +270,11 @@
 
     <template v-else-if="media.type === 'other'">
       <div class="font-verysmall">
-        <a :href="mediaURL" :download="media.media_filename">
+        <a
+          :href="mediaURL"
+          class="js--openInNativeApp"
+          :download="media.media_filename"
+        >
           <pre>{{ media.media_filename }}</pre>
         </a>
       </div>
@@ -505,9 +513,8 @@ export default {
         return;
       }
 
-      let timeMark = 0;
       let timeMarkThumbs = this.media.thumbs.filter(
-        (t) => !!t && t.timeMark === 0
+        (t) => !!t && t.timeMark === "00:00:00"
       );
 
       if (!timeMarkThumbs || timeMarkThumbs.length === 0) {
@@ -550,9 +557,8 @@ export default {
         return this.mediaURL;
       }
 
-      let timeMark = 0;
       let timeMarkThumbs = this.media.thumbs.filter(
-        (t) => !!t && t.timeMark === 0
+        (t) => !!t && t.timeMark === "00:00:00"
       );
 
       if (!timeMarkThumbs || timeMarkThumbs.length === 0) {
