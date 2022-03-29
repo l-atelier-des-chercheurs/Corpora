@@ -544,6 +544,7 @@ export default {
     font-size: inherit;
     padding: 0.2em 0.4em;
     // width: 260px;
+    min-height: 1.5rem;
     max-width: none;
   }
 

@@ -1507,6 +1507,10 @@ audio {
         #app:not(.is--wide) & {
           position: relative;
         }
+
+        .mediaContainer iframe {
+          height: 100%;
+        }
       }
       #app.is--wide & {
         width: 90vw;
