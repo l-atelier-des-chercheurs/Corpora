@@ -505,9 +505,8 @@ export default {
         return;
       }
 
-      let timeMark = 0;
       let timeMarkThumbs = this.media.thumbs.filter(
-        (t) => !!t && t.timeMark === 0
+        (t) => !!t && t.timeMark === "00:00:00"
       );
 
       if (!timeMarkThumbs || timeMarkThumbs.length === 0) {
@@ -550,9 +549,8 @@ export default {
         return this.mediaURL;
       }
 
-      let timeMark = 0;
       let timeMarkThumbs = this.media.thumbs.filter(
-        (t) => !!t && t.timeMark === 0
+        (t) => !!t && t.timeMark === "00:00:00"
       );
 
       if (!timeMarkThumbs || timeMarkThumbs.length === 0) {
