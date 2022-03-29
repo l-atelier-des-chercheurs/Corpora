@@ -8,6 +8,7 @@ const sockets = require("./core/sockets"),
   api = require("./core/api"),
   file = require("./core/file"),
   exporter = require("./core/exporter"),
+  auth = require("./core/auth"),
   importer = require("./core/importer"),
   remote_api = require("./core/remote_api");
 
@@ -49,6 +50,7 @@ module.exports = function (app) {
       pageData.url = req.path;
       pageData.protocol = req.protocol;
       pageData.structure = global.settings.structure;
+      pageData.ap = auth.hashCode(global.settings.adminPass);
       pageData.isDebug = dev.isDebug();
 
       pageData.store = Object.keys(global.settings.structure).reduce(
