@@ -485,7 +485,7 @@ export default {
       text-transform: initial;
       pointer-events: auto;
       margin-bottom: 0;
-      margin-right: calc(var(--spacing) / 1);
+      margin-right: calc(var(--spacing) / 2);
 
       line-height: 1;
 
