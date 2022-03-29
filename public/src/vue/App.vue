@@ -888,6 +888,8 @@ audio {
     flex: 1 0 33%;
     min-width: 100px;
     max-width: 260px;
+    min-height: 4em;
+    background: white;
     display: flex;
     justify-content: center;
     align-items: center;
