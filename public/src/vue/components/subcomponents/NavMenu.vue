@@ -66,8 +66,9 @@ export default {
 ._navPages {
   float: right;
   display: flex;
+  flex-flow: row wrap;
   align-items: center;
-  gap: calc(var(--spacing));
+  gap: 0 calc(var(--spacing));
   margin-top: calc(var(--spacing) / 2);
 
   .app.mobile_view & {
