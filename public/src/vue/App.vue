@@ -163,6 +163,10 @@ label:not(.no-style) {
     position: relative;
     z-index: 0;
     // padding: calc(var(--spacing) / 2);
+
+    .app.mobile_view &:empty {
+      display: none;
+    }
   }
 }
 
@@ -463,6 +467,7 @@ input {
 
   &[type="search"],
   &[type="text"],
+  &[type="password"],
   &[type="url"] {
     min-height: 2.2rem;
     &[readonly] {
@@ -473,6 +478,16 @@ input {
   }
   &[type="file"] {
     min-height: 0;
+  }
+}
+
+.switch {
+  display: flex;
+  align-items: center;
+  gap: calc(var(--spacing) / 2);
+
+  input {
+    margin-top: 0;
   }
 }
 
@@ -506,14 +521,6 @@ input[type="checkbox"] {
   &.disabled {
     background-color: var(--color-black);
     cursor: not-allowed;
-  }
-}
-.input-checkbox {
-  display: flex;
-  flex-flow: row nowrap;
-  align-items: center;
-  label {
-    margin-bottom: 0;
   }
 }
 

@@ -604,7 +604,7 @@ export default {
     position: relative;
     pointer-events: auto;
     padding: calc(var(--spacing) / 2) 0 calc(var(--spacing));
-    margin: calc(var(--spacing) * 1) 0 0;
+    margin: calc(var(--spacing) * 1) 0;
     border-top: 1px solid var(--color-blue);
     border-bottom: 1px solid var(--color-blue);
     background: white;
@@ -785,7 +785,7 @@ export default {
 }
 
 ._comments {
-  margin-top: calc(var(--spacing) * 2);
+  margin: calc(var(--spacing) * 1) 0;
   background: white;
   padding: calc(var(--spacing)) calc(var(--spacing));
   border-top: 1px solid var(--color-blue);
