@@ -168,8 +168,8 @@
                   v-if="fragments_pane_scrolled > 150"
                 >
                   <svg
-                    width="40"
-                    height="40"
+                    width="30"
+                    height="30"
                     xmlns="http://www.w3.org/2000/svg"
                     stroke="currentColor"
                     fill="none"
@@ -952,15 +952,24 @@ h1 {
     // height: 4em;
     background-color: var(--color-lightgray);
 
-    box-shadow: 0 0 0.75rem 0.75rem var(--color-lightgray),
+    box-shadow: 0 0 0.5rem 0.5rem var(--color-lightgray),
       0 0 1rem 1rem var(--color-lightgray) inset;
-    // padding: calc(var(--spacing) * 1);
+    padding: calc(var(--spacing) / 2);
     border-radius: 100%;
-    margin-bottom: calc(var(--spacing) * 1);
+    margin-bottom: calc(var(--spacing) / 2);
     pointer-events: auto;
 
     svg {
-      // transform: rotate(90deg);
+      transform: rotate(-90deg);
+      transition: all 0.4s cubic-bezier(0.19, 1, 0.22, 1);
+    }
+
+    @media (hover: hover) {
+      &:hover {
+        svg {
+          transform: translateY(-5px) rotate(-90deg) !important;
+        }
+      }
     }
   }
 }

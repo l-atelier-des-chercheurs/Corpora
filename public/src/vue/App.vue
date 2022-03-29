@@ -470,6 +470,7 @@ input {
   &[type="password"],
   &[type="url"] {
     min-height: 2.2rem;
+    border-bottom: 2px solid transparent;
     &[readonly] {
       cursor: not-allowed;
       border-color: var(--color-lightgray);
