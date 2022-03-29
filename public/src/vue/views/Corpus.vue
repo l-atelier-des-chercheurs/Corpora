@@ -853,6 +853,10 @@ export default {
     .app.mobile_view & {
       padding: calc(var(--spacing) * 1) calc(var(--spacing) * 2)
         calc(var(--spacing) * 1) calc(var(--spacing) * 1);
+
+      h1 {
+        margin-top: 0;
+      }
     }
   }
 
@@ -861,7 +865,7 @@ export default {
     transition: all 0.8s cubic-bezier(0.19, 1, 0.22, 1);
 
     &.is--collapsed {
-      transform: translateX(calc(100% - calc(var(--spacing) * 3.5)));
+      transform: translateX(calc(100% - calc(var(--spacing) * 2)));
     }
 
     ._corpusContainer--rightCont--container {
@@ -875,7 +879,7 @@ export default {
       z-index: 10000;
       right: 0;
       width: 100%;
-      padding-left: calc(var(--spacing) * 2);
+      padding-left: calc(var(--spacing) * 1);
       // padding-top: calc(var(--spacing) * 2);
       // padding-bottom: calc(var(--spacing) * 2);
 
@@ -966,8 +970,9 @@ h1 {
 ._uncollapseButton {
   position: absolute;
   right: 100%;
-  top: calc(var(--spacing) * 2);
+  top: calc(var(--spacing) * 0.7);
   color: var(--active-color);
+  margin-right: calc(var(--spacing) / -4);
 }
 ._collapseButton {
   position: absolute;

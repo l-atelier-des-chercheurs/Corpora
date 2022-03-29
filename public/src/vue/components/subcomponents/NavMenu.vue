@@ -69,5 +69,9 @@ export default {
   align-items: center;
   gap: calc(var(--spacing));
   margin-top: calc(var(--spacing) / 2);
+
+  .app.mobile_view & {
+    float: none;
+  }
 }
 </style>
