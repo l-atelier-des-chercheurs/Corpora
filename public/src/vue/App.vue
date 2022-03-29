@@ -50,6 +50,8 @@ export default {
   --font-size-small: 0.7rem;
   --font-size-large: 1.25rem;
   // --body-bg: var(--color-lightgray);
+
+  --vh: 1vh;
 }
 
 body {
