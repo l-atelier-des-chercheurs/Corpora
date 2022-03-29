@@ -31,13 +31,13 @@
       </ul>
       <h3>Vos données personnelles</h3>
       <p>
-        Ce site est un dispositif expérimental développé par<a
-          href="https://latelier-des-chercheurs.fr"
+        Ce site est un dispositif expérimental développé par
+        <a class="js--openInBrowser" href="https://latelier-des-chercheurs.fr"
+          >l'Atelier des chercheurs</a
         >
-          l'Atelier des chercheurs</a
-        >
-        et<a href="https://plurality-university.org">
-          le Réseau Université de la Pluralité</a
+        et
+        <a class="js--openInBrowser" href="https://plurality-university.org"
+          >le Réseau Université de la Pluralité</a
         >
         pour constituer collectivement des corpus d'&oelig;uvres et de
         connaissances.
