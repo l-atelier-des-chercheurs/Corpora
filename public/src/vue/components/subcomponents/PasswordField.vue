@@ -113,7 +113,7 @@ export default {
   background-color: #f1f1f1;
   // line-height: 1.7;
   // padding: 15px;
-  font-size: 2em;
+  font-size: 0.7rem;
   flex-shrink: 0;
   // width: 2em;
   // height: 2em;

@@ -238,8 +238,8 @@ let vm = new Vue({
     fragments_read: [],
 
     settings: {
-      windowWidth: window.innerWidth,
-      windowHeight: window.innerHeight,
+      windowWidth: undefined,
+      windowHeight: undefined,
       enable_system_bar: window.state.is_electron && window.state.is_darwin,
       text_media_being_edited: false,
       load_all_embeds: localstore.get("load_all_embeds_option")
@@ -266,9 +266,9 @@ let vm = new Vue({
       console.log("ROOT EVENT: created / checking for password");
 
     window.addEventListener("resize", () => {
-      this.settings.windowWidth = window.innerWidth;
-      this.settings.windowHeight = window.innerHeight;
+      this.setWindowSize();
     });
+    this.setWindowSize();
 
     this.currentTime = this.$moment().millisecond(0);
     setInterval(() => (this.currentTime = this.$moment().millisecond(0)), 1000);
@@ -432,6 +432,13 @@ let vm = new Vue({
         a = (a << 5) - a + b.charCodeAt(0);
         return a & a;
       }, 0);
+    },
+    setWindowSize() {
+      this.settings.windowWidth = window.innerWidth;
+      this.settings.windowHeight = window.innerHeight;
+      // from https://www.alsacreations.com/astuce/lire/1831-corriger-le-probleme-de-hauteur-100vh-sur-mobile.html
+      const vh = window.innerHeight * 0.01;
+      document.documentElement.style.setProperty("--vh", `${vh}px`);
     },
     alreadyVisited({ slugFolderName, fragmentId }) {
       const fullPath = `${slugFolderName}/${fragmentId}`;
