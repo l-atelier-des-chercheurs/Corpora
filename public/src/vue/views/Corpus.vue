@@ -158,31 +158,31 @@
                 />
               </div>
             </transition>
-          </div>
 
-          <div class="_scrollTop">
-            <transition name="slide-up">
-              <button
-                type="button"
-                :title="$t('scroll_to_top')"
-                @click="scrollToTop"
-                v-if="fragments_pane_scrolled > 150"
-              >
-                <svg
-                  width="40"
-                  height="40"
-                  xmlns="http://www.w3.org/2000/svg"
-                  stroke="currentColor"
-                  fill="none"
-                  stroke-linecap="square"
-                  style="transform: rotate(-90deg)"
+            <div class="_scrollTop">
+              <transition name="slide-up">
+                <button
+                  type="button"
+                  :title="$t('scroll_to_top')"
+                  @click="scrollToTop"
+                  v-if="fragments_pane_scrolled > 150"
                 >
-                  <line x1="0" y1="50%" x2="100%" y2="50%" />
-                  <line x1="75%" y1="25%" x2="100%" y2="50%" />
-                  <line x1="75%" y1="75%" x2="100%" y2="50%" />
-                </svg>
-              </button>
-            </transition>
+                  <svg
+                    width="40"
+                    height="40"
+                    xmlns="http://www.w3.org/2000/svg"
+                    stroke="currentColor"
+                    fill="none"
+                    stroke-linecap="square"
+                    style="transform: rotate(-90deg)"
+                  >
+                    <line x1="0" y1="50%" x2="100%" y2="50%" />
+                    <line x1="75%" y1="25%" x2="100%" y2="50%" />
+                    <line x1="75%" y1="75%" x2="100%" y2="50%" />
+                  </svg>
+                </button>
+              </transition>
+            </div>
           </div>
 
           <footer class="_bottomFooter">
@@ -729,6 +729,7 @@ export default {
 </script>
 <style lang="scss" scoped>
 .m_corpus {
+  position: relative;
   scroll-behavior: smooth;
   // min-height: 50vh;
 
@@ -937,7 +938,7 @@ h1 {
 }
 
 ._scrollTop {
-  position: absolute;
+  position: sticky;
   z-index: 10;
   bottom: 0;
   left: 0;
@@ -951,11 +952,11 @@ h1 {
     // height: 4em;
     background-color: var(--color-lightgray);
 
-    box-shadow: 0 0 1rem 1rem var(--color-lightgray),
+    box-shadow: 0 0 0.75rem 0.75rem var(--color-lightgray),
       0 0 1rem 1rem var(--color-lightgray) inset;
     // padding: calc(var(--spacing) * 1);
     border-radius: 100%;
-    margin-bottom: calc(var(--spacing) * 0.5);
+    margin-bottom: calc(var(--spacing) * 1);
     pointer-events: auto;
 
     svg {
