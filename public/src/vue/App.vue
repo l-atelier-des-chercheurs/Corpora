@@ -56,7 +56,6 @@ export default {
 
 body {
   position: relative;
-  overflow: hidden;
   background-color: var(--body-bg);
   color: var(--color-black);
   margin: 0;
