@@ -1706,7 +1706,8 @@ audio {
       }
     }
 
-    img {
+    img,
+    iframe {
       position: absolute;
       top: 0;
       right: 0;
@@ -1714,6 +1715,8 @@ audio {
       width: 100%;
       object-fit: scale-down;
       object-position: center;
+    }
+    iframe {
     }
 
     .plyr--video,

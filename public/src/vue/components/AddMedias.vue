@@ -404,7 +404,7 @@ export default {
         flex-flow: row wrap;
         align-items: center;
         justify-content: center;
-        gap: calc(var(--spacing) / 2);
+        gap: calc(var(--spacing) / 4);
         // margin-bottom: calc(var(--spacing) / 4);
 
         > button,
@@ -485,7 +485,7 @@ export default {
       text-transform: initial;
       pointer-events: auto;
       margin-bottom: 0;
-      margin-right: calc(var(--spacing) / 2);
+      // margin-right: calc(var(--spacing) / 2);
 
       line-height: 1;
 
