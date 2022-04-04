@@ -56,7 +56,6 @@ export default {
 
 body {
   position: relative;
-  overflow: hidden;
   background-color: var(--body-bg);
   color: var(--color-black);
   margin: 0;
@@ -1707,7 +1706,8 @@ audio {
       }
     }
 
-    img {
+    img,
+    iframe {
       position: absolute;
       top: 0;
       right: 0;
@@ -1715,6 +1715,8 @@ audio {
       width: 100%;
       object-fit: scale-down;
       object-position: center;
+    }
+    iframe {
     }
 
     .plyr--video,
