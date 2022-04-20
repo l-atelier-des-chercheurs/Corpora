@@ -506,6 +506,8 @@ export default {
         display: flex;
         justify-content: center;
 
+        transform: rotate(0deg) !important;
+
         svg {
           display: none;
         }
