@@ -199,6 +199,10 @@ module.exports = (function () {
               if (window.store[type].hasOwnProperty(slugFolderName)) {
                 window.store[type][slugFolderName].medias =
                   content[slugFolderName].medias;
+              } else {
+                window.store[type][slugFolderName] = {
+                  medias: content[slugFolderName].medias,
+                };
               }
             }
             this.$eventHub.$emit(`socketio.${type}.medias_listed`);
