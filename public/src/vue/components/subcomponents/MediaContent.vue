@@ -257,6 +257,8 @@
     </template>
     <template v-else-if="media.type === 'document'">
       <div v-if="context !== 'full'" class="padding-vert-small font-verysmall">
+        <img :src="linkToPageThumb" loading="lazy" draggable="false" />
+
         <a
           :href="mediaURL"
           class="js--openInNativeApp"
@@ -575,7 +577,33 @@ export default {
           : "/" + pathToSmallestThumb;
       return pathToSmallestThumb !== undefined ? url : this.mediaURL;
     },
+    linkToPageThumb() {
+      if (
+        !this.media["thumbs"] ||
+        (typeof this.media.thumbs === "object" &&
+          this.media.thumbs.length === 0)
+      ) {
+        return this.mediaURL;
+      }
+
+      let timeMarkThumbs = this.media.thumbs.filter((t) => !!t && t.page === 0);
+
+      if (!timeMarkThumbs || timeMarkThumbs.length === 0) {
+        return this.mediaURL;
+      }
+
+      let pathToSmallestThumb = timeMarkThumbs[0].thumbsData.filter(
+        (m) => m.size === this.thumbRes
+      )[0].path;
+
+      let url =
+        this.$root.state.mode === "export_publication"
+          ? "./" + pathToSmallestThumb
+          : "/" + pathToSmallestThumb;
+      return pathToSmallestThumb !== undefined ? url : this.mediaURL;
+    },
   },
+
   methods: {
     volumeChanged(event) {
       const vol = Math.round(Number(event.detail.plyr.volume) * 100);
