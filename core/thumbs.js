@@ -8,6 +8,8 @@ const path = require("path"),
   fetch = require("node-fetch"),
   https = require("https");
 
+const { BrowserWindow } = require("electron");
+
 sharp.cache(false);
 
 const dev = require("./dev-log"),
@@ -950,6 +952,8 @@ module.exports = (function () {
 
           screenshotWebsite({
             url,
+            width: 2100 / 4,
+            height: 2970 / 4,
           })
             .then((image) => {
               fs.writeFile(fullScreenshotPath, image.toPNG(1.0), (error) => {
@@ -1087,7 +1091,6 @@ module.exports = (function () {
     return new Promise((resolve, reject) => {
       dev.logfunction(`THUMBS — _getPageMetadata : ${url}`);
 
-      const { BrowserWindow } = require("electron");
       let win = new BrowserWindow({
         show: false,
       });
@@ -1300,34 +1303,41 @@ module.exports = (function () {
     });
   }
 
-  function screenshotWebsite({ url }) {
+  function screenshotWebsite({ url, width = 1800, height = 1800 }) {
     return new Promise(function (resolve, reject) {
-      dev.logfunction(`THUMBS — screenshotWebsite url ${url}`);
+      dev.logfunction(
+        `THUMBS — screenshotWebsite url ${url} width ${width} height ${height}`
+      );
 
-      const { BrowserWindow } = require("electron");
+      width = Math.round(width);
+      height = Math.round(height);
 
       let win = new BrowserWindow({
         // width: 800,
         // height: 600,
-        width: 1800,
-        height: 1800,
+        width,
+        height,
         show: false,
+        enableLargerThanScreen: true,
         webPreferences: {
-          contextIsolation: true,
-          allowRunningInsecureContent: true,
+          plugins: true,
+          // offscreen: true,
+          // contextIsolation: true,
+          // allowRunningInsecureContent: true,
         },
       });
       win.loadURL(url);
+      win.webContents.setAudioMuted(true);
 
-      win.webContents.on("did-stop-loading", async () => {
-        dev.logverbose(`THUMBS — _makeSTLScreenshot : finished loading page`);
+      win.webContents.once("ready-to-show", async () => {
+        dev.logverbose(`THUMBS — screenshotWebsite : finished loading page`);
         // Use default printing options
         setTimeout(() => {
-          win.capturePage().then((image) => {
+          win.webContents.capturePage().then((image) => {
             if (win) win.close();
             return resolve(image);
           });
-        }, 1000);
+        }, 3_000);
       });
       win.webContents.on("did-fail-load", (err) => {
         if (win) win.close();
