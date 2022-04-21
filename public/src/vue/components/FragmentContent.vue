@@ -4,6 +4,7 @@
     :class="{
       'is--preview': context === 'preview',
       'was--read': already_read,
+      'is--fullsizepreview': show_preview_fullsize,
     }"
   >
     <div
@@ -240,7 +241,7 @@
           </router-link>
         </template>
       </div>
-      <div class="_comments">
+      <div class="_comments" v-if="context !== 'preview'">
         {{ $t("comment") }}
         <div>
           <small v-if="!fragment.comments" class="text-gray">
@@ -293,6 +294,8 @@ export default {
     return {
       show_advanced_meta: false,
       show_edit_fragment: false,
+
+      show_preview_fullsize: true,
 
       random_angle: (Math.random() - 0.5) * 4,
       slide_on_hover: 1,
@@ -515,15 +518,6 @@ export default {
     margin-top: var(--move_top_for_slide);
     padding-top: calc(-1 * var(--move_top_for_slide));
 
-    width: calc(100% + var(--slide_on_hover));
-    margin-left: calc(-0.5 * var(--slide_on_hover));
-    margin-right: calc(-0.5 * var(--slide_on_hover));
-    padding-left: calc(0.5 * var(--slide_on_hover));
-    padding-right: calc(0.5 * var(--slide_on_hover));
-
-    border-bottom-left-radius: 0;
-    border-bottom-right-radius: 0;
-
     // box-shadow: 0px 0px 4px 0px rgba(204, 208, 218, 0.8);
 
     &::after {
@@ -608,7 +602,7 @@ export default {
     padding: calc(var(--spacing) / 2) 0 calc(var(--spacing));
     margin: calc(var(--spacing) * 1) 0;
     border-top: 1px solid var(--color-blue);
-    border-bottom: 1px solid var(--color-blue);
+    // border-bottom: 1px solid var(--color-blue);
     background: white;
 
     transition: all 0.4s cubic-bezier(0.19, 1, 0.22, 1);
@@ -803,6 +797,50 @@ export default {
 ._fragmentPreview--media {
   .mediaTextContent {
     font-size: 1em;
+  }
+}
+
+.m_fragmentContent.is--fullsizepreview .m_fragmentContent--content {
+  --preview_height: none !important;
+  height: auto;
+  // aspect-ratio: 21 / 29.7;
+
+  .m_fragmentContent--content--inner {
+    padding: 0;
+  }
+  .m_fragmentContent--content--inner--top {
+    position: absolute;
+    top: 0;
+    padding-top: calc(var(--spacing) / 2);
+
+    background: linear-gradient(#fff 0%, #fff 50%, transparent);
+
+    width: 100%;
+    z-index: 1;
+
+    ._title {
+      height: 2.5em !important;
+    }
+  }
+
+  ._fragmentPreview {
+    position: relative;
+    top: 0;
+    left: 0;
+
+    > * {
+      margin: 0;
+      padding: 0;
+    }
+
+    .mediaContainer > * {
+      margin: 0;
+      padding: 0;
+    }
+  }
+
+  &::after {
+    display: none !important;
   }
 }
 </style>
