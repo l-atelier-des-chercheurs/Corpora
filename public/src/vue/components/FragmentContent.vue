@@ -339,6 +339,8 @@ export default {
       preview = this.linked_medias.find((m) => m.type === "image");
 
       // if none, get first text
+      if (!preview)
+        preview = this.linked_medias.find((m) => m.type === "document");
       if (!preview) preview = this.linked_medias.find((m) => m.type === "text");
 
       // if none, then too bad
