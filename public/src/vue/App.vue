@@ -864,6 +864,16 @@ audio {
   &.type-embed {
     // background-color: rgba(141, 141, 141, 0.1);
   }
+
+  &.type-document {
+    > * {
+      // margin: calc(var(--spacing) / 2);
+    }
+    img {
+      border: 1px solid var(--color-lightgray);
+      // box-shadow: 0 0 0.5rem 0rem var(--color-gray);
+    }
+  }
 }
 
 // .m_keywordField {
@@ -1762,6 +1772,7 @@ audio {
         height: 50%;
       }
     }
+
     &.type-other {
       color: var(--color-black);
 
