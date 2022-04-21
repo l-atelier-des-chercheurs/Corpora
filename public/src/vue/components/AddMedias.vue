@@ -496,10 +496,21 @@ export default {
       }
 
       &.is--dragover {
-        width: 120px;
+        width: 100%;
         // height: 64px;
-        padding: calc(var(--spacing) / 4);
+        background: var(--color-blue);
+        color: white;
+        padding: calc(var(--spacing) / 1);
         margin: 0;
+
+        display: flex;
+        justify-content: center;
+
+        transform: rotate(0deg) !important;
+
+        svg {
+          display: none;
+        }
       }
 
       &.is--shown {
@@ -510,19 +521,6 @@ export default {
     &.is--showing_options {
       // background-color: #999;
     }
-  }
-
-  .m_addMedias--dropContainer {
-    position: absolute;
-    z-index: 0;
-    bottom: 0;
-    right: 0;
-
-    border-radius: 6px;
-
-    width: 120px;
-    // height: 120px;
-    background-color: var(--color-black);
   }
 
   input[type="file"] {

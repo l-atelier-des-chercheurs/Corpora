@@ -592,14 +592,13 @@ export default {
   methods: {
     loadCorpus() {
       this.is_loading_medias = true;
-
       this.$nextTick(() => {
         this.$socketio.listMedias({
           type: "corpus",
           slugFolderName: this.$route.params.slugFolderName,
         });
         this.$eventHub.$once(`socketio.corpus.medias_listed`, () => {
-          if (this.corpus.corpus_default_view) {
+          if (this.corpus && this.corpus.corpus_default_view) {
             // only redirect if homepage
             if (
               // this.$route.name === "Corpus" &&

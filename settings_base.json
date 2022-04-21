@@ -144,6 +144,7 @@
               "text",
               "embed",
               "link",
+              "stl",
               "document",
               "fragment",
               "collection",
