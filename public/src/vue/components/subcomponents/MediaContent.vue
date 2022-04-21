@@ -259,13 +259,13 @@
       <div v-if="context !== 'full'" class="padding-vert-small font-verysmall">
         <img :src="linkToPageThumb" loading="lazy" draggable="false" />
 
-        <a
+        <!-- <a
           :href="mediaURL"
           class="js--openInNativeApp"
           :download="media.media_filename"
         >
           <pre>{{ media.media_filename }}</pre>
-        </a>
+        </a> -->
       </div>
       <iframe v-else :src="mediaURL" />
     </template>
