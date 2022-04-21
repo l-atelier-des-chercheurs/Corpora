@@ -950,10 +950,19 @@ module.exports = (function () {
         if (!exists) {
           const url = `${global.appInfos.homeURL}/${slugFolderName}/${filename}`;
 
+          const padding = 6;
+          const top_toolbar_height = 54;
+
           screenshotWebsite({
             url,
-            width: 2100 / 4,
-            height: 2970 / 4,
+            width: 2100 / 3 + padding,
+            height: 2970 / 3 + top_toolbar_height,
+            rect: {
+              x: padding,
+              y: top_toolbar_height + padding,
+              width: 2100 / 3 - padding * 2,
+              height: 2970 / 3 - padding * 2 - 2,
+            },
           })
             .then((image) => {
               fs.writeFile(fullScreenshotPath, image.toPNG(1.0), (error) => {
@@ -1303,10 +1312,12 @@ module.exports = (function () {
     });
   }
 
-  function screenshotWebsite({ url, width = 1800, height = 1800 }) {
+  function screenshotWebsite({ url, width = 1800, height = 1800, rect }) {
     return new Promise(function (resolve, reject) {
       dev.logfunction(
-        `THUMBS — screenshotWebsite url ${url} width ${width} height ${height}`
+        `THUMBS — screenshotWebsite url ${url} width ${width} height ${height} rect ${JSON.stringify(
+          rect
+        )}`
       );
 
       width = Math.round(width);
@@ -1319,6 +1330,7 @@ module.exports = (function () {
         height,
         show: false,
         enableLargerThanScreen: true,
+        frame: false,
         webPreferences: {
           plugins: true,
           // offscreen: true,
@@ -1331,9 +1343,10 @@ module.exports = (function () {
 
       win.webContents.once("ready-to-show", async () => {
         dev.logverbose(`THUMBS — screenshotWebsite : finished loading page`);
-        // Use default printing options
+        // win.webContents.insertCSS(`embed { top: -70px; }`);
+
         setTimeout(() => {
-          win.webContents.capturePage().then((image) => {
+          win.webContents.capturePage(rect).then((image) => {
             if (win) win.close();
             return resolve(image);
           });
