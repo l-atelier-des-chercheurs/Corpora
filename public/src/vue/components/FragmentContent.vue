@@ -4,7 +4,7 @@
     :class="{
       'is--preview': context === 'preview',
       'was--read': already_read,
-      'is--fullsizepreview': show_preview_fullsize,
+      'is--fullsizepreview': context === 'preview' && show_preview_fullsize,
     }"
   >
     <div
@@ -339,11 +339,9 @@ export default {
       let preview = undefined;
 
       // find first image
-      preview = this.linked_medias.find((m) => m.type === "image");
-
-      // if none, get first text
-      if (!preview)
-        preview = this.linked_medias.find((m) => m.type === "document");
+      preview = this.linked_medias.find(
+        (m) => m.type === "image" || m.type === "document"
+      );
       if (!preview) preview = this.linked_medias.find((m) => m.type === "text");
 
       // if none, then too bad
