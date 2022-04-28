@@ -4,7 +4,6 @@ var http = require("http");
 var https = require("https");
 var fs = require("fs");
 var path = require("path");
-var bodyParser = require("body-parser");
 const compression = require("compression");
 const socketio = require("socket.io");
 
