@@ -295,7 +295,7 @@ export default {
       show_advanced_meta: false,
       show_edit_fragment: false,
 
-      show_preview_fullsize: true,
+      show_preview_fullsize: false,
 
       random_angle: (Math.random() - 0.5) * 4,
       slide_on_hover: 1,
