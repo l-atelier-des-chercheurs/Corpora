@@ -177,6 +177,38 @@
           />
         </div>
       </div>
+
+      <template v-for="adv_prop in adv_props" v-if="$root.state.scpo">
+        <div
+          :key="adv_prop.key"
+          class="m_fragmentMedia--infos--caption"
+          v-if="is_being_edited || media[adv_prop.key]"
+        >
+          <label
+            ><strong>{{ $t(adv_prop.key) }}</strong></label
+          >
+          <div>
+            <template v-if="adv_prop.type === 'text'">
+              <span v-if="!is_being_edited" v-text="media[adv_prop.key]" />
+              <input
+                v-else
+                type="text"
+                v-model="mediadata[adv_prop.key]"
+                placeholder="…"
+              />
+            </template>
+            <template v-else-if="adv_prop.type === 'toggle'">
+              <span v-if="!is_being_edited" v-text="media[adv_prop.key]" />
+              <input
+                v-else
+                type="checkbox"
+                v-model="mediadata[adv_prop.key]"
+                placeholder="…"
+              />
+            </template>
+          </div>
+        </div>
+      </template>
     </div>
     <div
       class="m_advancedMenu"
@@ -304,7 +336,36 @@ export default {
         caption: this.media.caption,
         source: this.media.source,
         content: this.media.content,
+
+        type_of_document: this.media.type_of_document,
+        date_of_document: this.media.date_of_document,
+        origin_of_document: this.media.origin_of_document,
+        authors_of_document: this.media.authors_of_document,
+        activated_document: this.media.activated_document,
       },
+
+      adv_props: [
+        {
+          key: "type_of_document",
+          type: "text",
+        },
+        {
+          key: "date_of_document",
+          type: "text",
+        },
+        {
+          key: "origin_of_document",
+          type: "text",
+        },
+        {
+          key: "authors_of_document",
+          type: "text",
+        },
+        {
+          key: "activated_document",
+          type: "toggle",
+        },
+      ],
 
       is_hovered: false,
 

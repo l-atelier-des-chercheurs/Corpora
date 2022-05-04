@@ -51,6 +51,7 @@ module.exports = function (app) {
       pageData.protocol = req.protocol;
       pageData.structure = global.settings.structure;
       pageData.ap = auth.hashCode(global.settings.adminPass);
+      pageData.scpo = global.settings.scpo;
       pageData.isDebug = dev.isDebug();
 
       pageData.store = Object.keys(global.settings.structure).reduce(

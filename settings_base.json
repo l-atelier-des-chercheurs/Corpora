@@ -11,6 +11,7 @@
 
   "contentDirname": "user",
   "cacheDirname": "corpora_cache",
+  "scpo": false,
 
   "privateKeyPath": "",
   "certificatePath": "",
@@ -129,6 +130,22 @@
           "source": {
             "type": "string"
           },
+          "type_of_document": {
+            "type": "string"
+          },
+          "date_of_document": {
+            "type": "string"
+          },
+          "origin_of_document": {
+            "type": "string"
+          },
+          "authors_of_document": {
+            "type": "string"
+          },
+          "activated_document": {
+            "type": "boolean"
+          },
+
           "comments": {
             "type": "string"
           },
