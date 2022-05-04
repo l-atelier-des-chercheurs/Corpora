@@ -304,6 +304,11 @@ export default {
         caption: this.media.caption,
         source: this.media.source,
         content: this.media.content,
+
+        type_of_document: this.media.type_of_document,
+        date_of_document: this.media.date_of_document,
+        origin_of_document: this.media.origin_of_document,
+        activated_document: this.media.activated_document,
       },
 
       is_hovered: false,
