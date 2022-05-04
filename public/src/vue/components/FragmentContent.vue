@@ -318,8 +318,7 @@ export default {
         .duration(
           this.$moment(this.$root.currentTime)
             .utc()
-            .add(1, "hours")
-            .diff(this.$moment.utc(this.fragment.date_created))
+            .diff(this.$moment(this.fragment.date_created).zone("Europe/Paris"))
         )
         .asMinutes();
       return Math.floor(ellapsed);
