@@ -11,6 +11,7 @@
 
   "contentDirname": "user",
   "cacheDirname": "corpora_cache",
+  "scpo": false,
 
   "privateKeyPath": "",
   "certificatePath": "",

@@ -284,7 +284,22 @@ module.exports = (function () {
       en: "Password",
     },
     close_the_window: {
-      fr: "Annul",
+      fr: "Annuler",
+    },
+    type_of_document: {
+      fr: "Type de document",
+    },
+    date_of_document: {
+      fr: "Date",
+    },
+    origin_of_document: {
+      fr: "Origine",
+    },
+    authors_of_document: {
+      fr: "Auteur.e.s",
+    },
+    activated_document: {
+      fr: "Activé",
     },
     caption: {
       fr: "Légende",
