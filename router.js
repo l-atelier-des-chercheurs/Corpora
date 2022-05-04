@@ -52,6 +52,8 @@ module.exports = function (app) {
       pageData.structure = global.settings.structure;
       pageData.ap = auth.hashCode(global.settings.adminPass);
       pageData.scpo = global.settings.scpo;
+      pageData.editable_timeframe_minutes =
+        global.settings.editable_timeframe_minutes;
       pageData.isDebug = dev.isDebug();
 
       pageData.store = Object.keys(global.settings.structure).reduce(

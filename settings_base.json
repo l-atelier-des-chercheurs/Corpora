@@ -12,6 +12,7 @@
   "contentDirname": "user",
   "cacheDirname": "corpora_cache",
   "scpo": false,
+  "editable_timeframe_minutes": 30,
 
   "privateKeyPath": "",
   "certificatePath": "",

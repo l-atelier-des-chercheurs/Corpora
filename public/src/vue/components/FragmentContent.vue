@@ -104,7 +104,8 @@
           <div
             v-if="
               !$root.can_admin_corpora &&
-              fragment_was_created_x_minutes_ago < 30
+              fragment_was_created_x_minutes_ago <
+                $root.state.editable_timeframe_minutes
             "
             class="_editingNotice"
           >
@@ -112,7 +113,8 @@
               v-html="
                 $t('available_30_minutes_after_creation,still') +
                 ' ' +
-                (30 - fragment_was_created_x_minutes_ago) +
+                ($root.state.editable_timeframe_minutes -
+                  fragment_was_created_x_minutes_ago) +
                 ')'
               "
             />
@@ -307,10 +309,12 @@ export default {
   watch: {},
   computed: {
     fragment_can_be_edited() {
+      if (this.context !== "edit") return false;
+      if (this.$root.can_admin_corpora) return true;
+      if (!this.$root.state.editable_timeframe_minutes) return true;
       return (
-        this.context === "edit" &&
-        (this.$root.can_admin_corpora ||
-          this.fragment_was_created_x_minutes_ago < 30)
+        this.fragment_was_created_x_minutes_ago <
+        this.$root.state.editable_timeframe_minutes
       );
     },
     fragment_was_created_x_minutes_ago() {
@@ -318,8 +322,7 @@ export default {
         .duration(
           this.$moment(this.$root.currentTime)
             .utc()
-            .add(1, "hours")
-            .diff(this.$moment.utc(this.fragment.date_created))
+            .diff(this.$moment(this.fragment.date_created).zone("Europe/Paris"))
         )
         .asMinutes();
       return Math.floor(ellapsed);
