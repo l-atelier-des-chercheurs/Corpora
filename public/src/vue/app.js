@@ -374,7 +374,7 @@ let vm = new Vue({
       // todo actual admin checks
       return (
         // this.$root.state.is_electron ||
-        auth.hashCode(this.$root.admin_pwd.toLowerCase()) + "" === this.state.ap
+        auth.hashCode(this.$root.admin_pwd) + "" === this.state.ap
       );
     },
 
