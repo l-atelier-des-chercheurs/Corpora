@@ -35,20 +35,21 @@
         <CollectMode v-model="fragmentdata.contribution_moment" />
       </div> -->
 
-      <div
-        class="margin-bottom-small admin_cat fullWidth"
-        v-if="$root.can_admin_corpora"
-      >
-        <label>{{ $t("tags") }} (admin)</label>
+      <div class="margin-bottom-small admin_cat fullWidth">
+        <label>{{ $t("tag") }}</label>
         <div class="custom-select">
           <select v-model="fragmentdata.category">
-            <option v-html="'—'" value="" />
+            <option v-html="'(aucune)'" value="" />
             <option
               v-for="(tag, index) in all_tags_rightly_formatted"
               :key="index"
               v-html="tag.text"
             />
-            <option v-html="$t('new_cat')" value="new" />
+            <option
+              v-if="$root.can_admin_corpora"
+              v-html="$t('new_cat')"
+              value="new"
+            />
           </select>
         </div>
 
@@ -70,7 +71,7 @@
         <label>{{ $t("keywords") }}</label>
         <TagsInput
           :allKeywords="all_keywords_rightly_formatted"
-          :allow_new_terms="$root.can_admin_corpora"
+          :allow_new_terms="true"
           :type="'keywords'"
           :keywords="fragmentdata.keywords"
           :placeholder="$t('add_keyword')"
