@@ -545,6 +545,10 @@ module.exports = (function () {
       fr: "Catégories",
       en: "Categories",
     },
+    tag: {
+      fr: "Catégorie",
+      en: "Categorie",
+    },
     new_cat_name: {
       fr: "Nom de la nouvelle catégorie",
       en: "Name of the new category",

@@ -36,6 +36,14 @@
         :placeholder="placeholder ? placeholder : $t('add_keyword')"
         @keydown.enter.prevent="createTag"
       />
+      <small
+        v-if="tag"
+        :class="{
+          'is--warning': tag.length > 20,
+        }"
+        >{{ tag.length }} ≤ 20 char</small
+      >
+      <br />
       <button
         type="button"
         @click="createTag"
@@ -45,13 +53,6 @@
         + {{ $t("add") }}
       </button>
     </div>
-    <small
-      v-if="tag"
-      :class="{
-        'is--warning': tag.length > 20,
-      }"
-      >{{ tag.length }} ≤ 20 char</small
-    >
 
     <div
       v-if="matchingKeywords.length > 0"
