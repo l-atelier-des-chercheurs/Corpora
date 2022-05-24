@@ -51,7 +51,6 @@ module.exports = function (app) {
       pageData.protocol = req.protocol;
       pageData.structure = global.settings.structure;
       pageData.ap = auth.hashCode(global.settings.adminPass);
-      pageData.scpo = global.settings.scpo;
       pageData.editable_timeframe_minutes =
         global.settings.editable_timeframe_minutes;
       pageData.isDebug = dev.isDebug();

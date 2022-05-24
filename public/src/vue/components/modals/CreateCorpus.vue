@@ -59,6 +59,21 @@
           />
         </div>
       </div>
+
+      <div class="margin-bottom-small">
+        <label>{{ $t("advanced_data_on_medias") }}</label>
+        <input
+          type="checkbox"
+          v-model.trim="corpusdata.advanced_data_on_medias"
+        />
+      </div>
+      <div class="margin-bottom-small">
+        <label>{{ $t("full_fragment_previews") }}</label>
+        <input
+          type="checkbox"
+          v-model.trim="corpusdata.full_fragment_previews"
+        />
+      </div>
     </template>
 
     <template slot="submit_button">{{ $t("create") }}</template>
@@ -95,6 +110,8 @@ export default {
         description: "",
         password: "",
         keywords: [],
+        advanced_data_on_medias: false,
+        full_fragment_previews: false,
       },
       preview: undefined,
       askBeforeClosingModal: false,
