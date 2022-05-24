@@ -231,6 +231,14 @@ module.exports = (function () {
       fr: "Indiquer ici les paramètres qui seront chargés à l’ouverture de la page d’accueil du corpus. Exemple : si le lien est https://platform.plurality-university.org/clothes?tag_search=Body, écrire ?tag_search=Body",
       en: "Write here the parameters to use. For example: https://platform.plurality-university.org/clothes?tag_search=Body -> ?tag_search=Body",
     },
+    advanced_data_on_medias: {
+      fr: "Métadonnées avancées pour les médias",
+      en: "Advanced metadata for medias",
+    },
+    full_fragment_previews: {
+      fr: "Afficher l’aperçu d'un récit en entier",
+      en: "Show story preview in full",
+    },
     title: {
       fr: "Titre",
       en: "Title",

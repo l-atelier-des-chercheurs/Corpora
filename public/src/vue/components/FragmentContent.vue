@@ -4,7 +4,8 @@
     :class="{
       'is--preview': context === 'preview',
       'was--read': already_read,
-      'is--fullsizepreview': context === 'preview' && show_preview_fullsize,
+      'is--fullsizepreview':
+        context === 'preview' && corpus.full_fragment_previews === true,
     }"
   >
     <div
@@ -170,6 +171,7 @@
               :media="preview_media"
               :slugFolderName="slugFolderName"
               context="preview"
+              :show_full_fragment_previews="corpus.full_fragment_previews"
               :data-mediatype="preview_media.type"
             />
             <div
@@ -197,6 +199,8 @@
                 :can_be_edited="fragment_can_be_edited"
                 :linked_medias="linked_medias"
                 :context="context"
+                :show_advanced_data_on_medias="corpus.advanced_data_on_medias"
+                :show_full_fragment_previews="corpus.full_fragment_previews"
                 @removeMedia="(d) => removeMedia(d)"
                 @moveMedia="(d) => moveMedia(d)"
               />
@@ -296,8 +300,6 @@ export default {
     return {
       show_advanced_meta: false,
       show_edit_fragment: false,
-
-      show_preview_fullsize: false,
 
       random_angle: (Math.random() - 0.5) * 4,
       slide_on_hover: 1,
@@ -734,7 +736,8 @@ export default {
   ._fragmentPreview--media {
     color: var(--color-blue);
 
-    &[data-mediatype="image"] {
+    &[data-mediatype="image"],
+    &[data-mediatype="document"] {
       filter: grayscale(100%) brightness(125%) contrast(100%);
     }
     &[data-mediatype="text"] {
@@ -750,6 +753,10 @@ export default {
   width: calc(100% - var(--spacing) * 2);
   height: 100%;
   margin: calc(var(--spacing) / 2) calc(var(--spacing));
+
+  .m_fragmentContent.is--fullsizepreview & {
+    width: 100%;
+  }
 }
 
 .m_advancedMenu {
@@ -799,6 +806,9 @@ export default {
   .mediaTextContent {
     font-size: 1em;
   }
+  .m_fragmentMedia--infos--caption {
+    display: none;
+  }
 }
 
 .m_fragmentContent.is--fullsizepreview .m_fragmentContent--content {
@@ -810,7 +820,7 @@ export default {
     padding: 0;
   }
   .m_fragmentContent--content--inner--top {
-    position: absolute;
+    // position: absolute;
     top: 0;
     padding-top: calc(var(--spacing) / 2);
 

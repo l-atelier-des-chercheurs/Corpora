@@ -72,6 +72,12 @@
         "description_long_en": {
           "type": "string"
         },
+        "advanced_data_on_medias": {
+          "type": "boolean"
+        },
+        "full_fragment_previews": {
+          "type": "boolean"
+        },
         "date_created": {
           "type": "date",
           "default": "current",

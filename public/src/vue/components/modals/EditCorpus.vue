@@ -95,12 +95,27 @@
       </div>
 
       <!-- Default corpus view -->
-      <div class="margin-bottom-small" v-if="$root.can_admin_corpora">
-        <label>{{ $t("corpus_default_view") }} (admin)</label>
+      <div class="margin-bottom-small">
+        <label>{{ $t("corpus_default_view") }}</label>
         <input type="text" v-model.trim="corpusdata.corpus_default_view" />
         <small>
           {{ $t("corpus_default_view_instructions") }}
         </small>
+      </div>
+
+      <div class="margin-bottom-small">
+        <label>{{ $t("advanced_data_on_medias") }}</label>
+        <input
+          type="checkbox"
+          v-model.trim="corpusdata.advanced_data_on_medias"
+        />
+      </div>
+      <div class="margin-bottom-small">
+        <label>{{ $t("full_fragment_previews") }}</label>
+        <input
+          type="checkbox"
+          v-model.trim="corpusdata.full_fragment_previews"
+        />
       </div>
     </template>
 
@@ -137,6 +152,8 @@ export default {
         description_en: this.corpus.description_en,
         corpus_default_view: this.corpus.corpus_default_view,
         password: this.corpus_password ? this.corpus_password : "",
+        advanced_data_on_medias: this.corpus.advanced_data_on_medias,
+        full_fragment_previews: this.corpus.full_fragment_previews,
       },
       tag: "",
       preview_rawdata: undefined,
