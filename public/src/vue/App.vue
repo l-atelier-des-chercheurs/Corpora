@@ -157,7 +157,7 @@ label:not(.no-style) {
     display: flex;
     flex-flow: column nowrap;
     align-items: center;
-    justify-content: center;
+    justify-content: flex-start;
 
     position: relative;
     z-index: 0;

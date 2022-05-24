@@ -326,7 +326,6 @@ export default {
     context: String,
     can_be_edited: Boolean,
     show_advanced_data_on_medias: Boolean,
-    show_full_fragment_previews: Boolean,
   },
   components: {
     MediaContent,

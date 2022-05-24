@@ -25,7 +25,11 @@
           `"
       >
         <div class="m_fragmentContent--content--inner--top">
-          <div class="_meta" @click="show_advanced_meta = !show_advanced_meta">
+          <div
+            class="_meta"
+            v-if="false"
+            @click="show_advanced_meta = !show_advanced_meta"
+          >
             <div v-if="!show_advanced_meta" class="_meta--oneLine">
               <div class="_date">
                 {{
@@ -171,13 +175,12 @@
               :media="preview_media"
               :slugFolderName="slugFolderName"
               context="preview"
-              :show_full_fragment_previews="corpus.full_fragment_previews"
               :data-mediatype="preview_media.type"
             />
-            <div
+            <!-- <div
               class="_fragmentPreview--overlay"
               v-if="preview_media.type === 'image'"
-            />
+            /> -->
           </template>
           <template v-else>
             <div class="_fragmentPreview--media ta-ce lowerc">
@@ -200,7 +203,6 @@
                 :linked_medias="linked_medias"
                 :context="context"
                 :show_advanced_data_on_medias="corpus.advanced_data_on_medias"
-                :show_full_fragment_previews="corpus.full_fragment_previews"
                 @removeMedia="(d) => removeMedia(d)"
                 @moveMedia="(d) => moveMedia(d)"
               />
@@ -511,7 +513,7 @@ export default {
   &.is--preview .m_fragmentContent--content {
     --slide_on_hover: 1rem;
     --move_top_for_slide: calc(-1.8 * var(--slide_on_hover));
-    --preview_height: 260px;
+    --preview_height: auto;
 
     height: var(--preview_height);
     overflow: hidden;
@@ -806,7 +808,7 @@ export default {
   .mediaTextContent {
     font-size: 1em;
   }
-  .m_fragmentMedia--infos--caption {
+  .m_fragmentMedia--infos {
     display: none;
   }
 }
