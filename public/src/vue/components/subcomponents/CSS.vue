@@ -54,7 +54,7 @@ export default {
   position: fixed;
   bottom: calc(var(--spacing) * 0);
   right: calc(var(--spacing) * 0);
-  background-color: var(--color-black);
+  background-color: var(--color-eggplant);
   color: white;
   margin: 0;
   padding: calc(var(--spacing) / 4) calc(var(--spacing) / 2);

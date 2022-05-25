@@ -253,7 +253,7 @@ export default {
   }
   &.is--failed {
     &::before {
-      background-color: var(--color-black);
+      background-color: var(--color-eggplant);
     }
   }
 
@@ -273,7 +273,7 @@ export default {
     overflow: hidden;
 
     font-size: 75%;
-    color: var(--color-black);
+    color: var(--color-eggplant);
     padding: calc(var(--spacing) / 4);
   }
   .m_uploadFile--size {

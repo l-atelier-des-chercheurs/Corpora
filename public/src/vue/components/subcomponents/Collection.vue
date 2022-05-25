@@ -256,8 +256,8 @@ export default {
 .m_collection--presentation {
   position: relative;
 
-  border: 1px solid var(--color-blue);
-  padding: calc(var(--spacing) * 1);
+  border-top: 1px solid var(--color-eggplant);
+  padding: calc(var(--spacing) * 1) 0;
 }
 
 ._editFragmentsLabel {

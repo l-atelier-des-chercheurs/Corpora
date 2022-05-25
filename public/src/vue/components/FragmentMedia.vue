@@ -685,7 +685,7 @@ export default {
   }
   &:hover {
     svg {
-      stroke: var(--color-blue);
+      stroke: var(--color-eggplant);
       // fill: white;
     }
   }

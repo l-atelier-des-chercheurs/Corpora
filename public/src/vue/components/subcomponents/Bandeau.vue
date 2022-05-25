@@ -67,7 +67,7 @@ export default {
   box-sizing: border-box;
   background-color: #000;
   color: var(--color-lightgray);
-  background-color: var(--color-blue);
+  background-color: var(--color-eggplant);
 
   font-family: var(--ff-top-level);
   font-weight: 300;
@@ -84,7 +84,7 @@ a {
   &:hover,
   &:active,
   &:focus {
-    color: var(--color-black);
+    color: var(--color-eggplant);
   }
 }
 </style>

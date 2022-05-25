@@ -20,7 +20,54 @@
               @click.native.prevent="resetFiltersAndScrollTop()"
               event
             >
-              {{ corpus.name }}
+              <svg
+                class="_logo"
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 939.15 126.77"
+              >
+                <path
+                  class="cls-1"
+                  d="M19.88,34.7v5.75c0,12.38,7.67,17.26,23.36,19.35l19.53,2.09c25.11,3,33.65,11.69,33.65,29.3,0,22.49-19.18,34.69-47.95,34.69C18,125.88,0,113.68,0,88.92V82.47H18v6.45c0,15.69,9.41,23,30.51,23s29.64-7.68,29.64-20.75v-7.5c0-11.33-5.4-18-22-20.23L35.39,61c-23.88-3-33.82-9.41-33.82-27.54C1.57,13.77,17.61,0,47.6,0s46,12,46,37v5.41H75.84V36.44c0-15-9.41-22.67-28.24-22.67C28.07,13.77,19.88,20.92,19.88,34.7Z"
+                />
+                <path
+                  class="cls-1"
+                  d="M117.3,1.92h17.44V61.54a2.44,2.44,0,0,0,2.61,2.62h57A2.44,2.44,0,0,0,197,61.54V1.92h17.43V124H197V71.89a2.52,2.52,0,0,0-2.61-2.62h-57a2.52,2.52,0,0,0-2.61,2.62V124H117.3Z"
+                />
+                <path
+                  class="cls-1"
+                  d="M308.42,81.06a3.37,3.37,0,0,0-.24-.37,2.41,2.41,0,0,1,.32.53A.8.8,0,0,1,308.42,81.06Zm-44.77-1.43H305a2.24,2.24,0,0,0,.46,0Z"
+                />
+                <path
+                  class="cls-1"
+                  d="M355.41,1.92H410c22.49,0,35.57,15.51,35.57,39.58,0,24.93-13.42,38.11-37,38.11H375.46a2.52,2.52,0,0,0-2.61,2.62V124H355.41Zm17.44,14v56a2.44,2.44,0,0,0,2.61,2.62h30.86c14.82,0,21.27-7.15,21.27-20.75v-17c0-12.73-7-20.92-20.57-20.92Z"
+                />
+                <path
+                  class="cls-1"
+                  d="M600,91.36c1.4,1.74,1.92,2.09,3,2.09s1.75-.69,1.75-2.26V1.92h6.39v122h-8L530.76,21.62V124H514.37V1.92h23Z"
+                />
+                <path
+                  class="cls-1"
+                  d="M734.76,64.06V82.84c0,27.89-19,43.93-49.34,43.93-35.57,0-55.45-20-55.45-62.94C630,23.21,650.55.89,685.42.89c30.51,0,49.34,16.74,49.34,43.41v2.79H717.67V44.48c0-18.31-12.2-29.47-32.25-29.47-21.8,0-37,13.43-37,38.71V73.6c0,25.28,13.77,39.05,37,39.05,18.83,0,32.25-8.72,32.25-29.47V71.74c0-1.92-.69-2.62-2.61-2.62H671.3V64.06Z"
+                />
+                <path class="cls-1" d="M468.57,1.92H486V124H468.57Z" />
+                <polygon
+                  class="cls-1"
+                  points="939.15 64.15 939.15 123.84 921.71 123.84 921.71 64.15 913 64.15 913 2.15 930.43 2.15 930.43 64.15 939.15 64.15"
+                />
+                <path
+                  class="cls-1"
+                  d="M883.6,59.36v0L863.58,2h-22L799,124l1,.06h16.07L828.2,88.37l.16-.46a2.57,2.57,0,0,1,2.45-1.6h26.78v5.1h16.35A2.55,2.55,0,0,1,876.48,93l.19.48,9.69,24.77,0,0,2,5.71h17.79ZM871.12,79.63H857.59V74.51H834.11c-1.1,0-1.73-.88-1.25-2.26l.44-1.36L853.77,15.4l3.82,11v8.9l14.27,40.46.13.38.39,1.22C872.86,78.75,872.22,79.61,871.12,79.63Z"
+                />
+                <path
+                  class="cls-1"
+                  d="M305.42,79.58l-41.77,0h42.43a2.26,2.26,0,0,1,1.29.29,2.57,2.57,0,0,0-1.37-.34Z"
+                />
+                <path
+                  class="cls-1"
+                  d="M297.29,1.92H272.18L230,124h16.74L260,81.72a2.58,2.58,0,0,1,2.7-2.06l42.29,0H263.65l41.77,0H306a2.57,2.57,0,0,1,1.37.34l.06,0a1.08,1.08,0,0,1,.29.2,1.79,1.79,0,0,1,.27.28.76.76,0,0,1,.19.25,2.41,2.41,0,0,1,.32.53,1.39,1.39,0,0,1,.12.28L322,124h17.79Zm5.94,72.64H265.38c-1.12,0-1.76-.88-1.28-2.27l.52-1.6,19.76-55.34,19.68,55.22a5.31,5.31,0,0,0,.21.64C304.77,72.67,305.49,74.47,303.23,74.56Z"
+                />
+              </svg>
+              <span>{{ corpus.name }}</span>
             </router-link>
           </h1>
           <transition name="fade">
@@ -758,7 +805,7 @@ export default {
 .m_corpus--fragments--sort {
   margin: 0 calc(var(--spacing) * 2);
   padding: calc(var(--spacing) / 2) 0 0;
-  // border-bottom: 2px solid var(--color-blue);
+  // border-bottom: 2px solid var(--color-eggplant);
 
   > * {
     display: flex;
@@ -774,7 +821,7 @@ export default {
     gap: calc(var(--spacing) / 2);
 
     > button {
-      // background: var(--color-blue);
+      // background: var(--color-eggplant);
       padding: 0 calc(var(--spacing) / 4);
       text-transform: inherit;
 
@@ -792,17 +839,12 @@ export default {
 }
 
 ._logo {
-  position: absolute;
-  top: 5px;
-  right: 0px;
-  max-width: 317px;
-  width: 40vw;
-  transform: rotate(4deg);
+  width: 10ch;
   // image-rendering: crisp-edges;
 }
 
 ._bottomFooter {
-  border-top: 1px solid var(--color-blue);
+  border-top: 1px solid var(--color-eggplant);
   padding: calc(var(--spacing)) 0 0;
   font-size: var(--font-size-small);
 
@@ -852,6 +894,10 @@ export default {
     padding: calc(var(--spacing) * 1) calc(var(--spacing) * 2);
     overflow-y: auto;
 
+    background-image: url("/images/bg-1.png");
+    background-size: 100vw auto;
+    // background-attachment: local, scroll;
+
     .app.mobile_view & {
       padding: calc(var(--spacing) * 1) calc(var(--spacing) * 2)
         calc(var(--spacing) * 1) calc(var(--spacing) * 1);
@@ -872,8 +918,16 @@ export default {
 
     ._corpusContainer--rightCont--container {
       height: 100%;
-      background: var(--body-bg);
-      border-left: 1px solid var(--color-blue);
+      // background: var(--body-bg);
+      border-left: 1px solid var(--color-eggplant);
+
+      background-image: url("/images/bg-1.png");
+      background-size: 100vw auto;
+      // background-attachment: local, scroll;
+
+      .app:not(.mobile_view) & {
+        background-position: calc(-100vw + 260px) 0;
+      }
     }
 
     .app.mobile_view & {
@@ -913,6 +967,9 @@ h2 {
   > a {
     pointer-events: auto;
   }
+  span {
+    font-size: 0;
+  }
 }
 
 h1 {
@@ -949,18 +1006,23 @@ h1 {
   button {
     // width: 4em;
     // height: 4em;
-    background-color: var(--color-lightgray);
+    // background-color: var(--color-purple);
+    background: var(--color-purple);
+    // border: 1px solid currentColor;
 
-    box-shadow: 0 0 0.5rem 0.5rem var(--color-lightgray),
-      0 0 1rem 1rem var(--color-lightgray) inset;
+    // box-shadow: 0 0 0.5rem 0.5rem var(--color-lightgray),
+    //   0 0 1rem 1rem var(--color-lightgray) inset;
     padding: calc(var(--spacing) / 2);
     border-radius: 100%;
     margin-bottom: calc(var(--spacing) / 2);
     pointer-events: auto;
 
     svg {
+      display: block;
       transform: rotate(-90deg);
       transition: all 0.4s cubic-bezier(0.19, 1, 0.22, 1);
+      stroke-width: 1px;
+      stroke: white;
     }
 
     @media (hover: hover) {

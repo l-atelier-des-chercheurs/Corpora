@@ -89,11 +89,12 @@ export default {
   watch: {},
   computed: {
     toggle_fill_color() {
-      if (this.field_mode === "password") return "fill: var(--color-black);";
+      if (this.field_mode === "password") return "fill: var(--color-eggplant);";
       else return "fill: var(--active-color);";
     },
     toggle_stroke_color() {
-      if (this.field_mode === "password") return "stroke: var(--color-black);";
+      if (this.field_mode === "password")
+        return "stroke: var(--color-eggplant);";
       else return "stroke: transparent;";
     },
   },

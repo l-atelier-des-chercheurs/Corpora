@@ -387,7 +387,7 @@ export default {
   height: auto;
   text-align: left;
   margin: 0 calc(var(--spacing));
-  color: var(--color-blue);
+  color: var(--color-eggplant);
 
   .menu_encart {
     display: flex;
@@ -417,7 +417,7 @@ export default {
           transition: all 0.2s cubic-bezier(0.19, 1, 0.22, 1);
           background-color: transparent;
 
-          border: 1px solid var(--color-blue);
+          border: 1px solid var(--color-eggplant);
 
           display: flex;
           align-items: center;
@@ -498,7 +498,7 @@ export default {
       &.is--dragover {
         width: 100%;
         // height: 64px;
-        background: var(--color-blue);
+        background: var(--color-eggplant);
         color: white;
         padding: calc(var(--spacing) / 1);
         margin: 0;

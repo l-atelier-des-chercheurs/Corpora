@@ -547,7 +547,7 @@ export default {
 
       // background: hsla(48, 71%, 92%, 1);
       // background: black;
-      box-shadow: 0 0 0.5rem 0.75rem var(--color-lightgray);
+      // box-shadow: 0 0 0.5rem 0.75rem var(--color-lightgray);
       background: var(--color-lightgray);
       // box-shadow: inset 0.5rem 0.5rem red;
 
@@ -556,7 +556,7 @@ export default {
 
     .m_fragmentContent--content--inner {
       margin: 0;
-      box-shadow: 0 0 0.5rem 0rem var(--color-lightgray);
+      // box-shadow: 0 0 0.5rem 0rem var(--color-lightgray);
       pointer-events: auto;
       height: var(--preview_height);
       overflow: hidden;
@@ -570,7 +570,7 @@ export default {
         transform: translateY(calc(-1 * var(--slide_on_hover)));
         // transform: translateY(calc(-1 * var(--slide_on_hover)))
         //   rotate(calc(var(--random_angle) * 1deg)) scale(1);
-        color: var(--color-blue);
+        color: var(--color-eggplant);
       }
 
       ._fragmentPreview {
@@ -580,7 +580,7 @@ export default {
 
   &.is--preview.was--read {
     .m_fragmentContent--content--inner--top {
-      color: var(--color-blue);
+      color: var(--color-eggplant);
     }
   }
 
@@ -589,8 +589,8 @@ export default {
     pointer-events: auto;
     padding: calc(var(--spacing) / 2) 0 calc(var(--spacing));
     margin: calc(var(--spacing) * 1) 0;
-    border-top: 1px solid var(--color-blue);
-    // border-bottom: 1px solid var(--color-blue);
+    border-top: 1px solid var(--color-eggplant);
+    // border-bottom: 1px solid var(--color-eggplant);
     background: white;
 
     transition: all 0.4s cubic-bezier(0.19, 1, 0.22, 1);
@@ -687,7 +687,7 @@ export default {
 
   span {
     position: absolute;
-    background-color: var(--color-black);
+    background-color: var(--color-eggplant);
     color: white;
     padding: calc(var(--spacing) / 4) calc(var(--spacing) / 2);
     border-radius: 0.5em;
@@ -719,7 +719,7 @@ export default {
   // filter: brightness(80%) sepia(100%) hue-rotate(201deg) saturate(1260%);
   position: relative;
   ._fragmentPreview--media {
-    color: var(--color-blue);
+    color: var(--color-eggplant);
 
     &[data-mediatype="image"],
     &[data-mediatype="document"] {
@@ -777,8 +777,8 @@ export default {
   margin: calc(var(--spacing) * 1) 0;
   background: white;
   padding: calc(var(--spacing)) calc(var(--spacing));
-  border-top: 1px solid var(--color-blue);
-  border-bottom: 1px solid var(--color-blue);
+  border-top: 1px solid var(--color-eggplant);
+  border-bottom: 1px solid var(--color-eggplant);
 
   ::v-deep .mediaTextContent {
     margin-left: calc(var(--spacing) / -4);
@@ -803,13 +803,16 @@ export default {
 
   .m_fragmentContent--content--inner {
     padding: 0;
+    background: rgba(255, 255, 255, 0.15);
   }
   .m_fragmentContent--content--inner--top {
     // position: absolute;
     top: 0;
     // padding-top: calc(var(--spacing) / 2);
 
-    background: linear-gradient(#fff 0%, #fff 50%, transparent);
+    // background: linear-gradient(#fff 0%, #fff 50%, transparent);
+    // background: var(--color-lilas);
+    // color: var(--color-eggplant);
 
     width: 100%;
     z-index: 1;

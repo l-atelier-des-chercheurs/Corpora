@@ -506,7 +506,7 @@ export default {
   margin-bottom: calc(var(--spacing) * 1);
   padding: calc(var(--spacing));
   background: white;
-  border-top: 1px solid var(--color-blue);
+  border-top: 1px solid var(--color-eggplant);
 
   ._collectionsList {
     margin-bottom: calc(var(--spacing));
@@ -564,7 +564,7 @@ export default {
   }
   button {
     margin: 0 calc(var(--spacing) / 4);
-    background-color: var(--color-blue);
+    background-color: var(--color-eggplant);
     color: white;
   }
 }
@@ -594,7 +594,7 @@ ul {
     }
 
     &.was--visited {
-      color: var(--color-blue);
+      color: var(--color-eggplant);
     }
   }
 }

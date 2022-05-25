@@ -463,6 +463,10 @@ export default {
   overflow: auto;
   height: 100%;
 
+  // background: rgba(0, 0, 0, 0.02);
+  // background: var(--color-eggplant);
+  // color: var(--color-lilas);
+
   > * {
     padding-bottom: calc(var(--spacing) * 2);
     max-width: 320px;

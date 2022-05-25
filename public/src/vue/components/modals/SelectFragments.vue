@@ -215,15 +215,15 @@ export default {
 </script>
 <style lang="scss" scoped>
 ._inCollection {
-  border: 1px solid var(--color-blue);
   border-top: 0;
   border-bottom: 0;
-  padding: calc(var(--spacing) * 1);
+  border-top: 1px solid var(--color-eggplant);
+  padding: calc(var(--spacing) * 1) 0;
   padding-bottom: 0;
 }
 
 ._notInCollection {
-  border-top: 1px solid var(--color-blue);
+  border-top: 1px solid var(--color-eggplant);
   padding: calc(var(--spacing) * 1) 0;
 
   h3 {
