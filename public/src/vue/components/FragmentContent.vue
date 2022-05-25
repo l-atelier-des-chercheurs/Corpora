@@ -723,7 +723,7 @@ export default {
 
     &[data-mediatype="image"],
     &[data-mediatype="document"] {
-      filter: grayscale(100%) brightness(125%) contrast(100%);
+      // filter: grayscale(100%) brightness(125%) contrast(100%);
     }
     &[data-mediatype="text"] {
       margin-top: calc(var(--spacing) / -4);
@@ -818,7 +818,6 @@ export default {
       padding: calc(var(--spacing) / 2);
       margin: 0;
       min-height: 0;
-
       height: 5.5em;
 
       h2 {
