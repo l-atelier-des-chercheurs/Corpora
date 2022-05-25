@@ -564,23 +564,6 @@ export default {
       transform-origin: 50% 100px;
     }
 
-    .m_fragmentContent--content--inner--top {
-      ._title {
-        height: 5.5em;
-        min-height: 0;
-      }
-
-      h2 {
-        display: -webkit-box;
-        -webkit-line-clamp: 3;
-        -webkit-box-orient: vertical;
-        overflow: hidden;
-        text-overflow: ellipsis;
-
-        font-size: 1.3rem;
-      }
-    }
-
     &:hover,
     &.is--opened {
       .m_fragmentContent--content--inner {
@@ -824,7 +807,7 @@ export default {
   .m_fragmentContent--content--inner--top {
     // position: absolute;
     top: 0;
-    padding-top: calc(var(--spacing) / 2);
+    // padding-top: calc(var(--spacing) / 2);
 
     background: linear-gradient(#fff 0%, #fff 50%, transparent);
 
@@ -832,7 +815,20 @@ export default {
     z-index: 1;
 
     ._title {
-      height: 2.5em !important;
+      padding: calc(var(--spacing) / 2);
+      margin: 0;
+      min-height: 0;
+
+      height: 5.5em;
+
+      h2 {
+        display: -webkit-box;
+        -webkit-line-clamp: 3;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        font-size: 1rem;
+      }
     }
   }
 
