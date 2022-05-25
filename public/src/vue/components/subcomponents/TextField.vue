@@ -3,7 +3,12 @@
     <label v-if="title">{{ $t(title) }}</label>
 
     <div v-if="!edit_mode" v-html="content" class="mediaTextContent" />
-    <CollaborativeEditor class="_editor" v-else v-model="new_content" />
+    <CollaborativeEditor
+      class="_editor"
+      v-else
+      v-model="new_content"
+      :placeholder="placeholder"
+    />
 
     <div class="_editText">
       <button
@@ -53,6 +58,7 @@ export default {
       type: String,
       default: "edit_text",
     },
+    placeholder: String,
   },
   components: {
     CollaborativeEditor,

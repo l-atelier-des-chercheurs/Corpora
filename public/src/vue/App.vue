@@ -2066,7 +2066,7 @@ twitter-widget.twitter-tweet {
   // lh : 1.41
   // scale : 1.31
 
-  font-size: 1.25rem;
+  font-size: 1.05rem;
   line-height: 1.5;
   // max-width: 773px;
 

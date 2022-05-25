@@ -317,6 +317,10 @@ export default {
       type: String,
       default: "corpus",
     },
+    placeholder: {
+      type: String,
+      default: "write_text_here",
+    },
   },
 
   components: {},
@@ -394,10 +398,8 @@ export default {
         "list",
         "media",
       ],
-      placeholder:
-        this.$root.lang.current === "fr"
-          ? "Écrire le texte ici…"
-          : "Write text here",
+
+      placeholder: this.$t(this.placeholder),
     });
 
     this.$refs.editor.dataset.quill = this.editor;

@@ -767,6 +767,22 @@ module.exports = (function () {
       fr: "Remonter",
       en: "Scroll to top",
     },
+    write_text_here: {
+      fr: "Écrire le texte ici…",
+      en: "Write text here",
+    },
+    write_description: {
+      fr: "Écrire une description",
+      en: "Write description here",
+    },
+    write_descriptor: {
+      fr: "Ajouter des descripteurs",
+      en: "Add descriptors here",
+    },
+    write_cases: {
+      fr: "Cas",
+      en: "Cases",
+    },
   };
 
   return messages;

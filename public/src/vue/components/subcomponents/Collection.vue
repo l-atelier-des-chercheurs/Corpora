@@ -97,17 +97,56 @@
         </div>
       </div>
 
-      <TextField
-        :field_name="'collection_description'"
-        class="_description"
-        :content="collection.collection_description"
-        type2="media"
-        ref="description_field"
-        :metaFileName="collection.metaFileName"
-        :slugFolderName="corpus.slugFolderName"
-        :allow_editing="true"
-        edit_text_btn="edit_collection_text"
-      />
+      <div class="_descs">
+        <div>
+          <template v-if="!edit_collection">
+            <iframe :src="vimeo_url" frameborder="0" allowfullscreen />
+          </template>
+          <input
+            v-else
+            type="url"
+            placeholder="Vimeo url"
+            v-model="collection_video_embed"
+          />
+        </div>
+
+        <TextField
+          :field_name="'collection_description'"
+          class="_description"
+          :content="collection.collection_description"
+          type2="media"
+          ref="description_field"
+          :metaFileName="collection.metaFileName"
+          :slugFolderName="corpus.slugFolderName"
+          :allow_editing="true"
+          :placeholder="'write_description'"
+          edit_text_btn="edit_collection_text"
+        />
+        <TextField
+          :field_name="'collection_descriptors'"
+          class="_description"
+          :content="collection.collection_descriptors"
+          type2="media"
+          ref="descriptor_field"
+          :metaFileName="collection.metaFileName"
+          :slugFolderName="corpus.slugFolderName"
+          :allow_editing="true"
+          :placeholder="'write_descriptor'"
+          edit_text_btn="edit_collection_text"
+        />
+        <TextField
+          :field_name="'collection_cases'"
+          class="_description"
+          :content="collection.collection_cases"
+          type2="media"
+          ref="cases_field"
+          :metaFileName="collection.metaFileName"
+          :slugFolderName="corpus.slugFolderName"
+          :allow_editing="true"
+          :placeholder="'write_cases'"
+          edit_text_btn="edit_collection_text"
+        />
+      </div>
     </div>
     <SelectFragments
       :collection="collection"
@@ -148,6 +187,8 @@ export default {
       show_advanced_meta: false,
       edit_collection: false,
       new_coll_name: "",
+
+      collection_video_embed: this.collection.collection_video_embed,
     };
   },
   created() {},
@@ -158,12 +199,28 @@ export default {
       if (this.edit_collection) {
         this.new_coll_name = this.collection.title;
         this.$refs.description_field.edit_mode = true;
+        this.$refs.descriptor_field.edit_mode = true;
+        this.$refs.cases_field.edit_mode = true;
       } else {
         this.$refs.description_field.edit_mode = false;
+        this.$refs.descriptor_field.edit_mode = false;
+        this.$refs.cases_field.edit_mode = false;
       }
     },
   },
-  computed: {},
+  computed: {
+    vimeo_url() {
+      function getId(url) {
+        const regExp = /(?:vimeo)\.com.*(?:videos|video|channels|)\/([\d]+)/i;
+        const match = url.match(regExp);
+        return match ? match[1] : null;
+      }
+
+      const videoId = getId(this.collection.collection_video_embed);
+      if (!videoId) return false;
+      return `https://player.vimeo.com/video/${videoId}?autoplay=1`;
+    },
+  },
   methods: {
     addToCollection({ metaFileName, index }) {
       let fragments_slugs = this.collection.fragments_slugs
@@ -243,9 +300,12 @@ export default {
       this.updateMedia({
         data: {
           title: this.new_coll_name,
+          collection_video_embed: this.collection_video_embed,
         },
       }).then(() => {
         this.$refs.description_field.save();
+        this.$refs.descriptor_field.save();
+        this.$refs.cases_field.save();
         this.edit_collection = false;
       });
     },
@@ -299,7 +359,7 @@ input {
   .m_collection:not(.is--editing) & {
     margin-left: calc(var(--spacing) / -4);
   }
-  margin-bottom: calc(var(--spacing) * 2);
+  margin-bottom: calc(var(--spacing) * 1);
 }
 
 ._buttonRow {
@@ -324,6 +384,20 @@ input {
   ._editText button,
   ._btns {
     display: none;
+  }
+}
+
+._descs {
+  display: flex;
+  flex-flow: row wrap;
+  gap: var(--spacing);
+  > * {
+    flex: 1 1 50%;
+    min-width: 300px;
+  }
+  iframe {
+    width: 100%;
+    aspect-ratio: 16/9;
   }
 }
 </style>

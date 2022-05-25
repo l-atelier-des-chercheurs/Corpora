@@ -159,6 +159,15 @@
           "collection_description": {
             "type": "string"
           },
+          "collection_descriptors": {
+            "type": "string"
+          },
+          "collection_cases": {
+            "type": "string"
+          },
+          "collection_video_embed": {
+            "type": "string"
+          },
           "type": {
             "type": "string",
             "options": [
