@@ -99,11 +99,11 @@
 
       <div class="_descs">
         <div>
-          <template v-if="!edit_collection">
+          <template v-if="!edit_collection && vimeo_url">
             <iframe :src="vimeo_url" frameborder="0" allowfullscreen />
           </template>
           <input
-            v-else
+            v-else-if="edit_collection"
             type="url"
             placeholder="Vimeo url"
             v-model="collection_video_embed"
@@ -122,6 +122,7 @@
           :placeholder="'write_description'"
           edit_text_btn="edit_collection_text"
         />
+
         <TextField
           :field_name="'collection_descriptors'"
           class="_description"
@@ -210,6 +211,7 @@ export default {
   },
   computed: {
     vimeo_url() {
+      if (!this.collection.collection_video_embed) return false;
       function getId(url) {
         const regExp = /(?:vimeo)\.com.*(?:videos|video|channels|)\/([\d]+)/i;
         const match = url.match(regExp);
@@ -286,10 +288,10 @@ export default {
             data,
           })
           .then((mdata) => {
-            // setTimeout(() => {
-            this.is_sending_content_to_server = false;
-            return resolve();
-            // }, 300);
+            setTimeout(() => {
+              this.is_sending_content_to_server = false;
+              return resolve();
+            }, 300);
           })
           .catch(() => {
             return reject();
@@ -302,12 +304,12 @@ export default {
           title: this.new_coll_name,
           collection_video_embed: this.collection_video_embed,
         },
-      }).then(() => {
-        this.$refs.description_field.save();
-        this.$refs.descriptor_field.save();
-        this.$refs.cases_field.save();
-        this.edit_collection = false;
-      });
+      })
+        // Promise.resolve()
+        .then(() => this.$refs.description_field.save())
+        .then(() => this.$refs.descriptor_field.save())
+        .then(() => this.$refs.cases_field.save())
+        .then((this.edit_collection = false));
     },
   },
 };

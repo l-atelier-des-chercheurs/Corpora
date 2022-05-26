@@ -1,11 +1,11 @@
 <template>
   <div class="">
     <label v-if="title">{{ $t(title) }}</label>
-
+    <!-- content = <span v-text="content === ''" /> -->
     <div v-if="!edit_mode" v-html="content" class="mediaTextContent" />
     <CollaborativeEditor
       class="_editor"
-      v-else
+      v-else-if="edit_mode"
       v-model="new_content"
       :placeholder="placeholder"
     />
@@ -89,38 +89,43 @@ export default {
       this.new_content = this.content;
     },
     save() {
-      this.is_saving = true;
+      return new Promise((resolve, reject) => {
+        this.is_saving = true;
 
-      return Promise.resolve()
-        .then(
-          this.type2 &&
-            this.type2 === "media" &&
-            this.$root.editMedia({
-              type: this.type,
-              slugFolderName: this.slugFolderName,
-              slugMediaName: this.metaFileName,
-              data: {
-                [this.field_name]: this.new_content,
-              },
-            })
-        )
-        .then(
-          !this.type2 &&
-            this.$root.editFolder({
-              type: this.type,
-              slugFolderName: this.slugFolderName,
-              data: {
-                [this.field_name]: this.new_content,
-              },
-            })
-        )
-        .then(() => {
-          this.is_saving = false;
-          this.edit_mode = false;
-        })
-        .catch(() => {
-          this.is_saving = false;
-        });
+        return Promise.resolve()
+          .then(
+            this.type2 &&
+              this.type2 === "media" &&
+              this.$root.editMedia({
+                type: this.type,
+                slugFolderName: this.slugFolderName,
+                slugMediaName: this.metaFileName,
+                data: {
+                  [this.field_name]: this.new_content,
+                },
+              })
+          )
+          .then(
+            !this.type2 &&
+              this.$root.editFolder({
+                type: this.type,
+                slugFolderName: this.slugFolderName,
+                data: {
+                  [this.field_name]: this.new_content,
+                },
+              })
+          )
+          .then(() => new Promise((resolve) => setTimeout(resolve, 500)))
+          .then(() => {
+            this.is_saving = false;
+            this.edit_mode = false;
+            return resolve();
+          })
+          .catch(() => {
+            this.is_saving = false;
+            return reject();
+          });
+      });
     },
   },
 };
