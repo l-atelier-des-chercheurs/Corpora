@@ -689,6 +689,12 @@ export default {
         if (fm.caption) acc += fm.caption.toLowerCase() + " ";
         if (fm.source) acc += fm.source.toLowerCase() + " ";
         if (fm.description) acc += fm.description.toLowerCase() + " ";
+        if (fm.type_of_document) acc += fm.type_of_document.toLowerCase() + " ";
+        if (fm.date_of_document) acc += fm.date_of_document.toLowerCase() + " ";
+        if (fm.origin_of_document)
+          acc += fm.origin_of_document.toLowerCase() + " ";
+        if (fm.authors_of_document)
+          acc += fm.authors_of_document.toLowerCase() + " ";
 
         if (
           Array.isArray(fm.thumbs) &&
