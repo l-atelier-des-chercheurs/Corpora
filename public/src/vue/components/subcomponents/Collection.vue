@@ -98,7 +98,7 @@
       </div>
 
       <div class="_descs">
-        <div>
+        <div class="_vid">
           <template v-if="!edit_collection && vimeo_url">
             <iframe :src="vimeo_url" frameborder="0" allowfullscreen />
           </template>
@@ -110,44 +110,45 @@
           />
         </div>
 
-        <TextField
-          :field_name="'collection_description'"
-          class="_description"
-          :content="collection.collection_description"
-          type2="media"
-          ref="description_field"
-          :metaFileName="collection.metaFileName"
-          :slugFolderName="corpus.slugFolderName"
-          :allow_editing="true"
-          :placeholder="'write_description'"
-          edit_text_btn="edit_collection_text"
-        />
-
-        <TextField
-          :field_name="'collection_descriptors'"
-          class="_description"
-          :content="collection.collection_descriptors"
-          type2="media"
-          ref="descriptor_field"
-          :metaFileName="collection.metaFileName"
-          :slugFolderName="corpus.slugFolderName"
-          :allow_editing="true"
-          :placeholder="'write_descriptor'"
-          edit_text_btn="edit_collection_text"
-        />
-        <TextField
-          :field_name="'collection_cases'"
-          class="_description"
-          :content="collection.collection_cases"
-          type2="media"
-          ref="cases_field"
-          :metaFileName="collection.metaFileName"
-          :slugFolderName="corpus.slugFolderName"
-          :allow_editing="true"
-          :placeholder="'write_cases'"
-          edit_text_btn="edit_collection_text"
-        />
+        <div>
+          <TextField
+            :field_name="'collection_description'"
+            class="_description"
+            :content="collection.collection_description"
+            type2="media"
+            ref="description_field"
+            :metaFileName="collection.metaFileName"
+            :slugFolderName="corpus.slugFolderName"
+            :allow_editing="true"
+            :placeholder="'write_description'"
+            edit_text_btn="edit_collection_text"
+          />
+        </div>
       </div>
+      <TextField
+        :field_name="'collection_descriptors'"
+        class="_description"
+        :content="collection.collection_descriptors"
+        type2="media"
+        ref="descriptor_field"
+        :metaFileName="collection.metaFileName"
+        :slugFolderName="corpus.slugFolderName"
+        :allow_editing="true"
+        :placeholder="'write_descriptor'"
+        edit_text_btn="edit_collection_text"
+      />
+      <TextField
+        :field_name="'collection_cases'"
+        class="_description"
+        :content="collection.collection_cases"
+        type2="media"
+        ref="cases_field"
+        :metaFileName="collection.metaFileName"
+        :slugFolderName="corpus.slugFolderName"
+        :allow_editing="true"
+        :placeholder="'write_cases'"
+        edit_text_btn="edit_collection_text"
+      />
     </div>
     <SelectFragments
       :collection="collection"
@@ -391,15 +392,32 @@ input {
 
 ._descs {
   display: flex;
-  flex-flow: row wrap;
   gap: var(--spacing);
+  flex-flow: row nowrap;
+
+  .app.mobile_view & {
+    flex-flow: row wrap;
+  }
+
   > * {
     flex: 1 1 50%;
-    min-width: 300px;
   }
   iframe {
     width: 100%;
     aspect-ratio: 16/9;
   }
 }
+
+// ._vid {
+//   float: left;
+//   min-width: 420px;
+//   width: 50%;
+//   margin-right: calc(var(--spacing) / 2);
+//   margin-bottom: calc(var(--spacing) / 2);
+
+//   iframe {
+//     width: 100%;
+//     aspect-ratio: 16/9;
+//   }
+// }
 </style>
