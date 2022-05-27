@@ -49,7 +49,7 @@ export default {
   --color-darkblue: #24526e;
   --color-purple: #874a85;
 
-  --active-color: var(--color-purple);
+  --active-color: var(--color-orange);
   --body-bg: var(--color-grey);
   --panel-width: 320px;
 
@@ -70,7 +70,7 @@ body {
   margin: 0;
   font-family: var(--ff-body);
 
-  font-size: 90%;
+  font-size: 100%;
   line-height: 1.41;
 
   &.has_modal_opened {
@@ -183,7 +183,7 @@ label:not(.no-style) {
   justify-content: flex-start;
   align-items: flex-start;
   min-height: 100px;
-  border-top: 1px solid var(--color-eggplant);
+  border-top: 1px solid var(--color-orange);
 
   .m_fragments--createFragment--addFragmentButton {
     // color: var(--color-eggplant);
@@ -695,7 +695,7 @@ select {
 }
 
 .bg-orange {
-  background-color: var(--color-purple);
+  background-color: var(--color-orange);
 }
 
 .padding-small {
@@ -792,7 +792,7 @@ input[type="submit"] {
     }
 
     &.is--active {
-      color: var(--color-purple);
+      color: var(--color-orange);
       &::after {
         transform: rotate(-90deg);
       }
@@ -1031,8 +1031,8 @@ audio {
       }
       &.is--active {
         color: white;
-        background: var(--color-purple);
-        border: 1px solid var(--color-purple);
+        background: var(--color-orange);
+        border: 1px solid var(--color-orange);
       }
 
       &.more {

@@ -10,7 +10,7 @@
         v-html="'← ' + $t('show_fragments')"
       />
     </div>
-    <div class="margin-vert-small _description mediaTextContent">
+    <div class="margin-vert-small _description mediaTextContent" v-if="false">
       <h2>Informations légales et protection des données personnelles</h2>
       <h3>Informations éditeur</h3>
       <p>

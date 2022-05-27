@@ -368,7 +368,7 @@ let vm = new Vue({
   },
   computed: {
     mobile_view() {
-      return this.settings.windowWidth < 768;
+      return this.settings.windowWidth < 900;
     },
     can_admin_corpora() {
       // todo actual admin checks

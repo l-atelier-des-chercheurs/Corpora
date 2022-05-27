@@ -511,7 +511,7 @@ export default {
   }
 
   &.is--preview .m_fragmentContent--content {
-    --slide_on_hover: 1rem;
+    --slide_on_hover: 1.5rem;
     --move_top_for_slide: calc(-1.8 * var(--slide_on_hover));
     --preview_height: auto;
 
@@ -570,7 +570,7 @@ export default {
         transform: translateY(calc(-1 * var(--slide_on_hover)));
         // transform: translateY(calc(-1 * var(--slide_on_hover)))
         //   rotate(calc(var(--random_angle) * 1deg)) scale(1);
-        color: var(--color-eggplant);
+        color: var(--color-orange);
       }
 
       ._fragmentPreview {
@@ -579,8 +579,11 @@ export default {
   }
 
   &.is--preview.was--read {
+    .m_fragmentContent--content--inner {
+      border-top: 1px solid var(--color-eggplant);
+    }
     .m_fragmentContent--content--inner--top {
-      color: var(--color-eggplant);
+      // color: var(--color-eggplant);
     }
   }
 
@@ -589,7 +592,7 @@ export default {
     pointer-events: auto;
     padding: calc(var(--spacing) / 2) 0 calc(var(--spacing));
     margin: calc(var(--spacing) * 1) 0;
-    border-top: 1px solid var(--color-eggplant);
+    border-top: 1px solid var(--color-orange);
     // border-bottom: 1px solid var(--color-eggplant);
     background: white;
 
@@ -804,6 +807,7 @@ export default {
   .m_fragmentContent--content--inner {
     padding: 0;
     background: rgba(255, 255, 255, 0.15);
+    background: white;
   }
   .m_fragmentContent--content--inner--top {
     // position: absolute;
