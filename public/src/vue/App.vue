@@ -157,7 +157,7 @@ label:not(.no-style) {
 
 .m_fragments {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
   grid-gap: calc(var(--spacing)) calc(var(--spacing) * 1);
 
   // padding: calc(var(--spacing) * 1) 0;
