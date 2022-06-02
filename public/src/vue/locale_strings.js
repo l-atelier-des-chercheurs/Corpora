@@ -56,44 +56,44 @@ module.exports = (function () {
       en: "I agree",
     },
     fragment_included_in_collections: {
-      fr: "Ce récit est présent dans les collections suivantes",
-      en: "This story is part of the following collections",
+      fr: "Ce récit est présent dans les sourcis suivants",
+      en: "This story is part of the following concerns",
     },
     fragment_included_in_no_collections: {
-      fr: "Ce récit ne fait partie d’aucune collection.",
-      en: "This story isn’t part of any collections.",
+      fr: "Ce récit ne fait partie d’aucun souci.",
+      en: "This story isn’t part of any concerns.",
     },
     fragment_in_all_collections_already: {
-      fr: "Ce récit figure déjà dans toutes les collections",
-      en: "This fragment is already included in all collections",
+      fr: "Ce récit figure déjà dans tous les soucis",
+      en: "This fragment is already included in all concerns",
     },
     create_a_collection: {
-      fr: "Créer une collection",
-      en: "Create a collection",
+      fr: "Créer un soucis",
+      en: "Create a concern",
     },
     create_collection_first: {
-      fr: "Créer d’abord une collection en fermant cette page.",
-      en: "Create a collection first by closing this page.",
+      fr: "Créer d’abord un souci en fermant cette page.",
+      en: "Create a concern first by closing this page.",
     },
     create_your_collection: {
-      fr: "Créer votre collection",
-      en: "Create your collection",
+      fr: "Créer votre souci",
+      en: "Create your concern",
     },
     add_to_your_collection: {
-      fr: "ajouter à une collection",
-      en: "add to your collection",
+      fr: "ajouter à un souci",
+      en: "add to your concern",
     },
     edit_collection: {
-      fr: "éditer la collection",
-      en: "edit collection",
+      fr: "éditer le souci",
+      en: "edit concern",
     },
     edit_inside_collection: {
-      fr: "Ajouter/retirer d’une collection",
-      en: "Add/remove from a collection",
+      fr: "Ajouter/retirer d’un souci",
+      en: "Add/remove from a concern",
     },
     add_story_to_collection: {
-      fr: "Ajouter ce récit à une collection",
-      en: "Add this story to a collection",
+      fr: "Ajouter ce récit à un souci",
+      en: "Add this story to a concern",
     },
     search_in_fragments: {
       fr: "Rechercher",
@@ -318,20 +318,20 @@ module.exports = (function () {
       en: "Description",
     },
     collections: {
-      fr: "Collections",
-      en: "Collections",
+      fr: "Soucis",
+      en: "Concerns",
     },
     part_of_collections: {
-      fr: "Dans les collections",
-      en: "Part of collections",
+      fr: "Dans les soucis",
+      en: "Part of concerns",
     },
     collection: {
-      fr: "Collection",
-      en: "Collection",
+      fr: "Souci",
+      en: "Concern",
     },
     fragments_in_collection: {
-      fr: "Récits dans la collection",
-      en: "Stories in fragment",
+      fr: "Récits dans le souci",
+      en: "Stories in concern",
     },
     add_remove_fragments: {
       fr: "ajouter/retirer des récits",
@@ -370,20 +370,20 @@ module.exports = (function () {
       en: "Do you really want to remove this story?",
     },
     sure_to_remove_fragment_from_coll: {
-      fr: "Voulez-vous vraiment retirer ce récit de cette collection ?",
-      en: "Do you really want to remove this story from this collection?",
+      fr: "Voulez-vous vraiment retirer ce récit de ce souci ?",
+      en: "Do you really want to remove this story from this concern?",
     },
     fragments_in_collection: {
-      fr: "Récits appartenant à cette collection",
-      en: "Stories in this collection",
+      fr: "Récits appartenant à ce souci",
+      en: "Stories in this concern",
     },
     rename_tag: {
       fr: "Renommer l’onglet",
       en: "Rename tag",
     },
     rename_collection: {
-      fr: "Renommer cette collection",
-      en: "Rename this collection",
+      fr: "Renommer ce souci",
+      en: "Rename this concern",
     },
     current_tag_name: {
       fr: "Nom actuel",
@@ -398,8 +398,8 @@ module.exports = (function () {
       en: "Do you really want to remove this media?",
     },
     sure_to_remove_collection: {
-      fr: "Voulez-vous vraiment supprimer cette collection ?",
-      en: "Do you really want to remove this collection?",
+      fr: "Voulez-vous vraiment supprimer ce souci ?",
+      en: "Do you really want to remove this concern?",
     },
     all: {
       fr: "Afficher tous les récits",
@@ -415,8 +415,8 @@ module.exports = (function () {
       en: "Remove",
     },
     remove_collection: {
-      fr: "supprimer la collection",
-      en: "delete collection",
+      fr: "supprimer le souci",
+      en: "delete concern",
     },
     remove_this_story: {
       fr: "Supprimer ce récit",
@@ -530,8 +530,8 @@ module.exports = (function () {
       en: "Stories",
     },
     add_a_story_to_coll: {
-      fr: "Ajouter un récit à cette collection",
-      en: "Add a story to this collection",
+      fr: "Ajouter un récit à ce souci",
+      en: "Add a story to this concern",
     },
     create_a_source: {
       fr: "Créer une source de contribution",
@@ -582,8 +582,8 @@ module.exports = (function () {
       en: "Show all keywords",
     },
     show_all_collections: {
-      fr: "Afficher toutes les collections",
-      en: "Show all collections",
+      fr: "Afficher tous les sousic",
+      en: "Show all concerns",
     },
     your_search: {
       fr: "Votre recherche :",
