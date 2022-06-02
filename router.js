@@ -17,8 +17,8 @@ module.exports = function (app) {
    * routing event
    */
   app.get("/", load_index);
-  app.get("/:slug/*", load_index);
   app.get("/_archives/:type/:slugFolderName", downloadArchive);
+  app.get("/:slug/*", load_index);
   app.post("/_file-upload/:type/:slugFolderName", postFile);
 
   remote_api.init(app);
@@ -84,6 +84,7 @@ module.exports = function (app) {
   function downloadArchive(req, res) {
     let type = req.param("type");
     let slugFolderName = req.param("slugFolderName");
+    dev.log(`••• download requested for : ${type} and ${slugFolderName} •••`);
 
     // check if folder is protected
     file

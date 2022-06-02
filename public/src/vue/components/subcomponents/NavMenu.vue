@@ -25,6 +25,15 @@
       @close="show_edit_corpus_for = false"
     />
 
+    <button
+      v-if="$root.can_admin_corpora"
+      type="button"
+      class="button-small"
+      @click="downloadCorpus"
+    >
+      {{ $t("download") }} (admin)
+    </button>
+
     <router-link
       :to="{
         name: $route.name !== 'Informations' ? 'Informations' : 'Corpus',
@@ -59,7 +68,17 @@ export default {
   beforeDestroy() {},
   watch: {},
   computed: {},
-  methods: {},
+  methods: {
+    downloadCorpus() {
+      const query_url =
+        window.location.origin +
+        "/_archives/corpus/" +
+        this.corpus.slugFolderName +
+        `?socketid=${this.$root.$socketio.socket.id}.zip`;
+
+      window.open(query_url);
+    },
+  },
 };
 </script>
 <style lang="scss" scoped>
