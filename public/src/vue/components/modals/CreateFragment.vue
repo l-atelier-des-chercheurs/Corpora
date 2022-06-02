@@ -35,9 +35,9 @@
         <CollectMode v-model="fragmentdata.contribution_moment" />
       </div> -->
 
-      <div class="margin-bottom-small admin_cat fullWidth">
+      <div class="margin-bottom-small fullWidth">
         <label>{{ $t("tag") }}</label>
-        <div class="custom-select">
+        <!-- <div class="custom-select">
           <select v-model="fragmentdata.category">
             <option v-html="'(aucune)'" value="" />
             <option
@@ -56,15 +56,15 @@
         <template v-if="fragmentdata.category === 'new'">
           <label>{{ $t("new_cat_name") }}</label>
           <input type="text" v-model="new_cat_name" />
-        </template>
-        <!-- <TagsInput
+        </template> -->
+        <TagsInput
           :allKeywords="all_tags_rightly_formatted"
-          :allow_new_terms="$root.can_admin_corpora"
-          :type="'tabs'"
+          :allow_new_terms="true"
+          :type="'tags'"
           :placeholder="$t('add_tab')"
           :show_existing_by_default="true"
           @tagsChanged="(newTags) => (fragmentdata.tags = newTags)"
-        /> -->
+        />
       </div>
 
       <div class="margin-bottom-small">
@@ -96,7 +96,8 @@ export default {
     return {
       fragmentdata: {
         title: "",
-        category: "",
+        tags: [],
+        keywords: [],
         contribution_moment: this.current_contribution_mode,
       },
     };
@@ -148,14 +149,15 @@ export default {
 
       additionalMeta.title = title;
 
-      if (this.fragmentdata.category) {
-        if (this.fragmentdata.category) {
-          if (this.fragmentdata.category === "new" && !!this.new_cat_name)
-            additionalMeta.tags = [{ title: this.new_cat_name }];
-          else additionalMeta.tags = [{ title: this.fragmentdata.category }];
-        }
-      }
+      // if (this.fragmentdata.category) {
+      //   if (this.fragmentdata.category) {
+      //     if (this.fragmentdata.category === "new" && !!this.new_cat_name)
+      //       additionalMeta.tags = [{ title: this.new_cat_name }];
+      //     else additionalMeta.tags = [{ title: this.fragmentdata.category }];
+      //   }
+      // }
 
+      if (this.fragmentdata.tags) additionalMeta.tags = this.fragmentdata.tags;
       if (this.fragmentdata.keywords)
         additionalMeta.keywords = this.fragmentdata.keywords;
       if (this.fragmentdata.contribution_moment)

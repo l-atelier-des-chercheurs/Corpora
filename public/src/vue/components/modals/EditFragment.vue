@@ -35,9 +35,10 @@
         <CollectMode v-model="fragmentdata.contribution_moment" />
       </div> -->
 
-      <div class="margin-bottom-small admin_cat fullWidth">
+      <div class="margin-bottom-small fullWidth">
         <label>{{ $t("tag") }}</label>
-        <div class="custom-select">
+        <!-- {{ all_tags_rightly_formatted }} -->
+        <!-- <div class="custom-select">
           <select v-model="fragmentdata.category">
             <option v-html="'(aucune)'" value="" />
             <option
@@ -51,20 +52,20 @@
               value="new"
             />
           </select>
-        </div>
-
+        </div> -->
+        <!-- 
         <template v-if="fragmentdata.category === 'new'">
           <label>{{ $t("new_cat_name") }}</label>
           <input type="text" v-model="new_cat_name" />
-        </template>
-        <!-- 
+        </template> -->
+
         <TagsInput
           :allKeywords="all_tags_rightly_formatted"
           :keywords="fragmentdata.tags"
           :type="'tabs'"
           :placeholder="$t('add_tab')"
           @tagsChanged="(newTags) => (fragmentdata.tags = newTags)"
-        /> -->
+        />
       </div>
 
       <div class="margin-bottom-small">
@@ -100,10 +101,10 @@ export default {
         contribution_moment: this.fragment.contribution_moment,
         keywords: this.fragment.keywords,
         tags: this.fragment.tags,
-        category:
-          this.fragment.tags && this.fragment.tags.length > 0
-            ? this.fragment.tags[0].title
-            : "",
+        // tags:
+        //   this.fragment.tags && this.fragment.tags.length > 0
+        //     ? this.fragment.tags[0].title
+        //     : "",
       },
 
       new_cat_name: "",
@@ -152,11 +153,11 @@ export default {
         }
       }
 
-      let tags = [];
+      let tags = this.fragmentdata.tags;
       if (this.fragmentdata.category) {
-        if (this.fragmentdata.category === "new" && !!this.new_cat_name)
-          tags = [{ title: this.new_cat_name }];
-        else tags = [{ title: this.fragmentdata.category }];
+        // if (this.fragmentdata.category === "new" && !!this.new_cat_name)
+        //   tags = [{ title: this.new_cat_name }];
+        // else tags = [{ title: this.fragmentdata.category }];
       }
 
       const keywords = this.fragmentdata.keywords;
