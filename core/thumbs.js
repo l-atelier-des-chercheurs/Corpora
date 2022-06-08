@@ -1138,70 +1138,62 @@ module.exports = (function () {
     }
   }
 
-  function _getPageMetadata({ url }) {
-    return new Promise((resolve, reject) => {
-      dev.logfunction(`THUMBS — _getPageMetadata : ${url}`);
-      let browser;
+  async function _getPageMetadata({ url }) {
+    dev.logfunction(`THUMBS — _getPageMetadata : ${url}`);
 
-      if (url.includes("vimeo.com"))
-        url += "?access_token=7607d980b70782d069e7141c4e7c436a";
+    if (url.includes("vimeo.com"))
+      url += "?access_token=7607d980b70782d069e7141c4e7c436a";
 
-      puppeteer
-        .launch({
-          headless: true,
-          ignoreHTTPSErrors: true,
-          args: ["--no-sandbox", "--font-render-hinting=none"],
-        })
-        .then(async (_browser) => {
-          browser = _browser;
+    try {
+      const browser = await puppeteer.launch({
+        headless: true,
+        ignoreHTTPSErrors: true,
+        args: ["--no-sandbox", "--font-render-hinting=none"],
+      });
 
-          const page = await browser.newPage();
-          await page.setUserAgent("facebookexternalhit/1.1");
-          page.setViewport({
-            width: 1800,
-            height: 1800,
-            deviceScaleFactor: 2,
-          });
+      const page = await browser.newPage();
+      await page.setUserAgent("facebookexternalhit/1.1");
+      await page.setViewport({
+        width: 1800,
+        height: 1800,
+        deviceScaleFactor: 2,
+      });
 
-          dev.logverbose(`THUMBS — _getPageMetadata : loading URL ${url}`);
+      dev.logverbose(`THUMBS — _getPageMetadata : loading URL ${url}`);
 
-          let page_timeout = setTimeout(() => {
-            dev.error(`THUMBS — _getPageMetadata : page timeout for ${url}`);
-            clearTimeout(page_timeout);
-            browser.close();
-            return reject();
-          }, 10_000);
+      let page_timeout = setTimeout(() => {
+        dev.error(`THUMBS — _getPageMetadata : page timeout for ${url}`);
+        clearTimeout(page_timeout);
+        browser.close();
+        throw "err";
+      }, 10_000);
 
-          page
-            .goto(url, {
-              waitUntil: "domcontentloaded",
-            })
-            .then(async () => {
-              dev.logverbose(
-                `THUMBS — _getPageMetadata : finished loading page ${url}`
-              );
+      await page.goto(url, {
+        waitUntil: "domcontentloaded",
+      });
 
-              let html = await page.evaluate(
-                () => document.documentElement.innerHTML
-              );
+      dev.logverbose(
+        `THUMBS — _getPageMetadata : finished loading page ${url}`
+      );
 
-              clearTimeout(page_timeout);
-              browser.close();
+      let html = await page.evaluate(() => document.documentElement.innerHTML);
 
-              // console.log(html); // will be your innherhtml
-              const parsed_meta = _parseHTMLMetaTags({ html });
-              return resolve(parsed_meta);
-            })
-            .catch((err) => {
-              clearTimeout(page_timeout);
-              browser.close();
-              dev.error(
-                `THUMBS — _getPageMetadata / Failed to load link page with error ${err.message}`
-              );
-              return reject(err.message);
-            });
-        });
-    });
+      clearTimeout(page_timeout);
+      browser.close();
+
+      // console.log(html); // will be your innherhtml
+      const parsed_meta = _parseHTMLMetaTags({ html });
+      return parsed_meta;
+    } catch (err) {
+      dev.error(
+        `THUMBS — _getPageMetadata / Failed to load link page with error ${
+          err ? err.message : ""
+        }`
+      );
+      clearTimeout(page_timeout);
+      browser.close();
+      throw err;
+    }
   }
 
   function _parseHTMLMetaTags({ html }) {
