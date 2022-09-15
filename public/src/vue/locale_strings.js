@@ -183,6 +183,10 @@ module.exports = (function () {
       fr: "Modifier ce texte",
       en: "Edit this text",
     },
+    empty: {
+      fr: "Effacer tout",
+      en: "Empty",
+    },
     edit_collection_text: {
       fr: "éditer la description",
       en: "edit description",
