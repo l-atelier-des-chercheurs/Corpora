@@ -3,8 +3,8 @@
   "userDirname": "corpora",
 
   "api": {
-    "enabled": false,
-    "allow_all_domains": false,
+    "enabled": true,
+    "allow_all_domains": true,
     "domains_whitelist": ["localhost", "latelier-des-chercheurs.fr"]
   }
 }
