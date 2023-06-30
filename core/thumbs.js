@@ -1151,7 +1151,7 @@ module.exports = (function () {
         dev.error(`THUMBS — _getPageMetadata : page timeout for ${url}`);
         win.close();
         return reject();
-      }, 10_000);
+      }, 20_000);
 
       win.webContents.once("did-finish-load", () => {
         dev.logverbose(
