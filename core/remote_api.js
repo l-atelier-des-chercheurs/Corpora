@@ -150,8 +150,12 @@ module.exports = (function () {
 
       let foldersData;
 
-      file
-        .getFolder({ type, slugFolderName })
+      new Promise((r) => setTimeout(r, 1))
+        .then(() => {
+          if (slugFolderName) return file.getFolder({ type, slugFolderName });
+          return file.getFolders({ type });
+        })
+
         .then((_foldersData) => {
           if (_foldersData === undefined) {
             return reject("No folder found with name " + slugFolderName);
@@ -278,9 +282,8 @@ module.exports = (function () {
                   if (!meta) {
                     // case of non-existent media (was removed recently for example)
                   } else {
-                    foldersData[slugFolderName].medias[
-                      k
-                    ]._source_media_meta = meta;
+                    foldersData[slugFolderName].medias[k]._source_media_meta =
+                      meta;
                   }
                   return resolve();
                 });
