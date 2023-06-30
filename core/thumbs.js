@@ -1200,6 +1200,12 @@ module.exports = (function () {
               );
               return reject(err.message);
             });
+        })
+        .catch((err) => {
+          dev.error(
+            `THUMBS — _getPageMetadata / Failed to create puppeteer with error ${err.message}`
+          );
+          return reject(err.message);
         });
     });
   }
