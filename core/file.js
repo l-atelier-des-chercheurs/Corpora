@@ -80,7 +80,8 @@ module.exports = (function () {
         folder_meta.number_of_medias = list_metaFileName.length;
       }
 
-      cache.put({ type, slugFolderName }, folder_meta);
+      if (type !== "authors") cache.put({ type, slugFolderName }, folder_meta);
+
       return { [slugFolderName]: folder_meta };
     },
     getFolders: async ({ type }) => {
@@ -242,7 +243,7 @@ module.exports = (function () {
     copyFolder: ({
       type,
       slugFolderName: old_slugFolderName,
-      new_slugFolderName,
+      new_folder_name,
     }) => {
       return new Promise(function (resolve, reject) {
         dev.logfunction(`COMMON — copyFolder`);
@@ -252,10 +253,8 @@ module.exports = (function () {
         }
 
         _getFolderSlugs({ type }).then((folders) => {
-          let new_slugFolderName = api.slug(new_slugFolderName);
-          if (new_slugFolderName === "") {
-            new_slugFolderName = "untitled";
-          }
+          let new_slugFolderName = api.slug(new_folder_name);
+          if (new_slugFolderName === "") new_slugFolderName = "untitled";
 
           if (folders.length > 0) {
             let index = 0;
@@ -287,7 +286,7 @@ module.exports = (function () {
                     slugFolderName: new_slugFolderName,
                     foldersData: foldersData[new_slugFolderName],
                     newFoldersData: {
-                      name: new_slugFolderName,
+                      name: new_folder_name,
                     },
                   }).then(() => {
                     return resolve(new_slugFolderName);
@@ -310,7 +309,7 @@ module.exports = (function () {
         );
         if (slugFolderName === undefined) {
           dev.error(`Missing slugFolderName to read medias from.`);
-          reject();
+          return reject();
         }
         if (metaFileName === undefined) {
           dev.logverbose(
@@ -872,6 +871,7 @@ module.exports = (function () {
                   meta.type === "marker" ||
                   meta.type === "planning" ||
                   meta.type === "composition" ||
+                  meta.type === "writeup" ||
                   meta.type === "embed" ||
                   meta.type === "link" ||
                   meta.type === "code") &&
@@ -1082,6 +1082,7 @@ module.exports = (function () {
           additionalMeta.type === "marker" ||
           additionalMeta.type === "planning" ||
           additionalMeta.type === "composition" ||
+          additionalMeta.type === "writeup" ||
           additionalMeta.type === "embed" ||
           additionalMeta.type === "link" ||
           additionalMeta.type === "code"
@@ -1199,7 +1200,8 @@ module.exports = (function () {
               global.settings.structure[type].medias.fields.hasOwnProperty(
                 "media_filename"
               ) &&
-              media_data.hasOwnProperty("media_filename")
+              media_data.hasOwnProperty("media_filename") &&
+              media_data.media_filename
             ) {
               let copy_media = new Promise((resolve, reject) => {
                 // copier le media_filename dans le nouveau dossier avec le premier nom disponible
@@ -1416,6 +1418,7 @@ module.exports = (function () {
                 mediaData.type === "marker" ||
                 mediaData.type === "planning" ||
                 mediaData.type === "composition" ||
+                mediaData.type === "writeup" ||
                 mediaData.type === "embed" ||
                 mediaData.type === "link" ||
                 mediaData.type === "code") &&
@@ -1779,10 +1782,7 @@ module.exports = (function () {
               if (existing[key].startsWith("$")) {
                 output_obj[key] = existing[key];
               } else {
-                output_obj[key] = bcrypt.hashSync(
-                  validator.escape(existing[key] + ""),
-                  10
-                );
+                output_obj[key] = bcrypt.hashSync(existing[key] + "", 10);
               }
             } else {
               output_obj[key] = "";

@@ -970,7 +970,7 @@ module.exports = (function () {
     )
       return;
 
-    const new_slugFolderName = await file.copyFolder({
+    new_folder_name = await file.copyFolder({
       type,
       slugFolderName,
       new_folder_name,
@@ -982,7 +982,7 @@ module.exports = (function () {
       detail: { type, slugFolderName, new_folder_name },
     });
 
-    await sendFolders({ type, slugFolderName: new_slugFolderName, id });
+    await sendFolders({ type, slugFolderName: new_folder_name, id });
   }
 
   function onUpdateNetworkInfos(socket) {
@@ -1018,7 +1018,8 @@ module.exports = (function () {
         : await file.getFolders({ type });
     } catch (err) {
       dev.error(`Error listing folder(s): ${err}`);
-      throw err;
+      // throw err;
+      return false;
     }
 
     // if folder creation, we get an ID to open the folder straight away
@@ -1074,11 +1075,16 @@ module.exports = (function () {
         throw err;
       });
 
-    const list_metaFileName = await file.getMediaMetaNames({
-      type,
-      slugFolderName,
-      metaFileName,
-    });
+    const list_metaFileName = await file
+      .getMediaMetaNames({
+        type,
+        slugFolderName,
+        metaFileName,
+      })
+      .catch((err) => {
+        dev.error(`No folder found: ${err}`);
+        // throw err;
+      });
 
     let medias_list = list_metaFileName.map((_metaFileName) => {
       return {
