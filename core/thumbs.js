@@ -1165,8 +1165,8 @@ module.exports = (function () {
         dev.error(`THUMBS — _getPageMetadata : page timeout for ${url}`);
         clearTimeout(page_timeout);
         browser.close();
-        throw "err";
-      }, 10_000);
+        return reject();
+      }, 20_000);
 
       await page.goto(url, {
         waitUntil: "domcontentloaded",

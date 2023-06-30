@@ -249,7 +249,7 @@
           </router-link>
         </template>
       </div>
-      <div class="_comments" v-if="context !== 'preview'">
+      <div class="_comments" v-if="fragment.comments && context !== 'preview'">
         {{ $t("comment") }}
         <div>
           <small v-if="!fragment.comments" class="text-gray">

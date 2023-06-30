@@ -24,6 +24,16 @@
       <button type="button" v-if="edit_mode" @click="edit_mode = false">
         {{ $t("cancel") }}
       </button>
+      <button
+        type="button"
+        v-if="edit_mode"
+        @click="
+          new_content = '';
+          save();
+        "
+      >
+        {{ $t("empty") }}
+      </button>
       <button type="button" @click="save()" v-if="edit_mode">
         {{ $t("save") }}
       </button>
