@@ -978,37 +978,25 @@ module.exports = (function () {
         pageRange: [page + 1, page + 1],
       });
 
-      await new Promise((resolve, reject) => {
-        pdf
-          .parse(mediaPath)
-          .then(() => {
-            dev.logverbose(
-              `THUMBS — _makePDFScreenshot: extracted page ${page}`
-            );
-            resolve();
-          })
-          .catch((err) => {
-            dev.error(
-              `THUMBS — _makePDFScreenshot / Failed to make pdf thumbs with error ${err}`
-            );
-            reject(err);
-          });
-      })
-        .then(() => {
-          // rename and move page-1.png
-          const src = path.join(_pdf_folder, "page-1.png");
-          fs.move(src, fullScreenshotPath);
-          fs.remove(_pdf_folder);
-          return { screenshotPath, screenshotName };
-        })
-        .catch((err) => {
-          dev.error(
-            `THUMBS — _makePDFScreenshot / Failed to make pdf thumbs with error ${err}`
-          );
-          throw err;
-        });
+      await pdf.parse(mediaPath).catch((err) => {
+        dev.error(
+          `THUMBS — _makePDFScreenshot / Failed to make pdf thumbs with error ${err}`
+        );
+        throw err;
+      });
+
+      dev.logverbose(`THUMBS — _makePDFScreenshot: extracted page ${page}`);
+
+      // rename and move page-1.png
+      const src = path.join(_pdf_folder, "page-1.png");
+      await fs.move(src, fullScreenshotPath);
+      await fs.remove(_pdf_folder);
+
+      return { screenshotPath, screenshotName };
     } catch (err) {
-      dev.error(`THUMBS — _makePDFScreenshot ${err}`);
+      dev.error(
+        `THUMBS — _makePDFScreenshot / Failed to make pdf thumbs ${err}`
+      );
       throw err;
     }
 
