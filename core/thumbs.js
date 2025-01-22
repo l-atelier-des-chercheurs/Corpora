@@ -966,39 +966,41 @@ module.exports = (function () {
     let PdfExtractor;
     try {
       PdfExtractor = require("pdf-extractor").PdfExtractor;
+
+      pdfExtractor = new PdfExtractor(_pdf_folder, {
+        viewportScale: (width, height) => {
+          //dynamic zoom based on rendering a page to a fixed page size
+          if (width > height) {
+            //landscape: 1100px wide
+            return 1100 / width;
+          }
+          //portrait: 800px wide
+          return 800 / width;
+        },
+        pageRange: [page + 1, page + 1],
+      });
+
+      await pdfExtractor.parse(mediaPath).catch((err) => {
+        dev.error(
+          `THUMBS — _makePDFScreenshot / Failed to make pdf thumbs with error ${err}`
+        );
+        throw err;
+      });
+
+      dev.logverbose(`THUMBS — _makePDFScreenshot: extracted page ${page}`);
+
+      // rename and move page-1.png
+      const src = path.join(_pdf_folder, "page-1.png");
+      await fs.move(src, fullScreenshotPath);
+      await fs.remove(_pdf_folder);
+
+      return { screenshotPath, screenshotName };
     } catch (err) {
-      dev.error(`THUMBS — _makePDFScreenshot / No pdfextractor found ${err}`);
-      throw err;
-    }
-
-    pdfExtractor = new PdfExtractor(_pdf_folder, {
-      viewportScale: (width, height) => {
-        //dynamic zoom based on rendering a page to a fixed page size
-        if (width > height) {
-          //landscape: 1100px wide
-          return 1100 / width;
-        }
-        //portrait: 800px wide
-        return 800 / width;
-      },
-      pageRange: [page + 1, page + 1],
-    });
-
-    await pdfExtractor.parse(mediaPath).catch((err) => {
       dev.error(
-        `THUMBS — _makePDFScreenshot / Failed to make pdf thumbs with error ${err}`
+        `THUMBS — _makePDFScreenshot / Failed to make pdf thumbs ${err}`
       );
       throw err;
-    });
-
-    dev.logverbose(`THUMBS — _makePDFScreenshot: extracted page ${page}`);
-
-    // rename and move page-1.png
-    const src = path.join(_pdf_folder, "page-1.png");
-    await fs.move(src, fullScreenshotPath);
-    await fs.remove(_pdf_folder);
-
-    return { screenshotPath, screenshotName };
+    }
 
     // const url = `${global.appInfos.homeURL}/${slugFolderName}/${filename}`;
     // const padding = 6;
