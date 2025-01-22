@@ -963,11 +963,9 @@ module.exports = (function () {
     );
     await fs.ensureDir(_pdf_folder);
 
-    let PdfExtractor;
     try {
-      PdfExtractor = require("pdf-extractor").PdfExtractor;
-
-      pdfExtractor = new PdfExtractor(_pdf_folder, {
+      const PdfExtractor = require("pdf-extractor").PdfExtractor;
+      const pdf = new PdfExtractor(_pdf_folder, {
         viewportScale: (width, height) => {
           //dynamic zoom based on rendering a page to a fixed page size
           if (width > height) {
@@ -980,7 +978,7 @@ module.exports = (function () {
         pageRange: [page + 1, page + 1],
       });
 
-      await pdfExtractor.parse(mediaPath).catch((err) => {
+      await pdf.parse(mediaPath).catch((err) => {
         dev.error(
           `THUMBS — _makePDFScreenshot / Failed to make pdf thumbs with error ${err}`
         );
